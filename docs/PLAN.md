@@ -20,7 +20,7 @@ Coverage and quality facts that shape the design:
 - **120 schools across the US and Canada**, from 32 faculty (MIT) down to 1.
 - **Metrics stored are total citations and h-index only.** The column is still named `Cites2017`, but it holds current totals. `CY2017` (citations per year since PhD) is `#REF!` in 805 rows.
 - **Percentiles are computed by macros with hard-coded row ranges** (rows 2 to 1052 overall; rank boundaries at rows 282 and 647). The sheet has 1,051 data rows, so the ranges are already slightly off, and any roster change silently breaks them.
-- **Identity problems the spreadsheet cannot express**: Guang Tian appears at two schools with the same Scholar id; Lisa Berglund appears twice; Scholar id `vxeLlLIAAAAJ` is attached to two different people; 15 rows have no `Years` value.
+- **Identity problems the spreadsheet cannot express**: Guang Tian (Utah to New Orleans) and Lisa Berglund (Dalhousie to Morgan State, with a promotion) each appear twice because they moved and the old row was never removed. 15 rows have no `Years` value, mostly 2025 PhDs where years since PhD is zero.
 - **Gender** is recorded (M/F/T). It is useful for aggregate analysis but should not be shown on individual public pages.
 
 **No history survives in this file.** Tom updated in place each summer and winter, and the site he published only ever showed the current snapshot. We will not try to reconstruct the past. The time series starts at t = now: the 2026 workbook is the first snapshot, and every collection run after it adds a point. Within a year the site has a real trend to show; within three it has more history than the spreadsheet ever held.
@@ -230,7 +230,7 @@ planning-citation-metrics/
 
 **Phase 0. Settle scope** (this month)
 - Ask Tom for the inclusion rule for the 120 schools (ACSP membership?).
-- Confirm the handful of data fixes above with him: the shared Scholar id, the two duplicate people, the 15 missing `Years` values.
+- Confirm the two moves with him (Guang Tian, Lisa Berglund) so the stale rows can be closed out as ended affiliations rather than deleted.
 
 **Phase 1. Schema and migration** (2 to 3 weeks)
 - Write `schema.sql` and `views.sql`. Migrate the workbook into roster CSVs and one 2026 snapshot per person (source `google_scholar` or `pop`).
