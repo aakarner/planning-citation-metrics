@@ -23,7 +23,7 @@ Coverage and quality facts that shape the design:
 - **Identity problems the spreadsheet cannot express**: Guang Tian appears at two schools with the same Scholar id; Lisa Berglund appears twice; Scholar id `vxeLlLIAAAAJ` is attached to two different people; 15 rows have no `Years` value.
 - **Gender** is recorded (M/F/T). It is useful for aggregate analysis but should not be shown on individual public pages.
 
-The most important gap: **no history survives in this file.** Tom updated in place each summer and winter. Before anything else, ask Tom for every prior version of the workbook so the time series can be backfilled. If they are gone, history begins with this 2026 snapshot.
+**No history survives in this file.** Tom updated in place each summer and winter, and the site he published only ever showed the current snapshot. We will not try to reconstruct the past. The time series starts at t = now: the 2026 workbook is the first snapshot, and every collection run after it adds a point. Within a year the site has a real trend to show; within three it has more history than the spreadsheet ever held.
 
 ## 2. Design principles
 
@@ -211,7 +211,7 @@ planning-citation-metrics/
       google_scholar/  2026-01-15.csv, ...
       openalex/        2026-10-01.csv, ...
     review/            identity_candidates.csv
-    legacy/            UPDATED_Cites2026.xlsm and any earlier workbooks Tom can find
+    legacy/            UPDATED_Cites2026.xlsm, the handover workbook
   pipeline/            Python package
     load_workbook.py   one-time migration of the xlsm into roster CSVs
     build_db.py        CSV + snapshots -> citations.sqlite, runs views and tests
@@ -228,14 +228,14 @@ planning-citation-metrics/
 
 ## 8. Phased delivery
 
-**Phase 0. Recover history and settle scope** (this month)
-- Ask Tom for all prior workbook versions and for the inclusion rule for the 120 schools (ACSP membership?).
+**Phase 0. Settle scope** (this month)
+- Ask Tom for the inclusion rule for the 120 schools (ACSP membership?).
 - Confirm the handful of data fixes above with him: the shared Scholar id, the two duplicate people, the 15 missing `Years` values.
 
 **Phase 1. Schema and migration** (2 to 3 weeks)
 - Write `schema.sql` and `views.sql`. Migrate the workbook into roster CSVs and one 2026 snapshot per person (source `google_scholar` or `pop`).
 - Regression test: views reproduce Tom's percentiles and department summaries.
-- Backfill earlier workbooks as dated snapshots if they turn up.
+- Date the migrated snapshot to when Tom last refreshed the numbers, so the series has an honest starting point.
 
 **Phase 2. Collectors and identity matching** (3 to 4 weeks)
 - OpenAlex collector and matcher; run the initial match, review the pending queue.
@@ -255,7 +255,7 @@ Rough total: about three months of part-time effort, front-loaded in phases 1 an
 
 ## 9. Open questions for Tom
 
-1. Do earlier versions of the workbook exist, and can we have every one of them?
+1. When were the citation numbers in this workbook last refreshed? That date stamps the first snapshot.
 2. What is the inclusion rule for schools? ACSP membership, or a hand-curated list?
 3. Were the Publish or Perish numbers for the 243 non-profile faculty ever recorded with a date or query string, so we can reproduce them?
 4. Is there a reason `RegFaculty` and `NonPhD` exist but are empty? Were they meant to exclude adjuncts or practitioners?
