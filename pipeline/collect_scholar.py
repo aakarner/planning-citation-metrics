@@ -36,9 +36,17 @@ FIELDS = [
 MAX_CONSECUTIVE_FAILURES = 5
 
 
-def load_people() -> list[dict]:
+def load_people() -> tuple[list[str], list[dict]]:
     with (ROSTER_DIR / "person.csv").open(newline="", encoding="utf-8") as f:
-        return [r for r in csv.DictReader(f) if r["google_scholar_id"]]
+        r = csv.DictReader(f)
+        return list(r.fieldnames), list(r)
+
+
+def save_people(fields: list[str], rows: list[dict]) -> None:
+    with (ROSTER_DIR / "person.csv").open("w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=fields)
+        w.writeheader()
+        w.writerows(rows)
 
 
 def already_done(path: Path) -> set[str]:
@@ -67,7 +75,8 @@ def main(argv=None) -> None:
     except ImportError as e:
         sys.exit(f'cannot import scholarly ({e}); run  pip install -e ".[scholar]"')
 
-    people = load_people()
+    fields, everyone = load_people()
+    people = [p for p in everyone if p["google_scholar_id"]]
     if args.ids:
         people = [p for p in people if p["google_scholar_id"] in set(args.ids)]
     out = SNAPSHOT_DIR / "google_scholar" / f"{args.date}.csv"
@@ -80,6 +89,7 @@ def main(argv=None) -> None:
     out.parent.mkdir(parents=True, exist_ok=True)
     new_file = not out.exists()
     ok = failed = consecutive = 0
+    redirected: dict[str, str] = {}   # person_id -> new Scholar id
     t0 = time.monotonic()
     with out.open("a", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=FIELDS)
@@ -88,7 +98,11 @@ def main(argv=None) -> None:
         for i, p in enumerate(todo, 1):
             try:
                 a = fetch(scholarly, p["google_scholar_id"])
-                raw = {k: a.get(k) for k in ("name", "affiliation", "email_domain", "interests", "homepage",
+                seen = a.get("scholar_id")
+                if seen and seen != p["google_scholar_id"]:
+                    # Google merged or renumbered the profile; remember the new id.
+                    redirected[p["person_id"]] = seen
+                raw = {k: a.get(k) for k in ("scholar_id", "name", "affiliation", "email_domain", "interests", "homepage",
                                              "citedby", "citedby5y", "hindex", "hindex5y", "i10index",
                                              "i10index5y", "cites_per_year")}
                 w.writerow({
@@ -116,6 +130,17 @@ def main(argv=None) -> None:
     meta = {"trigger": "manual", "notes": f"scholarly collector; {ok} ok, {failed} failed, "
                                           f"{(time.monotonic() - t0) / 60:.1f} min"}
     out.with_suffix(".meta.json").write_text(json.dumps(meta, indent=2) + "\n")
+    if redirected:
+        taken = {q["google_scholar_id"] for q in everyone} - {p["google_scholar_id"] for p in everyone if p["person_id"] in redirected}
+        for q in everyone:
+            new = redirected.get(q["person_id"])
+            if new and new not in taken:
+                print(f"  roster: {q['display_name']} Scholar id {q['google_scholar_id']} -> {new} (profile redirected)")
+                q["google_scholar_id"] = new
+                taken.add(new)
+            elif new:
+                print(f"  roster: {q['display_name']} redirects to {new}, which another person already holds; left unchanged", file=sys.stderr)
+        save_people(fields, everyone)
     print(f"\ndone: {ok} ok, {failed} failed -> {out}")
 
 

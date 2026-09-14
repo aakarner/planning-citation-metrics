@@ -94,7 +94,8 @@ stops itself after five consecutive failures, which means Scholar is blocking.
 .venv/bin/python -m pipeline.find_scholar_profiles                         # everyone without a profile
 ```
 
-One Scholar author-search page per person without a recorded profile, scored like OpenAlex
+One Scholar publication search per person without a recorded profile (Scholar's author search
+now requires sign-in), with linked author profiles fetched and scored like OpenAlex
 candidates and written to the same review queue with `source=google_scholar`. Clear winners
 go into `person.csv`. Run it from a university or home connection. We do not reconstruct
 citation counts for people without a profile (that was Publish or Perish, by hand); they get

@@ -170,7 +170,7 @@ Google Scholar has no API and blocks datacenter IPs, so automation has to be pra
 
 Once a person has an OpenAlex id, monthly collection is a single API call per person with no ambiguity.
 
-**Scholar profile discovery.** For each person without a Scholar id, one Scholar author-search page fetched from a UT connection returns candidate profiles with affiliation text and citation totals. They are scored the same way (name, affiliation, plausibility against the number we already hold) and land in the same review queue. Run once over the 243, then each semester for new hires.
+**Scholar profile discovery.** For each person without a Scholar id, one Scholar publication search restricted to their name, fetched from a UT connection, links author names to profiles where they exist (Scholar's dedicated author search now requires a Google sign-in). Linked names that match ours are fetched for affiliation text and citation totals. They are scored the same way (name, affiliation, plausibility against the number we already hold) and land in the same review queue. Run once over the 243, then each semester for new hires.
 
 **Publish or Perish is retired.** It is a desktop program that runs the same Scholar name search and relies on a person unticking the wrong papers. Automating the fetch without that judgment produces confident wrong numbers; automating the judgment is the unsolved problem. Policy (2026-09-14): we do not reconstruct counts for people without a profile. They get the flagged OpenAlex number, and the fix is in their hands. The migrated Publish or Perish figures stay in the database as the first data point for those 243 and are superseded by the first OpenAlex snapshot.
 
@@ -183,7 +183,7 @@ Once a person has an OpenAlex id, monthly collection is a single API call per pe
 | OpenAlex snapshot | Monthly, 1st of month | GitHub Actions cron; about 1,051 free id lookups, a few minutes |
 | Google Scholar snapshot | Quarterly (Jan, Apr, Jul, Oct) | Self-hosted runner or Scholar API; results committed as a snapshot file |
 | Roster review | Semiannual (Jan, Jul), matching Tom's rhythm | Pipeline emails the change-detection report; a person edits the roster CSVs by pull request |
-| Scholar profile discovery | Semiannual, with roster review | One author-search page per person without a profile, from a UT connection; candidates go to the review queue |
+| Scholar profile discovery | Semiannual, with roster review | One publication-search page per person without a profile, plus one profile page per plausible candidate, from a UT connection; candidates go to the review queue |
 | Site rebuild and deploy | On every push to `main` and after every collection | GitHub Actions builds SQLite from CSV and snapshots, builds the site, deploys to GitHub Pages |
 
 Each run appends a snapshot file under `data/snapshots/<source>/<YYYY-MM-DD>.csv` and commits it. The CSVs are the canonical, diffable record; the SQLite file is a build product that is also published for download. Failures open a GitHub issue automatically so a silent stall cannot go unnoticed for a semester.

@@ -7,8 +7,14 @@
 Policy (2026-09-14): we do not reconstruct citation counts for people without
 a Scholar profile (that is what Publish or Perish did, by hand). We do check
 whether a profile exists that we simply never recorded, and we re-check new
-hires each semester. One Scholar author-search page per person; run it from a
-university or home connection, never a cloud runner.
+hires each semester.
+
+Scholar's author search now redirects to a Google sign-in page, so this uses
+the ordinary publication search restricted to the author's name instead. The
+result page links author names to their profiles when they have one; linked
+names that match ours are fetched and scored. One search page plus one
+profile page per plausible candidate. Run it from a university or home
+connection, never a cloud runner.
 
 Candidates are scored like OpenAlex candidates (name, affiliation text,
 citation plausibility) and land in data/review/identity_candidates.csv with
@@ -19,13 +25,42 @@ from __future__ import annotations
 
 import argparse
 import csv
+import html
+import re
 import sys
 import time
+import urllib.parse
+import urllib.request
 from datetime import date
 
 from . import ROSTER_DIR
 from .match_openalex import (REVIEW_DIR, REVIEW_FIELDS, load_context, name_similarity, norm,
                              read_csv, write_csv)
+
+SEARCH_URL = "https://scholar.google.com/scholar?hl=en&q=author%3A%22{name}%22"
+USER_AGENT = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+              "(KHTML, like Gecko) Chrome/128.0 Safari/537.36")
+PROFILE_LINK = re.compile(r'<a href="/citations\?user=([\w-]{12})[^"]*"[^>]*>([^<]+)</a>')
+
+
+class ScholarBlocked(RuntimeError):
+    pass
+
+
+def search_profile_links(name: str) -> dict[str, str]:
+    """Publication search by author name -> {scholar_id: linked author text}."""
+    url = SEARCH_URL.format(name=urllib.parse.quote_plus(name))
+    req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, "Accept-Language": "en-US,en"})
+    with urllib.request.urlopen(req, timeout=60) as resp:
+        final = resp.geturl()
+        page = resp.read().decode("utf-8", "replace")
+    if "accounts.google.com" in final or "/sorry/" in final or "unusual traffic" in page:
+        raise ScholarBlocked(f"redirected/blocked: {final[:80]}")
+    links: dict[str, str] = {}
+    for sid, text in PROFILE_LINK.findall(page):
+        links.setdefault(sid, html.unescape(text).strip())
+    return links
+
 
 ACCEPT_SCORE = 0.85
 ACCEPT_MARGIN = 0.15
@@ -117,7 +152,16 @@ def main(argv=None) -> None:
         aff = current.get(person["person_id"])
         dept = dept_by_id.get(aff["department_id"]) if aff else None
         try:
-            found = list(scholarly.search_author(person["display_name"]))
+            links = search_profile_links(person["display_name"])
+            # Only fetch profiles whose linked name could be this person ("N Brooks" counts).
+            plausible = [sid for sid, text in links.items()
+                         if name_similarity(person, {"display_name": text}) >= 0.9]
+            found = []
+            for sid in plausible[:4]:
+                time.sleep(args.sleep / 2)
+                a = scholarly.search_author_id(sid)
+                found.append({"scholar_id": sid, "name": a.get("name"), "affiliation": a.get("affiliation"),
+                              "citedby": a.get("citedby"), "email_domain": a.get("email_domain")})
             consecutive = 0
         except Exception as e:
             tally["failed"] += 1
@@ -144,7 +188,8 @@ def main(argv=None) -> None:
             rows.append({"person_id": person["person_id"], "display_name": person["display_name"],
                          "department": dept["short_name"] if dept else None, "source": "google_scholar",
                          "external_id": None, "candidate_name": None, "score": 0, "status": "pending"})
-        print(f"  [{i}/{len(todo)}] {person['display_name']}: {len(found)} candidates -> {status}"
+        print(f"  [{i}/{len(todo)}] {person['display_name']}: {len(links)} linked authors, "
+              f"{len(found)} plausible -> {status}"
               + (f" ({scored[0]['candidate_name']}, {scored[0]['last_known_institution']})" if scored else ""))
         if i < len(todo):
             time.sleep(args.sleep)
