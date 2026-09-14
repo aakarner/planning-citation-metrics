@@ -101,6 +101,18 @@ go into `person.csv`. Run it from a university or home connection. We do not rec
 citation counts for people without a profile (that was Publish or Perish, by hand); they get
 the flagged OpenAlex number instead.
 
+## Change report
+
+```bash
+.venv/bin/python -m pipeline.detect_changes      # -> build/change_report_<date>.md
+```
+
+Compares the latest snapshots with the roster and the previous snapshots, and lists the
+people a reviewer should look at: Scholar verified-email domain or affiliation text that
+does not match the department, OpenAlex last known institution elsewhere, a citation count
+that fell more than 20% (usually a wrong or merged profile), and profiles that vanished.
+It edits nothing; roster changes are made by hand in `data/roster/`.
+
 ## Private attributes
 
 `data/private/person_private.csv` holds gender and is gitignored. The build merges it in
