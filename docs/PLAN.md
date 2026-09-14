@@ -230,7 +230,7 @@ planning-citation-metrics/
 
 **Phase 0. Settle scope** (this month)
 - Ask Tom for the inclusion rule for the 120 schools (ACSP membership?).
-- Confirm the two moves with him (Guang Tian, Lisa Berglund) so the stale rows can be closed out as ended affiliations rather than deleted.
+- Done 2026-09-13: the two moves (Guang Tian to Utah, Lisa Berglund to Morgan State) were verified against Scholar profiles and department pages, and the stale rows are closed as ended affiliations.
 
 **Phase 1. Schema and migration** (2 to 3 weeks)
 - Write `schema.sql` and `views.sql`. Migrate the workbook into roster CSVs and one 2026 snapshot per person (source `google_scholar` or `pop`).
