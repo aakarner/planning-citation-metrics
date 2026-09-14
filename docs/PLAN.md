@@ -150,7 +150,7 @@ Google Scholar has no API and blocks datacenter IPs, so automation has to be pra
 | | Google Scholar | OpenAlex |
 |---|---|---|
 | Access | Scrape profile pages (`scholarly` library, throttled) or a paid Scholar API such as SerpApi | Metered REST API. A free account's key gives about $1 of usage a day; lookups by author id are free, name searches cost about a tenth of a cent each. Our one-time matching costs a dollar or two; monthly collection costs nothing |
-| Covers | 808 faculty with profiles | Everyone, once matched |
+| Covers | 808 faculty with profiles, plus any the discovery pass turns up | Everyone, once matched |
 | Numbers | Higher; includes books, reports, gray literature that matter in planning | Lower and systematically different; journal-centric |
 | Role | **Headline metric** for everyone with a profile. Continuity with Tom's series and with what the field expects | **Fallback headline** for faculty without a Scholar profile, flagged as OpenAlex and a likely undercount. Also collected for everyone as a comparison series |
 
@@ -161,7 +161,7 @@ Google Scholar has no API and blocks datacenter IPs, so automation has to be pra
 - Self-hosted runner or `launchd` job on a UT machine, using `scholarly` with a few seconds between requests. 808 profiles at one request every 10 to 15 seconds is about three hours. This is what Tom did by hand. Scraping is against Google's terms, which is a risk to note, not a blocker; the data is public profile data.
 - A commercial Scholar API (SerpApi's `google_scholar_author` engine returns exactly the citation table). Runs fine from GitHub Actions. Costs money only in the months a run happens. Check current pricing before committing.
 
-**Disambiguation, done once.** The 808 people with a Scholar id need no disambiguation on the Scholar side. Matching everyone to OpenAlex, and finding Scholar profiles for the 243 who lack one, is the real work Tom described:
+**Disambiguation, done once.** The 808 people with a Scholar id need no disambiguation on the Scholar side. The real work Tom described is matching everyone to OpenAlex, and checking whether any of the 243 without a recorded profile actually have one.
 
 1. Query OpenAlex `/authors?search=<name>` and filter by the department's `openalex_institution_id`.
 2. Score each candidate: name similarity (Jaro-Winkler on full name and on last name plus first initial), current or past institution match, topic overlap with planning concepts, first publication year consistent with PhD year, coauthor overlap with already-matched faculty in the same department.
@@ -169,6 +169,10 @@ Google Scholar has no API and blocks datacenter IPs, so automation has to be pra
 4. Review pending rows in a simple table (a CSV in the repo or a small review page) and mark accepted or rejected. Expect a few hours of review for the initial pass, then a handful of new hires per semester.
 
 Once a person has an OpenAlex id, monthly collection is a single API call per person with no ambiguity.
+
+**Scholar profile discovery.** For each person without a Scholar id, one Scholar author-search page fetched from a UT connection returns candidate profiles with affiliation text and citation totals. They are scored the same way (name, affiliation, plausibility against the number we already hold) and land in the same review queue. Run once over the 243, then each semester for new hires.
+
+**Publish or Perish is retired.** It is a desktop program that runs the same Scholar name search and relies on a person unticking the wrong papers. Automating the fetch without that judgment produces confident wrong numbers; automating the judgment is the unsolved problem. Policy (2026-09-14): we do not reconstruct counts for people without a profile. They get the flagged OpenAlex number, and the fix is in their hands. The migrated Publish or Perish figures stay in the database as the first data point for those 243 and are superseded by the first OpenAlex snapshot.
 
 **Detecting roster changes automatically.** Twice a year, produce a diff report for human review rather than editing blind: Scholar profile affiliation text or verified-email domain changed; OpenAlex `last_known_institutions` changed; citation count fell by more than 20% (almost always a wrong profile, not a real drop); profile disappeared. Rank changes still need a person to check department websites, as before.
 
@@ -179,6 +183,7 @@ Once a person has an OpenAlex id, monthly collection is a single API call per pe
 | OpenAlex snapshot | Monthly, 1st of month | GitHub Actions cron; about 1,051 free id lookups, a few minutes |
 | Google Scholar snapshot | Quarterly (Jan, Apr, Jul, Oct) | Self-hosted runner or Scholar API; results committed as a snapshot file |
 | Roster review | Semiannual (Jan, Jul), matching Tom's rhythm | Pipeline emails the change-detection report; a person edits the roster CSVs by pull request |
+| Scholar profile discovery | Semiannual, with roster review | One author-search page per person without a profile, from a UT connection; candidates go to the review queue |
 | Site rebuild and deploy | On every push to `main` and after every collection | GitHub Actions builds SQLite from CSV and snapshots, builds the site, deploys to GitHub Pages |
 
 Each run appends a snapshot file under `data/snapshots/<source>/<YYYY-MM-DD>.csv` and commits it. The CSVs are the canonical, diffable record; the SQLite file is a build product that is also published for download. Failures open a GitHub issue automatically so a silent stall cannot go unnoticed for a semester.
@@ -240,6 +245,7 @@ planning-citation-metrics/
 **Phase 2. Collectors and identity matching** (3 to 4 weeks)
 - OpenAlex collector and matcher; run the initial match, review the pending queue.
 - Scholar collector; test `scholarly` from a UT IP versus a commercial API and pick one.
+- Scholar profile discovery pass over the 243 people without a recorded profile.
 - `collection_run` logging, retries, and the drop-detection check.
 
 **Phase 3. Scheduling** (1 week)

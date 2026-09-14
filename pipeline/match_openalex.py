@@ -318,7 +318,7 @@ def main(argv=None) -> None:
 
     # Carry forward rows for people not processed this run.
     processed = {p["person_id"] for p in todo}
-    carried = [r for r in existing if r["person_id"] not in processed]
+    carried = [r for r in existing if r["person_id"] not in processed or r["source"] != "openalex"]
     all_rows = carried + review_rows
 
     print("\nsummary:", json.dumps(tally))

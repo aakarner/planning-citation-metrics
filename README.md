@@ -87,6 +87,19 @@ Scrapes public profile pages one request at a time. Run it from a university or 
 connection, never from a cloud runner. Output is resumable within a day and the run
 stops itself after five consecutive failures, which means Scholar is blocking.
 
+## Scholar profile discovery
+
+```bash
+.venv/bin/python -m pipeline.find_scholar_profiles --limit 20 --sleep 10   # trial
+.venv/bin/python -m pipeline.find_scholar_profiles                         # everyone without a profile
+```
+
+One Scholar author-search page per person without a recorded profile, scored like OpenAlex
+candidates and written to the same review queue with `source=google_scholar`. Clear winners
+go into `person.csv`. Run it from a university or home connection. We do not reconstruct
+citation counts for people without a profile (that was Publish or Perish, by hand); they get
+the flagged OpenAlex number instead.
+
 ## Private attributes
 
 `data/private/person_private.csv` holds gender and is gitignored. The build merges it in
