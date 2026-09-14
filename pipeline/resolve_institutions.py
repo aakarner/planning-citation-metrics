@@ -56,8 +56,12 @@ def country_ok(hit: dict, country: str) -> bool:
 def resolve(label: str, country: str) -> dict | None:
     query = QUERY_OVERRIDE.get(label, label)
     results = search_institutions(query) or (search_institutions(label) if query != label else [])
-    # Keep OpenAlex relevance order; only demote non-universities and wrong countries.
-    ranked = sorted(results, key=lambda r: (r.get("type") != "education", not country_ok(r, country)))
+    # An exact name match wins; otherwise keep OpenAlex relevance order and only
+    # demote non-universities and wrong countries.
+    def key(r):
+        exact = (r.get("display_name") or "").casefold() != query.casefold()
+        return (exact, r.get("type") != "education", not country_ok(r, country))
+    ranked = sorted(results, key=key)
     return ranked[0] if ranked else None
 
 

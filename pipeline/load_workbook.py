@@ -3,7 +3,10 @@
 Run once:
 
     python -m pipeline.load_workbook data/legacy/UPDATED_Cites2026.xlsm \
-        --collected-at 2026-09-13
+        --scholar-date 2026-03-01 --pop-date 2026-02-20
+
+Dates per Tom Sanchez (email, 2026-09-14): Scholar totals refreshed 2026-03-01;
+Publish or Perish lookups run 2026-02-15 to 2026-02-20.
 
 Writes:
   data/roster/department.csv
@@ -28,6 +31,7 @@ import json
 import re
 import sys
 from collections import defaultdict
+from datetime import date
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
@@ -83,7 +87,7 @@ DEPARTMENT_FIELDS = [
 ]
 PRIVATE_FIELDS = ["person_id", "gender"]
 AFFILIATION_FIELDS = [
-    "affiliation_id", "person_id", "department_id", "rank", "is_primary",
+    "affiliation_id", "person_id", "department_id", "rank", "appointment_type", "is_primary",
     "start_date", "end_date", "source",
 ]
 SNAPSHOT_FIELDS = [
@@ -135,8 +139,16 @@ def write_csv(path: Path, fields: list[str], rows: list[dict]) -> None:
     print(f"  wrote {len(rows):>5} rows  {path}")
 
 
-def migrate(workbook: Path, collected_at: str, roster_dir: Path, snapshot_dir: Path,
-            private_dir: Path = PRIVATE_DIR) -> None:
+def migrate(workbook: Path, dates: dict[str, str], roster_dir: Path, snapshot_dir: Path,
+            private_dir: Path = PRIVATE_DIR, migration_date: str | None = None) -> None:
+    migration_date = migration_date or date.today().isoformat()
+    # Re-running must not destroy curation done since the first migration
+    # (OpenAlex ids, ORCIDs, notes). Carry those over by display name.
+    existing = {}
+    prior = roster_dir / "person.csv"
+    if prior.exists():
+        with prior.open(newline="", encoding="utf-8") as f:
+            existing = {r["display_name"]: r for r in csv.DictReader(f)}
     print(f"Reading {workbook}")
     wb = openpyxl.load_workbook(workbook, read_only=True, data_only=True)
     cites = [r for r in read_sheet(wb["Cites"]) if r.get("Name")]
@@ -195,13 +207,13 @@ def migrate(workbook: Path, collected_at: str, roster_dir: Path, snapshot_dir: P
             "phd_institution": cur.get("PhDSchool"),
             "interests": cur.get("Interests"),
             "google_scholar_id": gs,
-            "openalex_author_id": None,
-            "orcid": None,
-            "semantic_scholar_id": None,
+            "openalex_author_id": (existing.get(name) or {}).get("openalex_author_id") or None,
+            "orcid": (existing.get(name) or {}).get("orcid") or None,
+            "semantic_scholar_id": (existing.get(name) or {}).get("semantic_scholar_id") or None,
             "researchgate_url": cur.get("ResearchGate"),
             "linkedin_url": cur.get("LinkedIn"),
             "personal_url": cur.get("Personal"),
-            "notes": None,
+            "notes": (existing.get(name) or {}).get("notes") or None,
         })
         private.append({"person_id": pid, "gender": cur.get("Gender")})
         # Alias: the raw workbook name if it differs from the cleaned display name.
@@ -220,9 +232,10 @@ def migrate(workbook: Path, collected_at: str, roster_dir: Path, snapshot_dir: P
                 "person_id": pid,
                 "department_id": dept_id[r["CurrentSchool"]],
                 "rank": rank,
+                "appointment_type": "regular",   # Tom tracked full-time tenure-track faculty only
                 "is_primary": 1,
                 "start_date": None,
-                "end_date": None if is_current else collected_at,
+                "end_date": None if is_current else migration_date,
                 "source": (
                     "workbook-2026" if is_current and len(rows) == 1 else
                     "workbook-2026; move verified 2026-09-13 against Scholar profile (verified email domain) and department page" if is_current else
@@ -235,7 +248,7 @@ def migrate(workbook: Path, collected_at: str, roster_dir: Path, snapshot_dir: P
         snapshots[source].append({
             "person_id": pid,
             "source": source,
-            "collected_at": collected_at,
+            "collected_at": dates[source],
             "total_citations": cur.get("Cites2017"),
             "h_index": cur.get("H-Index"),
             "i10_index": None,
@@ -256,27 +269,30 @@ def migrate(workbook: Path, collected_at: str, roster_dir: Path, snapshot_dir: P
     write_csv(roster_dir / "person_alias.csv", ["person_id", "alias"], aliases)
     write_csv(roster_dir / "affiliation.csv", AFFILIATION_FIELDS, affiliations)
     write_csv(private_dir / "person_private.csv", PRIVATE_FIELDS, private)
+    notes = {
+        "google_scholar": f"Migrated from {workbook.name}. Tom Sanchez refreshed Scholar totals and "
+                          "h-indices on 2026-03-01 (email, 2026-09-14).",
+        "pop": f"Migrated from {workbook.name}. Publish or Perish lookups run 2026-02-15 to 2026-02-20 "
+               "by Tom Sanchez (email, 2026-09-14); queries not retained.",
+    }
     for source, rows in snapshots.items():
-        path = snapshot_dir / source / f"{collected_at}.csv"
+        path = snapshot_dir / source / f"{dates[source]}.csv"
         write_csv(path, SNAPSHOT_FIELDS, rows)
-        meta = {
-            "trigger": "migration",
-            "notes": (
-                f"Migrated from {workbook.name}. Collection date is the handover date, "
-                "not the date Tom last refreshed the numbers; confirm with him."
-            ),
-        }
+        meta = {"trigger": "migration", "notes": notes[source]}
         path.with_suffix(".meta.json").write_text(json.dumps(meta, indent=2) + "\n")
 
 
 def main(argv=None) -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("workbook", type=Path)
-    ap.add_argument("--collected-at", required=True, help="ISO date to stamp the first snapshot with")
+    ap.add_argument("--scholar-date", default="2026-03-01", help="date Tom last refreshed Scholar numbers")
+    ap.add_argument("--pop-date", default="2026-02-20", help="date of the Publish or Perish lookups")
+    ap.add_argument("--migration-date", default=None, help="end_date for closed duplicate rows (default today)")
     ap.add_argument("--roster-dir", type=Path, default=ROSTER_DIR)
     ap.add_argument("--snapshot-dir", type=Path, default=SNAPSHOT_DIR)
     args = ap.parse_args(argv)
-    migrate(args.workbook, args.collected_at, args.roster_dir, args.snapshot_dir)
+    migrate(args.workbook, {"google_scholar": args.scholar_date, "pop": args.pop_date},
+            args.roster_dir, args.snapshot_dir, migration_date=args.migration_date)
 
 
 if __name__ == "__main__":

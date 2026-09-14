@@ -36,8 +36,13 @@ _load_dotenv()
 
 BASE = "https://api.openalex.org"
 CACHE_DIR = BUILD_DIR / "cache" / "openalex"
+MAX_WAIT = 600               # never sleep longer than this on a 429; raise BudgetExhausted instead
 MIN_INTERVAL = 0.4           # seconds between requests; OpenAlex 429s well below its nominal 10/s without mailto
 _last_call = 0.0
+
+
+class BudgetExhausted(RuntimeError):
+    """The daily OpenAlex usage budget is spent; try again after midnight UTC."""
 
 
 def get(path: str, params: dict | None = None, use_cache: bool = True) -> dict:
@@ -72,6 +77,10 @@ def get(path: str, params: dict | None = None, use_cache: bool = True) -> dict:
             if e.code in (429, 500, 502, 503, 504) and attempt < 6:
                 retry_after = e.headers.get("Retry-After") if e.headers else None
                 delay = float(retry_after) if retry_after and retry_after.isdigit() else min(90, 3 * 2 ** attempt)
+                if delay > MAX_WAIT:
+                    # Daily budget exhausted: Retry-After points at midnight UTC.
+                    # Fail now so callers can save partial results and resume tomorrow.
+                    raise BudgetExhausted(f"OpenAlex budget exhausted; resets in {delay / 3600:.1f} h") from e
                 print(f"  openalex {e.code}; waiting {delay:.0f}s", file=sys.stderr)
                 time.sleep(delay)
                 continue

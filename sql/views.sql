@@ -2,11 +2,12 @@
 -- These replace the seven VBA macros and the 'Top Faculty' and 'Current Schools'
 -- sheets in the handover workbook.
 
--- Current primary appointment per person.
+-- Current primary regular appointment per person. Non-regular appointments
+-- stay in the table but never enter rankings.
 CREATE VIEW v_current_affiliation AS
 SELECT a.*
 FROM affiliation a
-WHERE a.end_date IS NULL AND a.is_primary = 1;
+WHERE a.end_date IS NULL AND a.is_primary = 1 AND a.appointment_type = 'regular';
 
 -- Most recent snapshot per person per source.
 CREATE VIEW v_latest_metrics AS

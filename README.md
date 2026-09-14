@@ -30,12 +30,13 @@ python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"
 ## One-time migration from the workbook
 
 ```bash
-.venv/bin/python -m pipeline.load_workbook data/legacy/UPDATED_Cites2026.xlsm --collected-at 2026-09-13
+.venv/bin/python -m pipeline.load_workbook data/legacy/UPDATED_Cites2026.xlsm
 ```
 
 Writes the roster CSVs and one snapshot per person under `data/snapshots/google_scholar/`
-(faculty with a Scholar profile) and `data/snapshots/pop/` (faculty Tom looked up in
-Publish or Perish). Two people who appear at two schools in the workbook are merged, with
+(dated 2026-03-01, when Tom last refreshed Scholar) and `data/snapshots/pop/` (dated
+2026-02-20, the last day of his Publish or Perish lookups). Re-running preserves OpenAlex
+ids, ORCIDs, and notes already in `person.csv`. Two people who appear at two schools in the workbook are merged, with
 the older appointment closed; see `CURRENT_SCHOOL_OVERRIDE` in the script.
 
 ## Build the database

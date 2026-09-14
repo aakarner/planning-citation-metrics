@@ -52,6 +52,10 @@ CREATE TABLE affiliation (
   person_id       INTEGER NOT NULL REFERENCES person(person_id),
   department_id   INTEGER NOT NULL REFERENCES department(department_id),
   rank            TEXT NOT NULL CHECK (rank IN ('assistant', 'associate', 'full', 'other')),
+  -- 'regular' = full-time tenure-track/tenured, the population Tom tracked.
+  -- Anything else (adjunct, visiting, clinical, emeritus) is excluded from rankings.
+  appointment_type TEXT NOT NULL DEFAULT 'regular'
+                  CHECK (appointment_type IN ('regular', 'adjunct', 'visiting', 'clinical', 'emeritus', 'other')),
   is_primary      INTEGER NOT NULL DEFAULT 1,
   start_date      TEXT,                            -- ISO date; NULL = unknown
   end_date        TEXT,                            -- ISO date; NULL = current

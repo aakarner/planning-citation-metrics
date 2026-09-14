@@ -1,0 +1,27 @@
+name: Build and test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[dev]"
+      - name: Build SQLite from roster and snapshots
+        run: python -m pipeline.build_db
+      - name: Tests
+        # The workbook regression test skips in CI (data/legacy is not committed).
+        run: python -m pytest -q
+      - uses: actions/upload-artifact@v4
+        with:
+          name: citations-sqlite
+          path: build/citations.sqlite
+          retention-days: 30

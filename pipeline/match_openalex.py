@@ -185,12 +185,29 @@ def score_candidate(person: dict, candidate: dict, dept_inst_id, gs_total) -> di
     }
 
 
+STUB_WORKS = 5
+STUB_CITES = 50
+
+
+def is_stub(c: dict) -> bool:
+    """A near-empty OpenAlex author record: almost always a split of the real
+    profile (same name, same institution, one or two works, no citations)."""
+    return (c.get("works_count") or 0) <= STUB_WORKS and (c.get("cited_by_count") or 0) < STUB_CITES
+
+
 def decide(scored: list[dict]) -> str:
-    """'accepted' for a clear winner, else 'pending'."""
+    """'accepted' for a clear winner, else 'pending'.
+
+    The winner must match on name and institution with a plausible citation
+    count, and beat every *substantive* runner-up by a margin. Stub records are
+    ignored when measuring the margin; a real second profile keeps the case
+    pending for a person to look at."""
     if not scored:
         return "none"
     best = scored[0]
-    runner = scored[1]["score"] if len(scored) > 1 else 0.0
+    if is_stub(best):
+        return "pending"
+    runner = max((c["score"] for c in scored[1:] if not is_stub(c)), default=0.0)
     if (best["score"] >= ACCEPT_SCORE and best["name_sim"] >= ACCEPT_NAME
             and best["inst_match"] >= 1.0 and best["score"] - runner >= ACCEPT_MARGIN):
         return "accepted"

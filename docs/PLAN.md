@@ -16,14 +16,14 @@ The workbook is a single **snapshot**, not a time series. Four sheets:
 Coverage and quality facts that shape the design:
 
 - **808 of 1,051 faculty (77%) have a Google Scholar profile URL.** All 808 parse to a valid 12-character Scholar user id, 806 distinct. The other 243 were looked up by hand in Publish or Perish.
-- **Three ranks only**: Professor 406, Associate 364, Assistant 281. `RegFaculty` and `NonPhD` are empty in every row. `Academia.edu`, `Twitter`, `Personal` are empty or nearly so.
+- **Three ranks only**: Professor 406, Associate 364, Assistant 281. `RegFaculty` and `NonPhD` are empty in every row; Tom says they were meant to restrict the list to regular full-time tenure-track faculty and to flag faculty without PhDs, such as landscape architects. The schema keeps the first idea as `affiliation.appointment_type`. `Academia.edu`, `Twitter`, `Personal` are empty or nearly so.
 - **120 schools across the US and Canada**, from 32 faculty (MIT) down to 1.
 - **Metrics stored are total citations and h-index only.** The column is still named `Cites2017`, but it holds current totals. `CY2017` (citations per year since PhD) is `#REF!` in 805 rows.
 - **Percentiles are computed by macros with hard-coded row ranges** (rows 2 to 1052 overall; rank boundaries at rows 282 and 647). The sheet has 1,051 data rows, so the ranges are already slightly off, and any roster change silently breaks them.
 - **Identity problems the spreadsheet cannot express**: Guang Tian (Utah to New Orleans) and Lisa Berglund (Dalhousie to Morgan State, with a promotion) each appear twice because they moved and the old row was never removed. 15 rows have no `Years` value, mostly 2025 PhDs where years since PhD is zero.
 - **Gender** is recorded (M/F/T). It is useful for aggregate analysis but should not be shown on individual public pages.
 
-**No history survives in this file.** Tom updated in place each summer and winter, and the site he published only ever showed the current snapshot. We will not try to reconstruct the past. The time series starts at t = now: the 2026 workbook is the first snapshot, and every collection run after it adds a point. Within a year the site has a real trend to show; within three it has more history than the spreadsheet ever held.
+**No history survives in this file.** Tom updated in place each summer and winter, and the site he published only ever showed the current snapshot. We will not try to reconstruct the past. The time series starts with the workbook: Tom refreshed the Scholar numbers on 2026-03-01 and ran the Publish or Perish lookups between 2026-02-15 and 2026-02-20, so the first snapshot carries those dates. Every collection run after it adds a point. Within a year the site has a real trend to show; within three it has more history than the spreadsheet ever held.
 
 ## 2. Design principles
 
@@ -229,13 +229,13 @@ planning-citation-metrics/
 ## 8. Phased delivery
 
 **Phase 0. Settle scope** (this month)
-- Ask Tom for the inclusion rule for the 120 schools (ACSP membership?).
+- Done 2026-09-14: inclusion rule per Tom is ACSP member schools plus a handful added on request, mostly Canadian. `department.acsp_member` records which is which; the methods page will say so.
 - Done 2026-09-13: the two moves (Guang Tian to Utah, Lisa Berglund to Morgan State) were verified against Scholar profiles and department pages, and the stale rows are closed as ended affiliations.
 
 **Phase 1. Schema and migration** (2 to 3 weeks)
 - Write `schema.sql` and `views.sql`. Migrate the workbook into roster CSVs and one 2026 snapshot per person (source `google_scholar` or `pop`).
 - Regression test: views reproduce Tom's percentiles and department summaries.
-- Date the migrated snapshot to when Tom last refreshed the numbers, so the series has an honest starting point.
+- Done: the migrated snapshot is dated 2026-03-01 (Scholar) and 2026-02-20 (Publish or Perish), per Tom.
 
 **Phase 2. Collectors and identity matching** (3 to 4 weeks)
 - OpenAlex collector and matcher; run the initial match, review the pending queue.
@@ -253,10 +253,12 @@ planning-citation-metrics/
 
 Rough total: about three months of part-time effort, front-loaded in phases 1 and 2. After that the recurring cost is a few hours twice a year for roster review plus responding to correction requests.
 
-## 9. Open questions for Tom
+## 9. Questions for Tom, answered 2026-09-14
 
-1. When were the citation numbers in this workbook last refreshed? That date stamps the first snapshot.
-2. What is the inclusion rule for schools? ACSP membership, or a hand-curated list?
-3. Were the Publish or Perish numbers for the 243 non-profile faculty ever recorded with a date or query string, so we can reproduce them?
-4. Is there a reason `RegFaculty` and `NonPhD` exist but are empty? Were they meant to exclude adjuncts or practitioners?
-5. Is he comfortable with Scholar and OpenAlex numbers being shown side by side, given the series will diverge?
+1. **Last refresh:** Scholar totals and h-indices on 2026-03-01. Publish or Perish lookups 2026-02-15 to 2026-02-20. The first snapshot is dated accordingly.
+2. **Inclusion rule:** ACSP member schools originally, plus several added on request, mostly Canadian. Recorded per department in `acsp_member`.
+3. **Publish or Perish queries:** not retained. Those 243 faculty move to OpenAlex going forward, labelled as such.
+4. **`RegFaculty` / `NonPhD`:** meant to keep the list to regular full-time tenure-track appointments and to flag non-PhD faculty. Kept as `affiliation.appointment_type`; rankings include only `regular`.
+5. **Duplicates:** confirmed as moves he forgot to clean up. Closed as ended affiliations.
+
+Still open: whether he is comfortable with Scholar and OpenAlex numbers shown side by side.
