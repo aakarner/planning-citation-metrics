@@ -98,8 +98,8 @@ def main(argv=None) -> None:
     args = ap.parse_args(argv)
     try:
         from scholarly import scholarly
-    except ImportError:
-        sys.exit('scholarly is not installed: run  pip install -e ".[scholar]"')
+    except ImportError as e:
+        sys.exit(f'cannot import scholarly ({e}); run  pip install -e ".[scholar]"')
 
     pfields, persons, dept_by_id, current, totals = load_context()
     review_path = REVIEW_DIR / "identity_candidates.csv"

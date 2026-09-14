@@ -64,8 +64,8 @@ def main(argv=None) -> None:
 
     try:
         from scholarly import scholarly
-    except ImportError:
-        sys.exit('scholarly is not installed: run  pip install -e ".[scholar]"')
+    except ImportError as e:
+        sys.exit(f'cannot import scholarly ({e}); run  pip install -e ".[scholar]"')
 
     people = load_people()
     if args.ids:

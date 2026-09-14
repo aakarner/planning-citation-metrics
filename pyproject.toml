@@ -13,6 +13,7 @@ dev = [
 ]
 scholar = [
     "scholarly>=1.7",
+    "bibtexparser<2",   # scholarly 1.7 imports bibtexparser.bibdatabase, removed in 2.x
 ]
 
 [build-system]
