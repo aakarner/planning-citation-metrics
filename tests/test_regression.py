@@ -17,6 +17,8 @@ Tolerances below are set just above the deviations those two effects cause.
 
 from __future__ import annotations
 
+import json
+import shutil
 import sqlite3
 from pathlib import Path
 
@@ -44,8 +46,16 @@ pytestmark = pytest.mark.skipif(
 
 @pytest.fixture(scope="module")
 def db(tmp_path_factory) -> sqlite3.Connection:
-    path = build(tmp_path_factory.mktemp("db") / "citations.sqlite",
-                 ROSTER_DIR, SNAPSHOT_DIR, quiet=True)
+    # Build from the migrated snapshots only. Later collection runs legitimately
+    # change the headline numbers, and this test is about the migration.
+    snaps = tmp_path_factory.mktemp("snapshots")
+    for meta in SNAPSHOT_DIR.glob("*/*.meta.json"):
+        if json.loads(meta.read_text()).get("trigger") == "migration":
+            dest = snaps / meta.parent.name
+            dest.mkdir(exist_ok=True)
+            shutil.copy(meta, dest / meta.name)
+            shutil.copy(meta.with_suffix("").with_suffix(".csv"), dest / meta.with_suffix("").with_suffix(".csv").name)
+    path = build(tmp_path_factory.mktemp("db") / "citations.sqlite", ROSTER_DIR, snaps, quiet=True)
     con = sqlite3.connect(path)
     con.row_factory = sqlite3.Row
     return con

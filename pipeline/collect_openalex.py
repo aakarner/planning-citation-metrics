@@ -44,6 +44,7 @@ def main(argv=None) -> None:
     ap.add_argument("--date", default=date.today().isoformat())
     ap.add_argument("--limit", type=int)
     args = ap.parse_args(argv)
+    sys.stdout.reconfigure(line_buffering=True)  # progress lines show up in logs as they happen
 
     people = load_people()
     out = SNAPSHOT_DIR / "openalex" / f"{args.date}.csv"

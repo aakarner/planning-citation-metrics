@@ -262,6 +262,7 @@ def main(argv=None) -> None:
     ap.add_argument("--rescore", action="store_true", help="re-score everyone from cached responses only")
     ap.add_argument("--dry-run", action="store_true", help="do not write person.csv or the review file")
     args = ap.parse_args(argv)
+    sys.stdout.reconfigure(line_buffering=True)  # progress lines show up in logs as they happen
 
     pfields, persons, dept_by_id, current, gs_total = load_context()
     review_path = REVIEW_DIR / "identity_candidates.csv"

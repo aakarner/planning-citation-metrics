@@ -69,6 +69,7 @@ def main(argv=None) -> None:
     ap.add_argument("--date", default=date.today().isoformat())
     ap.add_argument("--ids", nargs="*", help="only these Scholar ids")
     args = ap.parse_args(argv)
+    sys.stdout.reconfigure(line_buffering=True)  # progress lines show up in logs as they happen
 
     try:
         from scholarly import scholarly

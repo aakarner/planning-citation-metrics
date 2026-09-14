@@ -131,6 +131,7 @@ def main(argv=None) -> None:
     ap.add_argument("--sleep", type=float, default=10.0)
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args(argv)
+    sys.stdout.reconfigure(line_buffering=True)  # progress lines show up in logs as they happen
     try:
         from scholarly import scholarly
     except ImportError as e:
