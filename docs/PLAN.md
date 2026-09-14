@@ -152,9 +152,9 @@ Google Scholar has no API and blocks datacenter IPs, so automation has to be pra
 | Access | Scrape profile pages (`scholarly` library, throttled) or a paid Scholar API such as SerpApi | Metered REST API. A free account's key gives about $1 of usage a day; lookups by author id are free, name searches cost about a tenth of a cent each. Our one-time matching costs a dollar or two; monthly collection costs nothing |
 | Covers | 808 faculty with profiles | Everyone, once matched |
 | Numbers | Higher; includes books, reports, gray literature that matter in planning | Lower and systematically different; journal-centric |
-| Role | **Headline metric.** Continuity with Tom's series and with what the field expects | **Fully automated companion metric** and the source for the 243 faculty without Scholar profiles |
+| Role | **Headline metric** for everyone with a profile. Continuity with Tom's series and with what the field expects | **Fallback headline** for faculty without a Scholar profile, flagged as OpenAlex and a likely undercount. Also collected for everyone as a comparison series |
 
-Keep the two series separate in storage and on the site. Never mix sources within one ranking.
+**Source policy (decided 2026-09-14).** Scholar is the default. For faculty without a Scholar profile the headline number comes from OpenAlex, and every place it appears carries the source and a note that OpenAlex counts fewer citations than Scholar. Rankings include everyone, with fallback rows marked. This is deliberate: it keeps the list complete while giving faculty a clear reason to set up a Scholar profile. Sources stay separate in storage; the `source` column travels with every number so the mixing is visible, never silent.
 
 **Where the Scholar collector runs.** GitHub Actions runners are blocked by Scholar. Two options, decide in phase 2 after a test:
 
@@ -192,7 +192,7 @@ Recommended stack: **Observable Framework**. Its Python data loaders query the S
 Pages:
 
 - **Home**: search box front and center; current top faculty and top departments; "data as of" date.
-- **Person page**: current appointment and rank, PhD year and school, both metric series as sparklines with the latest values, percentile within rank and overall for each source, links to Scholar and OpenAlex profiles. No gender shown.
+- **Person page**: current appointment and rank, PhD year and school, the headline metric with a source badge (a visible note when it is OpenAlex, with a link to how to create a Scholar profile), the OpenAlex comparison series where available, sparklines, percentile within rank and overall, links to Scholar and OpenAlex profiles. No gender shown.
 - **Department page**: roster with rank, latest metrics and within-rank percentiles per faculty member, summary tiles (count, median, mean, per-capita), department trend line, link to the program.
 - **Rankings**: faculty and department tables, filterable by rank, source, and country, with column sort.
 - **Methods and caveats**: sources, cadence, how percentiles are computed, why Scholar and OpenAlex differ, inclusion criteria for schools, known limitations.
@@ -261,4 +261,4 @@ Rough total: about three months of part-time effort, front-loaded in phases 1 an
 4. **`RegFaculty` / `NonPhD`:** meant to keep the list to regular full-time tenure-track appointments and to flag non-PhD faculty. Kept as `affiliation.appointment_type`; rankings include only `regular`.
 5. **Duplicates:** confirmed as moves he forgot to clean up. Closed as ended affiliations.
 
-Still open: whether he is comfortable with Scholar and OpenAlex numbers shown side by side.
+Decided by Alex, 2026-09-14, rather than left to Tom: Scholar by default, OpenAlex as the flagged fallback. See the source policy in section 4.

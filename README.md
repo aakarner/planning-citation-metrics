@@ -53,8 +53,8 @@ views from `sql/views.sql`:
 | `v_person_percentiles` | the seven percentile macros; adds within-rank h-index percentile, years since PhD, citations per year |
 | `v_top_faculty` | the `Top Faculty` sheet |
 | `v_department_summary` | the `Current Schools` sheet; adds per-capita citations, median h-index, Scholar coverage |
-| `v_headline_metrics` | latest Scholar or Publish or Perish number per person |
-| `v_openalex_metrics` | latest OpenAlex number per person, kept as a separate series |
+| `v_headline_metrics` | the number shown for a person: Scholar if they have a profile, otherwise OpenAlex flagged as a fallback and likely undercount, otherwise the migrated Publish or Perish figure |
+| `v_openalex_metrics` | latest OpenAlex number for everyone matched, as a comparison series |
 | `v_person_timeseries` | every observation, for sparklines |
 
 ## Identity matching (OpenAlex)

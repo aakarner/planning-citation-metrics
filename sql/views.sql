@@ -19,29 +19,35 @@ JOIN (
   GROUP BY person_id, source
 ) latest USING (person_id, source, collected_at);
 
--- The headline number for a person: the latest Google Scholar snapshot,
--- falling back to Publish or Perish, then manual entry. OpenAlex is kept as
--- a separate series and never mixed into headline rankings.
+-- The headline number for a person. Policy (decided 2026-09-14):
+--   1. Google Scholar when the person has a profile;
+--   2. otherwise OpenAlex, shown with its source and a note that it is
+--      likely an undercount relative to Scholar (an incentive to create a
+--      Scholar profile);
+--   3. Publish or Perish and manual entries only while no OpenAlex snapshot
+--      exists yet (the migrated 2026 numbers for the 243 non-profile faculty).
+-- The `source` column travels with every headline number so the site can flag it.
 CREATE VIEW v_headline_metrics AS
 SELECT snapshot_id, run_id, person_id, source, collected_at,
-       total_citations, h_index, i10_index, citations_5yr, h_index_5yr, works_count
+       total_citations, h_index, i10_index, citations_5yr, h_index_5yr, works_count,
+       source <> 'google_scholar' AS is_fallback
 FROM (
   SELECT m.*,
          ROW_NUMBER() OVER (
            PARTITION BY m.person_id
            ORDER BY CASE m.source
                       WHEN 'google_scholar' THEN 1
-                      WHEN 'pop'            THEN 2
-                      WHEN 'manual'         THEN 3
+                      WHEN 'openalex'       THEN 2
+                      WHEN 'pop'            THEN 3
+                      WHEN 'manual'         THEN 4
                       ELSE 9 END,
                     m.collected_at DESC
          ) AS rn
   FROM v_latest_metrics m
-  WHERE m.source IN ('google_scholar', 'pop', 'manual')
 )
 WHERE rn = 1;
 
--- Same idea for the OpenAlex series.
+-- OpenAlex for everyone who is matched, as a comparison series alongside Scholar.
 CREATE VIEW v_openalex_metrics AS
 SELECT * FROM v_latest_metrics WHERE source = 'openalex';
 
@@ -55,6 +61,7 @@ SELECT p.person_id,
        d.short_name AS department,
        ca.rank,
        m.source,
+       m.is_fallback,
        m.collected_at,
        m.total_citations,
        m.h_index,
