@@ -11,6 +11,9 @@ dependencies = [
 dev = [
     "pytest>=8",
 ]
+scholar = [
+    "scholarly>=1.7",
+]
 
 [build-system]
 requires = ["setuptools>=68"]

@@ -1,0 +1,4 @@
+{
+  "trigger": "migration",
+  "notes": "Migrated from UPDATED_Cites2026.xlsm. Collection date is the handover date, not the date Tom last refreshed the numbers; confirm with him."
+}

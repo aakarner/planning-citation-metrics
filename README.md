@@ -56,6 +56,41 @@ views from `sql/views.sql`:
 | `v_openalex_metrics` | latest OpenAlex number per person, kept as a separate series |
 | `v_person_timeseries` | every observation, for sparklines |
 
+## Identity matching (OpenAlex)
+
+OpenAlex meters API usage. Create a free account at openalex.org to get an API key;
+without one an IP gets roughly 100 searches a day, with one about 1,000. Lookups by id
+are free, so only the one-time matching spends budget.
+
+```bash
+export OPENALEX_API_KEY=...
+.venv/bin/python -m pipeline.resolve_institutions      # department -> OpenAlex institution id
+.venv/bin/python -m pipeline.match_openalex --limit 50  # trial; drop --limit for everyone
+```
+
+The matcher scores candidate authors on name similarity, institution match, topic
+overlap, and citation plausibility against the Scholar number we already hold. Clear
+winners are written to `person.csv`; everything else lands in
+`data/review/identity_candidates.csv` with `status=pending` for a person to mark
+`accepted` or `rejected` (fill `reviewed_by`). Re-running keeps those decisions.
+API responses are cached under `build/cache/`.
+
+## Google Scholar collector
+
+```bash
+.venv/bin/pip install -e ".[scholar]"
+.venv/bin/python -m pipeline.collect_scholar --limit 20 --sleep 10   # access test
+```
+
+Scrapes public profile pages one request at a time. Run it from a university or home
+connection, never from a cloud runner. Output is resumable within a day and the run
+stops itself after five consecutive failures, which means Scholar is blocking.
+
+## Private attributes
+
+`data/private/person_private.csv` holds gender and is gitignored. The build merges it in
+when present, so local analysis can use it while nothing published contains it.
+
 ## Tests
 
 ```bash

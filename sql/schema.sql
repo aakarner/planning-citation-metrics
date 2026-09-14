@@ -25,7 +25,7 @@ CREATE TABLE person (
   middle_name          TEXT,
   last_name            TEXT NOT NULL,
   display_name         TEXT NOT NULL,
-  gender               TEXT,                       -- aggregate analysis only; never shown per person
+  gender               TEXT,                       -- loaded from data/private/ when present; never committed or shown
   phd_year             INTEGER,
   phd_institution      TEXT,
   interests            TEXT,

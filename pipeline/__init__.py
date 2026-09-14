@@ -13,6 +13,7 @@ DATA_DIR = REPO_ROOT / "data"
 ROSTER_DIR = DATA_DIR / "roster"
 SNAPSHOT_DIR = DATA_DIR / "snapshots"
 LEGACY_DIR = DATA_DIR / "legacy"
+PRIVATE_DIR = DATA_DIR / "private"      # gitignored: gender and anything else not for publication
 SQL_DIR = REPO_ROOT / "sql"
 BUILD_DIR = REPO_ROOT / "build"
 

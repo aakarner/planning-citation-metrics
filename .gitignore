@@ -219,3 +219,7 @@ __marimo__/
 
 # macOS
 .DS_Store
+
+# Project data that is never published
+data/private/
+data/legacy/

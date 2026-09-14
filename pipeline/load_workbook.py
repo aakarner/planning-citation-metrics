@@ -13,6 +13,7 @@ Writes:
   data/snapshots/google_scholar/<date>.csv   faculty with a Scholar profile
   data/snapshots/pop/<date>.csv              faculty looked up in Publish or Perish
   data/snapshots/<source>/<date>.meta.json   run metadata
+  data/private/person_private.csv            gender; gitignored, never published
 
 The workbook has one row per (person, school). Two people appear twice because
 they moved and the old row was never removed; those are merged into one person
@@ -32,7 +33,7 @@ from urllib.parse import parse_qs, urlparse
 
 import openpyxl
 
-from . import ROSTER_DIR, SNAPSHOT_DIR
+from . import PRIVATE_DIR, ROSTER_DIR, SNAPSHOT_DIR
 
 RANK_MAP = {
     "Professor": "full",
@@ -72,7 +73,7 @@ CURRENT_SCHOOL_OVERRIDE = {
 }
 
 PERSON_FIELDS = [
-    "person_id", "first_name", "middle_name", "last_name", "display_name", "gender",
+    "person_id", "first_name", "middle_name", "last_name", "display_name",
     "phd_year", "phd_institution", "interests", "google_scholar_id", "openalex_author_id",
     "orcid", "semantic_scholar_id", "researchgate_url", "linkedin_url", "personal_url", "notes",
 ]
@@ -80,6 +81,7 @@ DEPARTMENT_FIELDS = [
     "department_id", "short_name", "name", "university", "country", "url",
     "openalex_institution_id", "ror_id", "acsp_member", "active",
 ]
+PRIVATE_FIELDS = ["person_id", "gender"]
 AFFILIATION_FIELDS = [
     "affiliation_id", "person_id", "department_id", "rank", "is_primary",
     "start_date", "end_date", "source",
@@ -133,7 +135,8 @@ def write_csv(path: Path, fields: list[str], rows: list[dict]) -> None:
     print(f"  wrote {len(rows):>5} rows  {path}")
 
 
-def migrate(workbook: Path, collected_at: str, roster_dir: Path, snapshot_dir: Path) -> None:
+def migrate(workbook: Path, collected_at: str, roster_dir: Path, snapshot_dir: Path,
+            private_dir: Path = PRIVATE_DIR) -> None:
     print(f"Reading {workbook}")
     wb = openpyxl.load_workbook(workbook, read_only=True, data_only=True)
     cites = [r for r in read_sheet(wb["Cites"]) if r.get("Name")]
@@ -168,7 +171,7 @@ def migrate(workbook: Path, collected_at: str, roster_dir: Path, snapshot_dir: P
     for r in cites:
         groups[(r["Name"], r.get("PhDSchool"))].append(r)
 
-    persons, aliases, affiliations, snapshots = [], [], [], defaultdict(list)
+    persons, private, aliases, affiliations, snapshots = [], [], [], [], defaultdict(list)
     pid = aid = 0
     for key, rows in groups.items():
         name = key[0]
@@ -188,7 +191,6 @@ def migrate(workbook: Path, collected_at: str, roster_dir: Path, snapshot_dir: P
             "middle_name": cur.get("Middle"),
             "last_name": cur.get("Last") or name.split()[-1],
             "display_name": name,
-            "gender": cur.get("Gender"),
             "phd_year": cur.get("PhDYear") or cur.get("Year"),
             "phd_institution": cur.get("PhDSchool"),
             "interests": cur.get("Interests"),
@@ -201,6 +203,7 @@ def migrate(workbook: Path, collected_at: str, roster_dir: Path, snapshot_dir: P
             "personal_url": cur.get("Personal"),
             "notes": None,
         })
+        private.append({"person_id": pid, "gender": cur.get("Gender")})
         # Alias: the raw workbook name if it differs from the cleaned display name.
         raw = rows[0].get("Name")
         if raw and raw != name:
@@ -240,7 +243,7 @@ def migrate(workbook: Path, collected_at: str, roster_dir: Path, snapshot_dir: P
             "h_index_5yr": None,
             "works_count": None,
             "raw_json": json.dumps({
-                "workbook_row": {k: v for k, v in cur.items() if v is not None},
+                "workbook_row": {k: v for k, v in cur.items() if v is not None and k != "Gender"},
             }, ensure_ascii=False),
         })
 
@@ -252,6 +255,7 @@ def migrate(workbook: Path, collected_at: str, roster_dir: Path, snapshot_dir: P
     write_csv(roster_dir / "person.csv", PERSON_FIELDS, persons)
     write_csv(roster_dir / "person_alias.csv", ["person_id", "alias"], aliases)
     write_csv(roster_dir / "affiliation.csv", AFFILIATION_FIELDS, affiliations)
+    write_csv(private_dir / "person_private.csv", PRIVATE_FIELDS, private)
     for source, rows in snapshots.items():
         path = snapshot_dir / source / f"{collected_at}.csv"
         write_csv(path, SNAPSHOT_FIELDS, rows)

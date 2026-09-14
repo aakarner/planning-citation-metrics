@@ -149,7 +149,7 @@ Google Scholar has no API and blocks datacenter IPs, so automation has to be pra
 
 | | Google Scholar | OpenAlex |
 |---|---|---|
-| Access | Scrape profile pages (`scholarly` library, throttled) or a paid Scholar API such as SerpApi | Free REST API, generous rate limits, no key required |
+| Access | Scrape profile pages (`scholarly` library, throttled) or a paid Scholar API such as SerpApi | Metered REST API. A free account's key gives about $1 of usage a day; lookups by author id are free, name searches cost about a tenth of a cent each. Our one-time matching costs a dollar or two; monthly collection costs nothing |
 | Covers | 808 faculty with profiles | Everyone, once matched |
 | Numbers | Higher; includes books, reports, gray literature that matter in planning | Lower and systematically different; journal-centric |
 | Role | **Headline metric.** Continuity with Tom's series and with what the field expects | **Fully automated companion metric** and the source for the 243 faculty without Scholar profiles |
@@ -176,7 +176,7 @@ Once a person has an OpenAlex id, monthly collection is a single API call per pe
 
 | What | When | How |
 |---|---|---|
-| OpenAlex snapshot | Monthly, 1st of month | GitHub Actions cron; about 1,051 API calls, a few minutes |
+| OpenAlex snapshot | Monthly, 1st of month | GitHub Actions cron; about 1,051 free id lookups, a few minutes |
 | Google Scholar snapshot | Quarterly (Jan, Apr, Jul, Oct) | Self-hosted runner or Scholar API; results committed as a snapshot file |
 | Roster review | Semiannual (Jan, Jul), matching Tom's rhythm | Pipeline emails the change-detection report; a person edits the roster CSVs by pull request |
 | Site rebuild and deploy | On every push to `main` and after every collection | GitHub Actions builds SQLite from CSV and snapshots, builds the site, deploys to GitHub Pages |

@@ -15,7 +15,7 @@ import sqlite3
 import sys
 from pathlib import Path
 
-from . import BUILD_DIR, ROSTER_DIR, SNAPSHOT_DIR, SQL_DIR
+from . import BUILD_DIR, PRIVATE_DIR, ROSTER_DIR, SNAPSHOT_DIR, SQL_DIR
 
 ROSTER_TABLES = ["department", "person", "person_alias", "affiliation"]
 
@@ -49,6 +49,15 @@ def build(out: Path, roster_dir: Path = ROSTER_DIR, snapshot_dir: Path = SNAPSHO
             sys.exit(f"missing roster file: {path}")
         n = _insert(con, table, _rows(path))
         log(f"  {table:<16} {n:>6} rows")
+
+    # Private attributes live outside the public roster and are merged in only
+    # when the file is present (it is gitignored, so CI builds never have it).
+    private = PRIVATE_DIR / "person_private.csv"
+    if private.exists():
+        rows = _rows(private)
+        con.executemany("UPDATE person SET gender = ? WHERE person_id = ?",
+                        [(r["gender"], r["person_id"]) for r in rows])
+        log(f"  {'person_private':<16} {len(rows):>6} rows (gender, local only)")
 
     # One collection_run per snapshot file; source is the directory name.
     n_snap = 0
