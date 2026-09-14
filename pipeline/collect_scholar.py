@@ -6,10 +6,13 @@
 
 Scholar has no API. This scrapes public profile pages one request per person,
 so run it from a residential or university connection, never from a cloud
-runner, and keep --sleep at 8 seconds or more. Output goes to
+runner. Scholar tolerates roughly 40 to 50 profile fetches in a burst before
+it starts refusing for a while, so the defaults are slow and jittered
+(--sleep 20 plus up to --jitter 20 seconds). When fetches start failing the
+collector does not quit; it waits --cooldown minutes and tries again,
+giving up only after --max-wait hours without a success. Output goes to
 data/snapshots/google_scholar/<today>.csv; re-running the same day resumes,
-skipping ids already written. The run stops after several consecutive
-failures, which almost always means Scholar has started blocking.
+skipping ids already written. Plan on an overnight run for all ~800 profiles.
 
 Beyond totals and h-index, each profile yields citations received per
 calendar year (cites_per_year), the verified email domain, and the
@@ -21,6 +24,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import random
 import json
 import sys
 import time
@@ -33,7 +37,7 @@ FIELDS = [
     "person_id", "source", "collected_at", "total_citations", "h_index", "i10_index",
     "citations_5yr", "h_index_5yr", "works_count", "raw_json",
 ]
-MAX_CONSECUTIVE_FAILURES = 5
+FAILURES_BEFORE_COOLDOWN = 3
 
 
 def load_people() -> tuple[list[str], list[dict]]:
@@ -65,7 +69,10 @@ def fetch(scholarly, scholar_id: str) -> dict:
 def main(argv=None) -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--limit", type=int)
-    ap.add_argument("--sleep", type=float, default=10.0, help="seconds between requests")
+    ap.add_argument("--sleep", type=float, default=20.0, help="base seconds between requests")
+    ap.add_argument("--jitter", type=float, default=20.0, help="extra random seconds added to each pause")
+    ap.add_argument("--cooldown", type=float, default=20.0, help="minutes to wait after repeated failures")
+    ap.add_argument("--max-wait", type=float, default=3.0, help="hours without a success before giving up")
     ap.add_argument("--date", default=date.today().isoformat())
     ap.add_argument("--ids", nargs="*", help="only these Scholar ids")
     args = ap.parse_args(argv)
@@ -91,12 +98,21 @@ def main(argv=None) -> None:
     new_file = not out.exists()
     ok = failed = consecutive = 0
     redirected: dict[str, str] = {}   # person_id -> new Scholar id
+    retry: list[dict] = []            # people skipped during a cooldown; retried once at the end
     t0 = time.monotonic()
+    last_success = t0
     with out.open("a", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=FIELDS)
         if new_file:
             w.writeheader()
-        for i, p in enumerate(todo, 1):
+        queue = list(todo)
+        i = 0
+        while i < len(queue):
+            p = queue[i]
+            i += 1
+            if i == len(todo) + 1 and retry:
+                queue.extend(retry)   # one more pass over the people skipped during cooldowns
+                retry = []
             try:
                 a = fetch(scholarly, p["google_scholar_id"])
                 seen = a.get("scholar_id")
@@ -116,17 +132,26 @@ def main(argv=None) -> None:
                 f.flush()
                 ok += 1
                 consecutive = 0
-                print(f"  [{i}/{len(todo)}] {p['display_name']}: {a.get('citedby')} cites, h={a.get('hindex')}, "
+                last_success = time.monotonic()
+                print(f"  [{i}/{len(queue)}] {p['display_name']}: {a.get('citedby')} cites, h={a.get('hindex')}, "
                       f"{a.get('email_domain') or 'no verified email'}")
             except Exception as e:
                 failed += 1
                 consecutive += 1
-                print(f"  [{i}/{len(todo)}] {p['display_name']}: FAILED ({type(e).__name__}: {e})", file=sys.stderr)
-                if consecutive >= MAX_CONSECUTIVE_FAILURES:
-                    print(f"{consecutive} consecutive failures; Scholar is probably blocking. Stopping.", file=sys.stderr)
-                    break
-            if i < len(todo):
-                time.sleep(args.sleep)
+                print(f"  [{i}/{len(queue)}] {p['display_name']}: FAILED ({type(e).__name__}: {e})", file=sys.stderr)
+                if consecutive >= FAILURES_BEFORE_COOLDOWN:
+                    waited = (time.monotonic() - last_success) / 3600
+                    if waited > args.max_wait:
+                        print(f"no successful fetch for {waited:.1f} h; giving up. Re-run to resume.", file=sys.stderr)
+                        break
+                    print(f"  {consecutive} failures in a row; Scholar is throttling. "
+                          f"Cooling down {args.cooldown:.0f} min ({waited:.1f} h since last success).", file=sys.stderr)
+                    time.sleep(args.cooldown * 60)
+                    consecutive = 0
+                    retry.append(p)   # come back to this person at the end
+                    continue
+            if i < len(queue):
+                time.sleep(args.sleep + random.uniform(0, args.jitter))
 
     meta = {"trigger": "manual", "notes": f"scholarly collector; {ok} ok, {failed} failed, "
                                           f"{(time.monotonic() - t0) / 60:.1f} min"}
