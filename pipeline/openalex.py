@@ -18,7 +18,21 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-from . import BUILD_DIR
+from . import BUILD_DIR, REPO_ROOT
+
+
+def _load_dotenv() -> None:
+    """Read KEY=value lines from a gitignored .env at the repo root, if present."""
+    env = REPO_ROOT / ".env"
+    if env.exists():
+        for line in env.read_text().splitlines():
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                k, v = line.split("=", 1)
+                os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
+
+
+_load_dotenv()
 
 BASE = "https://api.openalex.org"
 CACHE_DIR = BUILD_DIR / "cache" / "openalex"
