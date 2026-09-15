@@ -1,121 +1,121 @@
 department_id,short_name,name,university,country,url,openalex_institution_id,ror_id,acsp_member,active
-1,Alabama A&M University,Alabama A&M University,Alabama A&M University,US,http://www.aamu.edu/academics/alns/crp/pages/default.aspx,I176692203,https://ror.org/05hz8m414,,1
-2,Appalachian State University,Appalachian State University,Appalachian State University,US,https://geo.appstate.edu/,I430192,https://ror.org/051m4vc48,,1
-3,Arizona State University,Arizona State University,Arizona State University,US,http://geoplan.asu.edu/,I55732556,https://ror.org/03efmqc40,,1
-4,Auburn University,Auburn University,Auburn University,US,http://cla.auburn.edu/polisci/graduate-programs/master-of-community-planning/about-the-program/,I82497590,https://ror.org/02v80fc35,,1
-5,Ball State University,Ball State University,Ball State University,US,https://www.bsu.edu/academics/collegesanddepartments/urban-planning,I198089087,https://ror.org/00k6tx165,,1
-6,"Cal Poly, Pomona","Cal Poly, Pomona","Cal Poly, Pomona",US,http://env.cpp.edu/urp/urp,I98947143,https://ror.org/05by5hm18,,1
-7,"Cal Poly, San Luis Obispo","Cal Poly, San Luis Obispo","Cal Poly, San Luis Obispo",US,http://planning.calpoly.edu/,I149919469,https://ror.org/001gpfp45,,1
-8,"California State University, Northridge","California State University, Northridge","California State University, Northridge",US,http://csun.edu/social-behavioral-sciences/urban-studies-planning,I157638225,https://ror.org/005f5hv41,,1
-9,Clemson University,Clemson University,Clemson University,US,http://clemson.edu/caah/departments/city-and-regional-planning/,I8078737,https://ror.org/037s24f05,,1
-10,Cleveland State University,Cleveland State University,Cleveland State University,US,http://csuohio.edu/urban/mupd/mupd,I102607778,https://ror.org/002tx1f22,,1
-11,Columbia University,Columbia University,Columbia University,US,http://arch.columbia.edu/programs/10-m-s-urban-planning,I78577930,https://ror.org/00hj8s172,,1
-12,Cornell University,Cornell University,Cornell University,US,http://aap.cornell.edu/academics/crp,I205783295,https://ror.org/05bnh6r87,,1
-13,Dalhousie University,Dalhousie University,Dalhousie University,CA,http://dal.ca/faculty/architecture-planning/school-of-planning.html,I129902397,https://ror.org/01e6qks80,,1
-14,East Carolina University,East Carolina University,East Carolina University,US,https://planning.ecu.edu/,I186335123,https://ror.org/01vx35703,,1
-15,Eastern Michigan University,Eastern Michigan University,Eastern Michigan University,US,https://www.emich.edu/geography-geology/programs/urban-regional-planning/index.php,I138216421,https://ror.org/02ehshm78,,1
-16,Eastern Washington,Eastern Washington,Eastern Washington,US,https://www.ewu.edu/css/geography-anthropology/urban-regional-planning/,I159107703,https://ror.org/002g57a93,,1
-17,Florida Atlantic University,Florida Atlantic University,Florida Atlantic University,US,https://planning.fau.edu,I63772739,https://ror.org/05p8w6387,,1
-18,Florida State University,Florida State University,Florida State University,US,http://coss.fsu.edu/durp/,I103163165,https://ror.org/05g3dte14,,1
-19,Georgetown University,Georgetown University,Georgetown University,US,https://scs.georgetown.edu/programs/356/master-of-professional-studies-urban-and-regional-planning/,I184565670,https://ror.org/05vzafd60,,1
-20,Georgia Tech,Georgia Tech,Georgia Tech,US,http://planning.gatech.edu/,I130701444,https://ror.org/01zkghx44,,1
-21,Harvard University,Harvard University,Harvard University,US,http://gsd.harvard.edu/#/academic-programs/urban-planning-design/urban-planning/index.html,I136199984,https://ror.org/03vek6s52,,1
-22,Hunter College,Hunter College,Hunter College,US,http://www.hunterurban.org/,I39694355,https://ror.org/00g2xk477,,1
-23,Indiana University of Pennsylvania,Indiana University of Pennsylvania,Indiana University of Pennsylvania,US,http://iup.edu/georegionalplan/,I200885203,https://ror.org/0511cmw96,,1
-24,Iowa State University,Iowa State University,Iowa State University,US,https://www.design.iastate.edu/community-and-regional-planning/,I173911158,https://ror.org/04rswrd78,,1
-25,Jackson State University,Jackson State University,Jackson State University,US,http://www.jsums.edu/planning/,I61937129,https://ror.org/01ecnnp60,,1
-26,Kansas State University,Kansas State University,Kansas State University,US,http://apdesign.k-state.edu/larcp/,I189590672,https://ror.org/05p1j8758,,1
-27,MIT,MIT,MIT,US,http://dusp.mit.edu/,I63966007,https://ror.org/042nb2s44,,1
-28,McGill University,McGill University,McGill University,CA,http://mcgill.ca/urbanplanning/school-urban-planning,I5023651,https://ror.org/01pxwe438,,1
-29,Miami University,Miami University,Miami University,US,https://miamioh.edu/cas/academics/departments/geography/academics/majors/urban-regional-planning-major/,I83328450,https://ror.org/05nbqxr67,,1
-30,Michigan State University,Michigan State University,Michigan State University,US,http://spdc.msu.edu/programs/urban_and_regional_planning,I87216513,https://ror.org/05hs6h993,,1
-31,"Minnesota State University, Mankato","Minnesota State University, Mankato","Minnesota State University, Mankato",US,http://sbs.mnsu.edu/ursi/,I152014189,https://ror.org/04att9732,,1
-32,Missouri State University,Missouri State University,Missouri State University,US,http://geosciences.missouristate.edu/,I119942284,https://ror.org/01d2sez20,,1
-33,Morgan State University,Morgan State University,Morgan State University,US,http://morgan.edu/sap/crep,I83909951,https://ror.org/017d8gk22,,1
-34,New Jersey Institute of Technology,New Jersey Institute of Technology,New Jersey Institute of Technology,US,http://architecture.njit.edu/academics/graduate/mip.php,I118118575,https://ror.org/05e74xb87,,1
-35,New York University,New York University,New York University,US,http://wagner.nyu.edu/urbanplanning,I57206974,https://ror.org/0190ak572,,1
-36,Northeastern University,Northeastern University,Northeastern University,US,https://cssh.northeastern.edu/policyschool/program/ms-in-urban-planning-and-policy/,I12912129,https://ror.org/04t5xt781,,1
-37,Northern Arizona University,Northern Arizona University,Northern Arizona University,US,http://nau.edu/SBS/GPR/Degrees-Programs/Geography/,I203172682,https://ror.org/0272j5188,,1
-38,Ohio State University,Ohio State University,Ohio State University,US,http://knowlton.osu.edu/programs/city-and-regional-planning,I52357470,https://ror.org/00rs6vg23,,1
-39,Portland State University,Portland State University,Portland State University,US,http://pdx.edu/usp/master-urban-and-regional-planning-murp,I126345244,https://ror.org/00yn2fy02,,1
-40,Pratt Institute,Pratt Institute,Pratt Institute,US,http://pratt.edu/academics/architecture/city-and-regional-planning/,I59028336,https://ror.org/007m3p006,,1
-41,Queen's University,Queen's University,Queen's University,CA,https://www.queensu.ca/geographyandplanning/surp/,I204722609,https://ror.org/02y72wh86,,1
-42,Rowan University,Rowan University,Rowan University,US,https://earth.rowan.edu/departments/geography/,I44265643,https://ror.org/049v69k10,,1
-43,Rutgers University,Rutgers University,Rutgers University,US,http://bloustein.rutgers.edu/graduate/uppd/,I102322142,https://ror.org/05vt9qd57,,1
-44,"Rutgers University, School of Environmental & Biological Sciences","Rutgers University, School of Environmental & Biological Sciences","Rutgers University, School of Environmental & Biological Sciences",US,http://sebs.rutgers.edu/,I102322142,https://ror.org/05vt9qd57,,1
-45,Salisbury University,Salisbury University,Salisbury University,US,https://www.salisbury.edu/explore-academics/programs/undergraduate-degree-programs/majors/urban-regional-planning-major.aspx,I9364636,https://ror.org/029gwvs11,,1
-46,San Diego State University,San Diego State University,San Diego State University,US,https://spa.sdsu.edu/index.php/academic_programs/city_planning/cp-overview,I26538001,https://ror.org/0264fdx42,,1
-47,San Jose State University,San Jose State University,San Jose State University,US,http://sjsu.edu/urbanplanning/,I51504820,https://ror.org/04qyvz380,,1
-48,Savannah State University,Savannah State University,Savannah State University,US,https://www.savannahstate.edu/graduate/master-degrees/degrees-grad-us.shtml,I159289790,https://ror.org/00mns7k70,,1
-49,Simon Fraser University,Simon Fraser University,Simon Fraser University,CA,https://www.sfu.ca/rem.html,I18014758,https://ror.org/0213rcc28,,1
-50,State University of New York at Albany,State University of New York at Albany,State University of New York at Albany,US,http://albany.edu/gp/,I392282,https://ror.org/012zs8222,,1
-51,Temple University,Temple University,Temple University,US,https://tyler.temple.edu/programs/planning-community-development,I84392919,https://ror.org/00kx1jb78,,1
-52,Texas A&M University,Texas A&M University,Texas A&M University,US,http://laup.arch.tamu.edu/,I91045830,https://ror.org/01f5ytq51,,1
-53,Texas Southern University,Texas Southern University,Texas Southern University,US,http://bjmlspa.tsu.edu/,I48205209,https://ror.org/05ch0aw77,,1
-54,The New School,The New School,The New School,US,http://newschool.edu/public-engagement/ms-urban-policy-analysis-management/,I102179633,https://ror.org/02tvcev59,,1
-55,Toronto Metropolitan University,Toronto Metropolitan University,Toronto Metropolitan University,CA,https://www.torontomu.ca/school-of-urban-and-regional-planning/,I530967,https://ror.org/05g13zd79,,1
-56,Tufts University,Tufts University,Tufts University,US,http://ase.tufts.edu/uep/,I121934306,https://ror.org/05wvpxv85,,1
-57,Tulane University,Tulane University,Tulane University,US,https://architecture.tulane.edu/academics/sustainable-urbanism,I114832834,https://ror.org/04vmvtb21,,1
-58,UC Berkeley,UC Berkeley,UC Berkeley,US,http://ced.berkeley.edu/academics/city-regional-planning/,I95457486,https://ror.org/01an7q238,,1
-59,UC Irvine,UC Irvine,UC Irvine,US,http://ppd.soceco.uci.edu/,I204250578,https://ror.org/04gyf1771,,1
-60,UC San Diego,UC San Diego,UC San Diego,US,https://usp.ucsd.edu/,I36258959,https://ror.org/0168r3w48,,1
-61,UCLA,UCLA,UCLA,US,http://luskin.ucla.edu/urban-planning,I161318765,https://ror.org/046rm7j60,,1
-62,UNC,UNC,UNC,US,http://planning.unc.edu/,I114027177,https://ror.org/0130frc33,,1
-63,USC,USC,USC,US,http://priceschool.usc.edu/programs/masters/mpl/,I1174212,https://ror.org/03taz7m60,,1
-64,Universite Laval,Universite Laval,Universite Laval,CA,https://www.esad.ulaval.ca/en,I43406934,https://ror.org/04sjchr03,,1
-65,Universite de Montreal,Universite de Montreal,Universite de Montreal,CA,http://urbanisme.umontreal.ca/,I70931966,https://ror.org/0161xgx34,,1
-66,"University at Buffalo, The State University of New York","University at Buffalo, The State University of New York","University at Buffalo, The State University of New York",US,http://ap.buffalo.edu/academics/graduate-degrees/mup.html,I63190737,https://ror.org/01y64my43,,1
-67,University of Alberta,University of Alberta,University of Alberta,CA,http://planning.eas.ualberta.ca/,I154425047,https://ror.org/0160cpw27,,1
-68,University of Arizona,University of Arizona,University of Arizona,US,http://capla.arizona.edu/planning-program,I138006243,https://ror.org/03m2x1q45,,1
-69,University of British Columbia,University of British Columbia,University of British Columbia,CA,http://scarp.ubc.ca/,I141945490,https://ror.org/03rmrcq20,,1
-70,University of Calgary,University of Calgary,University of Calgary,CA,http://evds.ucalgary.ca/content/master-planning-mplan,I168635309,https://ror.org/03yjb2x39,,1
-71,University of Cincinnati,University of Cincinnati,University of Cincinnati,US,https://daap.uc.edu/academic-programs/school-of-planning.html,I63135867,https://ror.org/01e3m7079,,1
-72,"University of Colorado, Denver","University of Colorado, Denver","University of Colorado, Denver",US,http://ucdenver.edu/academics/colleges/ArchitecturePlanning/Academics/DegreePrograms/MURP/Pages/MURP.aspx,I921990950,https://ror.org/02hh7en24,,1
-73,University of Delaware,University of Delaware,University of Delaware,US,https://www.bidenschool.udel.edu/masters-programs/masters-programs/m-a-in-urban-affairs-public-policy,I86501945,https://ror.org/01sbq1a82,,1
-74,University of Florida,University of Florida,University of Florida,US,http://dcp.ufl.edu/urp/,I33213144,https://ror.org/02y3ad647,,1
-75,University of Georgia,University of Georgia,University of Georgia,US,http://ced.uga.edu/degrees/mepd/,I165733156,https://ror.org/00te3t702,,1
-76,University of Guelph,University of Guelph,University of Guelph,CA,http://uoguelph.ca/sedrd/rural-planning-development,I79817857,https://ror.org/01r7awg59,,1
-77,University of Hawaii,University of Hawaii,University of Hawaii,US,http://manoa.hawaii.edu/durp/,I1331384533,https://ror.org/03tzaeb71,,1
-78,"University of Illinois, Chicago","University of Illinois, Chicago","University of Illinois, Chicago",US,http://upp.uic.edu/,I39422238,https://ror.org/02mpq6x41,,1
-79,"University of Illinois, Urbana-Champaign","University of Illinois, Urbana-Champaign","University of Illinois, Urbana-Champaign",US,http://urban.illinois.edu/,I157725225,https://ror.org/047426m28,,1
-80,University of Iowa,University of Iowa,University of Iowa,US,http://urban.uiowa.edu/,I126307644,https://ror.org/036jqmy94,,1
-81,University of Kansas,University of Kansas,University of Kansas,US,http://urbanplanning.ku.edu/,I146416000,https://ror.org/001tmjg57,,1
-82,University of Louisville,University of Louisville,University of Louisville,US,http://supa.louisville.edu/,I142740786,https://ror.org/01ckdn478,,1
-83,University of Manitoba,University of Manitoba,University of Manitoba,CA,http://umanitoba.ca/faculties/architecture/programs/cityplanning/index.html,I46247651,https://ror.org/02gfys938,,1
-84,University of Maryland,University of Maryland,University of Maryland,US,http://arch.umd.edu/ursp/urban-studies-and-planning,I66946132,https://ror.org/047s2c258,,1
-85,University of Massachusetts-Amherst,University of Massachusetts-Amherst,University of Massachusetts-Amherst,US,http://umass.edu/larp/home,I24603500,https://ror.org/0072zz521,,1
-86,University of Massachusetts-Boston,University of Massachusetts-Boston,University of Massachusetts-Boston,US,https://environment.umb.edu/graduate-programs/urban-planning-and-community-development-ms,I33434090,https://ror.org/04ydmy275,,1
-87,University of Memphis,University of Memphis,University of Memphis,US,http://memphis.edu/planning/,I94658018,https://ror.org/01cq23130,,1
-88,University of Michigan,University of Michigan,University of Michigan,US,http://taubmancollege.umich.edu/urbanplanning,I27837315,https://ror.org/00jmfr291,,1
-89,University of Minnesota,University of Minnesota,University of Minnesota,US,http://hhh.umn.edu/masters-degrees/master-urban-and-regional-planning,I130238516,https://ror.org/017zqws13,,1
-90,University of Missouri-Kansas City,University of Missouri-Kansas City,University of Missouri-Kansas City,US,http://info.umkc.edu/aupd/academic-programs/urban-planning-design/,I75421653,https://ror.org/01w0d5g70,,1
-91,University of Nebraska,University of Nebraska,University of Nebraska,US,http://architecture.unl.edu/degree-programs/community-and-regional-planning,I114395901,https://ror.org/043mer456,,1
-92,University of New Mexico,University of New Mexico,University of New Mexico,US,https://crp.unm.edu/index.html,I169521973,https://ror.org/05fs6jp91,,1
-93,University of New Orleans,University of New Orleans,University of New Orleans,US,https://www.uno.edu/academics/colaehd/la/planning-and-urban-studies,I192396691,https://ror.org/034mtvk83,,1
-94,University of Northern British Columbia,University of Northern British Columbia,University of Northern British Columbia,CA,https://www2.unbc.ca/environmental-planning,I151934421,https://ror.org/025wzwv46,,1
-95,University of Oklahoma,University of Oklahoma,University of Oklahoma,US,https://architecture.ou.edu/regional-city-planning/,I8692664,https://ror.org/02aqsxs83,,1
-96,University of Oregon,University of Oregon,University of Oregon,US,http://pppm.uoregon.edu/,I181233156,https://ror.org/0293rh119,,1
-97,University of Pennsylvania,University of Pennsylvania,University of Pennsylvania,US,https://www.design.upenn.edu/city-regional-planning/graduate/work,I79576946,https://ror.org/00b30xv10,,1
-98,University of Puerto Rico,University of Puerto Rico,University of Puerto Rico,US,http://planificacion.uprrp.edu/,I200399037,https://ror.org/02yg0nm07,,1
-99,University of Quebec in Montreal,University of Quebec in Montreal,University of Quebec in Montreal,CA,https://etudier.uqam.ca/programme/maitrise-etudes-urbaines,I159129438,https://ror.org/002rjbv21,,1
-100,University of Saskatchewan,University of Saskatchewan,University of Saskatchewan,CA,https://artsandscience.usask.ca/geography/undergraduates/regional-and-urban-planning.php,I32625721,https://ror.org/010x8gc63,,1
-101,University of South Florida,University of South Florida,University of South Florida,US,https://www.usf.edu/arts-sciences/departments/public-affairs/murp/,I2613432,https://ror.org/032db5x82,,1
-102,University of Southern Maine,University of Southern Maine,University of Southern Maine,US,https://usm.maine.edu/policy-planning-management,I73443619,https://ror.org/03ke6tv85,,1
-103,"University of Texas, Arlington","University of Texas, Arlington","University of Texas, Arlington",US,https://www.uta.edu/cappa/academics/planning-publicaffairs/index.php,I189196454,https://ror.org/019kgqr73,,1
-104,"University of Texas, Austin","University of Texas, Austin","University of Texas, Austin",US,http://soa.utexas.edu/programs/community-and-regional-planning,I86519309,https://ror.org/00hj54h04,,1
-105,"University of Texas, San Antonio","University of Texas, San Antonio","University of Texas, San Antonio",US,https://klesse.utsa.edu/architecture-planning/msurp.html,I165951966,https://ror.org/02f6dcw23,,1
-106,University of Toledo,University of Toledo,University of Toledo,US,http://utoledo.edu/llss/geography/,I90871651,https://ror.org/01pbdzh19,,1
-107,University of Toronto,University of Toronto,University of Toronto,CA,http://geography.utoronto.ca/graduate-planning/,I185261750,https://ror.org/03dbr7087,,1
-108,University of Utah,University of Utah,University of Utah,US,http://plan.cap.utah.edu/,I223532165,https://ror.org/03r0ha626,,1
-109,University of Virginia,University of Virginia,University of Virginia,US,http://arch.virginia.edu/urban-environmental-planning,I51556381,https://ror.org/0153tk833,,1
-110,University of Washington,University of Washington,University of Washington,US,http://urbdp.be.washington.edu/,I201448701,https://ror.org/00cvxb145,,1
-111,"University of Waterloo, Ontario","University of Waterloo, Ontario","University of Waterloo, Ontario",CA,http://uwaterloo.ca/planning/,I151746483,https://ror.org/01aff2v68,,1
-112,"University of Wisconsin, Madison","University of Wisconsin, Madison","University of Wisconsin, Madison",US,https://dpla.wisc.edu,I135310074,https://ror.org/01y2jtd41,,1
-113,"University of Wisconsin, Milwaukee","University of Wisconsin, Milwaukee","University of Wisconsin, Milwaukee",US,http://uwm.edu/sarup/program/planning/,I43579087,https://ror.org/031q21x57,,1
-114,Virginia Commonwealth University,Virginia Commonwealth University,Virginia Commonwealth University,US,https://wilder.vcu.edu/programs/urban-and-regional-studies-planning/,I184840846,https://ror.org/02nkdxk79,,1
-115,Virginia Tech,Virginia Tech,Virginia Tech,US,http://uap.vt.edu/,I859038795,https://ror.org/02smfhw86,,1
-116,Wayne State University,Wayne State University,Wayne State University,US,https://clas.wayne.edu/usp,I185443292,https://ror.org/01070mq45,,1
-117,West Chester University,West Chester University,West Chester University,US,https://www.wcupa.edu/business-publicManagement/geographyPlanning/,I161171246,https://ror.org/0053n5071,,1
-118,Western Washington University,Western Washington University,Western Washington University,US,https://huxley.wwu.edu/urban-planning-and-sustainable-development-program,I52669646,https://ror.org/05wn7r715,,1
-119,Westfield State University,Westfield State University,Westfield State University,US,http://westfield.ma.edu/academics/geography-and-regional-planning-department,I46506128,https://ror.org/05pjd6b26,,1
-120,York University,York University,York University,CA,http://urst.sosc.laps.yorku.ca/,I192455969,https://ror.org/05fq50484,,1
+1,Alabama A&M University,Alabama A&M University,Alabama A&M University,US,http://www.aamu.edu/academics/alns/crp/pages/default.aspx,I176692203,https://ror.org/05hz8m414,full,1
+2,Appalachian State University,Appalachian State University,Appalachian State University,US,https://geo.appstate.edu/,I430192,https://ror.org/051m4vc48,full,1
+3,Arizona State University,Arizona State University,Arizona State University,US,http://geoplan.asu.edu/,I55732556,https://ror.org/03efmqc40,full,1
+4,Auburn University,Auburn University,Auburn University,US,http://cla.auburn.edu/polisci/graduate-programs/master-of-community-planning/about-the-program/,I82497590,https://ror.org/02v80fc35,full,1
+5,Ball State University,Ball State University,Ball State University,US,https://www.bsu.edu/academics/collegesanddepartments/urban-planning,I198089087,https://ror.org/00k6tx165,full,1
+6,"Cal Poly, Pomona","Cal Poly, Pomona","Cal Poly, Pomona",US,http://env.cpp.edu/urp/urp,I98947143,https://ror.org/05by5hm18,full,1
+7,"Cal Poly, San Luis Obispo","Cal Poly, San Luis Obispo","Cal Poly, San Luis Obispo",US,http://planning.calpoly.edu/,I149919469,https://ror.org/001gpfp45,full,1
+8,"California State University, Northridge","California State University, Northridge","California State University, Northridge",US,http://csun.edu/social-behavioral-sciences/urban-studies-planning,I157638225,https://ror.org/005f5hv41,full,1
+9,Clemson University,Clemson University,Clemson University,US,http://clemson.edu/caah/departments/city-and-regional-planning/,I8078737,https://ror.org/037s24f05,full,1
+10,Cleveland State University,Cleveland State University,Cleveland State University,US,http://csuohio.edu/urban/mupd/mupd,I102607778,https://ror.org/002tx1f22,full,1
+11,Columbia University,Columbia University,Columbia University,US,http://arch.columbia.edu/programs/10-m-s-urban-planning,I78577930,https://ror.org/00hj8s172,full,1
+12,Cornell University,Cornell University,Cornell University,US,http://aap.cornell.edu/academics/crp,I205783295,https://ror.org/05bnh6r87,full,1
+13,Dalhousie University,Dalhousie University,Dalhousie University,CA,http://dal.ca/faculty/architecture-planning/school-of-planning.html,I129902397,https://ror.org/01e6qks80,full,1
+14,East Carolina University,East Carolina University,East Carolina University,US,https://planning.ecu.edu/,I186335123,https://ror.org/01vx35703,full,1
+15,Eastern Michigan University,Eastern Michigan University,Eastern Michigan University,US,https://www.emich.edu/geography-geology/programs/urban-regional-planning/index.php,I138216421,https://ror.org/02ehshm78,full,1
+16,Eastern Washington,Eastern Washington,Eastern Washington,US,https://www.ewu.edu/css/geography-anthropology/urban-regional-planning/,I159107703,https://ror.org/002g57a93,full,1
+17,Florida Atlantic University,Florida Atlantic University,Florida Atlantic University,US,https://planning.fau.edu,I63772739,https://ror.org/05p8w6387,full,1
+18,Florida State University,Florida State University,Florida State University,US,http://coss.fsu.edu/durp/,I103163165,https://ror.org/05g3dte14,full,1
+19,Georgetown University,Georgetown University,Georgetown University,US,https://scs.georgetown.edu/programs/356/master-of-professional-studies-urban-and-regional-planning/,I184565670,https://ror.org/05vzafd60,full,1
+20,Georgia Tech,Georgia Tech,Georgia Tech,US,http://planning.gatech.edu/,I130701444,https://ror.org/01zkghx44,full,1
+21,Harvard University,Harvard University,Harvard University,US,http://gsd.harvard.edu/#/academic-programs/urban-planning-design/urban-planning/index.html,I136199984,https://ror.org/03vek6s52,full,1
+22,Hunter College,Hunter College,Hunter College,US,http://www.hunterurban.org/,I39694355,https://ror.org/00g2xk477,full,1
+23,Indiana University of Pennsylvania,Indiana University of Pennsylvania,Indiana University of Pennsylvania,US,http://iup.edu/georegionalplan/,I200885203,https://ror.org/0511cmw96,none,1
+24,Iowa State University,Iowa State University,Iowa State University,US,https://www.design.iastate.edu/community-and-regional-planning/,I173911158,https://ror.org/04rswrd78,full,1
+25,Jackson State University,Jackson State University,Jackson State University,US,http://www.jsums.edu/planning/,I61937129,https://ror.org/01ecnnp60,full,1
+26,Kansas State University,Kansas State University,Kansas State University,US,http://apdesign.k-state.edu/larcp/,I189590672,https://ror.org/05p1j8758,full,1
+27,MIT,MIT,MIT,US,http://dusp.mit.edu/,I63966007,https://ror.org/042nb2s44,full,1
+28,McGill University,McGill University,McGill University,CA,http://mcgill.ca/urbanplanning/school-urban-planning,I5023651,https://ror.org/01pxwe438,affiliate,1
+29,Miami University,Miami University,Miami University,US,https://miamioh.edu/cas/academics/departments/geography/academics/majors/urban-regional-planning-major/,I83328450,https://ror.org/05nbqxr67,full,1
+30,Michigan State University,Michigan State University,Michigan State University,US,http://spdc.msu.edu/programs/urban_and_regional_planning,I87216513,https://ror.org/05hs6h993,full,1
+31,"Minnesota State University, Mankato","Minnesota State University, Mankato","Minnesota State University, Mankato",US,http://sbs.mnsu.edu/ursi/,I152014189,https://ror.org/04att9732,none,1
+32,Missouri State University,Missouri State University,Missouri State University,US,http://geosciences.missouristate.edu/,I119942284,https://ror.org/01d2sez20,full,1
+33,Morgan State University,Morgan State University,Morgan State University,US,http://morgan.edu/sap/crep,I83909951,https://ror.org/017d8gk22,full,1
+34,New Jersey Institute of Technology,New Jersey Institute of Technology,New Jersey Institute of Technology,US,http://architecture.njit.edu/academics/graduate/mip.php,I118118575,https://ror.org/05e74xb87,none,1
+35,New York University,New York University,New York University,US,http://wagner.nyu.edu/urbanplanning,I57206974,https://ror.org/0190ak572,full,1
+36,Northeastern University,Northeastern University,Northeastern University,US,https://cssh.northeastern.edu/policyschool/program/ms-in-urban-planning-and-policy/,I12912129,https://ror.org/04t5xt781,full,1
+37,Northern Arizona University,Northern Arizona University,Northern Arizona University,US,http://nau.edu/SBS/GPR/Degrees-Programs/Geography/,I203172682,https://ror.org/0272j5188,none,1
+38,Ohio State University,Ohio State University,Ohio State University,US,http://knowlton.osu.edu/programs/city-and-regional-planning,I52357470,https://ror.org/00rs6vg23,full,1
+39,Portland State University,Portland State University,Portland State University,US,http://pdx.edu/usp/master-urban-and-regional-planning-murp,I126345244,https://ror.org/00yn2fy02,full,1
+40,Pratt Institute,Pratt Institute,Pratt Institute,US,http://pratt.edu/academics/architecture/city-and-regional-planning/,I59028336,https://ror.org/007m3p006,full,1
+41,Queen's University,Queen's University,Queen's University,CA,https://www.queensu.ca/geographyandplanning/surp/,I204722609,https://ror.org/02y72wh86,full,1
+42,Rowan University,Rowan University,Rowan University,US,https://earth.rowan.edu/departments/geography/,I44265643,https://ror.org/049v69k10,full,1
+43,Rutgers University,Rutgers University,Rutgers University,US,http://bloustein.rutgers.edu/graduate/uppd/,I102322142,https://ror.org/05vt9qd57,full,1
+44,"Rutgers University, School of Environmental & Biological Sciences","Rutgers University, School of Environmental & Biological Sciences","Rutgers University, School of Environmental & Biological Sciences",US,http://sebs.rutgers.edu/,I102322142,https://ror.org/05vt9qd57,full,1
+45,Salisbury University,Salisbury University,Salisbury University,US,https://www.salisbury.edu/explore-academics/programs/undergraduate-degree-programs/majors/urban-regional-planning-major.aspx,I9364636,https://ror.org/029gwvs11,full,1
+46,San Diego State University,San Diego State University,San Diego State University,US,https://spa.sdsu.edu/index.php/academic_programs/city_planning/cp-overview,I26538001,https://ror.org/0264fdx42,full,1
+47,San Jose State University,San Jose State University,San Jose State University,US,http://sjsu.edu/urbanplanning/,I51504820,https://ror.org/04qyvz380,full,1
+48,Savannah State University,Savannah State University,Savannah State University,US,https://www.savannahstate.edu/graduate/master-degrees/degrees-grad-us.shtml,I159289790,https://ror.org/00mns7k70,none,1
+49,Simon Fraser University,Simon Fraser University,Simon Fraser University,CA,https://www.sfu.ca/rem.html,I18014758,https://ror.org/0213rcc28,none,1
+50,State University of New York at Albany,State University of New York at Albany,State University of New York at Albany,US,http://albany.edu/gp/,I392282,https://ror.org/012zs8222,full,1
+51,Temple University,Temple University,Temple University,US,https://tyler.temple.edu/programs/planning-community-development,I84392919,https://ror.org/00kx1jb78,full,1
+52,Texas A&M University,Texas A&M University,Texas A&M University,US,http://laup.arch.tamu.edu/,I91045830,https://ror.org/01f5ytq51,full,1
+53,Texas Southern University,Texas Southern University,Texas Southern University,US,http://bjmlspa.tsu.edu/,I48205209,https://ror.org/05ch0aw77,full,1
+54,The New School,The New School,The New School,US,http://newschool.edu/public-engagement/ms-urban-policy-analysis-management/,I102179633,https://ror.org/02tvcev59,affiliate,1
+55,Toronto Metropolitan University,Toronto Metropolitan University,Toronto Metropolitan University,CA,https://www.torontomu.ca/school-of-urban-and-regional-planning/,I530967,https://ror.org/05g13zd79,full,1
+56,Tufts University,Tufts University,Tufts University,US,http://ase.tufts.edu/uep/,I121934306,https://ror.org/05wvpxv85,full,1
+57,Tulane University,Tulane University,Tulane University,US,https://architecture.tulane.edu/academics/sustainable-urbanism,I114832834,https://ror.org/04vmvtb21,affiliate,1
+58,UC Berkeley,UC Berkeley,UC Berkeley,US,http://ced.berkeley.edu/academics/city-regional-planning/,I95457486,https://ror.org/01an7q238,full,1
+59,UC Irvine,UC Irvine,UC Irvine,US,http://ppd.soceco.uci.edu/,I204250578,https://ror.org/04gyf1771,full,1
+60,UC San Diego,UC San Diego,UC San Diego,US,https://usp.ucsd.edu/,I36258959,https://ror.org/0168r3w48,full,1
+61,UCLA,UCLA,UCLA,US,http://luskin.ucla.edu/urban-planning,I161318765,https://ror.org/046rm7j60,full,1
+62,UNC,UNC,UNC,US,http://planning.unc.edu/,I114027177,https://ror.org/0130frc33,full,1
+63,USC,USC,USC,US,http://priceschool.usc.edu/programs/masters/mpl/,I1174212,https://ror.org/03taz7m60,full,1
+64,Universite Laval,Universite Laval,Universite Laval,CA,https://www.esad.ulaval.ca/en,I43406934,https://ror.org/04sjchr03,none,1
+65,Universite de Montreal,Universite de Montreal,Universite de Montreal,CA,http://urbanisme.umontreal.ca/,I70931966,https://ror.org/0161xgx34,none,1
+66,"University at Buffalo, The State University of New York","University at Buffalo, The State University of New York","University at Buffalo, The State University of New York",US,http://ap.buffalo.edu/academics/graduate-degrees/mup.html,I63190737,https://ror.org/01y64my43,full,1
+67,University of Alberta,University of Alberta,University of Alberta,CA,http://planning.eas.ualberta.ca/,I154425047,https://ror.org/0160cpw27,full,1
+68,University of Arizona,University of Arizona,University of Arizona,US,http://capla.arizona.edu/planning-program,I138006243,https://ror.org/03m2x1q45,full,1
+69,University of British Columbia,University of British Columbia,University of British Columbia,CA,http://scarp.ubc.ca/,I141945490,https://ror.org/03rmrcq20,full,1
+70,University of Calgary,University of Calgary,University of Calgary,CA,http://evds.ucalgary.ca/content/master-planning-mplan,I168635309,https://ror.org/03yjb2x39,full,1
+71,University of Cincinnati,University of Cincinnati,University of Cincinnati,US,https://daap.uc.edu/academic-programs/school-of-planning.html,I63135867,https://ror.org/01e3m7079,full,1
+72,"University of Colorado, Denver","University of Colorado, Denver","University of Colorado, Denver",US,http://ucdenver.edu/academics/colleges/ArchitecturePlanning/Academics/DegreePrograms/MURP/Pages/MURP.aspx,I921990950,https://ror.org/02hh7en24,full,1
+73,University of Delaware,University of Delaware,University of Delaware,US,https://www.bidenschool.udel.edu/masters-programs/masters-programs/m-a-in-urban-affairs-public-policy,I86501945,https://ror.org/01sbq1a82,full,1
+74,University of Florida,University of Florida,University of Florida,US,http://dcp.ufl.edu/urp/,I33213144,https://ror.org/02y3ad647,full,1
+75,University of Georgia,University of Georgia,University of Georgia,US,http://ced.uga.edu/degrees/mepd/,I165733156,https://ror.org/00te3t702,full,1
+76,University of Guelph,University of Guelph,University of Guelph,CA,http://uoguelph.ca/sedrd/rural-planning-development,I79817857,https://ror.org/01r7awg59,full,1
+77,University of Hawaii,University of Hawaii,University of Hawaii,US,http://manoa.hawaii.edu/durp/,I1331384533,https://ror.org/03tzaeb71,full,1
+78,"University of Illinois, Chicago","University of Illinois, Chicago","University of Illinois, Chicago",US,http://upp.uic.edu/,I39422238,https://ror.org/02mpq6x41,full,1
+79,"University of Illinois, Urbana-Champaign","University of Illinois, Urbana-Champaign","University of Illinois, Urbana-Champaign",US,http://urban.illinois.edu/,I157725225,https://ror.org/047426m28,full,1
+80,University of Iowa,University of Iowa,University of Iowa,US,http://urban.uiowa.edu/,I126307644,https://ror.org/036jqmy94,full,1
+81,University of Kansas,University of Kansas,University of Kansas,US,http://urbanplanning.ku.edu/,I146416000,https://ror.org/001tmjg57,full,1
+82,University of Louisville,University of Louisville,University of Louisville,US,http://supa.louisville.edu/,I142740786,https://ror.org/01ckdn478,full,1
+83,University of Manitoba,University of Manitoba,University of Manitoba,CA,http://umanitoba.ca/faculties/architecture/programs/cityplanning/index.html,I46247651,https://ror.org/02gfys938,full,1
+84,University of Maryland,University of Maryland,University of Maryland,US,http://arch.umd.edu/ursp/urban-studies-and-planning,I66946132,https://ror.org/047s2c258,full,1
+85,University of Massachusetts-Amherst,University of Massachusetts-Amherst,University of Massachusetts-Amherst,US,http://umass.edu/larp/home,I24603500,https://ror.org/0072zz521,full,1
+86,University of Massachusetts-Boston,University of Massachusetts-Boston,University of Massachusetts-Boston,US,https://environment.umb.edu/graduate-programs/urban-planning-and-community-development-ms,I33434090,https://ror.org/04ydmy275,full,1
+87,University of Memphis,University of Memphis,University of Memphis,US,http://memphis.edu/planning/,I94658018,https://ror.org/01cq23130,full,1
+88,University of Michigan,University of Michigan,University of Michigan,US,http://taubmancollege.umich.edu/urbanplanning,I27837315,https://ror.org/00jmfr291,full,1
+89,University of Minnesota,University of Minnesota,University of Minnesota,US,http://hhh.umn.edu/masters-degrees/master-urban-and-regional-planning,I130238516,https://ror.org/017zqws13,full,1
+90,University of Missouri-Kansas City,University of Missouri-Kansas City,University of Missouri-Kansas City,US,http://info.umkc.edu/aupd/academic-programs/urban-planning-design/,I75421653,https://ror.org/01w0d5g70,full,1
+91,University of Nebraska,University of Nebraska,University of Nebraska,US,http://architecture.unl.edu/degree-programs/community-and-regional-planning,I114395901,https://ror.org/043mer456,full,1
+92,University of New Mexico,University of New Mexico,University of New Mexico,US,https://crp.unm.edu/index.html,I169521973,https://ror.org/05fs6jp91,full,1
+93,University of New Orleans,University of New Orleans,University of New Orleans,US,https://www.uno.edu/academics/colaehd/la/planning-and-urban-studies,I192396691,https://ror.org/034mtvk83,full,1
+94,University of Northern British Columbia,University of Northern British Columbia,University of Northern British Columbia,CA,https://www2.unbc.ca/environmental-planning,I151934421,https://ror.org/025wzwv46,none,1
+95,University of Oklahoma,University of Oklahoma,University of Oklahoma,US,https://architecture.ou.edu/regional-city-planning/,I8692664,https://ror.org/02aqsxs83,full,1
+96,University of Oregon,University of Oregon,University of Oregon,US,http://pppm.uoregon.edu/,I181233156,https://ror.org/0293rh119,full,1
+97,University of Pennsylvania,University of Pennsylvania,University of Pennsylvania,US,https://www.design.upenn.edu/city-regional-planning/graduate/work,I79576946,https://ror.org/00b30xv10,full,1
+98,University of Puerto Rico,University of Puerto Rico,University of Puerto Rico,US,http://planificacion.uprrp.edu/,I200399037,https://ror.org/02yg0nm07,full,1
+99,University of Quebec in Montreal,University of Quebec in Montreal,University of Quebec in Montreal,CA,https://etudier.uqam.ca/programme/maitrise-etudes-urbaines,I159129438,https://ror.org/002rjbv21,none,1
+100,University of Saskatchewan,University of Saskatchewan,University of Saskatchewan,CA,https://artsandscience.usask.ca/geography/undergraduates/regional-and-urban-planning.php,I32625721,https://ror.org/010x8gc63,none,1
+101,University of South Florida,University of South Florida,University of South Florida,US,https://www.usf.edu/arts-sciences/departments/public-affairs/murp/,I2613432,https://ror.org/032db5x82,full,1
+102,University of Southern Maine,University of Southern Maine,University of Southern Maine,US,https://usm.maine.edu/policy-planning-management,I73443619,https://ror.org/03ke6tv85,none,1
+103,"University of Texas, Arlington","University of Texas, Arlington","University of Texas, Arlington",US,https://www.uta.edu/cappa/academics/planning-publicaffairs/index.php,I189196454,https://ror.org/019kgqr73,full,1
+104,"University of Texas, Austin","University of Texas, Austin","University of Texas, Austin",US,http://soa.utexas.edu/programs/community-and-regional-planning,I86519309,https://ror.org/00hj54h04,full,1
+105,"University of Texas, San Antonio","University of Texas, San Antonio","University of Texas, San Antonio",US,https://klesse.utsa.edu/architecture-planning/msurp.html,I165951966,https://ror.org/02f6dcw23,full,1
+106,University of Toledo,University of Toledo,University of Toledo,US,http://utoledo.edu/llss/geography/,I90871651,https://ror.org/01pbdzh19,none,1
+107,University of Toronto,University of Toronto,University of Toronto,CA,http://geography.utoronto.ca/graduate-planning/,I185261750,https://ror.org/03dbr7087,full,1
+108,University of Utah,University of Utah,University of Utah,US,http://plan.cap.utah.edu/,I223532165,https://ror.org/03r0ha626,full,1
+109,University of Virginia,University of Virginia,University of Virginia,US,http://arch.virginia.edu/urban-environmental-planning,I51556381,https://ror.org/0153tk833,full,1
+110,University of Washington,University of Washington,University of Washington,US,http://urbdp.be.washington.edu/,I201448701,https://ror.org/00cvxb145,full,1
+111,"University of Waterloo, Ontario","University of Waterloo, Ontario","University of Waterloo, Ontario",CA,http://uwaterloo.ca/planning/,I151746483,https://ror.org/01aff2v68,full,1
+112,"University of Wisconsin, Madison","University of Wisconsin, Madison","University of Wisconsin, Madison",US,https://dpla.wisc.edu,I135310074,https://ror.org/01y2jtd41,full,1
+113,"University of Wisconsin, Milwaukee","University of Wisconsin, Milwaukee","University of Wisconsin, Milwaukee",US,http://uwm.edu/sarup/program/planning/,I43579087,https://ror.org/031q21x57,full,1
+114,Virginia Commonwealth University,Virginia Commonwealth University,Virginia Commonwealth University,US,https://wilder.vcu.edu/programs/urban-and-regional-studies-planning/,I184840846,https://ror.org/02nkdxk79,full,1
+115,Virginia Tech,Virginia Tech,Virginia Tech,US,http://uap.vt.edu/,I859038795,https://ror.org/02smfhw86,full,1
+116,Wayne State University,Wayne State University,Wayne State University,US,https://clas.wayne.edu/usp,I185443292,https://ror.org/01070mq45,full,1
+117,West Chester University,West Chester University,West Chester University,US,https://www.wcupa.edu/business-publicManagement/geographyPlanning/,I161171246,https://ror.org/0053n5071,full,1
+118,Western Washington University,Western Washington University,Western Washington University,US,https://huxley.wwu.edu/urban-planning-and-sustainable-development-program,I52669646,https://ror.org/05wn7r715,full,1
+119,Westfield State University,Westfield State University,Westfield State University,US,http://westfield.ma.edu/academics/geography-and-regional-planning-department,I46506128,https://ror.org/05pjd6b26,full,1
+120,York University,York University,York University,CA,http://urst.sosc.laps.yorku.ca/,I192455969,https://ror.org/05fq50484,full,1

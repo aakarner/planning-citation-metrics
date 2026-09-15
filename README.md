@@ -72,9 +72,17 @@ export OPENALEX_API_KEY=...
 The matcher scores candidate authors on name similarity, institution match, topic
 overlap, and citation plausibility against the Scholar number we already hold. Clear
 winners are written to `person.csv`; everything else lands in
-`data/review/identity_candidates.csv` with `status=pending` for a person to mark
-`accepted` or `rejected` (fill `reviewed_by`). Re-running keeps those decisions.
+`data/review/identity_candidates.csv` with `status=pending`. Re-running keeps decisions.
 API responses are cached under `build/cache/`.
+
+Pending cases are reviewed in `data/review/openalex_review.xlsx` (one block per person,
+grouped by why the matcher held it, yellow Decision cells, links to each OpenAlex page;
+instructions on the first tab). To apply the decisions:
+
+```bash
+.venv/bin/python -m pipeline.import_review data/review/openalex_review.xlsx
+.venv/bin/python -m pipeline.match_openalex --rescore
+```
 
 ## Google Scholar collector
 

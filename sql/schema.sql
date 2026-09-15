@@ -15,7 +15,7 @@ CREATE TABLE department (
   url                      TEXT,
   openalex_institution_id  TEXT,                   -- 'I161318765', for author matching
   ror_id                   TEXT,
-  acsp_member              INTEGER,                -- 1/0/NULL(unknown)
+  acsp_member              TEXT CHECK (acsp_member IN ('full', 'affiliate', 'none')),  -- per acsp.org/page/members, 2026-08-27 list
   active                   INTEGER NOT NULL DEFAULT 1
 );
 

@@ -191,7 +191,7 @@ Each run appends a snapshot file under `data/snapshots/<source>/<YYYY-MM-DD>.csv
 
 ## 6. Website
 
-A **static site** is the right shape: about 1,200 entities, read-only for visitors, updated a few times a month. No server, no database to keep alive, free hosting on GitHub Pages under a UT or project domain.
+A **static site** is the right shape: about 1,200 entities, read-only for visitors, updated a few times a month. No server, no database to keep alive, free hosting on GitHub Pages. Decided 2026-09-15: launch at the default address, `aakarner.github.io/planning-citation-metrics`, and revisit a custom or UT domain once the site exists.
 
 Recommended stack: **Observable Framework**. Its Python data loaders query the SQLite file at build time, it supports parameterized routes for one page per person and per department, and Observable Plot handles sparklines and distributions well. Astro is a fine alternative if the team prefers a general-purpose site builder. Search is client-side over a prebuilt JSON index (roughly 200 KB for all people and departments) using MiniSearch, so typing a name or school returns instantly.
 
@@ -235,7 +235,7 @@ planning-citation-metrics/
 ## 8. Phased delivery
 
 **Phase 0. Settle scope** (this month)
-- Done 2026-09-14: inclusion rule per Tom is ACSP member schools plus a handful added on request, mostly Canadian. `department.acsp_member` records which is which; the methods page will say so.
+- Done 2026-09-14: inclusion rule per Tom is ACSP member schools plus a handful added on request, mostly Canadian. `department.acsp_member` filled 2026-09-15 from the ACSP list dated 2026-08-27: 104 full members, 3 affiliates (McGill, The New School, Tulane), 13 non-members added on request (six Canadian). Five ACSP full members are not yet tracked and are candidates for the next roster review: Boston University, George Washington University, University of Central Florida, University of Washington Tacoma, Utah State University.
 - Done 2026-09-13: the two moves (Guang Tian to Utah, Lisa Berglund to Morgan State) were verified against Scholar profiles and department pages, and the stale rows are closed as ended affiliations.
 
 **Phase 1. Schema and migration** (2 to 3 weeks)
