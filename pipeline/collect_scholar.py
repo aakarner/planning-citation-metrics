@@ -223,7 +223,9 @@ def main(argv=None) -> None:
                     if waited > args.max_wait:
                         print(f"no successful fetch for {waited:.1f} h; giving up. Re-run to resume.", file=sys.stderr)
                         break
-                    print(f"  {consecutive} failures in a row; Scholar is throttling. "
+                    who = ("SerpApi rate limit (200 searches/hour)" if args.via == "serpapi"
+                           else "Scholar is blocking this address")
+                    print(f"  {consecutive} failures in a row; {who}. "
                           f"Cooling down {args.cooldown:.0f} min ({waited:.1f} h since last success).", file=sys.stderr)
                     time.sleep(args.cooldown * 60)
                     consecutive = 0
