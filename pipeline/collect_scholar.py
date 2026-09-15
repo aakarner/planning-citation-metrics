@@ -157,6 +157,9 @@ def main(argv=None) -> None:
                                           f"{(time.monotonic() - t0) / 60:.1f} min"}
     out.with_suffix(".meta.json").write_text(json.dumps(meta, indent=2) + "\n")
     if redirected:
+        # Re-read the roster now: another process (the matcher) may have written
+        # to it during this long run. Only the Scholar id column is ours to change.
+        fields, everyone = load_people()
         taken = {q["google_scholar_id"] for q in everyone} - {p["google_scholar_id"] for p in everyone if p["person_id"] in redirected}
         for q in everyone:
             new = redirected.get(q["person_id"])
