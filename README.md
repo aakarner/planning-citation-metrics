@@ -79,13 +79,14 @@ API responses are cached under `build/cache/`.
 ## Google Scholar collector
 
 ```bash
-.venv/bin/pip install -e ".[scholar]"
-.venv/bin/python -m pipeline.collect_scholar --limit 20 --sleep 10   # access test
+# SERPAPI_KEY=... in .env (serpapi.com; 250 lookups/month free, $25 for 1,000)
+.venv/bin/python -m pipeline.collect_scholar --limit 20     # test
+.venv/bin/python -m pipeline.collect_scholar                # full run, resumable within a day
 ```
 
-Scrapes public profile pages one request at a time. Run it from a university or home
-connection, never from a cloud runner. Output is resumable within a day and the run
-stops itself after five consecutive failures, which means Scholar is blocking.
+Default backend is SerpApi's Scholar author endpoint: one JSON call per person, runs from
+GitHub Actions. `--via scholarly` scrapes profile pages directly and is kept for spot checks
+only; a single address gets about 45 fetches before Scholar blocks it for many hours.
 
 ## Scholar profile discovery
 

@@ -158,8 +158,9 @@ Google Scholar has no API and blocks datacenter IPs, so automation has to be pra
 
 **Where the Scholar collector runs.** GitHub Actions runners are blocked by Scholar. Two options, decide in phase 2 after a test:
 
-- Self-hosted runner or `launchd` job on a UT machine, using `scholarly` with a few seconds between requests. 808 profiles at one request every 10 to 15 seconds is about three hours. This is what Tom did by hand. Scraping is against Google's terms, which is a risk to note, not a blocker; the data is public profile data.
-- A commercial Scholar API (SerpApi's `google_scholar_author` engine returns exactly the citation table). Runs fine from GitHub Actions. Costs money only in the months a run happens. Check current pricing before committing.
+**Decided 2026-09-15, by test.** Direct scraping from a single address is not viable for full runs. On 2026-09-14 Scholar allowed about 45 profile fetches from a UT address and then from a home address before redirecting to its CAPTCHA page, and the home-address block was still in force more than eight hours later; 89 profiles were collected in a day. Slow pacing and cooldowns did not help. The collector keeps the scraping backend for spot checks only.
+
+Full runs use **SerpApi's `google_scholar_author` endpoint**: parsed JSON with the citation table, the per-year graph, affiliation, and verified-email domain, one call per person, from anywhere including GitHub Actions. Pricing at the time of writing: 250 lookups a month free, $25 for 1,000. One paid month per quarter covers a full run of 806, so the annual cost is about $100, or nothing if a run is spread over the free tier across a quarter.
 
 **Disambiguation, done once.** The 808 people with a Scholar id need no disambiguation on the Scholar side. The real work Tom described is matching everyone to OpenAlex, and checking whether any of the 243 without a recorded profile actually have one.
 
@@ -181,7 +182,7 @@ Once a person has an OpenAlex id, monthly collection is a single API call per pe
 | What | When | How |
 |---|---|---|
 | OpenAlex snapshot | Monthly, 1st of month | GitHub Actions cron; about 1,051 free id lookups, a few minutes |
-| Google Scholar snapshot | Quarterly (Jan, Apr, Jul, Oct) | Self-hosted runner or Scholar API; results committed as a snapshot file |
+| Google Scholar snapshot | Quarterly (Jan, Apr, Jul, Oct) | SerpApi from GitHub Actions, about $25 per run; results committed as a snapshot file |
 | Roster review | Semiannual (Jan, Jul), matching Tom's rhythm | Pipeline emails the change-detection report; a person edits the roster CSVs by pull request |
 | Scholar profile discovery | Semiannual, with roster review | One publication-search page per person without a profile, plus one profile page per plausible candidate, from a UT connection; candidates go to the review queue |
 | Site rebuild and deploy | On every push to `main` and after every collection | GitHub Actions builds SQLite from CSV and snapshots, builds the site, deploys to GitHub Pages |
@@ -244,7 +245,7 @@ planning-citation-metrics/
 
 **Phase 2. Collectors and identity matching** (3 to 4 weeks)
 - OpenAlex collector and matcher; run the initial match, review the pending queue.
-- Scholar collector; test `scholarly` from a UT IP versus a commercial API and pick one.
+- Scholar collector; tested `scholarly` from UT and home addresses (blocked after ~45 fetches, 8+ hours); SerpApi chosen.
 - Scholar profile discovery pass over the 243 people without a recorded profile.
 - `collection_run` logging, retries, and the drop-detection check.
 
