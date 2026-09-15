@@ -105,12 +105,20 @@ many hours.
 .venv/bin/python -m pipeline.find_scholar_profiles                         # everyone without a profile
 ```
 
-Default backend is SerpApi's `google_scholar_profiles` engine, Scholar's own author search,
-one call per person without a recorded profile. Pass `--stale <id> ...` to also re-find people
-whose recorded Scholar id stopped resolving (the collector reports these as "empty profile").
-`--via scrape` falls back to a publication search from this machine, since Scholar's author
-search requires a sign-in when reached directly. Candidates are scored like OpenAlex
-candidates and written to the same review queue with `source=google_scholar`. Clear winners
+Runs a Scholar publication search restricted to the author's name from this machine and
+follows the profile links on the results page. This is the only route that still exposes
+those links: Scholar's own author search demands a sign-in, and SerpApi has discontinued its
+author-search endpoint and strips profile links from regular search results. Scholar blocks an
+address after ~45 requests for many hours, so run about 30 people per day (`--limit 30`); it
+resumes where it left off. Candidates are scored like OpenAlex candidates and written to the
+same review queue with `source=google_scholar`.
+
+People whose recorded Scholar id stops resolving (the collector reports "empty profile") are
+re-found by a direct fetch that follows Google's redirect, from an unblocked address:
+
+```bash
+.venv/bin/python -m pipeline.collect_scholar --via scholarly --ids <old id> ...
+``` Clear winners
 go into `person.csv`. Run it from a university or home connection. We do not reconstruct
 citation counts for people without a profile (that was Publish or Perish, by hand); they get
 the flagged OpenAlex number instead.

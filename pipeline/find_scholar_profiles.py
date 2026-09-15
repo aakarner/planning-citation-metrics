@@ -9,19 +9,20 @@ a Scholar profile (that is what Publish or Perish did, by hand). We do check
 whether a profile exists that we simply never recorded, and we re-check new
 hires each semester.
 
-Two backends:
+How it works (2026-09-15): Scholar's author search redirects to a Google
+sign-in page when reached directly, and SerpApi has discontinued its author
+search endpoint; SerpApi's regular Scholar search returns author names as
+plain text with no profile links. The only route that still exposes profile
+links is a direct publication search restricted to the author's name, fetched
+from a residential or university address. Linked author names that match ours
+are fetched and scored: one search page plus one profile page per plausible
+candidate. Scholar blocks an address after roughly 45 requests for many hours,
+so run this in batches of about 30 (--limit 30) on different days. It is
+resumable, and the yield is low: on the first 20 of the 243 it found no
+missing profiles, only namesakes.
 
-  --via serpapi   (default when SERPAPI_KEY is set) SerpApi's google_scholar_profiles
-                  engine, which is Scholar's own author search. One call per person
-                  returns candidate profiles with id, affiliation, verified email and
-                  citation total. Runs anywhere.
-
-  --via scrape    Scholar's author search now redirects to a Google sign-in page, so
-                  this uses the ordinary publication search restricted to the author's
-                  name; linked author names that match ours are fetched and scored.
-                  One search page plus one profile page per plausible candidate. Only
-                  works from a residential or university address, and only for a few
-                  dozen people before Scholar blocks the address.
+  --via scrape    the working route (default).
+  --via serpapi   kept for the record; exits with an explanation.
 
     --stale        also re-check people whose recorded Scholar id no longer resolves
                    (the collector reports these as 'empty profile'), to find the
@@ -168,19 +169,18 @@ def main(argv=None) -> None:
     ap.add_argument("--limit", type=int)
     ap.add_argument("--sleep", type=float, default=10.0)
     ap.add_argument("--dry-run", action="store_true")
-    ap.add_argument("--via", choices=["serpapi", "scrape"],
-                    default="serpapi" if os.environ.get("SERPAPI_KEY") else "scrape")
-    ap.add_argument("--stale", nargs="*", metavar="SCHOLAR_ID",
-                    help="also re-check the people holding these Scholar ids (no longer resolving)")
+    ap.add_argument("--via", choices=["serpapi", "scrape"], default="scrape")
+    ap.add_argument("--stale", metavar="ID,ID,...", default="",
+                    help="also re-check the people holding these Scholar ids (no longer resolving); "
+                         "comma-separated, written as --stale=... because ids can start with '-'")
     args = ap.parse_args(argv)
     sys.stdout.reconfigure(line_buffering=True)  # progress lines show up in logs as they happen
     scholarly = None
     key = os.environ.get("SERPAPI_KEY")
     if args.via == "serpapi":
-        if not key:
-            sys.exit("SERPAPI_KEY is not set (put it in .env)")
-        if args.sleep == 10.0:
-            args.sleep = 18.0     # stay under SerpApi's 200 searches/hour cap
+        sys.exit("SerpApi discontinued its Scholar author-search endpoint, and its regular Scholar "
+                 "search omits profile links (checked 2026-09-15). Use --via scrape from a home or "
+                 "campus address, about 30 people per day.")
     else:
         try:
             from scholarly import scholarly
@@ -189,7 +189,7 @@ def main(argv=None) -> None:
     print(f"backend: {args.via}")
 
     pfields, persons, dept_by_id, current, totals = load_context()
-    stale = set(args.stale or [])
+    stale = {x.strip() for x in args.stale.split(",") if x.strip()}
     review_path = REVIEW_DIR / "identity_candidates.csv"
     existing = read_csv(review_path)[1] if review_path.exists() else []
     searched = {r["person_id"] for r in existing if r["source"] == "google_scholar"}
