@@ -20,7 +20,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
-from collections import defaultdict
+from collections import Counter, defaultdict
 from datetime import date
 from pathlib import Path
 from urllib.parse import urlparse
@@ -48,13 +48,28 @@ def registrable(host: str | None) -> str | None:
     return ".".join(parts[-2:]) if len(parts) >= 2 else host
 
 
+WINDOW_DAYS = 7
+
+
 def latest_two(source: str) -> tuple[list[dict], list[dict]]:
+    """The latest collection run and the one before it.
+
+    A run can span several files (rate limits, budgets), so files within
+    WINDOW_DAYS of the newest are merged into one run, keeping the newest row
+    per person; the previous run is the newest file older than that window."""
     files = sorted((SNAPSHOT_DIR / source).glob("*.csv"))
     if not files:
         return [], []
-    latest = rows(files[-1])
-    prev = rows(files[-2]) if len(files) > 1 else []
-    return latest, prev
+    newest = date.fromisoformat(files[-1].stem)
+    latest_files = [f for f in files if (newest - date.fromisoformat(f.stem)).days <= WINDOW_DAYS]
+    older = [f for f in files if f not in latest_files]
+    latest: dict[str, dict] = {}
+    for f in latest_files:                      # ascending, so later files win
+        for r in rows(f):
+            if r["total_citations"]:
+                latest[r["person_id"]] = r
+    prev = rows(older[-1]) if older else []
+    return list(latest.values()), prev
 
 
 def main(argv=None) -> None:
@@ -71,16 +86,38 @@ def main(argv=None) -> None:
 
     gs_latest, gs_prev = latest_two("google_scholar")
     gs_prev_by = {r["person_id"]: r for r in gs_prev}
+
+    # A department's "home" email domains: its website's domain plus whatever
+    # domain most of its faculty verify with (program sites like hunterurban.org
+    # or uprrp.edu would otherwise flag everyone).
+    by_dept_domains: dict[str, Counter] = defaultdict(Counter)
+    for r in gs_latest:
+        aff = current.get(r["person_id"])
+        dom = registrable(json.loads(r["raw_json"] or "{}").get("email_domain"))
+        if aff and dom:
+            by_dept_domains[aff["department_id"]][dom] += 1
+    home_domains: dict[str, set] = {}
+    for did, d in depts.items():
+        doms = {registrable(d.get("url"))} - {None}
+        if by_dept_domains[did]:
+            top, n = by_dept_domains[did].most_common(1)[0]
+            if n >= 2 or not doms:
+                doms.add(top)
+        home_domains[did] = doms
+
     for r in gs_latest:
         pid = r["person_id"]
         aff = current.get(pid)
         dept = depts.get(aff["department_id"]) if aff else None
         raw = json.loads(r["raw_json"] or "{}")
-        dept_domain = registrable(dept.get("url")) if dept else None
         email_domain = registrable(raw.get("email_domain"))
-        if email_domain and dept_domain and email_domain != dept_domain:
-            flags[pid].append(f"Scholar verified email is @{email_domain}, department site is {dept_domain}")
-        if raw.get("affiliation") and dept and not affiliation_match(raw["affiliation"], dept):
+        homes = home_domains.get(aff["department_id"], set()) if aff else set()
+        email_ok = email_domain in homes if email_domain else None
+        if email_domain and homes and not email_ok:
+            flags[pid].append(f"Scholar verified email is @{email_domain}; department uses {', '.join(sorted(homes))}")
+        # Affiliation text is only evidence when the email does not already settle it.
+        if (email_ok is not True and raw.get("affiliation") and dept
+                and not affiliation_match(raw["affiliation"], dept)):
             flags[pid].append(f"Scholar affiliation reads \"{raw['affiliation'][:80]}\"")
         prev = gs_prev_by.get(pid)
         if prev and prev["total_citations"] and r["total_citations"]:
