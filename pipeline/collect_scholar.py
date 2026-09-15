@@ -69,11 +69,22 @@ def save_people(fields: list[str], rows: list[dict]) -> None:
         w.writerows(rows)
 
 
-def already_done(path: Path) -> set[str]:
-    if not path.exists():
-        return set()
-    with path.open(newline="", encoding="utf-8") as f:
-        return {r["person_id"] for r in csv.DictReader(f)}
+def already_done(path: Path, window_days: int = 7) -> set[str]:
+    """People collected in this file or in any Scholar snapshot within the last
+    window_days. A run that spans several days (rate limits, budgets) should
+    not fetch the same person twice."""
+    from datetime import timedelta
+    run_date = date.fromisoformat(path.stem)
+    done: set[str] = set()
+    for other in path.parent.glob("*.csv"):
+        try:
+            d = date.fromisoformat(other.stem)
+        except ValueError:
+            continue
+        if 0 <= (run_date - d).days <= window_days:
+            with other.open(newline="", encoding="utf-8") as f:
+                done |= {r["person_id"] for r in csv.DictReader(f) if r["total_citations"]}
+    return done
 
 
 def fetch_scholarly(scholarly, scholar_id: str) -> dict:
@@ -91,6 +102,9 @@ def fetch_serpapi(scholar_id: str, key: str) -> dict:
     if data.get("error"):
         raise RuntimeError(data["error"])
     author = data.get("author") or {}
+    if not author.get("name") and not (data.get("cited_by") or {}).get("table"):
+        # Stale or renumbered id: SerpApi returns an empty profile instead of following the redirect.
+        raise RuntimeError("empty profile from SerpApi; the Scholar id may have changed")
     table = (data.get("cited_by") or {}).get("table") or []
     stats = {}
     for entry in table:
@@ -154,7 +168,7 @@ def main(argv=None) -> None:
     todo = [p for p in people if p["person_id"] not in done]
     if args.limit:
         todo = todo[: args.limit]
-    print(f"{len(people)} people with Scholar ids, {len(done)} already collected today, {len(todo)} to fetch")
+    print(f"{len(people)} people with Scholar ids, {len(done)} collected in the last 7 days, {len(todo)} to fetch")
 
     out.parent.mkdir(parents=True, exist_ok=True)
     new_file = not out.exists()
