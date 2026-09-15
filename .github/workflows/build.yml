@@ -21,6 +21,8 @@ jobs:
         # The workbook regression test skips in CI (data/legacy is not committed).
         run: python -m pytest -q
       - uses: actions/upload-artifact@v4
+        # A convenience download, not part of the build; storage hiccups must not fail the run.
+        continue-on-error: true
         with:
           name: citations-sqlite
           path: build/citations.sqlite
