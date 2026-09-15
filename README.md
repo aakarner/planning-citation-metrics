@@ -85,8 +85,10 @@ API responses are cached under `build/cache/`.
 ```
 
 Default backend is SerpApi's Scholar author endpoint: one JSON call per person, runs from
-GitHub Actions. `--via scholarly` scrapes profile pages directly and is kept for spot checks
-only; a single address gets about 45 fetches before Scholar blocks it for many hours.
+GitHub Actions, paced at 18 s to stay under SerpApi's cap of 200 searches an hour (a full run
+of ~800 takes about four hours). `--via scholarly` scrapes profile pages directly and is kept
+for spot checks only; a single address gets about 45 fetches before Scholar blocks it for
+many hours.
 
 ## Scholar profile discovery
 
@@ -95,8 +97,11 @@ only; a single address gets about 45 fetches before Scholar blocks it for many h
 .venv/bin/python -m pipeline.find_scholar_profiles                         # everyone without a profile
 ```
 
-One Scholar publication search per person without a recorded profile (Scholar's author search
-now requires sign-in), with linked author profiles fetched and scored like OpenAlex
+Default backend is SerpApi's `google_scholar_profiles` engine, Scholar's own author search,
+one call per person without a recorded profile. Pass `--stale <id> ...` to also re-find people
+whose recorded Scholar id stopped resolving (the collector reports these as "empty profile").
+`--via scrape` falls back to a publication search from this machine, since Scholar's author
+search requires a sign-in when reached directly. Candidates are scored like OpenAlex
 candidates and written to the same review queue with `source=google_scholar`. Clear winners
 go into `person.csv`. Run it from a university or home connection. We do not reconstruct
 citation counts for people without a profile (that was Publish or Perish, by hand); they get

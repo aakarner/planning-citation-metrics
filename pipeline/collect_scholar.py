@@ -5,7 +5,8 @@ Two backends:
   --via serpapi   (default when SERPAPI_KEY is set) SerpApi's google_scholar_author
                   endpoint: parsed JSON, one call per person, runs anywhere including
                   GitHub Actions. Free tier is 250 lookups a month; $25 buys 1,000,
-                  enough for one full quarterly run. Key from serpapi.com in .env.
+                  enough for one full quarterly run, at a cap of 200 searches an hour
+                  (so a full run takes about four hours). Key from serpapi.com in .env.
 
   --via scholarly direct scraping of profile pages from this machine. Kept for
                   spot checks. Not viable for full runs: Scholar allowed ~45 fetches
@@ -149,8 +150,10 @@ def main(argv=None) -> None:
         if not key:
             sys.exit("SERPAPI_KEY is not set (put it in .env)")
         fetch = lambda sid: fetch_serpapi(sid, key)
-        if args.sleep == 20.0 and args.jitter == 20.0:   # defaults are for scraping; the API needs no pauses
-            args.sleep, args.jitter = 1.0, 0.0
+        if args.sleep == 20.0 and args.jitter == 20.0:
+            # SerpApi's paid plans cap searches at 200 per hour (429 beyond that);
+            # 18 s spacing keeps a run just under the cap with no failures.
+            args.sleep, args.jitter = 18.0, 0.0
     else:
         try:
             from scholarly import scholarly

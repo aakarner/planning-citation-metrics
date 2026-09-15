@@ -9,12 +9,23 @@ a Scholar profile (that is what Publish or Perish did, by hand). We do check
 whether a profile exists that we simply never recorded, and we re-check new
 hires each semester.
 
-Scholar's author search now redirects to a Google sign-in page, so this uses
-the ordinary publication search restricted to the author's name instead. The
-result page links author names to their profiles when they have one; linked
-names that match ours are fetched and scored. One search page plus one
-profile page per plausible candidate. Run it from a university or home
-connection, never a cloud runner.
+Two backends:
+
+  --via serpapi   (default when SERPAPI_KEY is set) SerpApi's google_scholar_profiles
+                  engine, which is Scholar's own author search. One call per person
+                  returns candidate profiles with id, affiliation, verified email and
+                  citation total. Runs anywhere.
+
+  --via scrape    Scholar's author search now redirects to a Google sign-in page, so
+                  this uses the ordinary publication search restricted to the author's
+                  name; linked author names that match ours are fetched and scored.
+                  One search page plus one profile page per plausible candidate. Only
+                  works from a residential or university address, and only for a few
+                  dozen people before Scholar blocks the address.
+
+    --stale        also re-check people whose recorded Scholar id no longer resolves
+                   (the collector reports these as 'empty profile'), to find the
+                   renumbered profile.
 
 Candidates are scored like OpenAlex candidates (name, affiliation text,
 citation plausibility) and land in data/review/identity_candidates.csv with
@@ -26,6 +37,8 @@ from __future__ import annotations
 import argparse
 import csv
 import html
+import json
+import os
 import re
 import sys
 import time
@@ -34,6 +47,7 @@ import urllib.request
 from datetime import date
 
 from . import ROSTER_DIR
+from .openalex import _load_dotenv
 from .match_openalex import (REVIEW_DIR, REVIEW_FIELDS, load_context, name_similarity, norm,
                              read_csv, write_csv)
 
@@ -60,6 +74,30 @@ def search_profile_links(name: str) -> dict[str, str]:
     for sid, text in PROFILE_LINK.findall(page):
         links.setdefault(sid, html.unescape(text).strip())
     return links
+
+
+_load_dotenv()
+
+
+def serpapi_profiles(name: str, key: str) -> list[dict]:
+    """Scholar author search via SerpApi -> candidate dicts in the scholarly shape."""
+    url = "https://serpapi.com/search.json?" + urllib.parse.urlencode(
+        {"engine": "google_scholar_profiles", "mauthors": name, "hl": "en", "api_key": key})
+    with urllib.request.urlopen(url, timeout=60) as resp:
+        data = json.loads(resp.read().decode("utf-8"))
+    if data.get("error") and "hasn't returned any results" not in data["error"]:
+        raise RuntimeError(data["error"])
+    out = []
+    for prof in data.get("profiles") or []:
+        email = prof.get("email") or ""
+        out.append({
+            "scholar_id": prof.get("author_id"),
+            "name": prof.get("name"),
+            "affiliation": prof.get("affiliations"),
+            "citedby": prof.get("cited_by"),
+            "email_domain": ("@" + email.split(" at ", 1)[1].strip()) if " at " in email else None,
+        })
+    return out
 
 
 ACCEPT_SCORE = 0.85
@@ -130,19 +168,35 @@ def main(argv=None) -> None:
     ap.add_argument("--limit", type=int)
     ap.add_argument("--sleep", type=float, default=10.0)
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--via", choices=["serpapi", "scrape"],
+                    default="serpapi" if os.environ.get("SERPAPI_KEY") else "scrape")
+    ap.add_argument("--stale", nargs="*", metavar="SCHOLAR_ID",
+                    help="also re-check the people holding these Scholar ids (no longer resolving)")
     args = ap.parse_args(argv)
     sys.stdout.reconfigure(line_buffering=True)  # progress lines show up in logs as they happen
-    try:
-        from scholarly import scholarly
-    except ImportError as e:
-        sys.exit(f'cannot import scholarly ({e}); run  pip install -e ".[scholar]"')
+    scholarly = None
+    key = os.environ.get("SERPAPI_KEY")
+    if args.via == "serpapi":
+        if not key:
+            sys.exit("SERPAPI_KEY is not set (put it in .env)")
+        if args.sleep == 10.0:
+            args.sleep = 18.0     # stay under SerpApi's 200 searches/hour cap
+    else:
+        try:
+            from scholarly import scholarly
+        except ImportError as e:
+            sys.exit(f'cannot import scholarly ({e}); run  pip install -e ".[scholar]"')
+    print(f"backend: {args.via}")
 
     pfields, persons, dept_by_id, current, totals = load_context()
+    stale = set(args.stale or [])
     review_path = REVIEW_DIR / "identity_candidates.csv"
     existing = read_csv(review_path)[1] if review_path.exists() else []
     searched = {r["person_id"] for r in existing if r["source"] == "google_scholar"}
 
-    todo = [p for p in persons if not p.get("google_scholar_id") and p["person_id"] not in searched]
+    todo = [p for p in persons
+            if (not p.get("google_scholar_id") or p.get("google_scholar_id") in stale)
+            and p["person_id"] not in searched]
     if args.limit:
         todo = todo[: args.limit]
     print(f"{sum(1 for p in persons if not p.get('google_scholar_id'))} people without a Scholar id, "
@@ -153,16 +207,22 @@ def main(argv=None) -> None:
         aff = current.get(person["person_id"])
         dept = dept_by_id.get(aff["department_id"]) if aff else None
         try:
-            links = search_profile_links(person["display_name"])
-            # Only fetch profiles whose linked name could be this person ("N Brooks" counts).
-            plausible = [sid for sid, text in links.items()
-                         if name_similarity(person, {"display_name": text}) >= 0.9]
-            found = []
-            for sid in plausible[:4]:
-                time.sleep(args.sleep / 2)
-                a = scholarly.search_author_id(sid)
-                found.append({"scholar_id": sid, "name": a.get("name"), "affiliation": a.get("affiliation"),
-                              "citedby": a.get("citedby"), "email_domain": a.get("email_domain")})
+            if args.via == "serpapi":
+                found = serpapi_profiles(person["display_name"], key)
+                links = {c["scholar_id"]: c["name"] for c in found}
+            else:
+                links = search_profile_links(person["display_name"])
+                # Only fetch profiles whose linked name could be this person ("N Brooks" counts).
+                plausible = [sid for sid, text in links.items()
+                             if name_similarity(person, {"display_name": text}) >= 0.9]
+                found = []
+                for sid in plausible[:4]:
+                    time.sleep(args.sleep / 2)
+                    a = scholarly.search_author_id(sid)
+                    found.append({"scholar_id": sid, "name": a.get("name"), "affiliation": a.get("affiliation"),
+                                  "citedby": a.get("citedby"), "email_domain": a.get("email_domain")})
+            # A stale id must never be re-accepted.
+            found = [c for c in found if c.get("scholar_id") and c["scholar_id"] not in stale]
             consecutive = 0
         except Exception as e:
             tally["failed"] += 1
@@ -178,6 +238,9 @@ def main(argv=None) -> None:
         tally[status] += 1
         if status == "accepted":
             person["google_scholar_id"] = scored[0]["external_id"]
+        elif person.get("google_scholar_id") in stale and not args.dry_run:
+            person["google_scholar_id"] = None      # the old id is dead either way
+            person["notes"] = ((person.get("notes") or "") + f" Scholar id {list(stale & {person['google_scholar_id']}) or ''} stopped resolving {date.today().isoformat()}.").strip()
         for rank, s in enumerate(scored):
             acc = status == "accepted" and rank == 0
             rows.append({"person_id": person["person_id"], "display_name": person["display_name"],
