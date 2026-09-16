@@ -31,6 +31,8 @@ RANK_LABEL = {"assistant": "Assistant Professor", "associate": "Associate Profes
 SOURCE_LABEL = {"google_scholar": "Google Scholar", "openalex": "OpenAlex",
                 "pop": "Publish or Perish", "manual": "entered by hand"}
 REPO = "https://github.com/aakarner/planning-citation-metrics"
+CONTACT = "alex.karner@utexas.edu"
+CONTACT_NAME = "Alex Karner"
 SCHOLAR_HELP = "https://scholar.google.com/intl/en/scholar/citations.html"
 
 
@@ -142,7 +144,7 @@ def page(title, body, base, active="", description="", extra_js=()) -> str:
 <body>
 <header class="bar">
   <div class="bar-in">
-    <a class="wordmark" href="{base}index.html">Planning <span>Citation Metrics</span></a>
+    <a class="wordmark" href="{base}index.html">Planning <span>Citation Metrics</span><span class="tag">Beta</span></a>
     <div class="search" data-base="{base}">
       <input type="search" placeholder="Search faculty or schools" aria-label="Search faculty or schools"
              autocomplete="off" spellcheck="false">
@@ -159,7 +161,9 @@ def page(title, body, base, active="", description="", extra_js=()) -> str:
        <a href="{base}methods.html">How these numbers are produced</a> &middot;
        <a href="{REPO}">Source and data on GitHub</a></p>
     <p>Counts come from public profile pages and change constantly; treat them as approximate.
-       Spotted something wrong? <a href="{REPO}/issues/new">Tell us</a>.</p>
+       This site is in beta. Spotted something wrong, or want your entry changed or removed?
+       Email <a href="mailto:{CONTACT}?subject=Planning%20Citation%20Metrics">{CONTACT}</a>
+       or <a href="{REPO}/issues/new">open an issue</a>.</p>
   </div>
 </footer>
 {scripts}
@@ -360,6 +364,17 @@ def index_page(data, slugs, dslugs, base) -> str:
                    for i, d in enumerate(top_d, 1))
     gs = data["asof"].get("google_scholar", "")
     body = f"""<main class="narrow">
+  <section class="beta" aria-labelledby="beta-h">
+    <h2 id="beta-h">Beta &middot; in active development</h2>
+    <p>This site is new and still being built. Figures, rosters and rankings will change as
+       collection improves, and some of what you see today is wrong: appointments are inferred
+       from public profiles, a few people are matched to the wrong record, and anyone who has
+       moved recently may still be listed at their old program.</p>
+    <p>If you find an error in your own entry or anywhere else, or you would rather not be
+       listed, email {CONTACT_NAME} directly at <a href="mailto:{CONTACT}?subject=Planning%20Citation%20Metrics">{CONTACT}</a>.
+       Corrections are quick to apply and genuinely welcome. Technical problems can also go in
+       the <a href="{REPO}/issues/new">issue tracker</a>.</p>
+  </section>
   <h1>Citation metrics for urban planning faculty</h1>
   <p class="lede">Total citations and h-index for {len(people):,} faculty at
      {len(depts)} planning programs in the United States and Canada, refreshed on a schedule
@@ -547,10 +562,11 @@ def methods_page(data, base, db_name) -> str:
         search for them returns nothing even though their earlier figures remain in the
         downloadable data.</li>
   </ul>
-  <p>Corrections are welcome and quick to apply:
-     <a href="{REPO}/issues/new">open an issue</a> with what is wrong.
-     If you would rather not have an individual page here at all, say so in an issue and it will be
-     removed.</p>
+  <p>The site is in beta, so expect all of the above to be more common now than it will be
+     later. Corrections are welcome and quick to apply: email {CONTACT_NAME} at
+     <a href="mailto:{CONTACT}?subject=Planning%20Citation%20Metrics%20correction">{CONTACT}</a>,
+     or <a href="{REPO}/issues/new">open an issue</a>. If you would rather not have an individual
+     page here at all, say so and it will be removed.</p>
 
   <h2>Get the data</h2>
   <p>Everything is public. The curated roster and every dated snapshot live as CSV in the

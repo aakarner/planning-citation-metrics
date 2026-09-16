@@ -118,6 +118,18 @@ td.n,th.n{text-align:right}
 td.name{white-space:normal;min-width:11rem}
 .rank{color:var(--muted);font-size:13px}
 
+/* -------------------------------------------------------------------- beta */
+.beta{background:var(--amber-soft);border:1px solid var(--amber);border-left-width:4px;
+  border-radius:4px;padding:15px 18px;margin:0 0 30px;max-width:none}
+.beta h2{font:600 12px/1 "Source Sans 3",sans-serif;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--amber);margin:0 0 9px}
+.beta p{margin:0 0 8px;font-size:15px;max-width:70ch}
+.beta p:last-child{margin:0}
+.beta a{color:var(--amber);font-weight:600}
+.tag{display:inline-block;font:600 9.5px/1 "Source Sans 3",sans-serif;letter-spacing:.1em;
+  text-transform:uppercase;padding:3px 5px;border-radius:2px;background:var(--amber-soft);
+  color:var(--amber);vertical-align:2px;margin-left:7px}
+
 /* ------------------------------------------------------------------ badges */
 .pill{display:inline-block;font:600 10.5px/1 "Source Sans 3",sans-serif;letter-spacing:.07em;
   text-transform:uppercase;padding:4px 7px;border-radius:3px;vertical-align:2px;white-space:nowrap}
