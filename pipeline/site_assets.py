@@ -52,7 +52,12 @@ img{max-width:100%}
 .bar nav a{color:var(--muted);text-decoration:none}
 .bar nav a:hover,.bar nav a[aria-current=page]{color:var(--ink)}
 main{max-width:1100px;margin:0 auto;padding:36px 24px 72px}
-main.narrow{max-width:760px}
+/* The narrow column IS the reading measure: ~75 characters at body size, and
+   the narrowest the landing page's tables fit without scrolling. Paragraphs
+   inside it carry no second limit of their own, because a ch-based cap lands
+   short of the column and reads as a broken right edge. */
+main.narrow{max-width:640px}
+main.narrow p,main.narrow .lede,main.narrow ul,main.narrow ol{max-width:none}
 footer{border-top:1px solid var(--rule);margin-top:48px}
 footer .bar-in{display:block;color:var(--muted);font-size:13.5px;padding:20px 24px 40px}
 footer p{margin:0 0 6px;max-width:75ch}
@@ -123,7 +128,7 @@ td.name{white-space:normal;min-width:11rem}
   border-radius:4px;padding:15px 18px;margin:0 0 30px;max-width:none}
 .beta h2{font:600 12px/1 "Source Sans 3",sans-serif;letter-spacing:.14em;text-transform:uppercase;
   color:var(--amber);margin:0 0 9px}
-.beta p{margin:0 0 8px;font-size:15px;max-width:70ch}
+.beta p{margin:0 0 8px;font-size:15px;max-width:none}
 .beta p:last-child{margin:0}
 .beta a{color:var(--amber);font-weight:600}
 .tag{display:inline-block;font:600 9.5px/1 "Source Sans 3",sans-serif;letter-spacing:.1em;
