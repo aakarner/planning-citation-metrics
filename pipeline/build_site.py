@@ -31,7 +31,7 @@ RANK_LABEL = {"assistant": "Assistant Professor", "associate": "Associate Profes
 SOURCE_LABEL = {"google_scholar": "Google Scholar", "openalex": "OpenAlex",
                 "pop": "Publish or Perish", "manual": "entered by hand"}
 REPO = "https://github.com/aakarner/planning-citation-metrics"
-CONTACT = "alex.karner@utexas.edu"
+CONTACT = "planning-citations@austin.utexas.edu"
 CONTACT_NAME = "Alex Karner"
 SCHOLAR_HELP = "https://scholar.google.com/intl/en/scholar/citations.html"
 
@@ -371,7 +371,7 @@ def index_page(data, slugs, dslugs, base) -> str:
        from public profiles, a few people are matched to the wrong record, and anyone who has
        moved recently may still be listed at their old program.</p>
     <p>If you find an error in your own entry or anywhere else, or you would rather not be
-       listed, email {CONTACT_NAME} directly at <a href="mailto:{CONTACT}?subject=Planning%20Citation%20Metrics">{CONTACT}</a>.
+       listed, email {CONTACT_NAME} at <a href="mailto:{CONTACT}?subject=Planning%20Citation%20Metrics">{CONTACT}</a>.
        Corrections are quick to apply and genuinely welcome. Technical problems can also go in
        the <a href="{REPO}/issues/new">issue tracker</a>.</p>
   </section>
