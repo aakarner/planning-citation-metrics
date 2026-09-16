@@ -250,9 +250,15 @@ def main(argv=None) -> None:
             if i < len(queue):
                 time.sleep(args.sleep + random.uniform(0, args.jitter))
 
-    meta = {"trigger": "manual", "notes": f"{args.via} collector; {ok} ok, {failed} failed, "
-                                          f"{(time.monotonic() - t0) / 60:.1f} min"}
-    out.with_suffix(".meta.json").write_text(json.dumps(meta, indent=2) + "\n")
+    if ok == 0 and new_file:
+        # Nothing was collected, so leave no empty snapshot behind: an
+        # header-only file would become a collection_run of zero rows.
+        out.unlink(missing_ok=True)
+        print("no profiles collected; removed the empty snapshot file", file=sys.stderr)
+    else:
+        meta = {"trigger": "manual", "notes": f"{args.via} collector; {ok} ok, {failed} failed, "
+                                              f"{(time.monotonic() - t0) / 60:.1f} min"}
+        out.with_suffix(".meta.json").write_text(json.dumps(meta, indent=2) + "\n")
     if redirected:
         # Re-read the roster now: another process (the matcher) may have written
         # to it during this long run. Only the Scholar id column is ours to change.

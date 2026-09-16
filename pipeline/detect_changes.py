@@ -140,6 +140,7 @@ def main(argv=None) -> None:
 
     oa_latest, oa_prev = latest_two("openalex")
     oa_prev_by = {r["person_id"]: r for r in oa_prev}
+    have_scholar = {r["person_id"] for r in gs_latest}
     for r in oa_latest:
         pid = r["person_id"]
         aff = current.get(pid)
@@ -147,9 +148,13 @@ def main(argv=None) -> None:
         raw = json.loads(r["raw_json"] or "{}")
         lki = raw.get("last_known_institutions") or []
         ids = {short_id(i.get("id")) for i in lki}
-        if dept and dept.get("openalex_institution_id") and ids and dept["openalex_institution_id"] not in ids:
+        # OpenAlex derives this from recent paper affiliations, so it is stale or
+        # shows a coauthor's institution often enough to be noise. Only worth
+        # raising for people with no Scholar profile, where it is all we have.
+        if (pid not in have_scholar and dept and dept.get("openalex_institution_id")
+                and ids and dept["openalex_institution_id"] not in ids):
             names = ", ".join(i.get("display_name", "?") for i in lki[:2])
-            flags[pid].append(f"OpenAlex last known institution: {names}")
+            flags[pid].append(f"OpenAlex last known institution: {names} (no Scholar profile to check against)")
         prev = oa_prev_by.get(pid)
         if prev and prev["total_citations"] and r["total_citations"]:
             a, b = int(prev["total_citations"]), int(r["total_citations"])
