@@ -214,6 +214,23 @@ the same name. Pending rows are audited on the high side only. A candidate with 
 citations than our figure is usually OpenAlex splitting one real person across sparse author
 records, so rejecting those would label some 1,600 rows as namesakes to no purpose.
 
+## Review sheet
+
+```bash
+.venv/bin/python -m pipeline.build_review_sheet             # people on fallback figures
+.venv/bin/python -m pipeline.build_review_sheet --scope all
+.venv/bin/python -m pipeline.import_review data/review/openalex_review.xlsx
+.venv/bin/python -m pipeline.match_openalex --rescore
+```
+
+Writes `data/review/openalex_review.xlsx` from the undecided candidates. The default scope is
+the people whose published figure still comes from Publish or Perish, a hand-built number from
+February 2026 that nothing refreshes, so a decision there changes what the site shows. Rows are
+banded easiest first and ordered within a person by works count, because the usual question is
+not whether a record is theirs but which of several is their main one: OpenAlex splits authors
+across records, and that is what stops the matcher accepting a winner on its own. Run
+`audit_matches` first so the namesakes the numbers already rule out never reach the sheet.
+
 ## Change report
 
 ```bash
