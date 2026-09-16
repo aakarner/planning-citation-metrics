@@ -3535,3 +3535,39 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 183,Anna Kramer,McGill University,google_scholar,8m3CoW0AAAAJ,Anna Krämer,0.575,1.0,0.0,,0.409,,182,,Ärztin Radioonkologie,,rejected,matcher,2026-09-15
 184,Nik Luka,McGill University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
 187,Bruce D'Arcus,Miami University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+188,Marcia England,Miami University,google_scholar,Dx43lFkAAAAJ,Marcia England,0.65,1.0,0.0,,1.037,,482,,Unknown affiliation,,rejected,matcher,2026-09-15
+191,Si Chen,Michigan State University,google_scholar,bP0vxAIAAAAJ,Si-Ming Chen,0.5,1.0,0.0,,285.6,,4284,,University of Science and Technology of China,,rejected,matcher,2026-09-15
+191,Si Chen,Michigan State University,google_scholar,KOQl2IsAAAAJ,Si-Jing Chen,0.5,1.0,0.0,,158.667,,2380,,The Chinese University of Hong Kong,,rejected,matcher,2026-09-15
+191,Si Chen,Michigan State University,google_scholar,XtkmEncAAAAJ,Si-An Chen,0.5,1.0,0.0,,98.133,,1472,,"Ph.D. Student of Computer Science and Information Engineering, National Taiwan University",,rejected,matcher,2026-09-15
+191,Si Chen,Michigan State University,google_scholar,6bwf5tsAAAAJ,Siyi Chen,0.47,0.941,0.0,,49.867,,748,,"HuaZhong University of Science and Technology,Union Hospita,Department of Rheumatology & Immunology",,rejected,matcher,2026-09-15
+194,Zeenat Kotval-Karamchandani,Michigan State University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+201,Russell Fricano,"Minnesota State University, Mankato",google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+203,Beth Heidelberg,"Minnesota State University, Mankato",google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+204,Kevin Parsneau,"Minnesota State University, Mankato",google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+205,Miriam Porter,"Minnesota State University, Mankato",google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+209,Gary Michelfelder,Missouri State University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+212,Alan Berger,MIT,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+215,Karilyn Crockett,MIT,google_scholar,JOBwoIsAAAAJ,Karilyn Crockett,0.65,1.0,0.0,,1.099,,78,,"Professor or urban history, public policy & planning",,rejected,matcher,2026-09-15
+218,Dennis Frenchman,MIT,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+225,Ceasar McDowell,MIT,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+235,J. Phillip Thompson,MIT,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+244,Siddhartha Sen,Morgan State University,google_scholar,RhEHgw0AAAAJ,Siddhartha Sen,0.575,1.0,0.0,,4.354,,2765,,"Former Professor of Electrical Engineering, Indian Institute of Technology, Kharagpur",,rejected,matcher,2026-09-15
+244,Siddhartha Sen,Morgan State University,google_scholar,IbvJTMoAAAAJ,siddhartha sen,0.5,1.0,0.0,,13.735,,8722,,"Emeritus Fellow, Trinity College, Dublin",,rejected,matcher,2026-09-15
+244,Siddhartha Sen,Morgan State University,google_scholar,oL8tErMAAAAJ,Siddhartha Sen,0.5,1.0,0.0,,9.68,,6147,,Microsoft Research AI Frontiers,,rejected,matcher,2026-09-15
+246,Tonya Sanders Thach,Morgan State University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+247,Zeynep Celik,New Jersey Institute of Technology,google_scholar,Spm3DGIAAAAJ,Zeynep Çelik Kenar,0.5,1.0,0.0,,0.034,,110,,Selçuk Üniversitesi,,rejected,matcher,2026-09-15
+247,Zeynep Celik,New Jersey Institute of Technology,google_scholar,vDBIICUAAAAJ,Tarik Celik Merch,0.399,0.498,0.0,,1.548,,5070,,Princeton University,,rejected,matcher,2026-09-15
+248,Gabrielle Esperdy,New Jersey Institute of Technology,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+263,Cara Michell,Northeastern University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+264,Kaitlyn Alvarez Noli,Northeastern University,google_scholar,jIaRVqYAAAAJ,Kaitlyn Alvarez Noli,0.65,1.0,0.0,,1.125,,9,,"Professor of Public Policy and Health Sciences, Northeastern Unviersity",,rejected,matcher,2026-09-15
+274,R. Dawn Hawley,Northern Arizona University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+283,Harley Etienne,Ohio State University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+291,Chryl Corbin,Portland State University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+294,Matthew Gebhardt,Portland State University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+302,Eve Baron,Pratt Institute,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+304,Jonathan Martin,Pratt Institute,google_scholar,X8nQQuwAAAAJ,Jonathan Martin,0.5,1.0,0.0,,56.947,,30182,,"Professor, Stockholm University",,rejected,matcher,2026-09-15
+306,John Shapiro,Pratt Institute,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+312,John Meligrana,Queen's University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+313,Graham Whitelaw,Queen's University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+315,John Hasse,Rowan University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+317,Kevin Keenan,Rowan University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
