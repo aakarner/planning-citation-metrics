@@ -53,7 +53,7 @@ beta_body_2 = """If you find an error in your own entry or anywhere else, or you
 heading = "Citation metrics for urban planning faculty"
 lede = """Total citations and h-indices for {people_count} faculty at
      {dept_count} planning programs in the United States and Canada. These are refreshed on a regular schedule
-     so should always be reasonably current."""
+     so should always be reasonably current for those with a Google Scholar or OpenAlex profile."""
 search_placeholder = "Search a name or a school&hellip;"
 search_hint = """Press <code>/</code> to jump to search.
      Google Scholar figures as of {scholar_date}."""
