@@ -51,9 +51,9 @@ beta_body_2 = """If you find an error in your own entry or anywhere else, or you
        Corrections are quick to apply and genuinely welcome. Technical problems can also go in
        the <a href="{repo}/issues/new">issue tracker</a>."""
 heading = "Citation metrics for urban planning faculty"
-lede = """Total citations and h-index for {people_count} faculty at
-     {dept_count} planning programs in the United States and Canada, refreshed on a schedule
-     and kept as a running record rather than overwritten."""
+lede = """Total citations and h-indices for {people_count} faculty at
+     {dept_count} planning programs in the United States and Canada. These are refreshed on a regular schedule
+     so should always be reasonably current."""
 search_placeholder = "Search a name or a school&hellip;"
 search_hint = """Press <code>/</code> to jump to search.
      Google Scholar figures as of {scholar_date}."""
