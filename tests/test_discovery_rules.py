@@ -23,11 +23,18 @@ def test_accepts_a_profile_naming_the_persons_own_department():
     assert classify(cand(1.0, "Florida State University"), DEPTS) == "accepted"
 
 
-def test_rejects_a_namesake_who_names_some_other_institution():
-    for where in ("Stanford", "Rutgers School of Public Health", "Professor of Pediatrics",
-                  "Aow Thai Marine Ecology Center", "Cleveland Clinic Lerner College of Medicine",
-                  "Seton Hall University", "Estudiante de doctorado", "Charlottesville, Virginia"):
+def test_rejects_a_namesake_whose_affiliation_names_another_institution():
+    for where in ("Rutgers School of Public Health", "Aow Thai Marine Ecology Center",
+                  "Cleveland Clinic Lerner College of Medicine", "Seton Hall University"):
         assert classify(cand(0.0, where), DEPTS) == "rejected", where
+
+
+def test_a_bare_organisation_name_goes_to_a_person():
+    # "Stanford" and "Microsoft Research AI Frontiers" are obviously not planning
+    # departments to a reader, but no rule here can tell them from an unhelpful
+    # self-description, so they are not rejected automatically.
+    for where in ("Stanford", "Microsoft Research AI Frontiers", "Charlottesville, Virginia"):
+        assert classify(cand(0.0, where), DEPTS) == "pending", where
 
 
 def test_keeps_an_unreadable_affiliation_for_a_person_to_judge():
@@ -41,9 +48,18 @@ def test_keeps_a_profile_naming_a_different_tracked_department():
 
 
 def test_a_single_clear_winner_is_accepted():
-    status, per = decide([cand(1.0, "Florida State University"), cand(0.0, "Stanford")], DEPTS)
+    status, per = decide([cand(1.0, "Florida State University"),
+                          cand(0.0, "Seton Hall University", score=0.4)], DEPTS)
     assert status == "accepted"
     assert per == ["accepted", "rejected"]
+
+
+def test_a_winner_is_still_accepted_alongside_an_undecidable_runner_up():
+    # The runner-up stays pending, but a clear winner should not be held back by it.
+    status, per = decide([cand(1.0, "Florida State University", score=0.95),
+                          cand(0.0, "Stanford", score=0.4)], DEPTS)
+    assert status == "accepted"
+    assert per == ["accepted", "pending"]
 
 
 def test_two_plausible_profiles_go_to_a_person():
@@ -54,9 +70,16 @@ def test_two_plausible_profiles_go_to_a_person():
 
 
 def test_all_namesakes_settles_the_person_with_no_review():
-    status, per = decide([cand(0.0, "Stanford"), cand(0.0, "Professor of Pediatrics")], DEPTS)
+    status, per = decide([cand(0.0, "Seton Hall University"),
+                          cand(0.0, "Professor of Pediatrics")], DEPTS)
     assert status == "rejected"
     assert per == ["rejected", "rejected"]
+
+
+def test_one_undecidable_candidate_keeps_the_person_in_the_queue():
+    status, per = decide([cand(0.0, "Seton Hall University"), cand(0.0, "Stanford")], DEPTS)
+    assert status == "pending"
+    assert per == ["rejected", "pending"]
 
 
 def test_no_candidates_at_all():
