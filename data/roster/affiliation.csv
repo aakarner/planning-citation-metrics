@@ -15,7 +15,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 14,14,3,assistant,regular,1,,,workbook-2026
 15,15,3,associate,regular,1,,,workbook-2026
 16,16,3,full,regular,1,,,workbook-2026
-17,17,3,associate,regular,1,,2026-09-14,"workbook-2026 | closed 2026-09-14: move; change from Scholar profile 2026-09-14: email @colorado.edu; affiliation ""Associate Professor, Department of Geography, University of Colorado Boulder"""
+17,17,3,associate,regular,1,,2026-09-14,"workbook-2026 | closed 2026-09-15: departed; Scholar profile 2026-09-15 reads ""University of Colorado Boulder"" (email @colorado.edu), which is not a tracked program. An earlier run mis-read this as a move to University of Colorado, Denver; corrected 2026-09-15."
 18,18,3,assistant,regular,1,,,workbook-2026
 19,19,3,associate,regular,1,,,workbook-2026
 20,20,3,assistant,regular,1,,,workbook-2026
@@ -897,7 +897,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 896,894,104,assistant,regular,1,,,workbook-2026
 897,895,104,associate,regular,1,,,workbook-2026
 898,896,104,full,regular,1,,,workbook-2026
-899,897,105,assistant,regular,1,,,workbook-2026
+899,897,105,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: depart; change from Scholar profile 2026-09-15: email @utdallas.edu; affiliation ""Assistant Professor of Sustainability Planning and Policy, University of Texas at Dallas"""
 900,898,105,assistant,regular,1,,,workbook-2026
 901,899,106,associate,regular,1,,,workbook-2026
 902,900,106,full,regular,1,,,workbook-2026
@@ -1051,7 +1051,6 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 1050,1048,120,associate,regular,1,,,workbook-2026
 1051,1049,120,full,regular,1,,,workbook-2026
 1052,11,66,full,regular,1,2026-09-14,,"change from Scholar profile 2026-09-14: email @buffalo.edu; affiliation ""SUNY-Buffalo"""
-1053,17,72,associate,regular,1,2026-09-14,,"change from Scholar profile 2026-09-14: email @colorado.edu; affiliation ""Associate Professor, Department of Geography, University of Colorado Boulder"""
 1054,39,6,full,regular,1,2026-09-14,,"change from Scholar profile 2026-09-14: email @cpp.edu; affiliation ""Professor, Cal Poly Pomona"""
 1055,78,12,associate,regular,1,2026-09-14,,"change from Scholar profile 2026-09-14: email @cornell.edu; affiliation ""Associate Professor, Cornell University"""
 1056,88,13,full,regular,1,2026-09-14,,"change from Scholar profile 2026-09-14: email @dal.ca; affiliation ""Professor of School of Planning, and Civil and Resource Engineering, Dalhousie University"""

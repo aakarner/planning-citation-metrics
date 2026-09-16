@@ -57,6 +57,11 @@ FIELDS = [
 FAILURES_BEFORE_COOLDOWN = 3
 
 
+class PermanentFailure(RuntimeError):
+    """This person cannot be collected however long we wait: the recorded
+    Scholar id no longer resolves. Skip them, do not back off."""
+
+
 def load_people() -> tuple[list[str], list[dict]]:
     with (ROSTER_DIR / "person.csv").open(newline="", encoding="utf-8") as f:
         r = csv.DictReader(f)
@@ -105,7 +110,8 @@ def fetch_serpapi(scholar_id: str, key: str) -> dict:
     author = data.get("author") or {}
     if not author.get("name") and not (data.get("cited_by") or {}).get("table"):
         # Stale or renumbered id: SerpApi returns an empty profile instead of following the redirect.
-        raise RuntimeError("empty profile from SerpApi; the Scholar id may have changed")
+        raise PermanentFailure("empty profile; this Scholar id no longer resolves "
+                               "(Google renumbers profiles). Re-find it with find_scholar_profiles.")
     table = (data.get("cited_by") or {}).get("table") or []
     stats = {}
     for entry in table:
@@ -178,6 +184,7 @@ def main(argv=None) -> None:
     ok = failed = consecutive = 0
     redirected: dict[str, str] = {}   # person_id -> new Scholar id
     retry: list[dict] = []            # people skipped during a cooldown; retried once at the end
+    stale: list[tuple] = []           # (person_id, name, id) whose Scholar id no longer resolves
     t0 = time.monotonic()
     last_success = t0
     with out.open("a", newline="", encoding="utf-8") as f:
@@ -214,6 +221,15 @@ def main(argv=None) -> None:
                 last_success = time.monotonic()
                 print(f"  [{i}/{len(queue)}] {p['display_name']}: {a.get('citedby')} cites, h={a.get('hindex')}, "
                       f"{a.get('email_domain') or 'no verified email'}")
+            except PermanentFailure as e:
+                # A dead id is not a rate limit: record it and move on.
+                failed += 1
+                stale.append((p["person_id"], p["display_name"], p["google_scholar_id"]))
+                print(f"  [{i}/{len(queue)}] {p['display_name']}: STALE ID "
+                      f"{p['google_scholar_id']} ({e})", file=sys.stderr)
+                if i < len(queue):
+                    time.sleep(args.sleep)
+                continue
             except Exception as e:
                 failed += 1
                 consecutive += 1
@@ -251,7 +267,13 @@ def main(argv=None) -> None:
             elif new:
                 print(f"  roster: {q['display_name']} redirects to {new}, which another person already holds; left unchanged", file=sys.stderr)
         save_people(fields, everyone)
-    print(f"\ndone: {ok} ok, {failed} failed -> {out}")
+    if stale:
+        print(f"\n{len(stale)} Scholar ids no longer resolve. Re-find them from an unblocked "
+              f"address with:\n  python -m pipeline.find_scholar_profiles --via scrape "
+              f"--stale={','.join(s[2] for s in stale)}", file=sys.stderr)
+        for _, name, sid in stale:
+            print(f"    {name}  {sid}", file=sys.stderr)
+    print(f"\ndone: {ok} ok, {failed} failed, {len(stale)} stale ids -> {out}")
 
 
 if __name__ == "__main__":

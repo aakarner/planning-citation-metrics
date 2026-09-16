@@ -108,6 +108,21 @@ MAX_CONSECUTIVE_FAILURES = 5
 # Words too generic to prove an affiliation match on their own.
 GENERIC = {"university", "of", "the", "state", "college", "at", "in", "and", "institute", "school",
            "department", "planning", "urban", "professor", "assistant", "associate"}
+# Names a profile may use that no rule derives from our label. Grows as cases
+# appear; keep each one specific enough that it cannot match another campus.
+ALIASES = {
+    "University at Buffalo, The State University of New York": ["SUNY Buffalo", "University at Buffalo"],
+    "State University of New York at Albany": ["SUNY Albany", "University at Albany"],
+    "Toronto Metropolitan University": ["Ryerson University"],          # renamed in 2022
+    "University of Quebec in Montreal": ["UQAM", "Universite du Quebec a Montreal"],
+}
+
+# Label suffixes a profile can legitimately omit. Campus names are deliberately absent.
+DROPPABLE_SUFFIXES = {
+    "ontario",                                          # University of Waterloo, Ontario
+    "the state university of new york",                 # University at Buffalo, ...
+    "school of environmental biological sciences",      # Rutgers University, ...
+}
 
 
 def affiliation_match(candidate_affiliation: str | None, dept: dict | None) -> float:
@@ -117,8 +132,15 @@ def affiliation_match(candidate_affiliation: str | None, dept: dict | None) -> f
     words = set(norm(candidate_affiliation).split())
     padded = f" {norm(candidate_affiliation)} "
     labels = [dept.get("university"), dept.get("short_name"), dept.get("name")]
-    # Also try each label without a trailing qualifier: 'University of Waterloo, Ontario'.
-    labels += [l.split(",")[0] for l in labels if l and "," in l]
+    labels += ALIASES.get(dept.get("short_name"), [])
+    # Drop only suffixes that add nothing a profile would repeat: a province, a
+    # system restatement, a sub-unit. Never drop a campus name, or
+    # 'University of Colorado, Denver' would match a Boulder profile.
+    for l in list(labels):
+        if l and "," in l:
+            head, _, tail = l.partition(",")
+            if norm(tail) in DROPPABLE_SUFFIXES:
+                labels.append(head)
     for label in labels:
         lab = norm(label)
         if lab and f" {lab} " in padded:          # whole label present as words ('ucla', 'mit')
