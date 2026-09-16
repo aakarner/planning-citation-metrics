@@ -43,10 +43,22 @@ FROM (
                       ELSE 9 END,
                     m.collected_at DESC
          ) AS rn
-  FROM (SELECT * FROM v_latest_metrics WHERE source <> 'openalex'
+  FROM (SELECT * FROM v_latest_metrics
+          WHERE source NOT IN ('openalex', 'google_scholar')
+        UNION ALL SELECT * FROM v_scholar_metrics
         UNION ALL SELECT * FROM v_openalex_metrics) m
 )
 WHERE rn = 1;
+
+-- A source's figures are published only while we still hold the identifier
+-- that produced them. Snapshots stay in metric_snapshot for audit, but a
+-- Scholar profile that has since been deleted (404) or an OpenAlex match we
+-- disavowed must not keep feeding the site with a number nobody can refresh.
+CREATE VIEW v_scholar_metrics AS
+SELECT m.* FROM v_latest_metrics m
+JOIN person p ON p.person_id = m.person_id
+WHERE m.source = 'google_scholar'
+  AND p.google_scholar_id IS NOT NULL AND p.google_scholar_id <> '';
 
 -- OpenAlex for everyone still matched, as a comparison series alongside Scholar.
 -- Restricted to people who currently hold an openalex_author_id: snapshots stay

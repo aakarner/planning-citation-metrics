@@ -161,6 +161,20 @@ def main(argv=None) -> None:
             if a and (a - b) / a > DROP:
                 flags[pid].append(f"OpenAlex citations fell {a} -> {b} ({(b - a) / a:+.0%})")
 
+    # Someone with no current figure vanishes from the site entirely, so say so
+    # here rather than letting them disappear quietly.
+    import sqlite3
+    try:
+        con = sqlite3.connect(BUILD_DIR / "citations.sqlite")
+        for pid, name in con.execute(
+                "SELECT p.person_id, p.display_name FROM person p "
+                "LEFT JOIN v_headline_metrics h USING(person_id) WHERE h.person_id IS NULL"):
+            flags[str(pid)].append("no current figure from any source, so they do not appear on "
+                                   "the site; needs a Scholar profile or an OpenAlex match")
+        con.close()
+    except sqlite3.Error:
+        pass
+
     lines = [f"# Change report, {date.today().isoformat()}", "",
              f"{len(flags)} people flagged out of {len(gs_latest)} Scholar and {len(oa_latest)} OpenAlex rows in the latest snapshots.", ""]
     if partial_note:

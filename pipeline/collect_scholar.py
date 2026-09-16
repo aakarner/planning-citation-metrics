@@ -62,6 +62,29 @@ class PermanentFailure(RuntimeError):
     Scholar id no longer resolves. Skip them, do not back off."""
 
 
+PROFILE_URL = "https://scholar.google.com/citations?user={id}&hl=en"
+BROWSER_UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+              "(KHTML, like Gecko) Chrome/128.0 Safari/537.36")
+
+
+def id_is_dead(scholar_id: str) -> bool:
+    """One cheap request to tell a deleted profile from a throttled one.
+
+    A fetch failure means either 'this profile is gone' or 'Google is refusing
+    us right now', and the two call for opposite responses: skip, or wait. The
+    profile page answers directly: 404 for a profile that no longer exists, a
+    redirect to /sorry/ when the address is being refused."""
+    req = urllib.request.Request(PROFILE_URL.format(id=scholar_id),
+                                 headers={"User-Agent": BROWSER_UA})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            return "/sorry/" not in resp.geturl() and resp.status == 404
+    except urllib.error.HTTPError as e:
+        return e.code == 404
+    except Exception:
+        return False        # cannot tell, so treat it as transient
+
+
 def load_people() -> tuple[list[str], list[dict]]:
     with (ROSTER_DIR / "person.csv").open(newline="", encoding="utf-8") as f:
         r = csv.DictReader(f)
@@ -110,8 +133,7 @@ def fetch_serpapi(scholar_id: str, key: str) -> dict:
     author = data.get("author") or {}
     if not author.get("name") and not (data.get("cited_by") or {}).get("table"):
         # Stale or renumbered id: SerpApi returns an empty profile instead of following the redirect.
-        raise PermanentFailure("empty profile; this Scholar id no longer resolves "
-                               "(Google renumbers profiles). Re-find it with find_scholar_profiles.")
+        raise PermanentFailure("empty profile; this Scholar id no longer resolves")
     table = (data.get("cited_by") or {}).get("table") or []
     stats = {}
     for entry in table:
@@ -142,7 +164,10 @@ def main(argv=None) -> None:
     ap.add_argument("--limit", type=int)
     ap.add_argument("--sleep", type=float, default=20.0, help="base seconds between requests")
     ap.add_argument("--jitter", type=float, default=20.0, help="extra random seconds added to each pause")
-    ap.add_argument("--cooldown", type=float, default=20.0, help="minutes to wait after repeated failures")
+    ap.add_argument("--cooldown", type=float, default=20.0,
+                    help="minutes to wait after repeated failures; 0 to fail fast instead. "
+                         "Forced to 0 for a short or id-targeted run, where waiting out a rate "
+                         "limit cannot be worth it")
     ap.add_argument("--max-wait", type=float, default=3.0, help="hours without a success before giving up")
     ap.add_argument("--date", default=date.today().isoformat())
     ap.add_argument("--ids", metavar="ID,ID,...", default="",
@@ -183,7 +208,12 @@ def main(argv=None) -> None:
     todo = [p for p in people if p["person_id"] not in done]
     if args.limit:
         todo = todo[: args.limit]
-    print(f"{len(people)} people with Scholar ids, {len(done)} collected in the last 7 days, {len(todo)} to fetch")
+    if wanted or len(todo) <= 10:
+        # A handful of people is a targeted repair, not a collection run: report
+        # failures and exit rather than sitting in rate-limit cooldowns.
+        args.cooldown = 0
+    print(f"{len(people)} people with Scholar ids, {len(done)} collected in the last 7 days, "
+          f"{len(todo)} to fetch" + ("  (failing fast, no cooldowns)" if args.cooldown == 0 else ""))
 
     out.parent.mkdir(parents=True, exist_ok=True)
     new_file = not out.exists()
@@ -238,9 +268,16 @@ def main(argv=None) -> None:
                 continue
             except Exception as e:
                 failed += 1
+                if id_is_dead(p["google_scholar_id"]):
+                    stale.append((p["person_id"], p["display_name"], p["google_scholar_id"]))
+                    print(f"  [{i}/{len(queue)}] {p['display_name']}: DEAD PROFILE "
+                          f"{p['google_scholar_id']} (page returns 404)", file=sys.stderr)
+                    if i < len(queue):
+                        time.sleep(args.sleep)
+                    continue
                 consecutive += 1
                 print(f"  [{i}/{len(queue)}] {p['display_name']}: FAILED ({type(e).__name__}: {e})", file=sys.stderr)
-                if consecutive >= FAILURES_BEFORE_COOLDOWN:
+                if consecutive >= FAILURES_BEFORE_COOLDOWN and args.cooldown > 0:
                     waited = (time.monotonic() - last_success) / 3600
                     if waited > args.max_wait:
                         print(f"no successful fetch for {waited:.1f} h; giving up. Re-run to resume.", file=sys.stderr)
@@ -280,9 +317,10 @@ def main(argv=None) -> None:
                 print(f"  roster: {q['display_name']} redirects to {new}, which another person already holds; left unchanged", file=sys.stderr)
         save_people(fields, everyone)
     if stale:
-        print(f"\n{len(stale)} Scholar ids no longer resolve. Re-find them from an unblocked "
-              f"address with:\n  python -m pipeline.find_scholar_profiles --via scrape "
-              f"--stale={','.join(s[2] for s in stale)}", file=sys.stderr)
+        print(f"\n{len(stale)} Scholar ids no longer resolve. Clear them so these people fall back "
+              f"to OpenAlex, and look for a new profile later:\n"
+              f"  python -m pipeline.clear_dead_ids --ids={','.join(s[2] for s in stale)}",
+              file=sys.stderr)
         for _, name, sid in stale:
             print(f"    {name}  {sid}", file=sys.stderr)
     print(f"\ndone: {ok} ok, {failed} failed, {len(stale)} stale ids -> {out}")

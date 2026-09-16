@@ -243,7 +243,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 242,Daniel,,Campo,Daniel Campo,2004,University of Pennsylvania,,uWPCdKQAAAAJ,,,,,,,
 243,Greg,,Newmark,Greg Newmark,2011,UC Berkeley,,-Ws1rSEAAAAJ,,,,,,,
 244,Siddhartha,,Sen,Siddhartha Sen,2001,"University of Illinois, Urbana-Champaign","International Development and Planning, Race and Ethnicity, Urban Design, Planning Theory and Practice, Transportation Planning and Policy, Housing & Community Development",,A5084190473,0000-0003-4272-3293,,https://researchgate.net/profile/Siddhartha_Sen5,https://linkedin.com/in/siddhartha-sen-12b68433,,
-245,Hyeon-Shic,,Shin,Hyeon-Shic Shin,2005,"University of Illinois, Chicago","Transportation Planning, Transportation Economics, Planning Methods, GIS.",-GG7MfEAAAAJ,A5009061450,0000-0003-2210-4911,,https://researchgate.net/profile/Hyeonshic_Shin,https://linkedin.com/in/hyeonshic-shin-5661368a,,
+245,Hyeon-Shic,,Shin,Hyeon-Shic Shin,2005,"University of Illinois, Chicago","Transportation Planning, Transportation Economics, Planning Methods, GIS.",,A5009061450,0000-0003-2210-4911,,https://researchgate.net/profile/Hyeonshic_Shin,https://linkedin.com/in/hyeonshic-shin-5661368a,,"Scholar profile -GG7MfEAAAAJ returned 404 on 2026-09-15; id cleared, falls back to OpenAlex until a new profile is found."
 246,Tonya,,Thach,Tonya Sanders Thach,2012,"University of Illinois, Chicago",,,,,,,,,
 247,Zeynep,,Celik,Zeynep Celik,1986,UC Berkeley,,,A5043802377,0000-0001-7941-9880,,,,,
 248,Gabrielle,,Esperdy,Gabrielle Esperdy,1995,City University of New York,,,A5013392610,,,,,,
@@ -373,7 +373,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 372,David,A.,Lewis,David Lewis,2003,Rutgers University,"Regional Planning and Regional Science, Brownfield Redevelopment, Local and Regional Economic Development, Globalization and Economic Restructuring",,,,,,,,
 373,Rui,,Li,Rui Li,2012,Pennsylvania State University,,Cei2NNEAAAAJ,,,,,,,
 374,Ryan,,Devlin,Ryan Devlin,2010,UC Berkeley,,,A5023723578,0000-0001-8845-7301,,,,,
-375,Jeffrey,,Doshna,Jeffrey Doshna,2015,Rutgers University,,to9o38sAAAAJ,,,,,,,
+375,Jeffrey,,Doshna,Jeffrey Doshna,2015,Rutgers University,,,,,,,,,"Scholar profile to9o38sAAAAJ returned 404 on 2026-09-15; id cleared, falls back to OpenAlex until a new profile is found."
 376,Lynn,,Mandarano,Lynn Mandarano,2004,University of Pennsylvania,"Collaborative Planning Negotiations, Sustainable Communities",trL3_roAAAAJ,A5024163993,0000-0001-5477-7630,,https://researchgate.net/profile/Lynn_Mandarano,https://linkedin.com/in/lynn-mandarano-63341634,,
 377,Robert,,Brown,Robert Brown,1985,University of Guelph,,uGmaJv4AAAAJ,A5019633786,0000-0001-6955-910X,,,,,
 378,Xinyu,,Fu,Xinyu Fu,2018,University of Florida,,005MlWQAAAAJ,A5079648643,0000-0002-3591-4158,,,,,
@@ -770,7 +770,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 769,David,,Thacher,David Thacher,1999,MIT,,,A5023977925,0000-0003-3324-1209,,,,,
 770,Ryan,P.,Allen,Ryan Allen,2007,MIT,"Immigrant and Refugee Policy, Social Networks, Urban Planning in Diverse Communities",NAvongwAAAAJ,A5037752635,0000-0003-1456-4088,,,https://linkedin.com/in/ryan-allen-731b4410,,
 771,Ragui,A.,Assaad,Ragui Assaad,1991,Cornell University,"Community Development, Demography, Economic Development Planning, Impact Assessment, International Development & Planning",KBDa5yMAAAAJ,A5074701331,0000-0002-2608-5335,,https://researchgate.net/profile/Ragui_Assaad,https://linkedin.com/in/ragui-assaad-8a78416,,
-772,Nisha,,Botchwey,Nisha Botchwey,2003,University of Pennsylvania,"Community Development, Public Health, Environmental and Health Impacts",9RdgBtgAAAAJ,A5054889735,0000-0003-1298-5065,,,https://linkedin.com/in/nishabotchwey,,
+772,Nisha,,Botchwey,Nisha Botchwey,2003,University of Pennsylvania,"Community Development, Public Health, Environmental and Health Impacts",,A5054889735,0000-0003-1298-5065,,,https://linkedin.com/in/nishabotchwey,,"Scholar profile 9RdgBtgAAAAJ returned 404 on 2026-09-15; id cleared, falls back to OpenAlex until a new profile is found."
 773,Fernando,,Burga,Fernando Burga,2013,UC Berkeley,,,,,,,,,
 774,Jason,,Cao,Jason Cao,2006,UC Davis,,2QrL8M0AAAAJ,,,,,,,
 775,Yingling,,Fan,Yingling Fan,2007,UNC,"Land Use/Growth Management, Transportation Planning and Policy, Time Geography, Urban Health",nF_usQsAAAAJ,,,,,https://linkedin.com/in/yingling-fan-7b450a10,,

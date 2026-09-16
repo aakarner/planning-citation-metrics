@@ -17,17 +17,15 @@ Tolerances below are set just above the deviations those two effects cause.
 
 from __future__ import annotations
 
-import csv
-import json
-import shutil
 import sqlite3
 from pathlib import Path
 
 import openpyxl
 import pytest
 
-from pipeline import LEGACY_DIR, ROSTER_DIR, SNAPSHOT_DIR
+from pipeline import LEGACY_DIR, ROSTER_DIR
 from pipeline.build_db import build
+from pipeline.load_workbook import migrate
 
 WORKBOOK = LEGACY_DIR / "UPDATED_Cites2026.xlsm"
 DUPLICATED = {"Guang Tian", "Lisa Berglund"}
@@ -47,32 +45,18 @@ pytestmark = pytest.mark.skipif(
 
 @pytest.fixture(scope="module")
 def db(tmp_path_factory) -> sqlite3.Connection:
-    # Build from the migrated snapshots only. Later collection runs legitimately
-    # change the headline numbers, and this test is about the migration.
-    snaps = tmp_path_factory.mktemp("snapshots")
-    for meta in SNAPSHOT_DIR.glob("*/*.meta.json"):
-        if json.loads(meta.read_text()).get("trigger") == "migration":
-            dest = snaps / meta.parent.name
-            dest.mkdir(exist_ok=True)
-            shutil.copy(meta, dest / meta.name)
-            shutil.copy(meta.with_suffix("").with_suffix(".csv"), dest / meta.with_suffix("").with_suffix(".csv").name)
-    # Likewise rebuild the roster as migrated: keep only the affiliations the
-    # workbook produced and undo closures applied by later change runs.
-    roster = tmp_path_factory.mktemp("roster")
-    for f in ROSTER_DIR.glob("*.csv"):
-        shutil.copy(f, roster / f.name)
-    with (ROSTER_DIR / "affiliation.csv").open(newline="", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        fields = reader.fieldnames
-        affs = [a for a in reader if (a["source"] or "").startswith("workbook-2026")]
-    for a in affs:
-        if "| closed" in (a["source"] or ""):
-            a["end_date"] = ""
-            a["source"] = a["source"].split(" | closed")[0]
-    with (roster / "affiliation.csv").open("w", newline="", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=fields)
-        w.writeheader()
-        w.writerows(affs)
+    """Run the migration into a temp directory and build from that.
+
+    This test is about whether the migration and the views reproduce Tom's
+    workbook. The live roster legitimately moves on afterwards: appointments
+    get closed, identifiers that stop resolving get cleared. Re-running the
+    migration in isolation keeps the test measuring the migration rather than
+    everything that has happened since.
+    """
+    tmp = tmp_path_factory.mktemp("migrated")
+    roster, snaps, private = tmp / "roster", tmp / "snapshots", tmp / "private"
+    migrate(WORKBOOK, {"google_scholar": "2026-03-01", "pop": "2026-02-20"},
+            roster, snaps, private_dir=private, migration_date="2026-09-15")
     path = build(tmp_path_factory.mktemp("db") / "citations.sqlite", roster, snaps, quiet=True)
     con = sqlite3.connect(path)
     con.row_factory = sqlite3.Row
