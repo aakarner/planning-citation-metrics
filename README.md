@@ -111,7 +111,12 @@ those links: Scholar's own author search demands a sign-in, and SerpApi has disc
 author-search endpoint and strips profile links from regular search results. Scholar blocks an
 address after ~45 requests for many hours, so run about 30 people per day (`--limit 30`); it
 resumes where it left off. Candidates are scored like OpenAlex candidates and written to the
-same review queue with `source=google_scholar`.
+same review queue with `source=google_scholar`. Because searching by name alone mostly turns
+up strangers, a candidate whose affiliation names an institution that is not this person's
+department is rejected outright, with the reason kept: a self-describing profile leaves a
+reviewer nothing to weigh. What stays pending is genuinely undecidable, a blank affiliation or
+one naming a different department we do track. `--reclassify` re-applies these rules to rows
+already in the queue without any network calls.
 
 People whose recorded Scholar id stops resolving (the collector reports "empty profile") are
 re-found by a direct fetch that follows Google's redirect, from an unblocked address:

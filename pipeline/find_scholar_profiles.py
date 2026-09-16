@@ -175,15 +175,75 @@ def score(person: dict, c: dict, dept: dict | None, ours: int | None) -> dict:
     }
 
 
-def decide(scored: list[dict]) -> str:
-    if not scored:
-        return "none"
-    best = scored[0]
-    runner = scored[1]["score"] if len(scored) > 1 else 0.0
-    if (best["score"] >= ACCEPT_SCORE and best["name_sim"] >= 0.9 and best["inst_match"] >= 1.0
-            and best["score"] - runner >= ACCEPT_MARGIN):
+def classify(cand: dict, depts: dict) -> str:
+    """accepted / pending / rejected for one candidate profile.
+
+    Discovery searches by name alone, so most hits are strangers who share it.
+    A profile whose affiliation names an institution is self-describing: if it
+    is not this person's department, it is not this person, and there is nothing
+    for a reviewer to weigh. Those are rejected outright with the reason kept.
+    What stays pending is the genuinely undecidable: a blank affiliation, or one
+    naming a different department we do track, which would be a real find plus
+    a move."""
+    if cand["inst_match"] >= 1.0:
         return "accepted"
-    return "pending"
+    text = cand.get("last_known_institution") or ""
+    if not text.strip():
+        return "pending"                     # nothing to judge on
+    for d in depts.values():
+        if affiliation_match(text, d):
+            return "pending"                 # a tracked department, just not the one on file
+    return "rejected"
+
+
+def decide(scored: list[dict], depts: dict) -> tuple[str, list[str]]:
+    """Overall outcome plus a per-candidate status."""
+    if not scored:
+        return "none", []
+    statuses = [classify(c, depts) for c in scored]
+    accepted = [i for i, st in enumerate(statuses) if st == "accepted"]
+    if len(accepted) == 1:
+        best = scored[accepted[0]]
+        others = [c["score"] for i, c in enumerate(scored) if i != accepted[0] and statuses[i] != "rejected"]
+        if (best["score"] >= ACCEPT_SCORE and best["name_sim"] >= 0.9
+                and best["score"] - max(others, default=0.0) >= ACCEPT_MARGIN):
+            return "accepted", statuses
+    for i in accepted:
+        statuses[i] = "pending"              # more than one plausible: a person decides
+    if all(st == "rejected" for st in statuses):
+        return "rejected", statuses
+    return "pending", statuses
+
+
+def reclassify() -> None:
+    """Apply the current rules to Scholar rows already in the review queue."""
+    pfields, persons, dept_by_id, current, totals = load_context()
+    path = REVIEW_DIR / "identity_candidates.csv"
+    fields, rows = read_csv(path)
+    changed = 0
+    for r in rows:
+        if r["source"] != "google_scholar":
+            continue
+        if not r["external_id"]:
+            if r["status"] == "pending":       # searched, nothing found
+                r["status"], r["reviewed_by"] = "rejected", "matcher"
+                r["reviewed_at"] = date.today().isoformat()
+                changed += 1
+            continue
+        if r["reviewed_by"] and r["reviewed_by"] != "matcher":
+            continue                                   # a person decided this; leave it
+        cand = {"inst_match": float(r["inst_match"] or 0),
+                "last_known_institution": r["last_known_institution"]}
+        st = classify(cand, dept_by_id)
+        if st != r["status"]:
+            print(f"  {r['display_name'][:26]:<27}{str(r['candidate_name'])[:24]:<25}"
+                  f"{r['status']} -> {st}   ({str(r['last_known_institution'])[:40]})")
+            r["status"] = st
+            r["reviewed_by"] = "matcher" if st in ("accepted", "rejected") else None
+            r["reviewed_at"] = date.today().isoformat() if st in ("accepted", "rejected") else None
+            changed += 1
+    write_csv(path, REVIEW_FIELDS, rows)
+    print(f"\n{changed} rows reclassified in {path}")
 
 
 def main(argv=None) -> None:
@@ -191,12 +251,19 @@ def main(argv=None) -> None:
     ap.add_argument("--limit", type=int)
     ap.add_argument("--sleep", type=float, default=10.0)
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--reclassify", action="store_true",
+                    help="re-apply the accept/reject rules to rows already in the review queue, "
+                         "from their stored evidence; makes no network calls")
     ap.add_argument("--via", choices=["serpapi", "scrape"], default="scrape")
     ap.add_argument("--stale", metavar="ID,ID,...", default="",
                     help="also re-check the people holding these Scholar ids (no longer resolving); "
                          "comma-separated, written as --stale=... because ids can start with '-'")
     args = ap.parse_args(argv)
     sys.stdout.reconfigure(line_buffering=True)  # progress lines show up in logs as they happen
+    if args.reclassify:
+        reclassify()
+        return
+
     scholarly = None
     key = os.environ.get("SERPAPI_KEY")
     if args.via == "serpapi":
@@ -224,7 +291,7 @@ def main(argv=None) -> None:
     print(f"{sum(1 for p in persons if not p.get('google_scholar_id'))} people without a Scholar id, "
           f"{len(searched)} already searched, {len(todo)} to search")
 
-    rows, tally, consecutive = [], {"accepted": 0, "pending": 0, "none": 0, "failed": 0}, 0
+    rows, tally, consecutive = [], {"accepted": 0, "pending": 0, "rejected": 0, "none": 0, "failed": 0}, 0
     for i, person in enumerate(todo, 1):
         aff = current.get(person["person_id"])
         dept = dept_by_id.get(aff["department_id"]) if aff else None
@@ -256,24 +323,29 @@ def main(argv=None) -> None:
             continue
         scored = sorted((score(person, c, dept, totals.get(person["person_id"])) for c in found),
                         key=lambda s: -s["score"])[:5]
-        status = decide(scored)
-        tally[status] += 1
+        status, statuses = decide(scored, dept_by_id)
+        tally[status] = tally.get(status, 0) + 1
         if status == "accepted":
             person["google_scholar_id"] = scored[0]["external_id"]
         elif person.get("google_scholar_id") in stale and not args.dry_run:
             person["google_scholar_id"] = None      # the old id is dead either way
             person["notes"] = ((person.get("notes") or "") + f" Scholar id {list(stale & {person['google_scholar_id']}) or ''} stopped resolving {date.today().isoformat()}.").strip()
         for rank, s in enumerate(scored):
-            acc = status == "accepted" and rank == 0
+            st = statuses[rank]
+            settled = st in ("accepted", "rejected")
             rows.append({"person_id": person["person_id"], "display_name": person["display_name"],
                          "department": dept["short_name"] if dept else None, "source": "google_scholar",
-                         "status": "accepted" if acc else "pending",
-                         "reviewed_by": "matcher" if acc else None,
-                         "reviewed_at": date.today().isoformat() if acc else None, **s})
+                         "status": st,
+                         "reviewed_by": "matcher" if settled else None,
+                         "reviewed_at": date.today().isoformat() if settled else None, **s})
         if not scored:
+            # Searched, nothing found. A settled outcome, not review work: the row
+            # exists so the next run skips this person, not so someone reads it.
             rows.append({"person_id": person["person_id"], "display_name": person["display_name"],
                          "department": dept["short_name"] if dept else None, "source": "google_scholar",
-                         "external_id": None, "candidate_name": None, "score": 0, "status": "pending"})
+                         "external_id": None, "candidate_name": None, "score": 0,
+                         "status": "rejected", "reviewed_by": "matcher",
+                         "reviewed_at": date.today().isoformat()})
         print(f"  [{i}/{len(todo)}] {person['display_name']}: {len(links)} linked authors, "
               f"{len(found)} plausible -> {status}"
               + (f" ({scored[0]['candidate_name']}, {scored[0]['last_known_institution']})" if scored else ""))

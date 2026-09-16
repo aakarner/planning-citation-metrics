@@ -2246,26 +2246,26 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 952,Jane Law,"University of Waterloo, Ontario",openalex,A5090605280,Jane Shoh Yin. Law,0.55,1.0,0.0,0.667,0.0,1,0,0,,,pending,,
 952,Jane Law,"University of Waterloo, Ontario",openalex,A5151044306,Jane E. Kirtley University of Minnesota: Silha Center for the Study of Media Ethics and Law,0.55,1.0,0.0,0.667,0.0,1,0,0,,,pending,,
 952,Jane Law,"University of Waterloo, Ontario",openalex,A5104865444,Jane Marie Law,0.525,1.0,0.0,0.5,0.0,1,0,0,,,pending,,
-5,Joyce Pressley,Alabama A&M University,google_scholar,,,0,,,,,,,,,,pending,,
-7,Chris Quattro,Appalachian State University,google_scholar,,,0,,,,,,,,,,pending,,
-8,Elizabeth Shay,Appalachian State University,google_scholar,QxKkL8IAAAAJ,Elizabeth Shay,0.575,1.0,0.0,,0.242,,187,,Cleveland Clinic Lerner College of Medicine of Case Western Reserve University,,pending,,
-31,Michael Burayidi,Ball State University,google_scholar,,,0,,,,,,,,,,pending,,
-33,Scott Truex,Ball State University,google_scholar,,,0,,,,,,,,,,pending,,
-34,John West,Ball State University,google_scholar,,,0,,,,,,,,,,pending,,
-35,Sanglim Yoo,Ball State University,google_scholar,,,0,,,,,,,,,,pending,,
-36,Dina Adbulkarim,"Cal Poly, Pomona",google_scholar,,,0,,,,,,,,,,pending,,
-37,So-Ra Baek,"Cal Poly, Pomona",google_scholar,,,0,,,,,,,,,,pending,,
-47,Kelly Main,"Cal Poly, San Luis Obispo",google_scholar,,,0,,,,,,,,,,pending,,
-48,Cornelius Nuworsoo,"Cal Poly, San Luis Obispo",google_scholar,,,0,,,,,,,,,,pending,,
-49,Ryan Sandwick,"Cal Poly, San Luis Obispo",google_scholar,,,0,,,,,,,,,,pending,,
-51,Miriam Giottonini-Badilla,"California State University, Northridge",google_scholar,,,0,,,,,,,,,,pending,,
-53,Craig Olwert,"California State University, Northridge",google_scholar,,,0,,,,,,,,,,pending,,
-54,Ward Thomas,"California State University, Northridge",google_scholar,,,0,,,,,,,,,,pending,,
-55,Zeynep Toker,"California State University, Northridge",google_scholar,pfz0Z_YAAAAJ,Zeynep Toker Dincer,0.575,1.0,0.0,,0.217,,101,,Cerrahpaşa Tıp Fakültesi,,pending,,
-60,Roland Anglin,Cleveland State University,google_scholar,,,0,,,,,,,,,,pending,,
-66,Hugo Sarmiento,Columbia University,google_scholar,CXjh5GsAAAAJ,Hugo Sarmiento,0.575,1.0,0.0,,2.36,,413,,Estudiante de doctorado,,pending,,
-72,Nancy Brooks,Cornell University,google_scholar,,,0,,,,,,,,,,pending,,
-76,Jeffrey Chusid,Cornell University,google_scholar,,,0,,,,,,,,,,pending,,
+5,Joyce Pressley,Alabama A&M University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+7,Chris Quattro,Appalachian State University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+8,Elizabeth Shay,Appalachian State University,google_scholar,QxKkL8IAAAAJ,Elizabeth Shay,0.575,1.0,0.0,,0.242,,187,,Cleveland Clinic Lerner College of Medicine of Case Western Reserve University,,rejected,matcher,2026-09-15
+31,Michael Burayidi,Ball State University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+33,Scott Truex,Ball State University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+34,John West,Ball State University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+35,Sanglim Yoo,Ball State University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+36,Dina Adbulkarim,"Cal Poly, Pomona",google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+37,So-Ra Baek,"Cal Poly, Pomona",google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+47,Kelly Main,"Cal Poly, San Luis Obispo",google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+48,Cornelius Nuworsoo,"Cal Poly, San Luis Obispo",google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+49,Ryan Sandwick,"Cal Poly, San Luis Obispo",google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+51,Miriam Giottonini-Badilla,"California State University, Northridge",google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+53,Craig Olwert,"California State University, Northridge",google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+54,Ward Thomas,"California State University, Northridge",google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+55,Zeynep Toker,"California State University, Northridge",google_scholar,pfz0Z_YAAAAJ,Zeynep Toker Dincer,0.575,1.0,0.0,,0.217,,101,,Cerrahpaşa Tıp Fakültesi,,rejected,matcher,2026-09-15
+60,Roland Anglin,Cleveland State University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+66,Hugo Sarmiento,Columbia University,google_scholar,CXjh5GsAAAAJ,Hugo Sarmiento,0.575,1.0,0.0,,2.36,,413,,Estudiante de doctorado,,rejected,matcher,2026-09-15
+72,Nancy Brooks,Cornell University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+76,Jeffrey Chusid,Cornell University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
 1,Florina Dutt,Alabama A&M University,openalex,A5091437041,Florina Dutt,0.7,1.0,0.0,1.0,0.625,17,100,4,Georgia Institute of Technology,https://orcid.org/0000-0002-2484-6831,pending,,
 1,Florina Dutt,Alabama A&M University,openalex,A5120149276,Dutt Florina,0.675,0.611,1.0,0.667,0.0,1,0,0,Alabama Agricultural and Mechanical University,,pending,,
 5,Joyce Pressley,Alabama A&M University,openalex,A5081607544,Joyce Ann Pressley,0.85,1.0,1.0,0.667,0.01,1,4,1,Alabama Agricultural and Mechanical University,,pending,,
@@ -3503,3 +3503,33 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 1049,Mark Winfield,York University,openalex,A5082341472,Mark E. Winfield,0.575,1.0,0.0,0.167,0.27,7,330,6,United States Department of Veterans Affairs,,pending,,
 1049,Mark Winfield,York University,openalex,A5129435695,Mark Winfield,0.45,1.0,0.0,0.0,0.0,2,0,0,,,pending,,
 1049,Mark Winfield,York University,openalex,A5091863895,Mark Winfield Brennan,0.45,1.0,0.0,0.0,0.0,1,0,0,,,pending,,
+89,Patricia Manuel,Dalhousie University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+94,Andrew Jacobs,East Carolina University,google_scholar,2Q91_s0AAAAJ,Andrew S. Jacobs,0.5,1.0,0.0,,16.269,,1269,,"Charlottesville, Virginia",,rejected,matcher,2026-09-15
+97,Heather Khan-Welsh,Eastern Michigan University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+98,RJ Koscielniak,Eastern Michigan University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+100,Margo Hill,Eastern Washington,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+101,Jason Scully,Eastern Washington,google_scholar,bT8DNoEAAAAJ,Jason Scully,0.5,1.0,0.0,,0.121,,40,,Seton Hall University,,rejected,matcher,2026-09-15
+110,Aurora Echavarria Canales,Florida State University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+114,Tisha Holmes,Florida State University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+117,Mehak Sachdeva,Florida State University,google_scholar,w5CaZhQAAAAJ,Mehak Sachdeva,1.0,1.0,1.0,,1.207,,455,,Florida State University,,accepted,matcher,2026-09-15
+119,Uwe Brandes,Georgetown University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+122,Emily Barrett,Georgia Tech,google_scholar,Tms37_EAAAAJ,Emily Barrett,0.5,1.0,0.0,,1263.4,,12634,,Rutgers School of Public Health,,rejected,matcher,2026-09-15
+126,William Drummond,Georgia Tech,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+137,Jerold Kayden,Harvard University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+139,Rahul Mehrotra,Harvard University,google_scholar,g9sodT8AAAAJ,Rahul Mehrotra,0.575,1.0,0.0,,0.432,,577,,Aow Thai Marine Ecology Center,,rejected,matcher,2026-09-15
+141,Richard Peiser,Harvard University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+142,Peter Rowe,Harvard University,google_scholar,lEAqe6IAAAAJ,Peter C. Rowe,0.575,1.0,0.0,,2.433,,11654,,Professor of Pediatrics,,rejected,matcher,2026-09-15
+147,Nicholas Bloom,Hunter College,google_scholar,fJy1tloAAAAJ,Nick Bloom,0.46,0.92,0.0,,160.566,,123636,,Stanford,,rejected,matcher,2026-09-15
+153,Sigmund Shipp,Hunter College,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+155,John Benhart,Indiana University of Pennsylvania,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+157,Richard Hoch,Indiana University of Pennsylvania,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+158,Calvin Masilela,Indiana University of Pennsylvania,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+160,Susan Bradbury,Iowa State University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+169,Moe Chowdhury,Jackson State University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+172,Edmund Merem,Jackson State University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+173,Talya Thomas,Jackson State University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+174,Joan Wesley,Jackson State University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+175,Huston Gibson,Kansas State University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+179,La Barbara Wigfall,Kansas State University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+181,Lisa Bornstein,McGill University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
+183,Anna Kramer,McGill University,google_scholar,8m3CoW0AAAAJ,Anna Krämer,0.575,1.0,0.0,,0.409,,182,,Ärztin Radioonkologie,,rejected,matcher,2026-09-15
