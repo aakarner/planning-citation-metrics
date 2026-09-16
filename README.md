@@ -128,6 +128,25 @@ re-found by a direct fetch that follows Google's redirect, from an unblocked add
 We do not reconstruct citation counts for people without a profile (that was Publish or
 Perish, by hand); they get the flagged OpenAlex number instead.
 
+## Scheduled discovery (local, macOS)
+
+Discovery has to run from a residential or campus address, so it cannot live in GitHub
+Actions. A launchd agent runs one batch of 30 a day:
+
+```bash
+bash scripts/install_discovery_agent.sh          # daily at 10:15
+bash scripts/install_discovery_agent.sh 21 30    # or a time you pick
+```
+
+Each run pulls, searches 30 people, commits anything it found, and pushes. It takes a lock so
+runs cannot overlap, logs to `~/Library/Logs/planning-citations-discovery.log`, and when
+nobody is left to search it says so and stops doing work. Remove it with:
+
+```bash
+launchctl bootout gui/$(id -u)/com.aakarner.planning-citations.discovery
+rm ~/Library/LaunchAgents/com.aakarner.planning-citations.discovery.plist
+```
+
 ## Applying roster changes
 
 ```bash
