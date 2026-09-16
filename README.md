@@ -180,7 +180,14 @@ date and the evidence in `source`.
 ```
 
 Writes `build/site`: a page per current faculty member and per department, sortable rankings,
-a methods page, a client-side search index, and a copy of the database for download. Plain
+a methods page, a client-side search index, and a copy of the database for download.
+
+**Every word on the site is in [site/copy.toml](site/copy.toml)**, not in the Python. Edit the
+prose there, rebuild, and push; the deploy runs itself. Values in curly braces like
+`{people_count}` are filled in at build time, and a name the page does not provide stops the
+build with a message naming the passage and listing what is available, so a typo cannot reach
+the site. `tests/test_copy.py` fills every passage in the file, which catches a malformed brace
+anywhere in it. Plain
 Python and SQLite, no Node toolchain. Deployed to GitHub Pages by `.github/workflows/deploy.yml`
 on every push that touches `data/`, `sql/`, or `pipeline/`:
 
