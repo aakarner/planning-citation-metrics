@@ -140,6 +140,33 @@ planning faculty hold (electrical engineering, biochemistry) are reported as pro
 namesakes and left alone. Nothing is deleted: old appointments are closed with the snapshot
 date and the evidence in `source`.
 
+## Build the site
+
+```bash
+.venv/bin/python -m pipeline.build_db && .venv/bin/python -m pipeline.build_site
+```
+
+Writes `build/site`: a page per current faculty member and per department, sortable rankings,
+a methods page, a client-side search index, and a copy of the database for download. Plain
+Python and SQLite, no Node toolchain. Deployed to GitHub Pages by `.github/workflows/deploy.yml`
+on every push that touches `data/`, `sql/`, or `pipeline/`:
+
+<https://aakarner.github.io/planning-citation-metrics/>
+
+## Audit OpenAlex matches
+
+```bash
+.venv/bin/python -m pipeline.audit_matches --dry-run
+.venv/bin/python -m pipeline.audit_matches
+```
+
+Run after an OpenAlex collection. The matcher decides before any metrics exist; once a snapshot
+is in, a match whose OpenAlex citation count is more than 3x or less than 5% of the Scholar or
+Publish or Perish count we hold is almost certainly a namesake. Offenders lose their
+`openalex_author_id` and their review row is marked `rejected`, which the matcher then respects.
+`v_openalex_metrics` publishes only matches currently held, so a disavowed snapshot stays in the
+database for audit without reaching the site.
+
 ## Change report
 
 ```bash

@@ -193,7 +193,14 @@ Each run appends a snapshot file under `data/snapshots/<source>/<YYYY-MM-DD>.csv
 
 A **static site** is the right shape: about 1,200 entities, read-only for visitors, updated a few times a month. No server, no database to keep alive, free hosting on GitHub Pages. Decided 2026-09-15: launch at the default address, `aakarner.github.io/planning-citation-metrics`, and revisit a custom or UT domain once the site exists.
 
-Recommended stack: **Observable Framework**. Its Python data loaders query the SQLite file at build time, it supports parameterized routes for one page per person and per department, and Observable Plot handles sparklines and distributions well. Astro is a fine alternative if the team prefers a general-purpose site builder. Search is client-side over a prebuilt JSON index (roughly 200 KB for all people and departments) using MiniSearch, so typing a name or school returns instantly.
+**Built 2026-09-15 as plain Python instead (`pipeline/build_site.py`).** The pages are read-only
+and the charts are two-point sparklines, so a JavaScript framework would have added a Node
+toolchain and a build step without changing anything a reader sees; there is no Node on the
+maintainer's machine either. The generator reads the SQLite file and writes 1,150 pages in a few
+seconds, search is a linear scan over a 170 KB JSON index, and the CI workflow stays
+single-language. Live at `aakarner.github.io/planning-citation-metrics`.
+
+The original recommendation, for the record, was **Observable Framework**. Its Python data loaders query the SQLite file at build time, it supports parameterized routes for one page per person and per department, and Observable Plot handles sparklines and distributions well. Astro is a fine alternative if the team prefers a general-purpose site builder. Search is client-side over a prebuilt JSON index (roughly 200 KB for all people and departments) using MiniSearch, so typing a name or school returns instantly.
 
 Pages:
 
@@ -252,7 +259,7 @@ planning-citation-metrics/
 **Phase 3. Scheduling** (1 week)
 - GitHub Actions workflows for monthly OpenAlex, quarterly Scholar, and deploy. Failure alerts as issues.
 
-**Phase 4. Website** (3 to 4 weeks)
+**Phase 4. Website** — done 2026-09-15
 - Person, department, rankings, methods, and download pages. Client-side search. Deploy to GitHub Pages.
 
 **Phase 5. Roster maintenance workflow** (1 week, then ongoing)
