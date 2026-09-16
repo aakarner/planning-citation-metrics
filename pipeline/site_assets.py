@@ -52,12 +52,13 @@ img{max-width:100%}
 .bar nav a{color:var(--muted);text-decoration:none}
 .bar nav a:hover,.bar nav a[aria-current=page]{color:var(--ink)}
 main{max-width:1100px;margin:0 auto;padding:36px 24px 72px}
-/* The narrow column IS the reading measure: ~75 characters at body size, and
-   the narrowest the landing page's tables fit without scrolling. Paragraphs
-   inside it carry no second limit of their own, because a ch-based cap lands
-   short of the column and reads as a broken right edge. */
-main.narrow{max-width:640px}
+/* The narrow column IS the reading measure: paragraphs inside it carry no
+   second limit of their own, because a ch-based cap lands short of the column
+   and reads as a broken right edge. Lines run long at this width, so prose
+   here gets extra leading, which is what keeps a long line trackable. */
+main.narrow{max-width:800px}
 main.narrow p,main.narrow .lede,main.narrow ul,main.narrow ol{max-width:none}
+main.narrow p,main.narrow li{line-height:1.68}
 footer{border-top:1px solid var(--rule);margin-top:48px}
 footer .bar-in{display:block;color:var(--muted);font-size:13.5px;padding:20px 24px 40px}
 footer p{margin:0 0 6px;max-width:75ch}
