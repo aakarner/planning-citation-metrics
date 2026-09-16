@@ -3,7 +3,9 @@ name: Deploy site
 on:
   push:
     branches: [main]
-    paths: ["data/**", "sql/**", "pipeline/**", ".github/workflows/deploy.yml"]
+    # site/** carries copy.toml, which is the whole point of editing copy; leaving
+    # it out meant a copy edit pushed but never published.
+    paths: ["data/**", "sql/**", "pipeline/**", "site/**", ".github/workflows/deploy.yml"]
   workflow_dispatch:
 
 # One deploy at a time; a newer push supersedes a queued one but never
