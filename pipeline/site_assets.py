@@ -264,6 +264,16 @@ SEARCH_JS = """
       if (!box.contains(e.target)) list.hidden = true;
     });
   }
+  /* Send off-site links to a new tab, so a reader following one does not lose
+     the page they were reading, and so the click has a visible effect.
+     mailto: and same-origin links are left alone. */
+  document.querySelectorAll('a[href^="http"]').forEach(function (a) {
+    if (a.hostname && a.hostname !== location.hostname) {
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+    }
+  });
+
   document.querySelectorAll(".search").forEach(wire);
   // "/" focuses search, the way most reference sites behave.
   document.addEventListener("keydown", function (e) {
