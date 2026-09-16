@@ -49,8 +49,8 @@ from datetime import date
 
 from . import ROSTER_DIR
 from .openalex import _load_dotenv
-from .match_openalex import (REVIEW_DIR, REVIEW_FIELDS, load_context, name_similarity, norm,
-                             read_csv, write_csv)
+from .match_openalex import (REVIEW_DIR, REVIEW_FIELDS, jaro_winkler, load_context,
+                             name_similarity, norm, read_csv, write_csv)
 
 SEARCH_URL = "https://scholar.google.com/scholar?hl=en&q=author%3A%22{name}%22"
 USER_AGENT = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
@@ -116,7 +116,10 @@ MAX_CONSECUTIVE_FAILURES = 5
 
 # Words too generic to prove an affiliation match on their own.
 GENERIC = {"university", "of", "the", "state", "college", "at", "in", "and", "institute", "school",
-           "department", "planning", "urban", "professor", "assistant", "associate"}
+           "department", "planning", "urban", "professor", "assistant", "associate",
+           # 'universite' is one edit from 'university', so leaving it distinctive let
+           # any Montreal institution stand in for Universite de Montreal.
+           "universite", "universidad", "universidade", "universita", "universitat"}
 # An affiliation line that names no institution cannot tell us the profile
 # belongs to someone else, however unhelpful it is.
 INSTITUTION_WORDS = ("universit", "college", "institut", "school", "polytechnic", "academy",
@@ -146,6 +149,22 @@ ALIASES = {
     "State University of New York at Albany": ["SUNY Albany", "University at Albany"],
     "Toronto Metropolitan University": ["Ryerson University"],          # renamed in 2022
     "University of Quebec in Montreal": ["UQAM", "Universite du Quebec a Montreal"],
+    # Our label is the short form the field uses; a profile writes the legal name.
+    # Each alias keeps the campus word, so one campus can never match another.
+    "UC Irvine": ["University of California, Irvine", "University of California Irvine", "UCI"],
+    "UC Berkeley": ["University of California, Berkeley", "University of California Berkeley"],
+    "UC San Diego": ["UCSD"],
+    "UCLA": ["University of California, Los Angeles", "University of California Los Angeles"],
+    "Cal Poly, Pomona": ["California State Polytechnic University, Pomona",
+                         "California State Polytechnic University Pomona"],
+    "Cal Poly, San Luis Obispo": ["California Polytechnic State University, San Luis Obispo",
+                                  "California Polytechnic State University San Luis Obispo"],
+    "UNC": ["University of North Carolina at Chapel Hill", "University of North Carolina, Chapel Hill"],
+    "USC": ["University of Southern California"],
+    "Georgia Tech": ["Georgia Institute of Technology"],
+    "Virginia Tech": ["Virginia Polytechnic Institute and State University"],
+    "MIT": ["Massachusetts Institute of Technology"],
+    "Universite de Montreal": ["University of Montreal", "Universite de Montreal"],
 }
 
 # Label suffixes a profile can legitimately omit. Campus names are deliberately absent.
@@ -180,6 +199,61 @@ def affiliation_match(candidate_affiliation: str | None, dept: dict | None) -> f
         if len(toks) >= 2 and toks <= words:       # all distinctive words present ('arizona','state' is too generic; 'alabama','a&m'...)
             return 1.0
     return 0.0
+
+
+# A profile can misspell its own institution ("University of Mew Mexico"), which
+# no alias can anticipate. What recovers those safely is a rule about typos, not
+# a similarity score: an institution the text names is a *different* institution,
+# however few characters separate the names, so scoring by overall resemblance
+# matches UC Irvine against USC and Urbana-Champaign against Chicago. Instead
+# every distinctive word of the label must be present, allowing one character of
+# slop per word. Even then this only corroborates evidence that already points
+# somewhere (a verified email domain) or vetoes a departure; it never initiates
+# a move on its own.
+TYPO_MIN_LEN = 3          # shorter words are too easy to collide by one edit
+
+
+def _edit_distance_le1(a: str, b: str) -> bool:
+    """True if `a` and `b` differ by at most one insertion, deletion or change."""
+    if a == b:
+        return True
+    la, lb = len(a), len(b)
+    if abs(la - lb) > 1:
+        return False
+    if la > lb:
+        a, b, la, lb = b, a, lb, la          # a is now the shorter
+    i = 0
+    while i < la and a[i] == b[i]:
+        i += 1
+    if la == lb:                             # one substitution allowed
+        return a[i + 1:] == b[i + 1:]
+    return a[i:] == b[i + 1:]                # one insertion allowed
+
+
+def affiliation_names_dept(text: str | None, dept: dict | None) -> bool:
+    """True if `text` names this department's institution, tolerating a typo.
+
+    Every distinctive word of some label must appear in the text, exactly or one
+    character off. 'University of Colorado Boulder' fails against Denver because
+    'boulder' is absent, not merely different, which is the case that matters.
+    """
+    if not text or not dept:
+        return False
+    if affiliation_match(text, dept):
+        return True
+    words = [w for w in norm(text).split() if w]
+    if not words:
+        return False
+    labels = [dept.get("university"), dept.get("short_name"), dept.get("name")]
+    labels += ALIASES.get(dept.get("short_name"), [])
+    for label in labels:
+        toks = [t for t in norm(label or "").split() if t not in GENERIC and len(t) > 2]
+        if len(toks) < 2:
+            continue                         # one distinctive word is too weak to fuzz
+        if all(any(len(t) >= TYPO_MIN_LEN and _edit_distance_le1(t, w) for w in words)
+               for t in toks):
+            return True
+    return False
 
 
 def cites_plausibility(candidate_cites, ours) -> tuple[float, float | None]:

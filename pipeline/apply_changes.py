@@ -12,6 +12,9 @@ in the latest run:
   2. affiliation text names another tracked department      -> MOVE there
   3. verified email belongs to another tracked department,
      and the affiliation text does not contradict it        -> MOVE there
+     (the text may name that department with one character wrong: a profile
+      reading "University of Mew Mexico" with an @unm.edu address is a move,
+      not a departure)
   4. affiliation text names an institution we don't track,
      and the email domain is not the current department's  -> DEPART
      (appointment closed, destination kept in the note)
@@ -34,7 +37,7 @@ from pathlib import Path
 
 from . import ROSTER_DIR
 from .detect_changes import latest_two, registrable, rows
-from .find_scholar_profiles import affiliation_match
+from .find_scholar_profiles import affiliation_match, affiliation_names_dept
 from .match_openalex import norm
 
 INSTITUTION_WORDS = ("university", "universit", "college", "institute", "school", "polytechnic", "academy")
@@ -61,6 +64,49 @@ def rank_from_text(text: str, default: str) -> str:
     if re.search(r"\bprofessor\b", t) and "assistant" not in t and "associate" not in t:
         return "full"
     return default
+
+
+def decide(text, email, rank, cur, depts, home, domain_owner):
+    """One profile against one appointment -> (action, destination).
+
+    Returns (None, None) to leave the appointment alone. Kept separate from
+    main() so the rules can be tested: three wrong departures reached the site
+    in September 2026 because this logic only ran against live data.
+
+    `rank` is the rank on the appointment, `cur` the department on file, `home`
+    its set of email domains, and `domain_owner` maps a domain to the department
+    that owns it.
+    """
+    low = text.lower()
+    if any(w in low for w in PRE_FACULTY):
+        return None, None                                  # stale pre-appointment profile
+    # Typo-tolerant here on purpose: a profile that misspells its own school
+    # must not read as a departure from it. Initiating a move still needs an
+    # exact match below.
+    at_current = bool(text) and affiliation_names_dept(text, cur) and not any(c in low for c in UNTRACKED_CAMPUS)
+    if not at_current and any(w in low for w in FOREIGN_FIELDS):
+        return "wrong", None                               # namesake's profile: report, do not apply
+    if at_current:
+        promoted = RANK_ORDER.get(rank_from_text(text, rank), -1) > RANK_ORDER.get(rank, -1)
+        return ("promote", cur) if promoted else (None, None)   # rule 1, plus promotions
+    email_home = bool(email) and email in home
+    if any(c in low for c in UNTRACKED_CAMPUS) and email and not email_home:
+        return "depart", None
+    target = None
+    if text:
+        hits = [d for did, d in depts.items() if did != cur["department_id"] and affiliation_match(text, d)]
+        if len(hits) == 1:
+            target = hits[0]                               # rule 2
+    if target is None and email and not email_home:
+        did = domain_owner.get(email)
+        if did and did != cur["department_id"] and (not text or not any(w in low for w in INSTITUTION_WORDS)
+                                                    or affiliation_names_dept(text, depts[did])):
+            target = depts[did]                            # rule 3
+    if target is not None:
+        return "move", target
+    if text and any(w in low for w in INSTITUTION_WORDS) and email and not email_home:
+        return "depart", None                              # rule 4
+    return None, None
 
 
 def main(argv=None) -> None:
@@ -108,38 +154,10 @@ def main(argv=None) -> None:
         raw = json.loads(r["raw_json"] or "{}")
         text = raw.get("affiliation") or ""
         email = registrable(raw.get("email_domain"))
-        cur = depts[a["department_id"]]
-        low = text.lower()
-        if any(w in low for w in PRE_FACULTY):
-            continue                                       # stale pre-appointment profile
-        at_current = bool(text) and affiliation_match(text, cur) and not any(c in low for c in UNTRACKED_CAMPUS)
-        if not at_current and any(w in low for w in FOREIGN_FIELDS):
-            actions.append(("wrong", pid, a, None, text, email, r["collected_at"]))
-            continue                                       # namesake's profile elsewhere: report, do not apply
-        if at_current:
-            new_rank = rank_from_text(text, a["rank"])     # rule 1, plus promotions
-            if RANK_ORDER.get(new_rank, -1) > RANK_ORDER.get(a["rank"], -1):
-                actions.append(("promote", pid, a, cur, text, email, r["collected_at"]))
-            continue
-        if any(c in low for c in UNTRACKED_CAMPUS) and email and not email_home_check(email, home, a):
-            actions.append(("depart", pid, a, None, text, email, r["collected_at"]))
-            continue
-        email_home = email in home[a["department_id"]] if email else False
-        target = None
-        if text:
-            hits = [d for did, d in depts.items() if did != a["department_id"] and affiliation_match(text, d)]
-            if len(hits) == 1:
-                target = hits[0]                           # rule 2
-        if target is None and email and not email_home:
-            did = domain_owner.get(email)
-            if did and did != a["department_id"] and (not text or not any(w in text.lower() for w in INSTITUTION_WORDS)
-                                                       or affiliation_match(text, depts[did])):
-                target = depts[did]                        # rule 3
-        if target is not None:
-            actions.append(("move", pid, a, target, text, email, r["collected_at"]))
-            continue
-        if text and any(w in text.lower() for w in INSTITUTION_WORDS) and email and not email_home:
-            actions.append(("depart", pid, a, None, text, email, r["collected_at"]))   # rule 4
+        kind, target = decide(text, email, a["rank"], depts[a["department_id"]], depts,
+                              home[a["department_id"]], domain_owner)
+        if kind:
+            actions.append((kind, pid, a, target, text, email, r["collected_at"]))
 
     for kind, pid, a, target, text, email, when in actions:
         p = people[pid]

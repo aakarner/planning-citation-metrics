@@ -8,7 +8,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 7,7,2,assistant,regular,1,,,workbook-2026
 8,8,2,associate,regular,1,,,workbook-2026
 9,9,2,assistant,regular,1,,2026-09-14,"workbook-2026 | closed 2026-09-14: depart; change from Scholar profile 2026-09-14: email @uncg.edu; affiliation ""University of North Carolina at Greensboro"""
-10,10,3,associate,regular,1,,2026-09-14,"workbook-2026 | closed 2026-09-14: depart; change from Scholar profile 2026-09-14: email @uci.edu; affiliation ""Associate Professor, University of California, Irvine"""
+10,10,3,associate,regular,1,,2026-09-14,"workbook-2026 | closed 2026-09-14: depart; change from Scholar profile 2026-09-14: email @uci.edu; affiliation ""Associate Professor, University of California, Irvine"" | RECLASSIFIED 2026-09-16: move to UC Irvine, not a departure. The profile names a tracked program our department labels did not recognise, and the @uci.edu address confirms it."
 11,11,3,full,regular,1,,2026-09-14,"workbook-2026 | closed 2026-09-14: move; change from Scholar profile 2026-09-14: email @buffalo.edu; affiliation ""SUNY-Buffalo"""
 12,12,3,associate,regular,1,,,workbook-2026
 13,13,3,associate,regular,1,,,workbook-2026
@@ -39,7 +39,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 38,38,6,assistant,regular,1,,,workbook-2026
 39,39,6,associate,regular,1,,2026-09-14,"workbook-2026 | closed 2026-09-14: promote; change from Scholar profile 2026-09-14: email @cpp.edu; affiliation ""Professor, Cal Poly Pomona"""
 40,40,6,full,regular,1,,,workbook-2026
-41,41,6,assistant,regular,1,,2026-09-14,"workbook-2026 | closed 2026-09-14: depart; change from Scholar profile 2026-09-14: email @tinkercraft.com; affiliation ""California State Polytechnic University, Pomona"""
+41,41,6,assistant,regular,1,,,"workbook-2026 | closed 2026-09-14: depart; change from Scholar profile 2026-09-14: email @tinkercraft.com; affiliation ""California State Polytechnic University, Pomona"" | REVERSED 2026-09-16: not a departure. The profile reads ""California State Polytechnic University, Pomona"", which is this same program; only the missing name alias made it look like another institution. A consulting email domain alone never moves anyone."
 42,42,6,assistant,regular,1,,,workbook-2026
 43,43,7,assistant,regular,1,,,workbook-2026
 44,44,7,full,regular,1,,,workbook-2026
@@ -239,7 +239,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 238,237,27,assistant,regular,1,,,workbook-2026
 239,238,27,associate,regular,1,,,workbook-2026
 240,239,27,full,regular,1,,,workbook-2026
-241,240,27,associate,regular,1,,,workbook-2026
+241,240,27,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @mit.edu; affiliation ""Professor of Cities and Transportation, Massachusetts Institute of Technology"""
 242,241,27,full,regular,1,,,workbook-2026
 243,242,33,associate,regular,1,,,workbook-2026
 244,243,33,assistant,regular,1,,,workbook-2026
@@ -463,7 +463,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 462,461,59,associate,regular,1,,,workbook-2026
 463,462,59,associate,regular,1,,,workbook-2026
 464,463,59,assistant,regular,1,,,workbook-2026
-465,464,59,associate,regular,1,,,workbook-2026
+465,464,59,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @uci.edu; affiliation ""Professor, University of California Irvine"""
 466,465,60,full,regular,1,,,workbook-2026
 467,466,60,assistant,regular,1,,,workbook-2026
 468,467,60,assistant,regular,1,,,workbook-2026
@@ -510,13 +510,13 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 509,508,62,assistant,regular,1,,,workbook-2026
 510,509,62,assistant,regular,1,,,workbook-2026
 511,510,62,assistant,regular,1,,,workbook-2026
-512,511,62,associate,regular,1,,,workbook-2026
+512,511,62,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @unc.edu; affiliation ""Professor of City and Regional Planning, University of North Carolina at Chapel Hill"""
 513,512,62,full,regular,1,,,workbook-2026
 514,513,62,assistant,regular,1,,,workbook-2026
 515,514,62,full,regular,1,,,workbook-2026
 516,515,62,full,regular,1,,,workbook-2026
 517,516,62,full,regular,1,,,workbook-2026
-518,517,62,assistant,regular,1,,,workbook-2026
+518,517,62,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @unc.edu; affiliation ""Associate Professor of City and Regional Planning, University of North Carolina at Chapel Hill"""
 519,518,62,full,regular,1,,,workbook-2026
 520,519,62,assistant,regular,1,,,workbook-2026
 521,520,62,assistant,regular,1,,,workbook-2026
@@ -637,7 +637,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 636,635,74,full,regular,1,,,workbook-2026
 637,636,74,full,regular,1,,,workbook-2026
 638,637,74,full,regular,1,,,workbook-2026
-639,638,74,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: depart; change from Scholar profile 2026-09-15: email @unc.edu; affiliation ""University of North Carolina at Chapel Hill"""
+639,638,74,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: depart; change from Scholar profile 2026-09-15: email @unc.edu; affiliation ""University of North Carolina at Chapel Hill"" | RECLASSIFIED 2026-09-16: move to UNC, not a departure; the profile names a tracked program our department labels did not recognise, and the @unc.edu address confirms it."
 640,639,74,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @ufl.edu; affiliation ""Associate Professor, University of Florida"""
 641,640,74,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @ufl.edu; affiliation ""Associate Professor in the Department of Urban and Regional Planning at the University of Florida"""
 642,641,74,assistant,regular,1,,,workbook-2026
@@ -687,7 +687,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 686,685,79,associate,regular,1,,,workbook-2026
 687,686,79,full,regular,1,,,workbook-2026
 688,687,79,assistant,regular,1,,,workbook-2026
-689,688,79,full,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: depart; change from Scholar profile 2026-09-15: email @unm.edu; affiliation ""Department of Community & Regional Planning, University of Mew Mexico"""
+689,688,79,full,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: depart; change from Scholar profile 2026-09-15: email @unm.edu; affiliation ""Department of Community & Regional Planning, University of Mew Mexico"" | RECLASSIFIED 2026-09-16: move to University of New Mexico, not a departure; the profile misspells it as ""Mew Mexico"" and the @unm.edu address confirms it."
 690,689,79,assistant,regular,1,,,workbook-2026
 691,690,79,assistant,regular,1,,,workbook-2026
 692,691,80,associate,regular,1,,,workbook-2026
@@ -982,7 +982,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 981,979,63,assistant,regular,1,,,workbook-2026
 982,980,63,assistant,regular,1,,,workbook-2026
 983,981,63,full,regular,1,,,workbook-2026
-984,982,63,assistant,regular,1,,,workbook-2026
+984,982,63,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @usc.edu; affiliation ""Associate Professor, Sol Price School of Public Policy, University of Southern California"""
 985,983,63,full,regular,1,,,workbook-2026
 986,984,63,full,regular,1,,,workbook-2026
 987,985,63,full,regular,1,,,workbook-2026
@@ -1102,3 +1102,11 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 1102,1008,115,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @vt.edu; affiliation ""Professor, School of Public and International Affairs, Virginia Tech"""
 1103,1047,107,assistant,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @utoronto.ca; affiliation ""University of Toronto"""
 1104,992,47,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @sjsu.edu; affiliation ""Associate Dean for Research and Faculty Success, San Jose State University"""
+1105,10,59,associate,regular,1,2026-09-14,,"corrected 2026-09-16 from Scholar profile 2026-09-14: email @uci.edu; affiliation ""Associate Professor, University of California, Irvine"""
+1106,688,92,full,regular,1,2026-09-15,,"corrected 2026-09-16 from Scholar profile 2026-09-15: email @unm.edu; affiliation ""Department of Community & Regional Planning, University of Mew Mexico"""
+1107,638,62,assistant,regular,1,2026-09-15,,"corrected 2026-09-16 from Scholar profile 2026-09-15: email @unc.edu; affiliation ""University of North Carolina at Chapel Hill"""
+1108,240,27,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @mit.edu; affiliation ""Professor of Cities and Transportation, Massachusetts Institute of Technology"""
+1109,511,62,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @unc.edu; affiliation ""Professor of City and Regional Planning, University of North Carolina at Chapel Hill"""
+1110,517,62,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @unc.edu; affiliation ""Associate Professor of City and Regional Planning, University of North Carolina at Chapel Hill"""
+1111,982,63,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @usc.edu; affiliation ""Associate Professor, Sol Price School of Public Policy, University of Southern California"""
+1112,464,59,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @uci.edu; affiliation ""Professor, University of California Irvine"""
