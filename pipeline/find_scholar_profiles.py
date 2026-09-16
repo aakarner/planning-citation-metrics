@@ -101,6 +101,15 @@ def serpapi_profiles(name: str, key: str) -> list[dict]:
     return out
 
 
+# A candidate's citation count against the figure we already hold. Both measure
+# Scholar citations for the same claimed person, so a real match lands close.
+# Only the reject direction is automated: a wrong rejection leaves the person
+# where they already were, while a wrong acceptance publishes a stranger's
+# count as theirs, which is how the Stanford economist reached the top of the
+# rankings. A plausible ratio is evidence, not proof, so it still goes to a person.
+CITES_RATIO_MAX = 4.0
+CITES_RATIO_MIN = 0.2
+
 ACCEPT_SCORE = 0.85
 ACCEPT_MARGIN = 0.15
 MAX_CONSECUTIVE_FAILURES = 5
@@ -216,6 +225,9 @@ def classify(cand: dict, depts: dict) -> str:
         return "rejected"                    # our population is faculty
     if any(w in text for w in FOREIGN_FIELDS):
         return "rejected"                    # a field none of them works in
+    ratio = cand.get("cites_ratio")
+    if ratio is not None and (float(ratio) > CITES_RATIO_MAX or float(ratio) < CITES_RATIO_MIN):
+        return "rejected"                    # far too many or too few citations to be them
     for d in depts.values():
         if affiliation_match(cand["last_known_institution"], d):
             return "pending"                 # a tracked department, just not the one on file
@@ -246,6 +258,36 @@ def decide(scored: list[dict], depts: dict) -> tuple[str, list[str]]:
     return "pending", statuses
 
 
+def apply_decisions(dry_run: bool = False) -> None:
+    """Write accepted Scholar ids from the review queue into person.csv.
+
+    The matcher writes its own acceptances as it goes; this is how a person's
+    decisions take effect. One accepted candidate per person, or nothing is
+    written for them."""
+    pfields, persons = read_csv(ROSTER_DIR / "person.csv")
+    _, rows = read_csv(REVIEW_DIR / "identity_candidates.csv")
+    accepted: dict[str, list] = {}
+    for r in rows:
+        if r["source"] == "google_scholar" and r["status"] == "accepted" and r["external_id"]:
+            accepted.setdefault(r["person_id"], []).append(r)
+    changed = 0
+    for person in persons:
+        got = accepted.get(person["person_id"], [])
+        if len(got) > 1:
+            print(f"  {person['display_name']}: {len(got)} accepted candidates; fix the queue first")
+            continue
+        if not got or person.get("google_scholar_id") == got[0]["external_id"]:
+            continue
+        print(f"  {person['display_name']:<28} -> {got[0]['external_id']}  "
+              f"({got[0]['reviewed_by'] or 'matcher'})")
+        changed += 1
+        if not dry_run:
+            person["google_scholar_id"] = got[0]["external_id"]
+    print(f"\n{changed} ids written" + (" (dry run)" if dry_run else ""))
+    if changed and not dry_run:
+        write_csv(ROSTER_DIR / "person.csv", pfields, persons)
+
+
 def reclassify() -> None:
     """Apply the current rules to Scholar rows already in the review queue."""
     pfields, persons, dept_by_id, current, totals = load_context()
@@ -264,7 +306,8 @@ def reclassify() -> None:
         if r["reviewed_by"] and r["reviewed_by"] != "matcher":
             continue                                   # a person decided this; leave it
         cand = {"inst_match": float(r["inst_match"] or 0),
-                "last_known_institution": r["last_known_institution"]}
+                "last_known_institution": r["last_known_institution"],
+                "cites_ratio": r["cites_ratio"] or None}
         st = classify(cand, dept_by_id)
         if st != r["status"]:
             print(f"  {r['display_name'][:26]:<27}{str(r['candidate_name'])[:24]:<25}"
@@ -282,6 +325,8 @@ def main(argv=None) -> None:
     ap.add_argument("--limit", type=int)
     ap.add_argument("--sleep", type=float, default=10.0)
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--apply", action="store_true",
+                    help="write accepted Scholar ids from the review queue into person.csv")
     ap.add_argument("--reclassify", action="store_true",
                     help="re-apply the accept/reject rules to rows already in the review queue, "
                          "from their stored evidence; makes no network calls")
@@ -291,6 +336,9 @@ def main(argv=None) -> None:
                          "comma-separated, written as --stale=... because ids can start with '-'")
     args = ap.parse_args(argv)
     sys.stdout.reconfigure(line_buffering=True)  # progress lines show up in logs as they happen
+    if args.apply:
+        apply_decisions(args.dry_run)
+        return
     if args.reclassify:
         reclassify()
         return

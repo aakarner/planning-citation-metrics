@@ -112,3 +112,25 @@ def test_rejects_a_pre_faculty_profile_in_any_language_we_cover():
 def test_a_named_institution_that_is_not_theirs_is_still_rejected():
     assert classify(cand(0.0, "University of Science and Technology of China"), DEPTS) == "rejected"
     assert classify(cand(0.0, "Selçuk Üniversitesi"), DEPTS) == "rejected"
+
+
+def ratio_cand(ratio, where="Stanford"):
+    return {"inst_match": 0.0, "last_known_institution": where, "cites_ratio": ratio,
+            "score": 0.6, "name_sim": 1.0}
+
+
+def test_rejects_a_candidate_whose_citation_count_is_nowhere_near_ours():
+    # The three verified namesakes from 2026-09-16, by their real ratios.
+    for ratio in (16.3, 160.6, 9.7):
+        assert classify(ratio_cand(ratio), DEPTS) == "rejected", ratio
+
+
+def test_keeps_a_candidate_whose_citation_count_is_close_to_ours():
+    # The three verified true matches. A plausible ratio is evidence, not proof,
+    # so these still go to a person rather than being accepted automatically.
+    for ratio in (1.04, 1.10, 1.13):
+        assert classify(ratio_cand(ratio), DEPTS) == "pending", ratio
+
+
+def test_a_missing_ratio_decides_nothing():
+    assert classify(ratio_cand(None), DEPTS) == "pending"

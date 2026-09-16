@@ -36,7 +36,8 @@ REVIEW_DIR = DATA_DIR / "review"
 REVIEW_FIELDS = [
     "person_id", "display_name", "department", "source", "external_id", "candidate_name",
     "score", "name_sim", "inst_match", "topic_share", "cites_ratio", "works_count",
-    "cited_by_count", "h_index", "last_known_institution", "orcid", "status", "reviewed_by", "reviewed_at",
+    "cited_by_count", "h_index", "last_known_institution", "orcid", "status", "reviewed_by",
+    "reviewed_at", "notes",
 ]
 
 # Topic subfield/field names that make a candidate look like a planning scholar.
@@ -223,12 +224,16 @@ def read_csv(path: Path) -> tuple[list[str], list[dict]]:
 
 
 def write_csv(path: Path, fields: list[str], rows: list[dict]) -> None:
+    """Write via a temp file and replace, so a failure part-way through cannot
+    leave a truncated roster or review queue behind."""
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", newline="", encoding="utf-8") as f:
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    with tmp.open("w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=fields, extrasaction="ignore")
         w.writeheader()
         for r in rows:
             w.writerow({k: ("" if r.get(k) is None else r.get(k)) for k in fields})
+    tmp.replace(path)
 
 
 def load_context():

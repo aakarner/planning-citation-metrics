@@ -59,6 +59,8 @@ def main(argv=None) -> None:
         d = decisions.get((r["person_id"], r["external_id"] or ""))
         if d and r["source"] == args.source:
             r["status"], r["reviewed_by"], r["reviewed_at"] = d["status"], d["reviewed_by"], d["reviewed_at"]
+            if d.get("notes"):
+                r["notes"] = d["notes"]        # the reviewer's reason, previously dropped
             applied += 1
             if d["status"] == "accepted":
                 accepted_people.add(r["person_id"])

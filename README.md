@@ -117,8 +117,15 @@ decisive reason: it names an institution that is not this person's department, o
 planning academic works in, or a pre-faculty stage. Everything else stays pending for a
 person, including an affiliation that names no institution at all (a profile reading
 "Professor of urban history and planning" is unhelpful but does not say it is someone else)
-and one naming a different department we do track, which would be a real find plus a move. `--reclassify` re-applies these rules to rows
-already in the queue without any network calls.
+and one naming a different department we do track, which would be a real find plus a move. A candidate is also rejected when its citation count is
+more than four times or less than a fifth of the figure we already hold, since both measure
+Scholar citations for the same claimed person. Only the reject direction is automated: a wrong
+rejection leaves someone where they already were, while a wrong acceptance publishes a
+stranger's count as theirs.
+
+`--reclassify` re-applies these rules to rows already in the queue without any network calls.
+`--apply` writes accepted ids from the queue into `person.csv`, which is how a person's own
+decisions take effect.
 
 People whose recorded Scholar id stops resolving (the collector reports "empty profile") are
 re-found by a direct fetch that follows Google's redirect, from an unblocked address:
