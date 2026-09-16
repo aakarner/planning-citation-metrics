@@ -112,10 +112,12 @@ author-search endpoint and strips profile links from regular search results. Sch
 address after ~45 requests for many hours, so run about 30 people per day (`--limit 30`); it
 resumes where it left off. Candidates are scored like OpenAlex candidates and written to the
 same review queue with `source=google_scholar`. Because searching by name alone mostly turns
-up strangers, a candidate whose affiliation names an institution that is not this person's
-department is rejected outright, with the reason kept: a self-describing profile leaves a
-reviewer nothing to weigh. What stays pending is genuinely undecidable, a blank affiliation or
-one naming a different department we do track. `--reclassify` re-applies these rules to rows
+up strangers, a candidate is rejected outright, reason kept, when its affiliation gives a
+decisive reason: it names an institution that is not this person's department, or a field no
+planning academic works in, or a pre-faculty stage. Everything else stays pending for a
+person, including an affiliation that names no institution at all (a profile reading
+"Professor of urban history and planning" is unhelpful but does not say it is someone else)
+and one naming a different department we do track, which would be a real find plus a move. `--reclassify` re-applies these rules to rows
 already in the queue without any network calls.
 
 People whose recorded Scholar id stops resolving (the collector reports "empty profile") are

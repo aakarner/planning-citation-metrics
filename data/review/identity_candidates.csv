@@ -3504,7 +3504,7 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 1049,Mark Winfield,York University,openalex,A5129435695,Mark Winfield,0.45,1.0,0.0,0.0,0.0,2,0,0,,,pending,,
 1049,Mark Winfield,York University,openalex,A5091863895,Mark Winfield Brennan,0.45,1.0,0.0,0.0,0.0,1,0,0,,,pending,,
 89,Patricia Manuel,Dalhousie University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
-94,Andrew Jacobs,East Carolina University,google_scholar,2Q91_s0AAAAJ,Andrew S. Jacobs,0.5,1.0,0.0,,16.269,,1269,,"Charlottesville, Virginia",,rejected,matcher,2026-09-15
+94,Andrew Jacobs,East Carolina University,google_scholar,2Q91_s0AAAAJ,Andrew S. Jacobs,0.5,1.0,0.0,,16.269,,1269,,"Charlottesville, Virginia",,pending,,
 97,Heather Khan-Welsh,Eastern Michigan University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
 98,RJ Koscielniak,Eastern Michigan University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
 100,Margo Hill,Eastern Washington,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
@@ -3519,7 +3519,7 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 139,Rahul Mehrotra,Harvard University,google_scholar,g9sodT8AAAAJ,Rahul Mehrotra,0.575,1.0,0.0,,0.432,,577,,Aow Thai Marine Ecology Center,,rejected,matcher,2026-09-15
 141,Richard Peiser,Harvard University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
 142,Peter Rowe,Harvard University,google_scholar,lEAqe6IAAAAJ,Peter C. Rowe,0.575,1.0,0.0,,2.433,,11654,,Professor of Pediatrics,,rejected,matcher,2026-09-15
-147,Nicholas Bloom,Hunter College,google_scholar,fJy1tloAAAAJ,Nick Bloom,0.46,0.92,0.0,,160.566,,123636,,Stanford,,rejected,matcher,2026-09-15
+147,Nicholas Bloom,Hunter College,google_scholar,fJy1tloAAAAJ,Nick Bloom,0.46,0.92,0.0,,160.566,,123636,,Stanford,,pending,,
 153,Sigmund Shipp,Hunter College,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
 155,John Benhart,Indiana University of Pennsylvania,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
 157,Richard Hoch,Indiana University of Pennsylvania,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
@@ -3535,7 +3535,7 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 183,Anna Kramer,McGill University,google_scholar,8m3CoW0AAAAJ,Anna Krämer,0.575,1.0,0.0,,0.409,,182,,Ärztin Radioonkologie,,rejected,matcher,2026-09-15
 184,Nik Luka,McGill University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
 187,Bruce D'Arcus,Miami University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
-188,Marcia England,Miami University,google_scholar,Dx43lFkAAAAJ,Marcia England,0.65,1.0,0.0,,1.037,,482,,Unknown affiliation,,rejected,matcher,2026-09-15
+188,Marcia England,Miami University,google_scholar,Dx43lFkAAAAJ,Marcia England,0.65,1.0,0.0,,1.037,,482,,Unknown affiliation,,pending,,
 191,Si Chen,Michigan State University,google_scholar,bP0vxAIAAAAJ,Si-Ming Chen,0.5,1.0,0.0,,285.6,,4284,,University of Science and Technology of China,,rejected,matcher,2026-09-15
 191,Si Chen,Michigan State University,google_scholar,KOQl2IsAAAAJ,Si-Jing Chen,0.5,1.0,0.0,,158.667,,2380,,The Chinese University of Hong Kong,,rejected,matcher,2026-09-15
 191,Si Chen,Michigan State University,google_scholar,XtkmEncAAAAJ,Si-An Chen,0.5,1.0,0.0,,98.133,,1472,,"Ph.D. Student of Computer Science and Information Engineering, National Taiwan University",,rejected,matcher,2026-09-15
@@ -3547,19 +3547,19 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 205,Miriam Porter,"Minnesota State University, Mankato",google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
 209,Gary Michelfelder,Missouri State University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
 212,Alan Berger,MIT,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
-215,Karilyn Crockett,MIT,google_scholar,JOBwoIsAAAAJ,Karilyn Crockett,0.65,1.0,0.0,,1.099,,78,,"Professor or urban history, public policy & planning",,rejected,matcher,2026-09-15
+215,Karilyn Crockett,MIT,google_scholar,JOBwoIsAAAAJ,Karilyn Crockett,0.65,1.0,0.0,,1.099,,78,,"Professor or urban history, public policy & planning",,pending,,
 218,Dennis Frenchman,MIT,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
 225,Ceasar McDowell,MIT,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
 235,J. Phillip Thompson,MIT,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
 244,Siddhartha Sen,Morgan State University,google_scholar,RhEHgw0AAAAJ,Siddhartha Sen,0.575,1.0,0.0,,4.354,,2765,,"Former Professor of Electrical Engineering, Indian Institute of Technology, Kharagpur",,rejected,matcher,2026-09-15
 244,Siddhartha Sen,Morgan State University,google_scholar,IbvJTMoAAAAJ,siddhartha sen,0.5,1.0,0.0,,13.735,,8722,,"Emeritus Fellow, Trinity College, Dublin",,rejected,matcher,2026-09-15
-244,Siddhartha Sen,Morgan State University,google_scholar,oL8tErMAAAAJ,Siddhartha Sen,0.5,1.0,0.0,,9.68,,6147,,Microsoft Research AI Frontiers,,rejected,matcher,2026-09-15
+244,Siddhartha Sen,Morgan State University,google_scholar,oL8tErMAAAAJ,Siddhartha Sen,0.5,1.0,0.0,,9.68,,6147,,Microsoft Research AI Frontiers,,pending,,
 246,Tonya Sanders Thach,Morgan State University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
 247,Zeynep Celik,New Jersey Institute of Technology,google_scholar,Spm3DGIAAAAJ,Zeynep Çelik Kenar,0.5,1.0,0.0,,0.034,,110,,Selçuk Üniversitesi,,rejected,matcher,2026-09-15
 247,Zeynep Celik,New Jersey Institute of Technology,google_scholar,vDBIICUAAAAJ,Tarik Celik Merch,0.399,0.498,0.0,,1.548,,5070,,Princeton University,,rejected,matcher,2026-09-15
 248,Gabrielle Esperdy,New Jersey Institute of Technology,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
 263,Cara Michell,Northeastern University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
-264,Kaitlyn Alvarez Noli,Northeastern University,google_scholar,jIaRVqYAAAAJ,Kaitlyn Alvarez Noli,0.65,1.0,0.0,,1.125,,9,,"Professor of Public Policy and Health Sciences, Northeastern Unviersity",,rejected,matcher,2026-09-15
+264,Kaitlyn Alvarez Noli,Northeastern University,google_scholar,jIaRVqYAAAAJ,Kaitlyn Alvarez Noli,0.65,1.0,0.0,,1.125,,9,,"Professor of Public Policy and Health Sciences, Northeastern Unviersity",,pending,,
 274,R. Dawn Hawley,Northern Arizona University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
 283,Harley Etienne,Ohio State University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15
 291,Chryl Corbin,Portland State University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-15

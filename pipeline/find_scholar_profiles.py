@@ -108,6 +108,28 @@ MAX_CONSECUTIVE_FAILURES = 5
 # Words too generic to prove an affiliation match on their own.
 GENERIC = {"university", "of", "the", "state", "college", "at", "in", "and", "institute", "school",
            "department", "planning", "urban", "professor", "assistant", "associate"}
+# An affiliation line that names no institution cannot tell us the profile
+# belongs to someone else, however unhelpful it is.
+INSTITUTION_WORDS = ("universit", "college", "institut", "school", "polytechnic", "academy",
+                     "hochschule", "universidad", "universidade", "universita", "uniwersytet",
+                     "laborator", "hospital", "clinic", "centre", "center", "museum",
+                     "faculty", "fakultesi", "faculte", "facultad", "department of")
+# Affiliation lines that are placeholders, not information.
+PLACEHOLDERS = ("unknown affiliation", "unknown", "none", "n a", "independent researcher",
+                "independent scholar", "retired", "self employed")
+# Fields no planning academic is appointed in. A profile naming one is someone
+# else, whether or not it names an institution we recognise.
+FOREIGN_FIELDS = ("pediatric", "paediatric", "oncolog", "radiolog", "cardiolog", "neurolog",
+                  "psychiatr", "surgery", "surgeon", "dentist", "nursing", "pharmac",
+                  "immunolog", "microbiolog", "biochem", "molecular biolog", "genetic",
+                  "electrical engineering", "mechanical engineering", "chemical engineering",
+                  "computer science", "astronom", "astrophys", "particle physic", "veterinar",
+                  "arztin", "arzt", "medizin", "klinik")
+
+# A profile still describing a pre-faculty stage is not the faculty member we track.
+PRE_FACULTY = ("student", "estudiante", "etudiant", "doctoral candidate", "phd candidate",
+               "doctorando", "doktorand", "postdoc", "post doc", "postdoctoral")
+
 # Names a profile may use that no rule derives from our label. Grows as cases
 # appear; keep each one specific enough that it cannot match another campus.
 ALIASES = {
@@ -187,12 +209,21 @@ def classify(cand: dict, depts: dict) -> str:
     a move."""
     if cand["inst_match"] >= 1.0:
         return "accepted"
-    text = cand.get("last_known_institution") or ""
-    if not text.strip():
+    text = norm(cand.get("last_known_institution") or "")
+    if not text or text in PLACEHOLDERS:
         return "pending"                     # nothing to judge on
+    if any(w in text for w in PRE_FACULTY):
+        return "rejected"                    # our population is faculty
+    if any(w in text for w in FOREIGN_FIELDS):
+        return "rejected"                    # a field none of them works in
     for d in depts.values():
-        if affiliation_match(text, d):
+        if affiliation_match(cand["last_known_institution"], d):
             return "pending"                 # a tracked department, just not the one on file
+    if not any(w in text for w in INSTITUTION_WORDS):
+        # Names a role or a field but no institution, e.g. "Professor of urban
+        # history, public policy & planning". Unhelpful, but it does not say
+        # this is somebody else.
+        return "pending"
     return "rejected"
 
 

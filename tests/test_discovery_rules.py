@@ -61,3 +61,31 @@ def test_all_namesakes_settles_the_person_with_no_review():
 
 def test_no_candidates_at_all():
     assert decide([], DEPTS) == ("none", [])
+
+
+def test_an_affiliation_naming_no_institution_is_not_evidence_of_a_namesake():
+    # Real case: MIT's Karilyn Crockett, whose profile names her field, not her
+    # school. Unhelpful, but it does not say the profile belongs to someone else.
+    assert classify(cand(0.0, "Professor or urban history, public policy & planning"), DEPTS) == "pending"
+
+
+def test_placeholder_affiliations_are_treated_as_blank():
+    for where in ("Unknown affiliation", "unknown", "none", "Independent researcher", "Retired"):
+        assert classify(cand(0.0, where), DEPTS) == "pending", where
+
+
+def test_rejects_a_field_no_planning_academic_works_in():
+    for where in ("Professor of Pediatrics", "Ärztin Radioonkologie",
+                  "Former Professor of Electrical Engineering, IIT Kharagpur",
+                  "Associate Professor of Computer Science"):
+        assert classify(cand(0.0, where), DEPTS) == "rejected", where
+
+
+def test_rejects_a_pre_faculty_profile_in_any_language_we_cover():
+    for where in ("Estudiante de doctorado", "PhD candidate, Somewhere", "Postdoctoral fellow"):
+        assert classify(cand(0.0, where), DEPTS) == "rejected", where
+
+
+def test_a_named_institution_that_is_not_theirs_is_still_rejected():
+    assert classify(cand(0.0, "University of Science and Technology of China"), DEPTS) == "rejected"
+    assert classify(cand(0.0, "Selçuk Üniversitesi"), DEPTS) == "rejected"
