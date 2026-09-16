@@ -226,3 +226,6 @@ data/legacy/
 
 # generated site (rebuilt by CI)
 build/site/
+
+# lock held by the scheduled discovery run
+.discovery.lock/
