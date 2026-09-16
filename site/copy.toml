@@ -42,8 +42,8 @@ footer_corrections = """Counts come from public profile pages and change constan
 #         methods_href, contact, repo
 meta_description = """Citation metrics for {people_count} urban planning faculty at {dept_count} programs in the US and Canada."""
 beta_title = "Beta &middot; in active development"
-beta_body_1 = """This site is new and still being built. Figures, rosters and rankings will change as
-       collection improves, and some of what you see today is wrong: appointments are inferred
+beta_body_1 = """This site is new and under active development. Figures, rosters and rankings will change as
+       our data collection methods improve. Some of what's here today is almost certainly incorrect: appointments are inferred
        from public profiles, a few people are matched to the wrong record, and anyone who has
        moved recently may still be listed at their old program."""
 beta_body_2 = """If you find an error in your own entry or anywhere else, or you would rather not be
