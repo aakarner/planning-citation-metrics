@@ -1,0 +1,217 @@
+# Every word on the site lives in this file. Edit the prose, rebuild, push:
+#
+#   .venv/bin/python -m pipeline.build_site
+#   git commit -am "Site copy edits" && git push
+#
+# Two rules.
+#
+# 1. Anything in curly braces is a live value the generator fills in, like
+#    {people_count} or {scholar_date}. Keep the spelling exactly; a name the
+#    page does not provide stops the build with a message naming the key and
+#    listing what is available. Each section below says which values it has.
+#    To write a literal brace, double it: {{ }}
+#
+# 2. HTML is allowed and is how links are written:
+#    <a href="...">text</a>, <strong>bold</strong>, <em>italic</em>.
+#    Leave the class="..." attributes alone; they carry the styling.
+#
+# Long strings are wrapped in triple quotes. Line breaks inside them are
+# cosmetic: the browser reflows the text, so wrap wherever it reads well.
+
+[site]
+# Header, footer and other chrome. Values: contact, repo, methods_href
+wordmark_lead = "Planning"
+wordmark_rest = "Citation Metrics"
+beta_tag = "Beta"
+search_placeholder = "Search faculty or schools"
+nav_rankings = "Rankings"
+nav_departments = "Departments"
+nav_methods = "Methods"
+title_suffix = "Planning Citation Metrics"
+footer_about = """Citation metrics for urban planning faculty in the United States and Canada, continuing the
+       dataset Tom Sanchez maintained from 2017 to 2026.
+       <a href="{methods_href}">How these numbers are produced</a> &middot;
+       <a href="{repo}">Source and data on GitHub</a>"""
+footer_corrections = """Counts come from public profile pages and change constantly; treat them as approximate.
+       This site is in beta. Spotted something wrong, or want your entry changed or removed?
+       Email <a href="mailto:{contact}?subject=Planning%20Citation%20Metrics">{contact}</a>
+       or <a href="{repo}/issues/new">open an issue</a>."""
+
+[home]
+# Values: people_count, dept_count, scholar_date, rankings_href, departments_href,
+#         methods_href, contact, repo
+meta_description = """Citation metrics for {people_count} urban planning faculty at {dept_count} programs in the US and Canada."""
+beta_title = "Beta &middot; in active development"
+beta_body_1 = """This site is new and still being built. Figures, rosters and rankings will change as
+       collection improves, and some of what you see today is wrong: appointments are inferred
+       from public profiles, a few people are matched to the wrong record, and anyone who has
+       moved recently may still be listed at their old program."""
+beta_body_2 = """If you find an error in your own entry or anywhere else, or you would rather not be
+       listed, email Alex Karner at <a href="mailto:{contact}?subject=Planning%20Citation%20Metrics">{contact}</a>.
+       Corrections are quick to apply and genuinely welcome. Technical problems can also go in
+       the <a href="{repo}/issues/new">issue tracker</a>."""
+heading = "Citation metrics for urban planning faculty"
+lede = """Total citations and h-index for {people_count} faculty at
+     {dept_count} planning programs in the United States and Canada, refreshed on a schedule
+     and kept as a running record rather than overwritten."""
+search_placeholder = "Search a name or a school&hellip;"
+search_hint = """Press <code>/</code> to jump to search.
+     Google Scholar figures as of {scholar_date}."""
+top_faculty_heading = "Most cited faculty"
+top_faculty_link = "Full faculty rankings &rarr;"
+top_departments_heading = "Programs by median citations"
+top_departments_note = """Programs with at least three faculty tracked.
+     <a href="{departments_href}">All programs &rarr;</a>"""
+caveats_heading = "What to know before citing these numbers"
+caveats_body = """Citation counts measure attention, not quality, and they differ enormously by subfield,
+     career stage, and publication venue. A number here is a rough indicator of reach at one
+     moment, nothing more. The <a href="{methods_href}">methods page</a> explains where each
+     figure comes from and the ways it can be wrong."""
+
+[person]
+# One page per faculty member. Values: source, scholar_help, collected_at, rank_label,
+#                                      methods_href, name, rank, department
+meta_description = "Citation metrics for {name}, {rank_label} at {department}."
+eyebrow = "Faculty"
+citations_label = "citations"
+h_index_label = "h-index"
+as_of = "As of {collected_at}."
+fallback_note = """This person has no Google Scholar profile we know of, so the
+       figures above come from <strong>{source}</strong>. OpenAlex indexes fewer books,
+       reports and other non-journal work than Scholar does, so this is very likely an
+       undercount next to the Scholar numbers shown elsewhere on this site.
+       <a href="{scholar_help}">Creating a Scholar profile</a> takes a few minutes and
+       fixes it at the next update."""
+pct_citations_all = "Citations, all"
+pct_citations_rank = "Citations, {rank}s"
+pct_h_all = "h-index, all"
+pct_h_rank = "h-index, {rank}s"
+percentile_note = """Percentile among the
+         {rank_label}s in this dataset, and among all
+         faculty in it."""
+spark_caption = "Total citations recorded by this project, {source}. {change}"
+spark_change = "Up {percent} over that span."
+compare_heading = "OpenAlex, for comparison"
+compare_note = """OpenAlex is journal-centric and normally
+     counts fewer citations than Scholar. Shown for context, not used in rankings."""
+details_heading = "Details"
+label_rank = "Rank"
+label_phd = "PhD"
+label_years = "Years since PhD"
+label_per_year = "Citations per year"
+label_interests = "Interests"
+link_scholar = "Google Scholar profile"
+link_openalex = "OpenAlex author record"
+link_orcid = "ORCID"
+link_personal = "Personal site"
+link_researchgate = "ResearchGate"
+link_linkedin = "LinkedIn"
+
+[department]
+# One page per program. Values: n_faculty, methods_href, short_name
+meta_description = "Citation metrics for {n_faculty} planning faculty at {short_name}."
+eyebrow = "Department"
+program_link = "Program website"
+member_full = "ACSP full member"
+member_affiliate = "ACSP affiliate member"
+member_none = "Not an ACSP member"
+tile_faculty = "faculty tracked"
+tile_median = "median citations"
+tile_mean = "mean citations"
+tile_per_faculty = "citations per faculty"
+tile_median_h = "median h-index"
+tile_scholar_share = "have a Scholar profile"
+faculty_heading = "Faculty"
+filter_rank = "Rank"
+shown = "shown"
+fallback_footnote = """Rows marked
+     <span class="pill pill-oa">OpenAlex</span> have no Google Scholar profile, so their figures
+     come from OpenAlex and are likely undercounts. See <a href="{methods_href}">Methods</a>."""
+
+[rankings]
+# Values: people_count
+meta_description = "Urban planning faculty ranked by total citations, sortable and filterable."
+eyebrow = "Rankings"
+heading = "Faculty by total citations"
+browser_title = "Faculty rankings"
+lede = """Click any column to re-sort. Rows marked <span class="pill pill-oa">OA</span>
+     use OpenAlex figures because the person has no Google Scholar profile; those are likely
+     undercounts."""
+filter_rank = "Rank"
+filter_country = "Country"
+shown = "shown"
+
+[departments]
+# Values: dept_count
+meta_description = "{dept_count} urban planning programs ranked by faculty citation metrics."
+eyebrow = "Departments"
+heading = "Planning programs"
+lede = """{dept_count} programs, ranked by the median citation count of the faculty tracked
+     at each. Median rather than mean, because one very highly cited person moves a mean a long way."""
+filter_country = "Country"
+filter_acsp = "ACSP"
+shown = "shown"
+
+[methods]
+meta_description = "Sources, update cadence, inclusion criteria, and known limitations."
+# Values: people_count, scholar_count, fallback_count, scholar_date, openalex_date,
+#         scholar_help, repo, db_href, year, contact
+eyebrow = "Methods"
+heading = "Where these numbers come from"
+lede = """This project continues a dataset Tom Sanchez maintained by hand from 2017 to 2026.
+     It is now collected on a schedule, stored as a running record, and published from a public
+     repository."""
+sources_heading = "Sources, in order of preference"
+sources_scholar = """<strong>Google Scholar</strong> is the headline source. It counts books, reports and other
+     non-journal work that matters in planning, and it is what the field is used to seeing. Of the
+     {people_count} faculty here, {scholar_count} have a Scholar profile.
+     Last refreshed {scholar_date}."""
+sources_openalex = """<strong>OpenAlex</strong> covers the remaining {fallback_count} people, who have no Scholar profile we
+     could find. Those figures are marked <span class="pill pill-oa">OpenAlex</span> everywhere they
+     appear. OpenAlex is journal-centric and normally reports fewer citations than Scholar for the
+     same person, so those numbers are very likely undercounts and are not comparable to the Scholar
+     ones. We do not adjust or scale them; we label them.
+     Last refreshed {openalex_date}."""
+sources_invitation = """Anyone shown with an OpenAlex figure can move to the Scholar series by
+     <a href="{scholar_help}">creating a Scholar profile</a>. We re-check for new profiles each
+     semester."""
+cadence_heading = "How often it updates"
+cadence_body = """OpenAlex monthly, Google Scholar quarterly, faculty rosters twice a year. Every run is
+     appended, never overwritten, so the history builds up from the first snapshot in
+     February and March 2026 rather than being reconstructed backwards."""
+inclusion_heading = "Who is included"
+inclusion_body = """Regular full-time tenured and tenure-track faculty at planning programs in the United States
+     and Canada: the population Tom tracked. Adjunct, visiting and clinical appointments are out.
+     The school list began as the membership of the Association of Collegiate Schools of Planning
+     and has a handful of programs added on request, mostly Canadian. Each program page says which
+     it is."""
+percentiles_heading = "Percentiles and per-year figures"
+percentiles_body = """Percentiles are computed across the faculty in this dataset, both overall and within academic
+     rank, so a percentile means "relative to the people on this site", not to all of academia.
+     Citations per year divides total citations by years since the PhD, which flatters nobody
+     consistently: it favours people whose early work was widely cited and penalises anyone whose
+     PhD year we have wrong."""
+limitations_heading = "Known ways this is wrong"
+limitation_lag = """<strong>Profiles lag reality.</strong> Appointments are updated from what a Scholar profile
+        says, so someone who moved but has not updated their profile stays put here."""
+limitation_names = """<strong>Name collisions.</strong> A common name can pick up another researcher's record,
+        particularly on the OpenAlex side. Matches were reviewed, but not all of them."""
+limitation_scholar = """<strong>Scholar counts are generous.</strong> They include citations from preprints, theses
+        and self-citations, and they change from week to week."""
+limitation_missing = """<strong>Missing people.</strong> New hires appear only after the next roster review, and
+        anyone recorded as having left a tracked program drops out of the site entirely, so a
+        search for them returns nothing even though their earlier figures remain in the
+        downloadable data."""
+corrections_body = """The site is in beta, so expect all of the above to be more common now than it will be
+     later. Corrections are welcome and quick to apply: email Alex Karner at
+     <a href="mailto:{contact}?subject=Planning%20Citation%20Metrics%20correction">{contact}</a>,
+     or <a href="{repo}/issues/new">open an issue</a>. If you would rather not have an individual
+     page here at all, say so and it will be removed."""
+data_heading = "Get the data"
+data_body = """Everything is public. The curated roster and every dated snapshot live as CSV in the
+     <a href="{repo}/tree/main/data">repository</a>; the built database, with the percentile and
+     summary views already defined, is one file:"""
+data_links = """<a href="{db_href}"><strong>citations.sqlite</strong></a> &middot;
+     <a href="{repo}">pipeline source</a>"""
+citation_body = """Please cite it as: Karner, A. and T. W. Sanchez ({year}).
+     <em>Planning Citation Metrics</em>. {repo}"""

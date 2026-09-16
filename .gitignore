@@ -165,7 +165,8 @@ venv.bak/
 .ropeproject
 
 # mkdocs documentation
-/site
+# /site  -- the stock Python .gitignore ignores this for mkdocs output.
+# This project keeps hand-edited site content there, so the rule is off.
 
 # mypy
 .mypy_cache/
