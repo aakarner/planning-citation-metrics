@@ -303,20 +303,37 @@ TABLE_JS = """
       if (c) c.textContent = ++i;
     });
   }
+  /* Filters. Every select pointing at a table is applied together, so Rank and
+     Country combine instead of overwriting each other, and the whole set is
+     applied on load as well as on change: coming back to the page restores the
+     select values but not the filtered rows. */
+  var byTable = {};
   document.querySelectorAll("[data-filter-for]").forEach(function (sel) {
-    var table = document.getElementById(sel.getAttribute("data-filter-for"));
-    var key = sel.getAttribute("data-filter-key");
-    sel.addEventListener("change", function () {
-      var want = sel.value, shown = 0;
+    var id = sel.getAttribute("data-filter-for");
+    (byTable[id] = byTable[id] || []).push(sel);
+  });
+  Object.keys(byTable).forEach(function (id) {
+    var table = document.getElementById(id);
+    if (!table) return;
+    var sels = byTable[id];
+    function apply() {
+      var shown = 0;
       Array.prototype.forEach.call(table.tBodies[0].rows, function (r) {
-        var ok = !want || r.getAttribute("data-" + key) === want;
+        var ok = sels.every(function (sel) {
+          var want = sel.value;
+          return !want || r.getAttribute("data-" + sel.getAttribute("data-filter-key")) === want;
+        });
         r.hidden = !ok;
         if (ok) shown++;
       });
-      var out = document.getElementById(table.id + "-count");
+      var out = document.getElementById(id + "-count");
       if (out) out.textContent = shown.toLocaleString();
       renumber(table);
-    });
+    }
+    sels.forEach(function (sel) { sel.addEventListener("change", apply); });
+    apply();
+    // Back/forward can restore the select values after this script has run.
+    window.addEventListener("pageshow", apply);
   });
 })();
 """
