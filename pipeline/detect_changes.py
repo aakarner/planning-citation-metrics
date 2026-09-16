@@ -45,6 +45,9 @@ def registrable(host: str | None) -> str | None:
     if "://" in host or "/" in host:
         host = urlparse(host if "://" in host else "http://" + host).hostname or host
     parts = host.split(".")
+    # inu.ac.kr, ox.ac.uk, unsw.edu.au: keep three labels under a two-letter country code
+    if len(parts) >= 3 and len(parts[-1]) == 2 and parts[-2] in {"ac", "edu", "co", "com", "org", "gov", "net"}:
+        return ".".join(parts[-3:])
     return ".".join(parts[-2:]) if len(parts) >= 2 else host
 
 
@@ -113,7 +116,8 @@ def main(argv=None) -> None:
         email_domain = registrable(raw.get("email_domain"))
         homes = home_domains.get(aff["department_id"], set()) if aff else set()
         email_ok = email_domain in homes if email_domain else None
-        if email_domain and homes and not email_ok:
+        text_ok = bool(raw.get("affiliation")) and dept is not None and affiliation_match(raw["affiliation"], dept)
+        if email_domain and homes and not email_ok and not text_ok:   # a stale email alone is not a signal
             flags[pid].append(f"Scholar verified email is @{email_domain}; department uses {', '.join(sorted(homes))}")
         # Affiliation text is only evidence when the email does not already settle it.
         if (email_ok is not True and raw.get("affiliation") and dept

@@ -17,6 +17,7 @@ Tolerances below are set just above the deviations those two effects cause.
 
 from __future__ import annotations
 
+import csv
 import json
 import shutil
 import sqlite3
@@ -55,7 +56,24 @@ def db(tmp_path_factory) -> sqlite3.Connection:
             dest.mkdir(exist_ok=True)
             shutil.copy(meta, dest / meta.name)
             shutil.copy(meta.with_suffix("").with_suffix(".csv"), dest / meta.with_suffix("").with_suffix(".csv").name)
-    path = build(tmp_path_factory.mktemp("db") / "citations.sqlite", ROSTER_DIR, snaps, quiet=True)
+    # Likewise rebuild the roster as migrated: keep only the affiliations the
+    # workbook produced and undo closures applied by later change runs.
+    roster = tmp_path_factory.mktemp("roster")
+    for f in ROSTER_DIR.glob("*.csv"):
+        shutil.copy(f, roster / f.name)
+    with (ROSTER_DIR / "affiliation.csv").open(newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        fields = reader.fieldnames
+        affs = [a for a in reader if (a["source"] or "").startswith("workbook-2026")]
+    for a in affs:
+        if "| closed" in (a["source"] or ""):
+            a["end_date"] = ""
+            a["source"] = a["source"].split(" | closed")[0]
+    with (roster / "affiliation.csv").open("w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=fields)
+        w.writeheader()
+        w.writerows(affs)
+    path = build(tmp_path_factory.mktemp("db") / "citations.sqlite", roster, snaps, quiet=True)
     con = sqlite3.connect(path)
     con.row_factory = sqlite3.Row
     return con

@@ -2,20 +2,20 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 1,1,1,assistant,regular,1,,,workbook-2026
 2,2,1,associate,regular,1,,,workbook-2026
 3,3,1,full,regular,1,,,workbook-2026
-4,4,1,assistant,regular,1,,,workbook-2026
+4,4,1,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: depart; change from Scholar profile 2026-09-15: email @urbanedge.net; affiliation ""professor of urban design, cairo university"""
 5,5,1,assistant,regular,1,,,workbook-2026
 6,6,1,assistant,regular,1,,,workbook-2026
 7,7,2,assistant,regular,1,,,workbook-2026
 8,8,2,associate,regular,1,,,workbook-2026
-9,9,2,assistant,regular,1,,,workbook-2026
-10,10,3,associate,regular,1,,,workbook-2026
-11,11,3,full,regular,1,,,workbook-2026
+9,9,2,assistant,regular,1,,2026-09-14,"workbook-2026 | closed 2026-09-14: depart; change from Scholar profile 2026-09-14: email @uncg.edu; affiliation ""University of North Carolina at Greensboro"""
+10,10,3,associate,regular,1,,2026-09-14,"workbook-2026 | closed 2026-09-14: depart; change from Scholar profile 2026-09-14: email @uci.edu; affiliation ""Associate Professor, University of California, Irvine"""
+11,11,3,full,regular,1,,2026-09-14,"workbook-2026 | closed 2026-09-14: move; change from Scholar profile 2026-09-14: email @buffalo.edu; affiliation ""SUNY-Buffalo"""
 12,12,3,associate,regular,1,,,workbook-2026
 13,13,3,associate,regular,1,,,workbook-2026
 14,14,3,assistant,regular,1,,,workbook-2026
 15,15,3,associate,regular,1,,,workbook-2026
 16,16,3,full,regular,1,,,workbook-2026
-17,17,3,associate,regular,1,,,workbook-2026
+17,17,3,associate,regular,1,,2026-09-14,"workbook-2026 | closed 2026-09-14: move; change from Scholar profile 2026-09-14: email @colorado.edu; affiliation ""Associate Professor, Department of Geography, University of Colorado Boulder"""
 18,18,3,assistant,regular,1,,,workbook-2026
 19,19,3,associate,regular,1,,,workbook-2026
 20,20,3,assistant,regular,1,,,workbook-2026
@@ -37,9 +37,9 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 36,36,6,associate,regular,1,,,workbook-2026
 37,37,6,associate,regular,1,,,workbook-2026
 38,38,6,assistant,regular,1,,,workbook-2026
-39,39,6,associate,regular,1,,,workbook-2026
+39,39,6,associate,regular,1,,2026-09-14,"workbook-2026 | closed 2026-09-14: promote; change from Scholar profile 2026-09-14: email @cpp.edu; affiliation ""Professor, Cal Poly Pomona"""
 40,40,6,full,regular,1,,,workbook-2026
-41,41,6,assistant,regular,1,,,workbook-2026
+41,41,6,assistant,regular,1,,2026-09-14,"workbook-2026 | closed 2026-09-14: depart; change from Scholar profile 2026-09-14: email @tinkercraft.com; affiliation ""California State Polytechnic University, Pomona"""
 42,42,6,assistant,regular,1,,,workbook-2026
 43,43,7,assistant,regular,1,,,workbook-2026
 44,44,7,full,regular,1,,,workbook-2026
@@ -69,14 +69,14 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 68,68,11,assistant,regular,1,,,workbook-2026
 69,69,11,full,regular,1,,,workbook-2026
 70,70,12,full,regular,1,,,workbook-2026
-71,71,12,full,regular,1,,,workbook-2026
+71,71,12,full,regular,1,,2026-09-14,"workbook-2026 | closed 2026-09-14: depart; change from Scholar profile 2026-09-14: email @gwu.edu; affiliation ""George Washington University Law School"""
 72,72,12,associate,regular,1,,,workbook-2026
 73,73,12,full,regular,1,,,workbook-2026
 74,74,12,associate,regular,1,,,workbook-2026
 75,75,12,associate,regular,1,,,workbook-2026
 76,76,12,associate,regular,1,,,workbook-2026
 77,77,12,assistant,regular,1,,,workbook-2026
-78,78,12,assistant,regular,1,,,workbook-2026
+78,78,12,assistant,regular,1,,2026-09-14,"workbook-2026 | closed 2026-09-14: promote; change from Scholar profile 2026-09-14: email @cornell.edu; affiliation ""Associate Professor, Cornell University"""
 79,79,12,full,regular,1,,,workbook-2026
 80,80,12,associate,regular,1,,,workbook-2026
 81,81,12,full,regular,1,,,workbook-2026
@@ -87,11 +87,11 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 86,86,12,assistant,regular,1,,,workbook-2026
 87,87,33,associate,regular,1,,,workbook-2026; move verified 2026-09-13 against Scholar profile (verified email domain) and department page
 88,87,13,assistant,regular,1,,2026-09-13,"workbook-2026; stale duplicate row, closed at migration, actual end date unknown"
-89,88,13,associate,regular,1,,,workbook-2026
+89,88,13,associate,regular,1,,2026-09-14,"workbook-2026 | closed 2026-09-14: promote; change from Scholar profile 2026-09-14: email @dal.ca; affiliation ""Professor of School of Planning, and Civil and Resource Engineering, Dalhousie University"""
 90,89,13,full,regular,1,,,workbook-2026
 91,90,13,associate,regular,1,,,workbook-2026
 92,91,13,assistant,regular,1,,,workbook-2026
-93,92,13,assistant,regular,1,,,workbook-2026
+93,92,13,assistant,regular,1,,2026-09-14,"workbook-2026 | closed 2026-09-14: promote; change from Scholar profile 2026-09-14: email @dal.ca; affiliation ""Associate Professor, Dalhousie University"""
 94,93,14,associate,regular,1,,,workbook-2026
 95,94,14,full,regular,1,,,workbook-2026
 96,95,14,associate,regular,1,,,workbook-2026
@@ -106,7 +106,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 105,104,17,assistant,regular,1,,,workbook-2026
 106,105,17,associate,regular,1,,,workbook-2026
 107,106,17,full,regular,1,,,workbook-2026
-108,107,17,assistant,regular,1,,,workbook-2026
+108,107,17,assistant,regular,1,,2026-09-14,"workbook-2026 | closed 2026-09-14: depart; change from Scholar profile 2026-09-14: email @life.edu; affiliation ""Life University / Florida International University"""
 109,108,18,full,regular,1,,,workbook-2026
 110,109,18,full,regular,1,,,workbook-2026
 111,110,18,assistant,regular,1,,,workbook-2026
@@ -120,7 +120,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 119,118,18,assistant,regular,1,,,workbook-2026
 120,119,19,associate,regular,1,,,workbook-2026
 121,120,20,full,regular,1,,,workbook-2026
-122,121,20,assistant,regular,1,,,workbook-2026
+122,121,20,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @gatech.edu; affiliation ""Associate Professor @ Georgia Tech"""
 123,122,20,assistant,regular,1,,,workbook-2026
 124,123,20,full,regular,1,,,workbook-2026
 125,124,20,assistant,regular,1,,,workbook-2026
@@ -131,7 +131,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 130,129,20,full,regular,1,,,workbook-2026
 131,130,20,assistant,regular,1,,,workbook-2026
 132,131,20,assistant,regular,1,,,workbook-2026
-133,132,20,assistant,regular,1,,,workbook-2026
+133,132,20,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: depart; change from Scholar profile 2026-09-15: email @canterbury.ac.nz; affiliation ""University of Canterbury"""
 134,133,20,full,regular,1,,,workbook-2026
 135,134,20,associate,regular,1,,,workbook-2026
 136,135,21,full,regular,1,,,workbook-2026
@@ -143,8 +143,8 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 142,141,21,full,regular,1,,,workbook-2026
 143,142,21,full,regular,1,,,workbook-2026
 144,143,21,assistant,regular,1,,,workbook-2026
-145,144,21,assistant,regular,1,,,workbook-2026
-146,145,21,full,regular,1,,,workbook-2026
+145,144,21,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @harvard.edu; affiliation ""Associate Professor, Urban Planning and Design, Harvard University"""
+146,145,21,full,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: move; change from Scholar profile 2026-09-15: email @uic.edu; affiliation ""Department of Urban Planning and Policy, University of Illinois at Chicago"""
 147,146,22,associate,regular,1,,,workbook-2026
 148,147,22,full,regular,1,,,workbook-2026
 149,148,22,full,regular,1,,,workbook-2026
@@ -166,7 +166,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 165,164,24,full,regular,1,,,workbook-2026
 166,165,24,full,regular,1,,,workbook-2026
 167,166,24,associate,regular,1,,,workbook-2026
-168,167,24,associate,regular,1,,,workbook-2026
+168,167,24,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @iastate.edu; affiliation ""Professor of Urban and Regional Planning, Iowa State University"""
 169,168,24,full,regular,1,,,workbook-2026
 170,169,25,assistant,regular,1,,,workbook-2026
 171,170,25,associate,regular,1,,,workbook-2026
@@ -175,9 +175,9 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 174,173,25,associate,regular,1,,,workbook-2026
 175,174,25,associate,regular,1,,,workbook-2026
 176,175,26,full,regular,1,,,workbook-2026
-177,176,26,assistant,regular,1,,,workbook-2026
+177,176,26,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @ksu.edu; affiliation ""Associate Professor, Kansas State University"""
 178,177,26,assistant,regular,1,,,workbook-2026
-179,178,26,assistant,regular,1,,,workbook-2026
+179,178,26,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @ksu.edu; affiliation ""Associate Professor of Regional and Community Planning, Kansas State University"""
 180,179,26,associate,regular,1,,,workbook-2026
 181,180,28,associate,regular,1,,,workbook-2026
 182,181,28,associate,regular,1,,,workbook-2026
@@ -215,7 +215,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 214,213,27,assistant,regular,1,,,workbook-2026
 215,214,27,assistant,regular,1,,,workbook-2026
 216,215,27,assistant,regular,1,,,workbook-2026
-217,216,27,assistant,regular,1,,,workbook-2026
+217,216,27,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @mit.edu; affiliation ""Associate Professor of Urban Science and Planning at MIT Dept of Urban Studies and Planning"""
 218,217,27,full,regular,1,,,workbook-2026
 219,218,27,full,regular,1,,,workbook-2026
 220,219,27,full,regular,1,,,workbook-2026
@@ -225,9 +225,9 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 224,223,27,associate,regular,1,,,workbook-2026
 225,224,27,associate,regular,1,,,workbook-2026
 226,225,27,full,regular,1,,,workbook-2026
-227,226,27,associate,regular,1,,,workbook-2026
+227,226,27,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @mit.edu; affiliation ""Professor of Law and Development, MIT"""
 228,227,27,full,regular,1,,,workbook-2026
-229,228,27,associate,regular,1,,,workbook-2026
+229,228,27,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @mit.edu; affiliation ""Professor of Urban Design and Public Policy, MIT"""
 230,229,27,associate,regular,1,,,workbook-2026
 231,230,27,full,regular,1,,,workbook-2026
 232,231,27,associate,regular,1,,,workbook-2026
@@ -248,7 +248,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 247,246,33,associate,regular,1,,,workbook-2026
 248,247,34,full,regular,1,,,workbook-2026
 249,248,34,associate,regular,1,,,workbook-2026
-250,249,34,assistant,regular,1,,,workbook-2026
+250,249,34,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: move; change from Scholar profile 2026-09-15: email @cornell.edu; affiliation ""Cornell University College of Architecture, Art, and Planning"""
 251,250,34,associate,regular,1,,,workbook-2026
 252,251,34,associate,regular,1,,,workbook-2026
 253,252,34,associate,regular,1,,,workbook-2026
@@ -268,10 +268,10 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 267,266,36,associate,regular,1,,,workbook-2026
 268,267,36,full,regular,1,,,workbook-2026
 269,268,36,assistant,regular,1,,,workbook-2026
-270,269,36,full,regular,1,,,workbook-2026
+270,269,36,full,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: depart; change from Scholar profile 2026-09-15: email @gsu.edu; affiliation ""Dean and Professor, Georgia State University"""
 271,270,36,full,regular,1,,,workbook-2026
-272,271,37,assistant,regular,1,,,workbook-2026
-273,272,37,assistant,regular,1,,,workbook-2026
+272,271,37,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: depart; change from Scholar profile 2026-09-15: email @inu.ac.kr; affiliation ""Assistant Professor, Incheon National University"""
+273,272,37,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @nau.edu; affiliation ""Associate Professor, Northern Arizona University"""
 274,273,37,assistant,regular,1,,,workbook-2026
 275,274,37,full,regular,1,,,workbook-2026
 276,275,37,associate,regular,1,,,workbook-2026
@@ -295,7 +295,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 294,293,39,associate,regular,1,,,workbook-2026
 295,294,39,associate,regular,1,,,workbook-2026
 296,295,39,full,regular,1,,,workbook-2026
-297,296,39,associate,regular,1,,,workbook-2026
+297,296,39,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: move; change from Scholar profile 2026-09-15: email @uoguelph.ca; affiliation ""University of Guelph"""
 298,297,39,associate,regular,1,,,workbook-2026
 299,298,39,associate,regular,1,,,workbook-2026
 300,299,39,associate,regular,1,,,workbook-2026
@@ -329,22 +329,22 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 328,327,43,full,regular,1,,,workbook-2026
 329,328,43,full,regular,1,,,workbook-2026
 330,329,43,full,regular,1,,,workbook-2026
-331,330,43,assistant,regular,1,,,workbook-2026
+331,330,43,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @rutgers.edu; affiliation ""Associate Professor, Bloustein School of Planning and Public Policy, Rutgers University"""
 332,331,43,associate,regular,1,,,workbook-2026
 333,332,43,assistant,regular,1,,,workbook-2026
 334,333,43,full,regular,1,,,workbook-2026
 335,334,43,associate,regular,1,,,workbook-2026
 336,335,43,associate,regular,1,,,workbook-2026
-337,336,43,associate,regular,1,,,workbook-2026
+337,336,43,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @rutgers.edu; affiliation ""Professor, Rutgers University"""
 338,337,43,full,regular,1,,,workbook-2026
-339,338,43,assistant,regular,1,,,workbook-2026
+339,338,43,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @rutgers.edu; affiliation ""Associate Professor at Rutgers University"""
 340,339,44,associate,regular,1,,,workbook-2026
 341,340,44,full,regular,1,,,workbook-2026
 342,341,44,associate,regular,1,,,workbook-2026
 343,342,44,associate,regular,1,,,workbook-2026
 344,343,44,associate,regular,1,,,workbook-2026
 345,344,44,full,regular,1,,,workbook-2026
-346,345,44,associate,regular,1,,,workbook-2026
+346,345,44,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @rutgers.edu; affiliation ""Chair and Professor of Landscape Architecture, Rutgers University"""
 347,346,45,full,regular,1,,,workbook-2026
 348,347,46,full,regular,1,,,workbook-2026
 349,348,46,assistant,regular,1,,,workbook-2026
@@ -354,7 +354,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 353,352,47,full,regular,1,,,workbook-2026
 354,353,47,full,regular,1,,,workbook-2026
 355,354,47,associate,regular,1,,,workbook-2026
-356,355,47,assistant,regular,1,,,workbook-2026
+356,355,47,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: depart; change from Scholar profile 2026-09-15: email @stanford.edu; affiliation ""Associate Director, Asian American Research Center at Stanford University"""
 357,356,47,assistant,regular,1,,,workbook-2026
 358,357,47,assistant,regular,1,,,workbook-2026
 359,358,47,full,regular,1,,,workbook-2026
@@ -369,7 +369,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 368,367,49,full,regular,1,,,workbook-2026
 369,368,49,full,regular,1,,,workbook-2026
 370,369,49,associate,regular,1,,,workbook-2026
-371,370,50,assistant,regular,1,,,workbook-2026
+371,370,50,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @albany.edu; affiliation ""Associate Professor, State University of New York at Albany"""
 372,371,50,associate,regular,1,,,workbook-2026
 373,372,50,associate,regular,1,,,workbook-2026
 374,373,50,assistant,regular,1,,,workbook-2026
@@ -382,7 +382,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 381,380,52,full,regular,1,,,workbook-2026
 382,381,52,assistant,regular,1,,,workbook-2026
 383,382,52,full,regular,1,,,workbook-2026
-384,383,52,assistant,regular,1,,,workbook-2026
+384,383,52,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @tamu.edu; affiliation ""Associate Professor, Texas A&M University"""
 385,384,52,full,regular,1,,,workbook-2026
 386,385,52,associate,regular,1,,,workbook-2026
 387,386,52,full,regular,1,,,workbook-2026
@@ -392,7 +392,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 391,390,52,assistant,regular,1,,,workbook-2026
 392,391,52,assistant,regular,1,,,workbook-2026
 393,392,52,full,regular,1,,,workbook-2026
-394,393,52,assistant,regular,1,,,workbook-2026
+394,393,52,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @tamu.edu; affiliation ""Associate Professor, Texas A&M University"""
 395,394,52,assistant,regular,1,,,workbook-2026
 396,395,53,full,regular,1,,,workbook-2026
 397,396,53,associate,regular,1,,,workbook-2026
@@ -435,7 +435,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 434,433,58,associate,regular,1,,,workbook-2026
 435,434,58,associate,regular,1,,,workbook-2026
 436,435,58,full,regular,1,,,workbook-2026
-437,436,58,associate,regular,1,,,workbook-2026
+437,436,58,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @berkeley.edu; affiliation ""Professor, City & Regional Planning; Interim Dean, College of Environmental Design; UC Berkeley"""
 438,437,58,full,regular,1,,,workbook-2026
 439,438,58,full,regular,1,,,workbook-2026
 440,439,58,associate,regular,1,,,workbook-2026
@@ -489,7 +489,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 488,487,61,associate,regular,1,,,workbook-2026
 489,488,61,assistant,regular,1,,,workbook-2026
 490,489,61,assistant,regular,1,,,workbook-2026
-491,490,61,associate,regular,1,,,workbook-2026
+491,490,61,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @ucla.edu; affiliation ""Professor of Urban Planning and Public Policy, UCLA"""
 492,491,61,full,regular,1,,,workbook-2026
 493,492,61,assistant,regular,1,,,workbook-2026
 494,493,61,full,regular,1,,,workbook-2026
@@ -499,7 +499,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 498,497,61,full,regular,1,,,workbook-2026
 499,498,61,full,regular,1,,,workbook-2026
 500,499,61,associate,regular,1,,,workbook-2026
-501,500,61,full,regular,1,,,workbook-2026
+501,500,61,full,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: depart; change from Scholar profile 2026-09-15: email @lse.ac.uk; affiliation ""London School of Economics and Political Science"""
 502,501,61,full,regular,1,,,workbook-2026
 503,502,61,full,regular,1,,,workbook-2026
 504,503,61,full,regular,1,,,workbook-2026
@@ -525,13 +525,13 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 524,523,65,full,regular,1,,,workbook-2026
 525,524,65,full,regular,1,,,workbook-2026
 526,525,65,associate,regular,1,,,workbook-2026
-527,526,65,associate,regular,1,,,workbook-2026
+527,526,65,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @umontreal.ca; affiliation ""Professor of urban planning - Université de Montréal"""
 528,527,65,associate,regular,1,,,workbook-2026
 529,528,65,associate,regular,1,,,workbook-2026
 530,529,65,associate,regular,1,,,workbook-2026
 531,530,65,associate,regular,1,,,workbook-2026
 532,531,65,full,regular,1,,,workbook-2026
-533,532,65,full,regular,1,,,workbook-2026
+533,532,65,full,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: depart; change from Scholar profile 2026-09-15: email @uclouvain.be; affiliation ""Université catholique de Louvain"""
 534,533,65,associate,regular,1,,,workbook-2026
 535,534,64,associate,regular,1,,,workbook-2026
 536,535,64,full,regular,1,,,workbook-2026
@@ -561,7 +561,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 560,559,66,full,regular,1,,,workbook-2026
 561,560,66,full,regular,1,,,workbook-2026
 562,561,66,full,regular,1,,,workbook-2026
-563,562,66,associate,regular,1,,,workbook-2026
+563,562,66,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @buffalo.edu; affiliation ""Professor, Urban and Regional Planning, University at Buffalo"""
 564,563,67,full,regular,1,,,workbook-2026
 565,564,67,assistant,regular,1,,,workbook-2026
 566,565,67,full,regular,1,,,workbook-2026
@@ -578,8 +578,8 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 577,576,67,associate,regular,1,,,workbook-2026
 578,577,68,associate,regular,1,,,workbook-2026
 579,578,68,associate,regular,1,,,workbook-2026
-580,579,68,assistant,regular,1,,,workbook-2026
-581,580,68,assistant,regular,1,,,workbook-2026
+580,579,68,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: move; change from Scholar profile 2026-09-15: email @asu.edu; affiliation ""School of Geographical Sciences & Urban Planning, Arizona State University"""
+581,580,68,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @arizona.edu; affiliation ""Associate Professor and Distinguished Scholar, University of Arizona"""
 582,581,68,assistant,regular,1,,,workbook-2026
 583,582,68,associate,regular,1,,,workbook-2026
 584,583,68,full,regular,1,,,workbook-2026
@@ -637,9 +637,9 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 636,635,74,full,regular,1,,,workbook-2026
 637,636,74,full,regular,1,,,workbook-2026
 638,637,74,full,regular,1,,,workbook-2026
-639,638,74,assistant,regular,1,,,workbook-2026
-640,639,74,assistant,regular,1,,,workbook-2026
-641,640,74,assistant,regular,1,,,workbook-2026
+639,638,74,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: depart; change from Scholar profile 2026-09-15: email @unc.edu; affiliation ""University of North Carolina at Chapel Hill"""
+640,639,74,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @ufl.edu; affiliation ""Associate Professor, University of Florida"""
+641,640,74,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @ufl.edu; affiliation ""Associate Professor in the Department of Urban and Regional Planning at the University of Florida"""
 642,641,74,assistant,regular,1,,,workbook-2026
 643,642,75,full,regular,1,,,workbook-2026
 644,643,75,assistant,regular,1,,,workbook-2026
@@ -676,25 +676,25 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 675,674,78,associate,regular,1,,,workbook-2026
 676,675,78,associate,regular,1,,,workbook-2026
 677,676,78,full,regular,1,,,workbook-2026
-678,677,78,associate,regular,1,,,workbook-2026
+678,677,78,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @uic.edu; affiliation ""Professor, Department of Urban Planning and Policy, University of Illinois Chicago"""
 679,678,78,assistant,regular,1,,,workbook-2026
 680,679,79,assistant,regular,1,,,workbook-2026
 681,680,79,assistant,regular,1,,,workbook-2026
 682,681,79,full,regular,1,,,workbook-2026
 683,682,79,associate,regular,1,,,workbook-2026
-684,683,79,assistant,regular,1,,,workbook-2026
+684,683,79,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: move; change from Scholar profile 2026-09-15: email @?; affiliation ""University of Pennsylvania"""
 685,684,79,full,regular,1,,,workbook-2026
 686,685,79,associate,regular,1,,,workbook-2026
 687,686,79,full,regular,1,,,workbook-2026
 688,687,79,assistant,regular,1,,,workbook-2026
-689,688,79,full,regular,1,,,workbook-2026
+689,688,79,full,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: depart; change from Scholar profile 2026-09-15: email @unm.edu; affiliation ""Department of Community & Regional Planning, University of Mew Mexico"""
 690,689,79,assistant,regular,1,,,workbook-2026
 691,690,79,assistant,regular,1,,,workbook-2026
 692,691,80,associate,regular,1,,,workbook-2026
 693,692,80,assistant,regular,1,,,workbook-2026
 694,693,80,assistant,regular,1,,,workbook-2026
 695,694,80,associate,regular,1,,,workbook-2026
-696,695,80,associate,regular,1,,,workbook-2026
+696,695,80,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @uiowa.edu; affiliation ""Professor, School of Planning & Public Affairs, University of Iowa"""
 697,696,80,assistant,regular,1,,,workbook-2026
 698,697,80,assistant,regular,1,,,workbook-2026
 699,698,81,associate,regular,1,,,workbook-2026
@@ -710,13 +710,13 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 709,708,82,full,regular,1,,,workbook-2026
 710,709,82,full,regular,1,,,workbook-2026
 711,710,82,associate,regular,1,,,workbook-2026
-712,711,82,associate,regular,1,,,workbook-2026
+712,711,82,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @louisville.edu; affiliation ""Professor, University of Louisville"""
 713,712,82,associate,regular,1,,,workbook-2026
 714,713,82,associate,regular,1,,,workbook-2026
 715,714,83,assistant,regular,1,,,workbook-2026
 716,715,83,full,regular,1,,,workbook-2026
 717,716,83,associate,regular,1,,,workbook-2026
-718,717,83,assistant,regular,1,,,workbook-2026
+718,717,83,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @umanitoba.ca; affiliation ""Associate Professor, City Planning, University of Manitoba"""
 719,718,83,associate,regular,1,,,workbook-2026
 720,719,83,associate,regular,1,,,workbook-2026
 721,720,84,associate,regular,1,,,workbook-2026
@@ -745,12 +745,12 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 744,743,86,assistant,regular,1,,,workbook-2026
 745,744,86,associate,regular,1,,,workbook-2026
 746,745,86,full,regular,1,,,workbook-2026
-747,746,86,assistant,regular,1,,,workbook-2026
+747,746,86,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: depart; change from Scholar profile 2026-09-15: email @uniroma1.it; affiliation ""Associate Professor of Urban Planning, La Sapienza University of Rome"""
 748,747,86,full,regular,1,,,workbook-2026
 749,748,86,associate,regular,1,,,workbook-2026
 750,749,86,assistant,regular,1,,,workbook-2026
-751,750,86,assistant,regular,1,,,workbook-2026
-752,751,87,assistant,regular,1,,,workbook-2026
+751,750,86,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: move; change from Scholar profile 2026-09-15: email @ufl.edu; affiliation ""University of Florida"""
+752,751,87,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: depart; change from Scholar profile 2026-09-15: email @uw.edu; affiliation ""Assistant Professor at University of Washington, Tacoma"""
 753,752,87,full,regular,1,,,workbook-2026
 754,753,87,assistant,regular,1,,,workbook-2026
 755,754,87,assistant,regular,1,,,workbook-2026
@@ -808,9 +808,9 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 807,805,94,assistant,regular,1,,,workbook-2026
 808,806,94,assistant,regular,1,,,workbook-2026
 809,807,95,associate,regular,1,,,workbook-2026
-810,808,95,associate,regular,1,,,workbook-2026
+810,808,95,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: move; change from Scholar profile 2026-09-15: email @sdsu.edu; affiliation ""San Diego State University"""
 811,809,95,associate,regular,1,,,workbook-2026
-812,810,96,assistant,regular,1,,,workbook-2026
+812,810,96,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @uoregon.edu; affiliation ""Associate Professor, University of Oregon School of Planning, Public Policy, and Management"""
 813,811,96,associate,regular,1,,,workbook-2026
 814,812,96,assistant,regular,1,,,workbook-2026
 815,813,96,assistant,regular,1,,,workbook-2026
@@ -836,21 +836,21 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 835,833,97,full,regular,1,,,workbook-2026
 836,834,97,assistant,regular,1,,,workbook-2026
 837,835,97,associate,regular,1,,,workbook-2026
-838,836,97,assistant,regular,1,,,workbook-2026
+838,836,97,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @upenn.edu; affiliation ""Associate Professor of Urban Planning, University of Pennsylvania"""
 839,837,97,assistant,regular,1,,,workbook-2026
 840,838,97,associate,regular,1,,,workbook-2026
 841,839,97,associate,regular,1,,,workbook-2026
 842,840,97,full,regular,1,,,workbook-2026
-843,841,97,associate,regular,1,,,workbook-2026
+843,841,97,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @upenn.edu; affiliation ""Professor, University of Pennsylvania"""
 844,842,97,associate,regular,1,,,workbook-2026
 845,843,97,full,regular,1,,,workbook-2026
-846,844,97,associate,regular,1,,,workbook-2026
+846,844,97,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @upenn.edu; affiliation ""Professor of City Planning and Urban Studies, University of Pennsylvania"""
 847,845,98,assistant,regular,1,,,workbook-2026
 848,846,98,full,regular,1,,,workbook-2026
 849,847,98,associate,regular,1,,,workbook-2026
 850,848,98,full,regular,1,,,workbook-2026
 851,849,98,associate,regular,1,,,workbook-2026
-852,850,98,assistant,regular,1,,,workbook-2026
+852,850,98,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @upr.edu; affiliation ""Associate Professor, Graduate School of Planning, University of Puerto Rico - Río Piedras"""
 853,851,98,assistant,regular,1,,,workbook-2026
 854,852,99,full,regular,1,,,workbook-2026
 855,853,99,full,regular,1,,,workbook-2026
@@ -885,11 +885,11 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 884,882,103,assistant,regular,1,,,workbook-2026
 885,883,103,assistant,regular,1,,,workbook-2026
 886,884,103,full,regular,1,,,workbook-2026
-887,885,103,assistant,regular,1,,,workbook-2026
+887,885,103,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @uta.edu; affiliation ""Associate Professor, University of Texas at Arlington"""
 888,886,104,associate,regular,1,,,workbook-2026
 889,887,104,associate,regular,1,,,workbook-2026
 890,888,104,assistant,regular,1,,,workbook-2026
-891,889,104,associate,regular,1,,,workbook-2026
+891,889,104,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @utexas.edu; affiliation ""Professor of Community and Regional Planning, University of Texas at Austin"""
 892,890,104,associate,regular,1,,,workbook-2026
 893,891,104,full,regular,1,,,workbook-2026
 894,892,104,assistant,regular,1,,,workbook-2026
@@ -907,7 +907,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 906,904,106,full,regular,1,,,workbook-2026
 907,905,106,associate,regular,1,,,workbook-2026
 908,906,106,associate,regular,1,,,workbook-2026
-909,907,106,assistant,regular,1,,,workbook-2026
+909,907,106,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: depart; change from Scholar profile 2026-09-15: email @whu.edu.cn; affiliation ""Professor, Wuhan University"""
 910,908,107,full,regular,1,,,workbook-2026
 911,909,107,full,regular,1,,,workbook-2026
 912,910,107,full,regular,1,,,workbook-2026
@@ -943,7 +943,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 942,940,110,full,regular,1,,,workbook-2026
 943,941,110,full,regular,1,,,workbook-2026
 944,942,110,assistant,regular,1,,,workbook-2026
-945,943,110,associate,regular,1,,,workbook-2026
+945,943,110,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @uw.edu; affiliation ""Professor of Urban Design and Planning, University of Washington"""
 946,944,111,assistant,regular,1,,,workbook-2026
 947,945,111,assistant,regular,1,,,workbook-2026
 948,946,111,full,regular,1,,,workbook-2026
@@ -962,12 +962,12 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 961,959,111,assistant,regular,1,,,workbook-2026
 962,960,111,associate,regular,1,,,workbook-2026
 963,961,111,full,regular,1,,,workbook-2026
-964,962,111,associate,regular,1,,,workbook-2026
+964,962,111,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @uwaterloo.ca; affiliation ""Professor, School of Planning, University of Waterloo"""
 965,963,112,assistant,regular,1,,,workbook-2026
 966,964,112,assistant,regular,1,,,workbook-2026
 967,965,112,full,regular,1,,,workbook-2026
 968,966,112,full,regular,1,,,workbook-2026
-969,967,112,assistant,regular,1,,,workbook-2026
+969,967,112,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @wisc.edu; affiliation ""Associate Professor, University of Wisconsin-Madison"""
 970,968,112,full,regular,1,,,workbook-2026
 971,969,112,full,regular,1,,,workbook-2026
 972,970,112,full,regular,1,,,workbook-2026
@@ -988,11 +988,11 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 987,985,63,full,regular,1,,,workbook-2026
 988,986,63,associate,regular,1,,,workbook-2026
 989,987,63,full,regular,1,,,workbook-2026
-990,988,63,full,regular,1,,,workbook-2026
+990,988,63,full,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: depart; change from Scholar profile 2026-09-15: email @uc.edu; affiliation ""Professor and BEARE Chair, UC Lindner School of Business"""
 991,989,63,associate,regular,1,,,workbook-2026
 992,990,63,associate,regular,1,,,workbook-2026
 993,991,63,full,regular,1,,,workbook-2026
-994,992,63,full,regular,1,,,workbook-2026
+994,992,63,full,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: move; change from Scholar profile 2026-09-15: email @sjsu.edu; affiliation ""Associate Dean for Research and Faculty Success, San Jose State University"""
 995,993,114,full,regular,1,,,workbook-2026
 996,994,114,full,regular,1,,,workbook-2026
 997,995,114,associate,regular,1,,,workbook-2026
@@ -1008,7 +1008,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 1007,1005,115,associate,regular,1,,,workbook-2026
 1008,1006,115,full,regular,1,,,workbook-2026
 1009,1007,115,associate,regular,1,,,workbook-2026
-1010,1008,115,associate,regular,1,,,workbook-2026
+1010,1008,115,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @vt.edu; affiliation ""Professor, School of Public and International Affairs, Virginia Tech"""
 1011,1009,115,associate,regular,1,,,workbook-2026
 1012,1010,115,full,regular,1,,,workbook-2026
 1013,1011,115,assistant,regular,1,,,workbook-2026
@@ -1023,7 +1023,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 1022,1020,116,full,regular,1,,,workbook-2026
 1023,1021,117,full,regular,1,,,workbook-2026
 1024,1022,117,full,regular,1,,,workbook-2026
-1025,1023,117,full,regular,1,,,workbook-2026
+1025,1023,117,full,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: depart; change from Scholar profile 2026-09-15: email @smc.edu; affiliation ""Professor of Geography, Santa Monica College"""
 1026,1024,117,associate,regular,1,,,workbook-2026
 1027,1025,117,full,regular,1,,,workbook-2026
 1028,1026,117,assistant,regular,1,,,workbook-2026
@@ -1047,6 +1047,59 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 1046,1044,120,associate,regular,1,,,workbook-2026
 1047,1045,120,full,regular,1,,,workbook-2026
 1048,1046,120,full,regular,1,,,workbook-2026
-1049,1047,120,assistant,regular,1,,,workbook-2026
+1049,1047,120,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: move; change from Scholar profile 2026-09-15: email @utoronto.ca; affiliation ""University of Toronto"""
 1050,1048,120,associate,regular,1,,,workbook-2026
 1051,1049,120,full,regular,1,,,workbook-2026
+1052,11,66,full,regular,1,2026-09-14,,"change from Scholar profile 2026-09-14: email @buffalo.edu; affiliation ""SUNY-Buffalo"""
+1053,17,72,associate,regular,1,2026-09-14,,"change from Scholar profile 2026-09-14: email @colorado.edu; affiliation ""Associate Professor, Department of Geography, University of Colorado Boulder"""
+1054,39,6,full,regular,1,2026-09-14,,"change from Scholar profile 2026-09-14: email @cpp.edu; affiliation ""Professor, Cal Poly Pomona"""
+1055,78,12,associate,regular,1,2026-09-14,,"change from Scholar profile 2026-09-14: email @cornell.edu; affiliation ""Associate Professor, Cornell University"""
+1056,88,13,full,regular,1,2026-09-14,,"change from Scholar profile 2026-09-14: email @dal.ca; affiliation ""Professor of School of Planning, and Civil and Resource Engineering, Dalhousie University"""
+1057,92,13,associate,regular,1,2026-09-14,,"change from Scholar profile 2026-09-14: email @dal.ca; affiliation ""Associate Professor, Dalhousie University"""
+1058,121,20,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @gatech.edu; affiliation ""Associate Professor @ Georgia Tech"""
+1059,144,21,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @harvard.edu; affiliation ""Associate Professor, Urban Planning and Design, Harvard University"""
+1060,145,78,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @uic.edu; affiliation ""Department of Urban Planning and Policy, University of Illinois at Chicago"""
+1061,167,24,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @iastate.edu; affiliation ""Professor of Urban and Regional Planning, Iowa State University"""
+1062,176,26,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @ksu.edu; affiliation ""Associate Professor, Kansas State University"""
+1063,178,26,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @ksu.edu; affiliation ""Associate Professor of Regional and Community Planning, Kansas State University"""
+1064,216,27,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @mit.edu; affiliation ""Associate Professor of Urban Science and Planning at MIT Dept of Urban Studies and Planning"""
+1065,226,27,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @mit.edu; affiliation ""Professor of Law and Development, MIT"""
+1066,228,27,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @mit.edu; affiliation ""Professor of Urban Design and Public Policy, MIT"""
+1067,249,12,assistant,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @cornell.edu; affiliation ""Cornell University College of Architecture, Art, and Planning"""
+1068,272,37,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @nau.edu; affiliation ""Associate Professor, Northern Arizona University"""
+1069,296,76,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @uoguelph.ca; affiliation ""University of Guelph"""
+1070,330,43,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @rutgers.edu; affiliation ""Associate Professor, Bloustein School of Planning and Public Policy, Rutgers University"""
+1071,336,43,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @rutgers.edu; affiliation ""Professor, Rutgers University"""
+1072,338,43,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @rutgers.edu; affiliation ""Associate Professor at Rutgers University"""
+1073,345,44,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @rutgers.edu; affiliation ""Chair and Professor of Landscape Architecture, Rutgers University"""
+1074,370,50,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @albany.edu; affiliation ""Associate Professor, State University of New York at Albany"""
+1075,383,52,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @tamu.edu; affiliation ""Associate Professor, Texas A&M University"""
+1076,393,52,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @tamu.edu; affiliation ""Associate Professor, Texas A&M University"""
+1077,436,58,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @berkeley.edu; affiliation ""Professor, City & Regional Planning; Interim Dean, College of Environmental Design; UC Berkeley"""
+1078,490,61,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @ucla.edu; affiliation ""Professor of Urban Planning and Public Policy, UCLA"""
+1079,526,65,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @umontreal.ca; affiliation ""Professor of urban planning - Université de Montréal"""
+1080,562,66,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @buffalo.edu; affiliation ""Professor, Urban and Regional Planning, University at Buffalo"""
+1081,579,3,assistant,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @asu.edu; affiliation ""School of Geographical Sciences & Urban Planning, Arizona State University"""
+1082,580,68,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @arizona.edu; affiliation ""Associate Professor and Distinguished Scholar, University of Arizona"""
+1083,639,74,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @ufl.edu; affiliation ""Associate Professor, University of Florida"""
+1084,640,74,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @ufl.edu; affiliation ""Associate Professor in the Department of Urban and Regional Planning at the University of Florida"""
+1085,677,78,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @uic.edu; affiliation ""Professor, Department of Urban Planning and Policy, University of Illinois Chicago"""
+1086,683,97,assistant,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @?; affiliation ""University of Pennsylvania"""
+1087,695,80,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @uiowa.edu; affiliation ""Professor, School of Planning & Public Affairs, University of Iowa"""
+1088,711,82,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @louisville.edu; affiliation ""Professor, University of Louisville"""
+1089,717,83,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @umanitoba.ca; affiliation ""Associate Professor, City Planning, University of Manitoba"""
+1090,750,74,assistant,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @ufl.edu; affiliation ""University of Florida"""
+1091,808,46,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @sdsu.edu; affiliation ""San Diego State University"""
+1092,810,96,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @uoregon.edu; affiliation ""Associate Professor, University of Oregon School of Planning, Public Policy, and Management"""
+1093,836,97,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @upenn.edu; affiliation ""Associate Professor of Urban Planning, University of Pennsylvania"""
+1094,841,97,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @upenn.edu; affiliation ""Professor, University of Pennsylvania"""
+1095,844,97,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @upenn.edu; affiliation ""Professor of City Planning and Urban Studies, University of Pennsylvania"""
+1096,850,98,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @upr.edu; affiliation ""Associate Professor, Graduate School of Planning, University of Puerto Rico - Río Piedras"""
+1097,885,103,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @uta.edu; affiliation ""Associate Professor, University of Texas at Arlington"""
+1098,889,104,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @utexas.edu; affiliation ""Professor of Community and Regional Planning, University of Texas at Austin"""
+1099,943,110,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @uw.edu; affiliation ""Professor of Urban Design and Planning, University of Washington"""
+1100,962,111,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @uwaterloo.ca; affiliation ""Professor, School of Planning, University of Waterloo"""
+1101,967,112,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @wisc.edu; affiliation ""Associate Professor, University of Wisconsin-Madison"""
+1102,1008,115,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @vt.edu; affiliation ""Professor, School of Public and International Affairs, Virginia Tech"""
+1103,1047,107,assistant,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @utoronto.ca; affiliation ""University of Toronto"""
+1104,992,47,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @sjsu.edu; affiliation ""Associate Dean for Research and Faculty Success, San Jose State University"""

@@ -118,10 +118,27 @@ re-found by a direct fetch that follows Google's redirect, from an unblocked add
 
 ```bash
 .venv/bin/python -m pipeline.collect_scholar --via scholarly --ids <old id> ...
-``` Clear winners
-go into `person.csv`. Run it from a university or home connection. We do not reconstruct
-citation counts for people without a profile (that was Publish or Perish, by hand); they get
-the flagged OpenAlex number instead.
+```
+
+We do not reconstruct citation counts for people without a profile (that was Publish or
+Perish, by hand); they get the flagged OpenAlex number instead.
+
+## Applying roster changes
+
+```bash
+.venv/bin/python -m pipeline.apply_changes --dry-run   # print every decision
+.venv/bin/python -m pipeline.apply_changes             # write data/roster/affiliation.csv
+```
+
+Policy: trust the Scholar profile, publish, and take corrections through the site. When the
+profile's affiliation text names another tracked department the person is moved there; when
+it names an institution we don't track and the verified email agrees, the appointment is
+closed and the destination kept in the note; when it names the current department at a
+higher rank, the person is promoted. A stale verified email alone never triggers anything,
+profiles that still read "PhD student" or "postdoc" are ignored, and profiles in fields no
+planning faculty hold (electrical engineering, biochemistry) are reported as probable
+namesakes and left alone. Nothing is deleted: old appointments are closed with the snapshot
+date and the evidence in `source`.
 
 ## Change report
 
@@ -129,11 +146,11 @@ the flagged OpenAlex number instead.
 .venv/bin/python -m pipeline.detect_changes      # -> build/change_report_<date>.md
 ```
 
-Compares the latest snapshots with the roster and the previous snapshots, and lists the
-people a reviewer should look at: Scholar verified-email domain or affiliation text that
-does not match the department, OpenAlex last known institution elsewhere, a citation count
-that fell more than 20% (usually a wrong or merged profile), and profiles that vanished.
-It edits nothing; roster changes are made by hand in `data/roster/`.
+Run after `apply_changes`: lists what the automatic rules could not settle, for a person to
+look at. Scholar email or affiliation text that does not match the department and was not
+strong enough to act on, OpenAlex last known institution elsewhere, a citation count that
+fell more than 20% (usually a wrong or merged profile), and profiles that vanished. It edits
+nothing.
 
 ## Private attributes
 
