@@ -145,7 +145,9 @@ def main(argv=None) -> None:
     ap.add_argument("--cooldown", type=float, default=20.0, help="minutes to wait after repeated failures")
     ap.add_argument("--max-wait", type=float, default=3.0, help="hours without a success before giving up")
     ap.add_argument("--date", default=date.today().isoformat())
-    ap.add_argument("--ids", nargs="*", help="only these Scholar ids")
+    ap.add_argument("--ids", metavar="ID,ID,...", default="",
+                    help="only these Scholar ids; comma-separated, and written as --ids=... "
+                         "because a Scholar id can start with '-'")
     ap.add_argument("--via", choices=["serpapi", "scholarly"],
                     default="serpapi" if os.environ.get("SERPAPI_KEY") else "scholarly")
     args = ap.parse_args(argv)
@@ -170,10 +172,14 @@ def main(argv=None) -> None:
 
     fields, everyone = load_people()
     people = [p for p in everyone if p["google_scholar_id"]]
-    if args.ids:
-        people = [p for p in people if p["google_scholar_id"] in set(args.ids)]
+    wanted = {x.strip() for x in args.ids.split(",") if x.strip()}
+    if wanted:
+        people = [p for p in people if p["google_scholar_id"] in wanted]
+        missing = wanted - {p["google_scholar_id"] for p in people}
+        if missing:
+            print(f"  note: no roster entry holds {', '.join(sorted(missing))}", file=sys.stderr)
     out = SNAPSHOT_DIR / "google_scholar" / f"{args.date}.csv"
-    done = already_done(out)
+    done = set() if wanted else already_done(out)
     todo = [p for p in people if p["person_id"] not in done]
     if args.limit:
         todo = todo[: args.limit]
