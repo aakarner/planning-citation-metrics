@@ -145,7 +145,7 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 61,Joanna Ganning,Cleveland State University,openalex,A5008867275,Joanna Ganning,1.0,1.0,1.0,1.0,0.693,46,388,9,Cleveland State University,https://orcid.org/0000-0002-8448-0288,accepted,matcher,2026-09-14
 61,Joanna Ganning,Cleveland State University,openalex,A5106609428,Joanna Ganning,0.9,1.0,1.0,1.0,0.0,1,0,0,Cleveland State University,,pending,,
 61,Joanna Ganning,Cleveland State University,openalex,A5124746648,Joanna Ganning,0.8,1.0,1.0,0.333,0.0,1,0,0,Cleveland State University,,pending,,
-62,Thomas Hilde,Cleveland State University,openalex,A5047102699,Thomas W.C. Hilde,0.75,1.0,1.0,0.0,27.047,63,3489,24,Cleveland State University,https://orcid.org/0000-0001-6584-3066,accepted,matcher,2026-09-14
+62,Thomas Hilde,Cleveland State University,openalex,A5047102699,Thomas W.C. Hilde,0.75,1.0,1.0,0.0,27.047,63,3489,24,Cleveland State University,https://orcid.org/0000-0001-6584-3066,rejected,audit_matches,2026-09-15
 62,Thomas Hilde,Cleveland State University,openalex,A5093293923,Thomas Hilde,0.605,1.0,0.0,0.364,0.116,4,15,1,"University of Maryland, College Park",,pending,,
 62,Thomas Hilde,Cleveland State University,openalex,A5148622947,Thomas Christian Hilde,0.6,1.0,0.0,1.0,0.0,1,0,0,,,pending,,
 62,Thomas Hilde,Cleveland State University,openalex,A5076776694,Thomas Cristian Hilde,0.6,1.0,0.0,1.0,0.0,1,0,0,,,pending,,
@@ -374,7 +374,7 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 146,Stefan Al,Hunter College,openalex,A5106809881,Stefan Al,0.6,1.0,0.0,1.0,0.003,1,2,1,,,pending,,
 146,Stefan Al,Hunter College,openalex,A5103574588,Stefan Johannes Al,0.6,1.0,0.0,1.0,0.007,1,5,1,,,pending,,
 146,Stefan Al,Hunter College,openalex,A5103928339,Stefan Al,0.6,1.0,0.0,1.0,0.0,2,0,0,,,pending,,
-147,Nicholas Bloom,Hunter College,openalex,A5044421873,Nicholas Bloom,0.9,1.0,1.0,1.0,85.61,550,65920,88,Hunter College,https://orcid.org/0000-0002-1600-7819,accepted,matcher,2026-09-14
+147,Nicholas Bloom,Hunter College,openalex,A5044421873,Nicholas Bloom,0.9,1.0,1.0,1.0,85.61,550,65920,88,Hunter College,https://orcid.org/0000-0002-1600-7819,rejected,audit_matches,2026-09-15
 147,Nicholas Bloom,Hunter College,openalex,A5141915477,Nicholas Bloom,0.65,1.0,0.0,1.0,0.058,2,45,2,,,pending,,
 147,Nicholas Bloom,Hunter College,openalex,A5109699108,Nicholas Bloom Marcela Carvalho,0.6,1.0,0.0,1.0,0.003,1,2,1,,,pending,,
 147,Nicholas Bloom,Hunter College,openalex,A5128529340,Nicholas Bloom,0.6,1.0,0.0,1.0,0.0,1,0,0,National Bureau of Economic Research,,pending,,
@@ -779,7 +779,7 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 332,Andrea Restrepo-Mieth,Rutgers University,openalex,A5071886532,Andrea Restrepo-Mieth,1.0,1.0,1.0,1.0,0.914,8,74,3,"Rutgers, The State University of New Jersey",https://orcid.org/0000-0002-6791-7345,accepted,matcher,2026-09-14
 333,Hal Salzman,Rutgers University,openalex,A5000469305,Hal Salzman,0.933,1.0,1.0,0.551,0.755,109,1080,19,"Rutgers, The State University of New Jersey",https://orcid.org/0000-0003-3036-3286,accepted,matcher,2026-09-14
 333,Hal Salzman,Rutgers University,openalex,A5126990965,Hal Salzman,0.87,1.0,1.0,0.8,0.001,2,2,1,"Rutgers, The State University of New Jersey",,pending,,
-334,Eric Seymour,Rutgers University,openalex,A5084759395,Eric Seymour,0.811,1.0,1.0,0.406,3.492,85,2329,25,United States Department of Housing and Urban Development,https://orcid.org/0000-0002-1906-3701,accepted,matcher,2026-09-14
+334,Eric Seymour,Rutgers University,openalex,A5084759395,Eric Seymour,0.811,1.0,1.0,0.406,3.492,85,2329,25,United States Department of Housing and Urban Development,https://orcid.org/0000-0002-1906-3701,rejected,audit_matches,2026-09-15
 335,Mi Shih,Rutgers University,openalex,A5010209545,Mi Shih,1.0,1.0,1.0,1.0,0.844,22,281,9,"Rutgers, The State University of New Jersey",https://orcid.org/0000-0002-9197-9386,accepted,matcher,2026-09-14
 335,Mi Shih,Rutgers University,openalex,A5067396163,Mi Shih,0.6,1.0,0.0,1.0,0.003,2,1,1,,,pending,,
 335,Mi Shih,Rutgers University,openalex,A5125615351,Mi Shih,0.573,1.0,0.0,0.818,0.0,5,0,0,,,pending,,
@@ -1235,7 +1235,7 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 529,Paula Negron-Poblete,Universite de Montreal,openalex,A5111375915,Paula Negron Poblete,0.6,1.0,0.0,1.0,0.017,3,9,2,,,pending,,
 529,Paula Negron-Poblete,Universite de Montreal,openalex,A5099270651,Paula Negron-Poblete,0.6,1.0,0.0,1.0,0.009,3,5,1,,,pending,,
 529,Paula Negron-Poblete,Universite de Montreal,openalex,A5099251753,Poblete Paula Negron,0.42,0.6,0.0,1.0,0.0,1,0,0,,,pending,,
-530,Max Raynaud,Universite de Montreal,openalex,A5046309756,Michel Max Raynaud,0.864,0.92,1.0,1.0,0.015,17,1,1,Université de Montréal,,accepted,matcher,2026-09-14
+530,Max Raynaud,Universite de Montreal,openalex,A5046309756,Michel Max Raynaud,0.864,0.92,1.0,1.0,0.015,17,1,1,Université de Montréal,,rejected,audit_matches,2026-09-15
 531,Franck Scherrer,Universite de Montreal,openalex,A5015756740,Franck Scherrer,1.0,1.0,1.0,1.0,0.247,62,149,7,Université de Montréal,https://orcid.org/0009-0004-5341-4044,accepted,matcher,2026-09-14
 531,Franck Scherrer,Universite de Montreal,openalex,A5102439538,Franck Scherrer,0.55,1.0,0.0,0.667,0.0,1,0,0,,,pending,,
 533,Juan Torres,Universite de Montreal,openalex,A5068929396,Juan Torres,0.929,1.0,1.0,0.857,2.238,52,535,11,Université de Montréal,https://orcid.org/0000-0001-9010-3174,accepted,matcher,2026-09-14
@@ -1388,7 +1388,7 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 599,Mark Stevens,University of British Columbia,openalex,A5012975876,Mark L. Stevens,0.588,1.0,0.0,0.25,0.152,17,338,8,,https://orcid.org/0000-0002-1813-6403,pending,,
 600,Martino Tran,University of British Columbia,openalex,A5038912348,Martino Tran,0.937,1.0,1.0,0.58,0.723,56,2318,23,University of British Columbia,https://orcid.org/0000-0002-8947-3829,accepted,matcher,2026-09-14
 601,Alberto de Salvatierra,University of Calgary,openalex,A5013944437,Alberto de Salvatierra,0.967,1.0,1.0,0.778,0.556,11,5,1,University of Calgary,https://orcid.org/0000-0002-3931-0132,accepted,matcher,2026-09-14
-602,Rebecca Pedersen,University of Calgary,openalex,A5042975887,Rebecca Laycock Pedersen,0.855,1.0,1.0,0.7,0.027,13,126,5,Landscape Institute,https://orcid.org/0000-0002-5966-5141,accepted,matcher,2026-09-14
+602,Rebecca Pedersen,University of Calgary,openalex,A5042975887,Rebecca Laycock Pedersen,0.855,1.0,1.0,0.7,0.027,13,126,5,Landscape Institute,https://orcid.org/0000-0002-5966-5141,rejected,audit_matches,2026-09-15
 602,Rebecca Pedersen,University of Calgary,openalex,A5082877046,Rebecca Pedersen,0.478,0.6,0.0,0.722,0.257,24,1204,14,Southwestern Medical Center,,pending,,
 602,Rebecca Pedersen,University of Calgary,openalex,A5018499583,Rebecca L Pedersen,0.32,0.6,0.0,0.333,0.0,1,0,0,,,pending,,
 602,Rebecca Pedersen,University of Calgary,openalex,A5041390087,Rebecca Broe Pedersen,0.27,0.6,0.0,0.0,0.0,1,0,0,Hospital Oftalmologico de Brasília,,pending,,
@@ -1412,7 +1412,7 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 610,David Edelman,University of Cincinnati,openalex,A5071658383,David Edelman,0.637,1.0,0.0,0.583,0.51,17,180,8,Montefiore Medical Center,https://orcid.org/0000-0003-3627-9149,pending,,
 610,David Edelman,University of Cincinnati,openalex,A5110412576,David Edelman,0.637,1.0,0.5,0.25,0.0,2,0,0,Cornell University,,pending,,
 610,David Edelman,University of Cincinnati,openalex,A5117655666,David Edelman,0.6,1.0,0.0,1.0,0.0,1,0,0,,,pending,,
-611,Jan Fritz,University of Cincinnati,openalex,A5051478915,Jan Marie Fritz,0.9,1.0,1.0,1.0,0.004,8,4,1,University of Cincinnati,https://orcid.org/0000-0002-0605-4152,accepted,matcher,2026-09-14
+611,Jan Fritz,University of Cincinnati,openalex,A5051478915,Jan Marie Fritz,0.9,1.0,1.0,1.0,0.004,8,4,1,University of Cincinnati,https://orcid.org/0000-0002-0605-4152,rejected,audit_matches,2026-09-15
 611,Jan Fritz,University of Cincinnati,openalex,A5006795112,Jan Fritz,0.75,1.0,1.0,0.0,9.196,487,9527,49,University of Johannesburg,https://orcid.org/0000-0003-4456-3043,pending,,
 611,Jan Fritz,University of Cincinnati,openalex,A5023282314,Jan Fritz,0.75,1.0,0.5,1.0,0.003,15,3,1,,,pending,,
 611,Jan Fritz,University of Cincinnati,openalex,A5047526450,Jan-Stefan Fritz,0.679,1.0,0.0,0.857,0.137,24,142,6,Hochschule Bremen,,pending,,
@@ -1477,7 +1477,7 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 631,Abhinav Alakshendra,University of Florida,openalex,A5118970737,Abhinav Alakshendra,0.825,1.0,1.0,0.5,0.004,1,1,1,University of Florida,,pending,,
 631,Abhinav Alakshendra,University of Florida,openalex,A5144268168,Abhinav Alakshendra,0.8,1.0,1.0,0.333,0.0,1,0,0,University of Florida,,pending,,
 632,Ilir Bejleri,University of Florida,openalex,A5071777797,Ilir Bejleri,0.933,1.0,1.0,0.551,0.555,51,345,10,University of Florida,,accepted,matcher,2026-09-14
-635,Kristin Larsen,University of Florida,openalex,A5091849508,Kristin E. Larsen,0.864,1.0,1.0,0.761,14.115,73,4531,20,University of Florida,https://orcid.org/0000-0002-4014-2543,accepted,matcher,2026-09-14
+635,Kristin Larsen,University of Florida,openalex,A5091849508,Kristin E. Larsen,0.864,1.0,1.0,0.761,14.115,73,4531,20,University of Florida,https://orcid.org/0000-0002-4014-2543,rejected,audit_matches,2026-09-15
 635,Kristin Larsen,University of Florida,openalex,A5050048641,Kristin Lind-Larsen,0.625,1.0,0.0,0.5,0.115,2,37,1,University of Bergen,,pending,,
 635,Kristin Larsen,University of Florida,openalex,A5014310198,Kristin M. Larsen,0.6,1.0,0.0,1.0,0.009,1,3,1,University of Pennsylvania,,pending,,
 635,Kristin Larsen,University of Florida,openalex,A5067504938,Kristin A. Larsen,0.575,1.0,0.0,0.5,0.069,2,22,2,The University of Texas at San Antonio Health Science Center,,pending,,
@@ -1659,7 +1659,7 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 712,Margath Walker,University of Louisville,openalex,A5038114992,Margath A. Walker,1.0,1.0,1.0,1.0,0.677,62,327,11,University of Louisville Hospital,https://orcid.org/0000-0002-9006-1100,accepted,matcher,2026-09-14
 712,Margath Walker,University of Louisville,openalex,A5148796430,Margath Walker,0.85,1.0,1.0,0.667,0.0,1,0,0,University of Louisville,,pending,,
 712,Margath Walker,University of Louisville,openalex,A5099158474,Margath A. Walker,0.525,1.0,0.0,0.5,0.0,1,0,0,,,pending,,
-713,Sumei Zhang,University of Louisville,openalex,A5080812283,Sumei Zhang,0.855,1.0,1.0,0.702,11.746,410,7952,48,Shenzhen Institute of Information Technology,https://orcid.org/0000-0001-5779-3281,accepted,matcher,2026-09-14
+713,Sumei Zhang,University of Louisville,openalex,A5080812283,Sumei Zhang,0.855,1.0,1.0,0.702,11.746,410,7952,48,Shenzhen Institute of Information Technology,https://orcid.org/0000-0001-5779-3281,rejected,audit_matches,2026-09-15
 713,Sumei Zhang,University of Louisville,openalex,A5125141100,Sumei Zhang,0.8,1.0,1.0,0.333,0.0,1,0,0,University of Louisville,,pending,,
 713,Sumei Zhang,University of Louisville,openalex,A5128711332,Sumei Zhang,0.6,1.0,0.0,1.0,0.0,1,0,0,Xi’an University of Posts and Telecommunications,,pending,,
 713,Sumei Zhang,University of Louisville,openalex,A5101951825,Sumei Zhang,0.56,1.0,0.0,0.402,1.513,88,1024,20,Xi’an University of Posts and Telecommunications,https://orcid.org/0000-0002-0459-6126,pending,,
@@ -1725,7 +1725,7 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 744,Richard Hung,University of Massachusetts-Boston,openalex,A5101056784,Chun-Hung Richard Lin,0.551,0.92,0.0,0.583,0.047,12,13,2,National Sun Yat-sen University,,pending,,
 744,Richard Hung,University of Massachusetts-Boston,openalex,A5021703621,Richard Chun-Hung Lin,0.539,0.914,0.0,0.182,0.185,11,51,3,"University of California, Los Angeles",https://orcid.org/0000-0003-3960-6248,pending,,
 744,Richard Hung,University of Massachusetts-Boston,openalex,A5065294786,Richard Kim-Hung Kwong,0.522,0.909,0.0,0.75,0.022,2,6,1,,,pending,,
-745,Michael Johnson,University of Massachusetts-Boston,openalex,A5064484557,Michael P. Johnson,0.884,1.0,1.0,0.896,56.096,195,5273,36,,https://orcid.org/0000-0002-4466-5886,accepted,matcher,2026-09-14
+745,Michael Johnson,University of Massachusetts-Boston,openalex,A5064484557,Michael P. Johnson,0.884,1.0,1.0,0.896,56.096,195,5273,36,,https://orcid.org/0000-0002-4466-5886,rejected,audit_matches,2026-09-15
 745,Michael Johnson,University of Massachusetts-Boston,openalex,A5021602538,Michael K. Johnson,0.691,1.0,0.5,0.606,170.872,377,16062,66,,https://orcid.org/0000-0002-8479-5810,pending,,
 745,Michael Johnson,University of Massachusetts-Boston,openalex,A5016429945,Michael S. Johnson,0.656,1.0,0.5,0.375,115.968,168,10901,31,University of Nottingham,https://orcid.org/0000-0002-4389-9437,pending,,
 745,Michael Johnson,University of Massachusetts-Boston,openalex,A5035489414,Michael D. Johnson,0.654,1.0,0.5,0.359,271.691,326,25539,60,University of Alabama at Birmingham,https://orcid.org/0000-0002-4120-3029,pending,,
@@ -2185,7 +2185,7 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 929,Andrea Roberts,University of Virginia,openalex,A5100765891,Andrea Roberts,0.666,1.0,0.0,0.773,0.53,25,285,11,University of Illinois Urbana-Champaign,https://orcid.org/0000-0001-9979-6026,pending,,
 929,Andrea Roberts,University of Virginia,openalex,A5032130517,Andrea Roberts,0.628,1.0,0.0,0.522,0.818,20,440,9,Lurie Children's Hospital,https://orcid.org/0000-0003-0104-9124,pending,,
 929,Andrea Roberts,University of Virginia,openalex,A5084129700,Andrea M. Roberts,0.6,1.0,0.0,1.0,0.002,1,1,1,,,pending,,
-930,Jennifer Roe,University of Virginia,openalex,A5112558031,Jennifer Roe,0.808,1.0,1.0,0.385,0.016,17,165,7,University of Liverpool,,accepted,matcher,2026-09-14
+930,Jennifer Roe,University of Virginia,openalex,A5112558031,Jennifer Roe,0.808,1.0,1.0,0.385,0.016,17,165,7,University of Liverpool,,rejected,audit_matches,2026-09-15
 930,Jennifer Roe,University of Virginia,openalex,A5074860804,Jennifer Roe Hardin,0.6,1.0,0.0,1.0,0.0,1,0,0,,,pending,,
 930,Jennifer Roe,University of Virginia,openalex,A5081711996,Jennifer L. Roe,0.54,1.0,0.0,0.6,0.0,5,1,1,,,pending,,
 930,Jennifer Roe,University of Virginia,openalex,A5045654236,Jennifer Roe,0.5,1.0,0.0,0.0,0.097,27,1029,13,Saint Louis University,,pending,,
@@ -2224,7 +2224,7 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 944,Martine August,"University of Waterloo, Ontario",openalex,A5127580475,Martine Jade August,0.6,1.0,0.0,1.0,0.0,1,0,0,,,pending,,
 945,Janice Barry,"University of Waterloo, Ontario",openalex,A5035156700,Janice Barry,1.0,1.0,1.0,1.0,0.611,31,662,13,University of Waterloo,https://orcid.org/0000-0003-4251-2015,accepted,matcher,2026-09-14
 945,Janice Barry,"University of Waterloo, Ontario",openalex,A5072205176,Raewyn Janice Barry,0.476,0.724,0.0,1.0,0.0,1,0,0,,,pending,,
-946,Jeff Casello,"University of Waterloo, Ontario",openalex,A5001943787,Jeffrey M. Casello,0.9,1.0,1.0,1.0,5.39,55,663,13,,https://orcid.org/0000-0002-9246-9759,accepted,matcher,2026-09-14
+946,Jeff Casello,"University of Waterloo, Ontario",openalex,A5001943787,Jeffrey M. Casello,0.9,1.0,1.0,1.0,5.39,55,663,13,,https://orcid.org/0000-0002-9246-9759,rejected,audit_matches,2026-09-15
 947,Jennifer Dean,"University of Waterloo, Ontario",openalex,A5003309377,Jennifer Dean,1.0,1.0,1.0,1.0,1.195,80,2669,25,University of Waterloo,https://orcid.org/0000-0003-2642-7638,accepted,matcher,2026-09-14
 947,Jennifer Dean,"University of Waterloo, Ontario",openalex,A5090967912,Jennifer Dean,0.672,1.0,0.0,0.812,0.208,6,464,3,Jupiter Medical Center,https://orcid.org/0000-0003-4093-9744,pending,,
 947,Jennifer Dean,"University of Waterloo, Ontario",openalex,A5037540734,Jennifer Dean Durning,0.65,1.0,0.0,1.0,0.054,10,121,5,MGH Institute of Health Professions,https://orcid.org/0000-0002-3210-4395,pending,,

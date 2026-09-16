@@ -43,13 +43,20 @@ FROM (
                       ELSE 9 END,
                     m.collected_at DESC
          ) AS rn
-  FROM v_latest_metrics m
+  FROM (SELECT * FROM v_latest_metrics WHERE source <> 'openalex'
+        UNION ALL SELECT * FROM v_openalex_metrics) m
 )
 WHERE rn = 1;
 
--- OpenAlex for everyone who is matched, as a comparison series alongside Scholar.
+-- OpenAlex for everyone still matched, as a comparison series alongside Scholar.
+-- Restricted to people who currently hold an openalex_author_id: snapshots stay
+-- in metric_snapshot for audit, but a match later disavowed (see
+-- pipeline/audit_matches.py) must not reach the site or the rankings.
 CREATE VIEW v_openalex_metrics AS
-SELECT * FROM v_latest_metrics WHERE source = 'openalex';
+SELECT m.* FROM v_latest_metrics m
+JOIN person p ON p.person_id = m.person_id
+WHERE m.source = 'openalex'
+  AND p.openalex_author_id IS NOT NULL AND p.openalex_author_id <> '';
 
 -- Percentiles among current faculty, overall and within rank.
 -- PERCENT_RANK() = (rank - 1) / (n - 1), which matches Excel's PERCENTRANK.INC
@@ -83,7 +90,8 @@ JOIN v_headline_metrics m     ON m.person_id = p.person_id;
 CREATE VIEW v_top_faculty AS
 SELECT RANK() OVER (ORDER BY total_citations DESC) AS rank_by_citations,
        RANK() OVER (ORDER BY h_index DESC)         AS rank_by_h_index,
-       person_id, display_name, department, rank, total_citations, h_index,
+       person_id, display_name, department, rank, source, is_fallback,
+       collected_at, total_citations, h_index,
        pct_citations_all, pct_citations_rank, pct_h_all, pct_h_rank
 FROM v_person_percentiles;
 
@@ -115,7 +123,7 @@ agg AS (
   FROM v_person_percentiles pp
   GROUP BY pp.department_id
 )
-SELECT d.department_id, d.short_name, d.university, d.country, d.url,
+SELECT d.department_id, d.short_name, d.university, d.country, d.url, d.acsp_member,
        agg.n_faculty, agg.total_citations, med_c.median_citations, agg.mean_citations,
        agg.total_citations * 1.0 / agg.n_faculty AS citations_per_faculty,
        med_h.median_h_index, agg.mean_h_index, agg.share_with_scholar_profile,

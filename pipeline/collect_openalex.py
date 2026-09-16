@@ -75,6 +75,7 @@ def main(argv=None) -> None:
             recent = sum(y.get("cited_by_count", 0) for y in by_year if y.get("year", 0) > this_year - 5)
             raw = {k: a.get(k) for k in ("display_name", "orcid", "works_count", "cited_by_count",
                                          "summary_stats", "last_known_institutions", "counts_by_year")}
+            raw["openalex_author_id"] = p["openalex_author_id"]
             w.writerow({
                 "person_id": p["person_id"], "source": "openalex", "collected_at": args.date,
                 "total_citations": a.get("cited_by_count"), "h_index": stats.get("h_index"),

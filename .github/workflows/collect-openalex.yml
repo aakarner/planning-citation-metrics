@@ -21,13 +21,17 @@ jobs:
         env:
           OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}   # optional; raises the anonymous limit
         run: python -m pipeline.collect_openalex
-      - name: Rebuild database as a sanity check
+      - name: Rebuild database
+        run: python -m pipeline.build_db
+      - name: Drop matches the new numbers contradict
+        run: python -m pipeline.audit_matches
+      - name: Rebuild after the audit
         run: python -m pipeline.build_db
       - name: Commit the snapshot
         run: |
           git config user.name "citation-metrics-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/snapshots/openalex
+          git add data/snapshots/openalex data/roster/person.csv data/review/identity_candidates.csv
           git diff --cached --quiet && echo "nothing new" && exit 0
           git commit -m "OpenAlex snapshot $(date -u +%Y-%m-%d)"
           git push

@@ -223,3 +223,6 @@ __marimo__/
 # Project data that is never published
 data/private/
 data/legacy/
+
+# generated site (rebuilt by CI)
+build/site/

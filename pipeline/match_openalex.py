@@ -270,6 +270,11 @@ def main(argv=None) -> None:
     # Keep human decisions from earlier runs.
     decided = {(r["person_id"], r["external_id"]): r for r in existing if r["status"] != "pending" and r.get("reviewed_by")}
 
+    rejected: dict[str, set] = {}
+    for r in existing:
+        if r["source"] == "openalex" and r["status"] == "rejected" and r["external_id"]:
+            rejected.setdefault(r["person_id"], set()).add(r["external_id"])
+
     review_rows: list[dict] = []
     tally = {"accepted": 0, "pending": 0, "none": 0, "already": 0, "failed": 0}
     todo = [p for p in persons if not p.get("openalex_author_id")]
@@ -287,8 +292,10 @@ def main(argv=None) -> None:
             print(f"  [{i}/{len(todo)}] {person['display_name']}: fetch failed ({e}); stopping", file=sys.stderr)
             tally["failed"] += 1
             break
+        veto = rejected.get(person["person_id"], set())
         scored = sorted(
-            (score_candidate(person, c, dept_inst, gs_total.get(person["person_id"])) for c in candidates),
+            (score_candidate(person, c, dept_inst, gs_total.get(person["person_id"]))
+             for c in candidates if short_id(c["id"]) not in veto),
             key=lambda s: -s["score"],
         )[:KEEP_TOP]
         status = decide(scored)
@@ -319,7 +326,9 @@ def main(argv=None) -> None:
 
     # Carry forward rows for people not processed this run.
     processed = {p["person_id"] for p in todo}
-    carried = [r for r in existing if r["person_id"] not in processed or r["source"] != "openalex"]
+    carried = [r for r in existing
+               if r["person_id"] not in processed or r["source"] != "openalex"
+               or r["status"] == "rejected"]
     all_rows = carried + review_rows
 
     print("\nsummary:", json.dumps(tally))

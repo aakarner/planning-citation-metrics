@@ -1,0 +1,66 @@
+name: Collect Google Scholar metrics
+
+# Quarterly, via SerpApi. Needs the SERPAPI_KEY repository secret; the job
+# skips itself with an explanation if the secret is absent rather than failing.
+# SerpApi caps paid plans at 200 searches an hour, so ~800 profiles take about
+# four hours. GitHub's job limit is six.
+on:
+  schedule:
+    - cron: "23 5 15 1,4,7,10 *"     # 05:23 UTC on 15 Jan, Apr, Jul, Oct
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "Only collect this many profiles (blank = all)"
+        required: false
+
+permissions:
+  contents: write
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e .
+      - name: Check the key is present
+        env:
+          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
+        run: |
+          if [ -z "$SERPAPI_KEY" ]; then
+            echo "::warning::SERPAPI_KEY is not set, so there is nothing to collect with."
+            echo "skip=yes" >> "$GITHUB_ENV"
+          fi
+      - name: Collect profiles
+        if: env.skip != 'yes'
+        env:
+          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
+        run: |
+          python -m pipeline.collect_scholar --via serpapi \
+            ${{ github.event.inputs.limit && format('--limit {0}', github.event.inputs.limit) || '' }}
+      - name: Apply roster changes the profiles imply
+        if: env.skip != 'yes'
+        run: python -m pipeline.apply_changes
+      - name: Rebuild and report what is left unsettled
+        if: env.skip != 'yes'
+        run: |
+          python -m pipeline.build_db
+          python -m pipeline.detect_changes
+      - name: Commit
+        if: env.skip != 'yes'
+        run: |
+          git config user.name "citation-metrics-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/snapshots/google_scholar data/roster
+          git diff --cached --quiet && echo "nothing new" && exit 0
+          git commit -m "Google Scholar snapshot $(date -u +%Y-%m-%d)"
+          git push
+      - uses: actions/upload-artifact@v4
+        if: env.skip != 'yes'
+        continue-on-error: true
+        with:
+          name: change-report
+          path: build/change_report_*.md
