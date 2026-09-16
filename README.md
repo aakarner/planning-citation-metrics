@@ -207,6 +207,13 @@ Publish or Perish count we hold is almost certainly a namesake. Offenders lose t
 `v_openalex_metrics` publishes only matches currently held, so a disavowed snapshot stays in the
 database for audit without reaching the site.
 
+The same test then runs over candidates still awaiting review, where it matters most: working
+down the review sheet by name and institution would otherwise accept the hepatologist Guadalupe
+Garcia-Tsao, 52,281 citations against a Publish or Perish base of 63, for a planning academic of
+the same name. Pending rows are audited on the high side only. A candidate with far *fewer*
+citations than our figure is usually OpenAlex splitting one real person across sparse author
+records, so rejecting those would label some 1,600 rows as namesakes to no purpose.
+
 ## Change report
 
 ```bash

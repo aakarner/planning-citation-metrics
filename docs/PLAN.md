@@ -127,7 +127,7 @@ CREATE TABLE identity_candidate (         -- disambiguation review queue
   score           REAL,                  -- 0..1 from matcher
   evidence        TEXT,                  -- JSON: name sim, inst match, topic overlap
   status          TEXT NOT NULL DEFAULT 'pending'
-                  CHECK (status IN ('pending','accepted','rejected')),
+                  CHECK (status IN ('pending','accepted','rejected','none')),
   reviewed_by     TEXT, reviewed_at TIMESTAMP
 );
 ```
@@ -166,8 +166,8 @@ Full runs use **SerpApi's `google_scholar_author` endpoint**: parsed JSON with t
 
 1. Query OpenAlex `/authors?search=<name>` and filter by the department's `openalex_institution_id`.
 2. Score each candidate: name similarity (Jaro-Winkler on full name and on last name plus first initial), current or past institution match, topic overlap with planning concepts, first publication year consistent with PhD year, coauthor overlap with already-matched faculty in the same department.
-3. Auto-accept when one candidate scores above threshold and the runner-up is far below. Everything else lands in `identity_candidate` as `pending`.
-4. Review pending rows in a simple table (a CSV in the repo or a small review page) and mark accepted or rejected. Expect a few hours of review for the initial pass, then a handful of new hires per semester.
+3. Auto-accept when one candidate scores above threshold and the runner-up is far below. A search that returns nothing is recorded as `none`, not `pending`, so the queue holds only rows with something to decide. Everything else lands in `identity_candidate` as `pending`.
+4. Before review, `audit_matches` rejects pending candidates whose citation count contradicts the Scholar or Publish or Perish figure already held, on the high side only: a candidate claiming many times our number is a namesake, while one claiming far fewer is usually OpenAlex holding a fragment of the right person. This is what stops a reviewer accepting a hepatologist's 52,281 citations for a planning academic on a name-and-institution match. 5. Review what is left in a simple table (a CSV in the repo or a small review page) and mark accepted or rejected. Expect a few hours of review for the initial pass, then a handful of new hires per semester.
 
 Once a person has an OpenAlex id, monthly collection is a single API call per person with no ambiguity.
 

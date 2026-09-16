@@ -102,11 +102,11 @@ CREATE TABLE identity_candidate (
   candidate_id  INTEGER PRIMARY KEY,
   person_id     INTEGER NOT NULL REFERENCES person(person_id),
   source        TEXT NOT NULL,                     -- 'openalex' | 'google_scholar' | 'orcid'
-  external_id   TEXT NOT NULL,
+  external_id   TEXT,                              -- null on a 'none' row: searched, nothing found
   score         REAL,
   evidence      TEXT,                              -- JSON
   status        TEXT NOT NULL DEFAULT 'pending'
-                CHECK (status IN ('pending', 'accepted', 'rejected')),
+                CHECK (status IN ('pending', 'accepted', 'rejected', 'none')),
   reviewed_by   TEXT,
   reviewed_at   TEXT,
   UNIQUE (person_id, source, external_id)

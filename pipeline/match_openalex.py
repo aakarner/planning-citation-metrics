@@ -323,9 +323,14 @@ def main(argv=None) -> None:
                     person["openalex_author_id"] = s["external_id"]
             review_rows.append(row)
         if status == "none":
+            # 'none', not 'pending': the search returned no candidate, so there is
+            # nothing for a reviewer to decide. Writing these as pending padded the
+            # review queue with rows that held no candidate at all.
             review_rows.append({"person_id": person["person_id"], "display_name": person["display_name"],
                                 "department": dept["short_name"] if dept else None, "source": "openalex",
-                                "external_id": None, "candidate_name": None, "score": 0, "status": "pending"})
+                                "external_id": None, "candidate_name": None, "score": 0,
+                                "status": "none", "reviewed_by": "matcher",
+                                "reviewed_at": date.today().isoformat()})
         if i % 50 == 0 or i == len(todo):
             print(f"  [{i}/{len(todo)}] accepted {tally['accepted']}  pending {tally['pending']}  none {tally['none']}")
 
