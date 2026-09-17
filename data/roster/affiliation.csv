@@ -545,7 +545,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 544,543,64,associate,regular,1,,,workbook-2026
 545,544,64,associate,regular,1,,,workbook-2026
 546,545,64,full,regular,1,,,workbook-2026
-547,546,64,assistant,regular,1,,,workbook-2026
+547,546,64,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: depart; change from Scholar profile 2026-09-15: email @polymtl.ca; affiliation ""Professor, Polytechnique Montréal"""
 548,547,66,assistant,regular,1,,,workbook-2026
 549,548,66,assistant,regular,1,,,workbook-2026
 550,549,66,assistant,regular,1,,,workbook-2026

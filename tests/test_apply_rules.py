@@ -113,3 +113,13 @@ def test_a_blank_profile_changes_nothing():
 ])
 def test_a_pre_faculty_profile_changes_nothing(text):
     assert run(text, "harvard.edu", "assistant", cur="3") == (None, None)
+
+
+def test_an_institution_named_in_french_is_still_an_institution():
+    # Owen Waygood, Laval -> Polytechnique Montreal, an untracked school. The
+    # English-only word list read "Polytechnique" as no institution at all.
+    DEPTS["7"] = dept("7", "Universite Laval", "ulaval.ca")
+    HOME["7"] = {"ulaval.ca"}
+    kind, _ = decide("Professor, Polytechnique Montréal", "polymtl.ca", "assistant",
+                     DEPTS["7"], DEPTS, HOME["7"], OWNER)
+    assert kind == "depart"

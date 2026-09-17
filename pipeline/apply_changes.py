@@ -40,7 +40,13 @@ from .detect_changes import latest_two, registrable, rows
 from .find_scholar_profiles import affiliation_match, affiliation_names_dept
 from .match_openalex import norm
 
-INSTITUTION_WORDS = ("university", "universit", "college", "institute", "school", "polytechnic", "academy")
+# Stems, not words, so the same concept is caught in more than one language:
+# "polytechni" covers Polytechnic and Polytechnique, "institut" covers Institute
+# and Institut, "universit" covers University, Universite and Universidad.
+# Owen Waygood's "Professor, Polytechnique Montreal" passed as no institution
+# at all under a list that only knew the English spellings.
+INSTITUTION_WORDS = ("universit", "college", "institut", "school", "polytechni", "academy",
+                     "ecole", "\u00e9cole", "hochschule", "facult", "escuela", "scuola")
 # A profile that still describes a pre-faculty stage predates the appointment we track: leave it.
 PRE_FACULTY = ("student", "candidate", "postdoc", "post-doc", "postdoctoral", "fellow", "research assistant")
 # Fields no planning faculty member is appointed in: the profile belongs to a namesake.
