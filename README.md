@@ -231,6 +231,22 @@ not whether a record is theirs but which of several is their main one: OpenAlex 
 across records, and that is what stops the matcher accepting a winner on its own. Run
 `audit_matches` first so the namesakes the numbers already rule out never reach the sheet.
 
+## Rank review sheet
+
+```bash
+.venv/bin/python -m pipeline.build_rank_sheet                         # -> data/review/rank_review.xlsx
+.venv/bin/python -m pipeline.import_rank_review data/review/rank_review.xlsx --dry-run
+.venv/bin/python -m pipeline.import_rank_review data/review/rank_review.xlsx
+```
+
+The same rows the change report flags, as a spreadsheet a reviewer can work through: clickable
+Scholar profile and program website, the profile's own affiliation line, the person's citation
+percentile within rank, and a dropdown of outcomes. The importer closes and reopens appointment
+rows with a start date, changes appointment type for emeritus and non-tenure-line posts (which
+takes them off the site), closes the row for anyone who has left, and records a dated
+`rank verified` note when the rank on file turns out to be right, so that person is not raised
+again for seven years. Nothing is deleted; evidence goes in the `source` column as always.
+
 ## Change report
 
 ```bash

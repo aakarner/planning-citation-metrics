@@ -29,6 +29,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import re
 from collections import Counter, defaultdict
 from datetime import date
 from pathlib import Path
@@ -65,15 +66,27 @@ RANK_REVIEW_YEARS = 7            # this long as assistant or associate: check fo
 PHD_PROXY_RANKS = ("assistant",)  # where years since the PhD stands in for an unknown rank start
 
 
-def rank_review(rank, start_date, phd_year, today) -> tuple[int, str] | None:
+VERIFIED_RE = re.compile(r"rank verified (\d{4}-\d{2}-\d{2})")
+
+
+def verified_on(source: str | None):
+    """The most recent 'rank verified YYYY-MM-DD' note on an appointment, or None."""
+    dates = VERIFIED_RE.findall(source or "")
+    return date.fromisoformat(max(dates)) if dates else None
+
+
+def rank_review(rank, start_date, phd_year, today, verified=None) -> tuple[int, str] | None:
     """(years, reason) if this appointment is due a rank check, else None.
 
     A start date we recorded ourselves is used when present, for either rank.
     Without one, only an assistant is judged, from years since the PhD: the
     tenure clock makes seven years a fair line there and a meaningless one for
-    associates, most of whom are decades past the PhD.
+    associates, most of whom are decades past the PhD. A rank a reviewer has
+    confirmed within the window is not raised again.
     """
     if rank not in ("assistant", "associate"):
+        return None
+    if verified and (today - verified).days < RANK_REVIEW_YEARS * 365:
         return None
     if start_date:
         yrs = (today - date.fromisoformat(start_date)).days // 365
@@ -106,6 +119,35 @@ def latest_two(source: str) -> tuple[list[dict], list[dict]]:
                 latest[r["person_id"]] = r
     prev = rows(older[-1]) if older else []
     return list(latest.values()), prev
+
+
+def collect_rank_review(people, depts, current, gs_text, metrics, today) -> list[dict]:
+    """Every current appointment due a rank check, longest-held first.
+
+    Shared by the change report and build_rank_sheet so both show the same rows.
+    `gs_text` is person_id -> latest Scholar affiliation text; `metrics` is
+    person_id -> (percentile within rank, total citations).
+    """
+    review = []
+    for pid, aff in current.items():
+        p = people.get(pid)
+        if not p:
+            continue
+        hit = rank_review(aff["rank"], aff.get("start_date") or None, p.get("phd_year") or None, today,
+                          verified=verified_on(aff.get("source")))
+        if not hit:
+            continue
+        yrs, why = hit
+        d = depts[aff["department_id"]]
+        pct, cites = metrics.get(pid, (None, None))
+        review.append({"person_id": pid, "affiliation_id": aff["affiliation_id"], "display_name": p["display_name"],
+                       "department": d["short_name"], "department_url": d.get("url") or "", "rank": aff["rank"],
+                       "years": yrs, "basis": why, "phd_year": p.get("phd_year") or "",
+                       "rank_start": aff.get("start_date") or "", "profile_affiliation": gs_text.get(pid, ""),
+                       "pct_citations_rank": "" if pct is None else pct, "total_citations": "" if cites is None else cites,
+                       "google_scholar_id": p.get("google_scholar_id") or ""})
+    review.sort(key=lambda r: (-r["years"], r["display_name"]))
+    return review
 
 
 def main(argv=None) -> None:
@@ -197,7 +239,7 @@ def main(argv=None) -> None:
     # Someone with no current figure vanishes from the site entirely, so say so
     # here rather than letting them disappear quietly.
     import sqlite3
-    pct_rank: dict[str, float] = {}
+    metrics: dict[str, tuple] = {}
     try:
         con = sqlite3.connect(BUILD_DIR / "citations.sqlite")
         for pid, name in con.execute(
@@ -205,8 +247,8 @@ def main(argv=None) -> None:
                 "LEFT JOIN v_headline_metrics h USING(person_id) WHERE h.person_id IS NULL"):
             flags[str(pid)].append("no current figure from any source, so they do not appear on "
                                    "the site; needs a Scholar profile or an OpenAlex match")
-        pct_rank = {str(r[0]): r[1] for r in con.execute(
-            "SELECT person_id, pct_citations_rank FROM v_person_percentiles") if r[1] is not None}
+        metrics = {str(r[0]): (r[1], r[2]) for r in con.execute(
+            "SELECT person_id, pct_citations_rank, total_citations FROM v_person_percentiles")}
         con.close()
     except sqlite3.Error:
         pass
@@ -214,20 +256,7 @@ def main(argv=None) -> None:
     # ---- rank review: promotions the profile text never announced ----------
     today = date.today()
     gs_text = {r["person_id"]: (json.loads(r["raw_json"] or "{}").get("affiliation") or "") for r in gs_latest}
-    review = []
-    for pid, aff in current.items():
-        p = people.get(pid)
-        if not p:
-            continue
-        hit = rank_review(aff["rank"], aff.get("start_date") or None, p.get("phd_year") or None, today)
-        if hit:
-            yrs, why = hit
-            review.append({"person_id": pid, "display_name": p["display_name"],
-                           "department": depts[aff["department_id"]]["short_name"], "rank": aff["rank"],
-                           "years": yrs, "basis": why, "phd_year": p.get("phd_year") or "",
-                           "rank_start": aff.get("start_date") or "", "profile_affiliation": gs_text.get(pid, ""),
-                           "pct_citations_rank": pct_rank.get(pid, ""), "google_scholar_id": p.get("google_scholar_id") or ""})
-    review.sort(key=lambda r: (-r["years"], r["display_name"]))
+    review = collect_rank_review(people, depts, current, gs_text, metrics, today)
     review_csv = args.out.parent / f"rank_review_{today.isoformat()}.csv"
 
     lines = [f"# Change report, {date.today().isoformat()}", "",
@@ -251,7 +280,7 @@ def main(argv=None) -> None:
                   f"Also written to {review_csv.name}.", "",
                   "| Name | Program | Rank | Years | Basis | Profile says | Pct in rank |", "|---|---|---|---:|---|---|---:|"]
         for r in review:
-            pct = f"{r['pct_citations_rank']:.2f}" if r["pct_citations_rank"] != "" else ""
+            pct = f"{float(r['pct_citations_rank']):.2f}" if r["pct_citations_rank"] != "" else ""
             lines.append(f"| {r['display_name']} | {r['department']} | {r['rank']} | {r['years']} | {r['basis']} | "
                          f"{r['profile_affiliation'][:60]} | {pct} |")
         lines.append("")

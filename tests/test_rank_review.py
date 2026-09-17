@@ -53,3 +53,13 @@ def test_the_threshold_is_the_named_constant():
     edge = TODAY.year - RANK_REVIEW_YEARS
     assert rank_review("assistant", None, edge, TODAY) is not None
     assert rank_review("assistant", None, edge + 1, TODAY) is None
+
+
+def test_a_recent_verification_silences_the_flag_and_an_old_one_does_not():
+    from pipeline.detect_changes import verified_on
+    assert rank_review("assistant", None, 1994, TODAY, verified=date(2026, 9, 17)) is None
+    assert rank_review("assistant", None, 1994, TODAY, verified=date(2018, 1, 1)) is not None
+    src = "workbook-2026 | rank verified 2024-03-01; x | rank verified 2026-09-17; y"
+    assert verified_on(src) == date(2026, 9, 17)          # the latest note wins
+    assert verified_on("workbook-2026") is None
+    assert verified_on(None) is None
