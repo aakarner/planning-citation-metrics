@@ -63,4 +63,6 @@ jobs:
         continue-on-error: true
         with:
           name: change-report
-          path: build/change_report_*.md
+          path: |
+            build/change_report_*.md
+            build/rank_review_*.csv

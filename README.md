@@ -243,6 +243,8 @@ strong enough to act on, OpenAlex last known institution elsewhere, a citation c
 fell more than 20% (usually a wrong or merged profile), and profiles that vanished. It edits
 nothing.
 
+The report ends with a **rank review**: everyone held as assistant or associate for seven years or more, so a promotion may have gone unrecorded. Promotions are applied only when the profile text states a rank, and many profiles never do. Tom's rows carry no rank start date, so for the inherited roster years since the PhD stands in, for assistants only; associates are judged only by a start date we recorded ourselves, so that part fills in over time. The same rows go to `build/rank_review_<date>.csv`, and both files are uploaded by the quarterly Scholar workflow.
+
 ## Private attributes
 
 `data/private/person_private.csv` holds gender and is gitignored. The build merges it in

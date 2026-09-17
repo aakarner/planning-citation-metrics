@@ -9,7 +9,16 @@ Flags, per person:
   * OpenAlex last known institution differs from the department;
   * headline citation count fell more than 20% since the previous snapshot of
     the same source (almost always a wrong or merged profile, not a real drop);
-  * profile fetched last time but missing from the latest run.
+  * profile fetched last time but missing from the latest run;
+  * rank review: assistant or associate for RANK_REVIEW_YEARS or more, so a
+    promotion may have been missed. Promotions are only applied when the
+    profile text states a rank, and many profiles never do (Geoff Boeing's
+    reads no rank at all). Tom's rows carry no rank start date, so for the
+    inherited roster years since the PhD stands in -- for assistants only,
+    where the tenure clock makes it a fair proxy. Associates are judged only
+    by a start date we recorded ourselves, so that list fills over time
+    rather than flagging 250 people who are simply long past their PhD.
+    Written as a table in the report and as build/rank_review_<date>.csv.
 
 Nothing here edits the roster. The report is for the person doing the
 semiannual review.
@@ -52,6 +61,30 @@ def registrable(host: str | None) -> str | None:
 
 
 WINDOW_DAYS = 7
+RANK_REVIEW_YEARS = 7            # this long as assistant or associate: check for a promotion
+PHD_PROXY_RANKS = ("assistant",)  # where years since the PhD stands in for an unknown rank start
+
+
+def rank_review(rank, start_date, phd_year, today) -> tuple[int, str] | None:
+    """(years, reason) if this appointment is due a rank check, else None.
+
+    A start date we recorded ourselves is used when present, for either rank.
+    Without one, only an assistant is judged, from years since the PhD: the
+    tenure clock makes seven years a fair line there and a meaningless one for
+    associates, most of whom are decades past the PhD.
+    """
+    if rank not in ("assistant", "associate"):
+        return None
+    if start_date:
+        yrs = (today - date.fromisoformat(start_date)).days // 365
+        if yrs >= RANK_REVIEW_YEARS:
+            return yrs, f"{rank} since {start_date} by our record ({yrs} years)"
+        return None
+    if rank in PHD_PROXY_RANKS and phd_year:
+        yrs = today.year - int(phd_year)
+        if yrs >= RANK_REVIEW_YEARS:
+            return yrs, f"assistant {yrs} years after the {phd_year} PhD; rank start not on record"
+    return None
 
 
 def latest_two(source: str) -> tuple[list[dict], list[dict]]:
@@ -164,6 +197,7 @@ def main(argv=None) -> None:
     # Someone with no current figure vanishes from the site entirely, so say so
     # here rather than letting them disappear quietly.
     import sqlite3
+    pct_rank: dict[str, float] = {}
     try:
         con = sqlite3.connect(BUILD_DIR / "citations.sqlite")
         for pid, name in con.execute(
@@ -171,9 +205,30 @@ def main(argv=None) -> None:
                 "LEFT JOIN v_headline_metrics h USING(person_id) WHERE h.person_id IS NULL"):
             flags[str(pid)].append("no current figure from any source, so they do not appear on "
                                    "the site; needs a Scholar profile or an OpenAlex match")
+        pct_rank = {str(r[0]): r[1] for r in con.execute(
+            "SELECT person_id, pct_citations_rank FROM v_person_percentiles") if r[1] is not None}
         con.close()
     except sqlite3.Error:
         pass
+
+    # ---- rank review: promotions the profile text never announced ----------
+    today = date.today()
+    gs_text = {r["person_id"]: (json.loads(r["raw_json"] or "{}").get("affiliation") or "") for r in gs_latest}
+    review = []
+    for pid, aff in current.items():
+        p = people.get(pid)
+        if not p:
+            continue
+        hit = rank_review(aff["rank"], aff.get("start_date") or None, p.get("phd_year") or None, today)
+        if hit:
+            yrs, why = hit
+            review.append({"person_id": pid, "display_name": p["display_name"],
+                           "department": depts[aff["department_id"]]["short_name"], "rank": aff["rank"],
+                           "years": yrs, "basis": why, "phd_year": p.get("phd_year") or "",
+                           "rank_start": aff.get("start_date") or "", "profile_affiliation": gs_text.get(pid, ""),
+                           "pct_citations_rank": pct_rank.get(pid, ""), "google_scholar_id": p.get("google_scholar_id") or ""})
+    review.sort(key=lambda r: (-r["years"], r["display_name"]))
+    review_csv = args.out.parent / f"rank_review_{today.isoformat()}.csv"
 
     lines = [f"# Change report, {date.today().isoformat()}", "",
              f"{len(flags)} people flagged out of {len(gs_latest)} Scholar and {len(oa_latest)} OpenAlex rows in the latest snapshots.", ""]
@@ -186,8 +241,27 @@ def main(argv=None) -> None:
         lines.append(f"## {p['display_name']} ({dept}, {aff['rank'] if aff else '-'})")
         lines += [f"- {f}" for f in flags[pid]]
         lines.append("")
+    if review:
+        lines += ["## Rank review", "",
+                  f"{len(review)} appointments have been assistant or associate for {RANK_REVIEW_YEARS}+ years, "
+                  "or look that way, so a promotion may have gone unrecorded. A promotion is applied only when the "
+                  "Scholar profile text states a rank, and many profiles never do. 'Profile says' is the text as it "
+                  "stands; 'pct in rank' is the person's citation percentile among people we hold at that rank, "
+                  "so 0.99 for an assistant professor is a second reason to look. "
+                  f"Also written to {review_csv.name}.", "",
+                  "| Name | Program | Rank | Years | Basis | Profile says | Pct in rank |", "|---|---|---|---:|---|---|---:|"]
+        for r in review:
+            pct = f"{r['pct_citations_rank']:.2f}" if r["pct_citations_rank"] != "" else ""
+            lines.append(f"| {r['display_name']} | {r['department']} | {r['rank']} | {r['years']} | {r['basis']} | "
+                         f"{r['profile_affiliation'][:60]} | {pct} |")
+        lines.append("")
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text("\n".join(lines))
+    if review:
+        with review_csv.open("w", newline="", encoding="utf-8") as f:
+            w = csv.DictWriter(f, fieldnames=list(review[0].keys()))
+            w.writeheader(); w.writerows(review)
+        print(f"-> {review_csv}  ({len(review)} rows)")
     print("\n".join(lines))
     print(f"-> {args.out}")
 
