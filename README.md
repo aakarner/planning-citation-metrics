@@ -143,8 +143,8 @@ Discovery has to run from a residential or campus address, so it cannot live in 
 Actions. A launchd agent runs one batch of 30 a day:
 
 ```bash
-bash scripts/install_discovery_agent.sh          # daily at 10:15
-bash scripts/install_discovery_agent.sh 21 30    # or a time you pick
+bash scripts/install_discovery_agent.sh          # 10:15, retried at 14:15 if the Mac was asleep
+bash scripts/install_discovery_agent.sh 10:15 14:15 20:15   # or any slots you like
 ```
 
 Each run pulls, searches 30 people, commits anything it found, and pushes. It takes a lock so

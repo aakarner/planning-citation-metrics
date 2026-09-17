@@ -2,9 +2,13 @@
 # One batch of Google Scholar profile discovery, for launchd to run daily.
 #
 # Scholar blocks an address after roughly 45 requests, so this does 30 people a
-# day and no more. Each run appends to the log, commits anything it found, and
-# pushes. When there is nobody left to search it says so and does nothing
-# further, so the agent can be removed:
+# day and no more. launchd fires it at more than one time of day, because a
+# missed slot (laptop asleep, lid shut) is never made up; the first slot that
+# actually searches someone stamps the date, and later slots that day see the
+# stamp and exit. A slot that got nothing done (Scholar blocked, network down)
+# does not stamp, so the next slot tries again. Each run appends to the log,
+# commits anything it found, and pushes. When there is nobody left to search
+# it says so and does nothing further, so the agent can be removed:
 #
 #   launchctl bootout gui/$(id -u)/com.aakarner.planning-citations.discovery
 #   rm ~/Library/LaunchAgents/com.aakarner.planning-citations.discovery.plist
@@ -17,6 +21,7 @@ REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PY="$REPO/.venv/bin/python"
 LOG="$HOME/Library/Logs/planning-citations-discovery.log"
 LOCK="$REPO/.discovery.lock"
+STAMP="$REPO/.discovery.last-run"   # holds the date of the last slot that did work
 BATCH="${DISCOVERY_BATCH:-30}"   # overridable so the plumbing can be tested cheaply
 
 export PATH="/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/homebrew/bin"
@@ -55,6 +60,12 @@ print(sum(1 for p in people if not p["google_scholar_id"] and p["person_id"] not
 PYEOF
 }
 
+TODAY="$(date '+%Y-%m-%d')"
+if [ -f "$STAMP" ] && [ "$(cat "$STAMP" 2>/dev/null)" = "$TODAY" ]; then
+  say "already searched a batch today; this slot has nothing to do"
+  exit 0
+fi
+
 LEFT="$(remaining 2>/dev/null || echo unknown)"
 if [ "$LEFT" = "0" ]; then
   say "nothing left to search: every person without a Scholar id has been checked."
@@ -84,4 +95,13 @@ else
   say "no data changed, nothing to commit"
 fi
 
-say "$(remaining 2>/dev/null || echo '?') people still to search"
+AFTER="$(remaining 2>/dev/null || echo unknown)"
+say "$AFTER people still to search"
+
+# Stamp only if the count moved: a blocked or failed slot leaves the day open
+# for the next one.
+if [ "$LEFT" != "unknown" ] && [ "$AFTER" != "unknown" ] && [ "$AFTER" -lt "$LEFT" ]; then
+  printf '%s\n' "$TODAY" > "$STAMP"
+else
+  say "no one was searched this slot; a later slot today will try again"
+fi

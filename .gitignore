@@ -228,5 +228,6 @@ data/legacy/
 # generated site (rebuilt by CI)
 build/site/
 
-# lock held by the scheduled discovery run
+# lock held by the scheduled discovery run, and the date it last did work
 .discovery.lock/
+.discovery.last-run
