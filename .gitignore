@@ -231,3 +231,6 @@ build/site/
 # lock held by the scheduled discovery run, and the date it last did work
 .discovery.lock/
 .discovery.last-run
+
+# local dev-server config for the desktop app preview pane
+.claude/launch.json

@@ -38,8 +38,9 @@ footer_corrections = """Counts come from public profile pages and change constan
        or <a href="{repo}/issues/new">open an issue</a>."""
 
 [home]
-# Values: people_count, dept_count, scholar_date, rankings_href, departments_href,
-#         methods_href, contact, repo
+# Values: people_count, dept_count, scholar_date, openalex_date, rankings_href, departments_href,
+#         methods_href, contact, repo, scholar_help, gs_n, oa_n, pop_n, pop_month, update_month,
+#         assistant_median, n (departed count)
 meta_description = """Citation metrics for {people_count} urban planning faculty at {dept_count} programs in the US and Canada."""
 beta_title = "Beta &middot; in active development"
 beta_body_1 = """This site is new and under active development. Figures, rosters and rankings will change as
@@ -57,6 +58,40 @@ lede = """Total citations and h-indices for {people_count} faculty at
 search_placeholder = "Search a name or a school&hellip;"
 search_hint = """Press <code>/</code> to jump to search.
      Google Scholar figures as of {scholar_date}."""
+status_faculty = "faculty"
+status_programs = "programs"
+status_scholar = "Google Scholar refreshed"
+status_openalex = "OpenAlex refreshed"
+mix_key = """{gs_n} from Google Scholar &middot; {oa_n} from OpenAlex &middot; {pop_n} still on Publish or
+     Perish figures from {pop_month}. <a href="{scholar_help}">A Scholar profile</a> moves a person
+     onto the refreshed series."""
+field_heading = "Where the field sits"
+field_note = """Among faculty with a Google Scholar profile, as of {scholar_date}. Half of all assistant
+     professors here have fewer than {assistant_median} citations; a number is only meaningful next to
+     its rank."""
+th_rank = "Rank"
+th_faculty = "Faculty"
+th_median = "Median citations"
+th_p75 = "75th percentile"
+th_median_h = "Median h-index"
+rank_assistant = "Assistant professors"
+rank_associate = "Associate professors"
+rank_full = "Full professors"
+new_heading = "New to the record"
+new_lede = """What the {update_month} update changed. Everything here comes from a person's own public
+     Scholar profile."""
+new_found_heading = "Scholar profiles found"
+new_found_note = """People previously shown on OpenAlex or Publish or Perish figures who now have a Scholar
+     profile on record. The daily search adds more as it finds them."""
+new_moves_heading = "Now at a new program"
+new_promos_heading = "Promotions read from profiles"
+new_departed = """{n} people left the tracked programs and are no longer listed; their earlier figures
+     remain in the <a href="{repo}/tree/main/data">downloadable data</a>."""
+new_empty = "Nothing has changed since the {update_month} collection."
+boards_heading = "Leaderboards"
+boards_lede = """These barely move between updates, so they are folded away. The full, sortable versions
+     are on the <a href="{rankings_href}">Rankings</a> and <a href="{departments_href}">Departments</a>
+     pages."""
 top_faculty_heading = "Most cited faculty"
 top_faculty_link = "Full faculty rankings &rarr;"
 top_departments_heading = "Programs by median citations"

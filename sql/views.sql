@@ -152,3 +152,24 @@ SELECT m.person_id, p.display_name, m.source, m.collected_at,
 FROM metric_snapshot m
 JOIN person p ON p.person_id = m.person_id
 ORDER BY m.person_id, m.source, m.collected_at;
+
+-- Where the field sits: citation medians by rank, Scholar figures only so the
+-- fallback undercounts do not drag the medians down. Lower median for even n.
+-- Shown on the homepage and kept here so the downloadable database has it too.
+CREATE VIEW v_rank_benchmarks AS
+WITH s AS (
+  SELECT ca.rank, h.total_citations AS c, h.h_index AS h,
+         ROW_NUMBER() OVER (PARTITION BY ca.rank ORDER BY h.total_citations) AS rc,
+         ROW_NUMBER() OVER (PARTITION BY ca.rank ORDER BY h.h_index)         AS rh,
+         COUNT(*)     OVER (PARTITION BY ca.rank)                             AS n
+  FROM v_headline_metrics h
+  JOIN v_current_affiliation ca ON ca.person_id = h.person_id
+  WHERE h.source = 'google_scholar'
+    AND h.total_citations IS NOT NULL AND h.h_index IS NOT NULL
+)
+SELECT rank, n,
+       MAX(CASE WHEN rc = (n + 1) / 2     THEN c END) AS median_citations,
+       MAX(CASE WHEN rc = (n * 3 + 3) / 4 THEN c END) AS p75_citations,
+       MAX(CASE WHEN rh = (n + 1) / 2     THEN h END) AS median_h_index
+FROM s
+GROUP BY rank, n;

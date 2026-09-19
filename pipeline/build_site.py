@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import html
+import csv
 import json
 import re
 import shutil
@@ -21,7 +22,7 @@ import sqlite3
 import tomllib
 import unicodedata
 from collections import defaultdict
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 
 from . import BUILD_DIR, REPO_ROOT
@@ -230,7 +231,14 @@ def load(con: sqlite3.Connection) -> dict:
         series[r["person_id"]][r["source"]].append((r["collected_at"], r["total_citations"]))
     asof = {r["source"]: r["d"] for r in q(
         "SELECT source, MAX(collected_at) AS d FROM metric_snapshot GROUP BY source")}
-    return {"people": people, "depts": depts, "oa": oa, "series": series, "asof": asof}
+    bench = {r["rank"]: r for r in q("SELECT * FROM v_rank_benchmarks")}
+    affs = q("SELECT a.*, d.short_name AS dept FROM affiliation a JOIN department d USING(department_id)")
+    gs_dates = [r["d"] for r in q("SELECT DISTINCT collected_at AS d FROM metric_snapshot "
+                                  "WHERE source='google_scholar' ORDER BY 1")]
+    mix = {r["source"]: r["n"] for r in q("SELECT h.source, COUNT(*) AS n FROM v_headline_metrics h "
+                                         "JOIN v_current_affiliation ca ON ca.person_id = h.person_id GROUP BY 1")}
+    return {"people": people, "depts": depts, "oa": oa, "series": series, "asof": asof,
+            "bench": bench, "affs": affs, "gs_dates": gs_dates, "mix": mix}
 
 
 # -------------------------------------------------------------------- pages
@@ -382,6 +390,61 @@ def department_page(d, roster, slugs, base) -> str:
                 extra_js=("table.js",))
 
 
+WINDOW_DAYS = 7      # snapshot files this close together are one collection run
+RANK_ORDER = {"assistant": 0, "associate": 1, "full": 2}
+
+
+def longdate(iso: str) -> str:
+    d = date.fromisoformat(iso)
+    return f"{d.day} {d.strftime('%B %Y')}"
+
+
+def collection_window(dates: list[str]) -> str | None:
+    """First day of the latest collection run: the earliest of the dates
+    within WINDOW_DAYS of the newest. Changes dated from here are 'new'."""
+    if not dates:
+        return None
+    newest = date.fromisoformat(dates[-1])
+    return min(d for d in dates if (newest - date.fromisoformat(d)).days <= WINDOW_DAYS)
+
+
+def recent_changes(affs: list[dict], since: str | None) -> dict:
+    """Moves, promotions and departures dated on or after `since`.
+
+    A change is a row closed on day X and, for moves and promotions, a new row
+    for the same person opened on day X: same department with a higher rank is
+    a promotion, a different department is a move. A person whose row closed
+    and who has no open row left the tracked programs. Pure, so it is tested.
+    """
+    out = {"moves": [], "promos": [], "departed": 0}
+    if not since:
+        return out
+    open_by = {a["person_id"]: a for a in affs if not a["end_date"] and str(a["is_primary"]) == "1"}
+    for old in affs:
+        if not old["end_date"] or old["end_date"] < since or str(old["is_primary"]) != "1":
+            continue
+        new = open_by.get(old["person_id"])
+        if new is None:
+            out["departed"] += 1
+        elif new["start_date"] != old["end_date"]:
+            continue                       # closed for some other reason; not a change we narrate
+        elif new["department_id"] != old["department_id"]:
+            out["moves"].append((old["person_id"], old["dept"], new["dept"]))
+        elif RANK_ORDER.get(new["rank"], -1) > RANK_ORDER.get(old["rank"], -1):
+            out["promos"].append((old["person_id"], new["dept"], old["rank"], new["rank"]))
+    return out
+
+
+def discovery_finds(since: str | None, review_csv: Path = REPO_ROOT / "data" / "review" / "identity_candidates.csv") -> list[dict]:
+    """Scholar profiles the discovery search accepted on or after `since`."""
+    if not since or not review_csv.exists():
+        return []
+    with review_csv.open(newline="", encoding="utf-8") as f:
+        return [r for r in csv.DictReader(f)
+                if r["source"] == "google_scholar" and r["status"] == "accepted"
+                and (r.get("reviewed_at") or "") >= since]
+
+
 def index_page(data, slugs, dslugs, base) -> str:
     people, depts = data["people"], data["depts"]
     top_p = sorted(people, key=lambda p: -(p["total_citations"] or 0))[:10]
@@ -399,6 +462,59 @@ def index_page(data, slugs, dslugs, base) -> str:
                    f'<td class="n">{num(round(d["mean_citations"]))}</td></tr>'
                    for i, d in enumerate(top_d, 1))
     gs = data["asof"].get("google_scholar", "")
+    oa_date = data["asof"].get("openalex", "")
+    pop_date = data["asof"].get("pop", "")
+    mix = data["mix"]
+    by_pid = {p["person_id"]: p for p in people}
+    plink = lambda pid: (f'<a href="{base}person/{slugs[id(by_pid[pid])]}.html">{e(by_pid[pid]["display_name"])}</a>'
+                         if pid in by_pid else "")
+    rank_label = {"assistant": t("home", "rank_assistant"), "associate": t("home", "rank_associate"),
+                  "full": t("home", "rank_full")}
+
+    brow = "".join(f'<tr><td class="name">{rank_label[rk]}</td><td class="n">{b["n"]}</td>'
+                   f'<td class="n">{num(b["median_citations"])}</td><td class="n">{num(b["p75_citations"])}</td>'
+                   f'<td class="n">{b["median_h_index"]}</td></tr>'
+                   for rk in ("assistant", "associate", "full") if (b := data["bench"].get(rk)))
+    a_med = data["bench"].get("assistant", {}).get("median_citations") or 0
+
+    since = collection_window(data["gs_dates"])
+    ch = recent_changes(data["affs"], since)
+    found = discovery_finds(since)
+    found_li = "".join(f'<li>{plink(str(r["person_id"]))}<span class="d">{e(r["department"] or "")}</span>'
+                       f'<span class="when">{e(longdate(r["reviewed_at"]))}</span></li>'
+                       for r in found if str(r["person_id"]) in by_pid)
+    moves_li = "".join(f'<li>{plink(str(pid))}<span class="d">{e(o)} &rarr; <b>{e(n)}</b></span></li>'
+                       for pid, o, n in ch["moves"] if str(pid) in by_pid)
+    promos_li = "".join(f'<li>{plink(str(pid))}<span class="d">{e(d)} &middot; {o} &rarr; <b>{n}</b></span></li>'
+                        for pid, d, o, n in ch["promos"] if str(pid) in by_pid)
+    update_month = date.fromisoformat(since).strftime("%B") if since else ""
+    pop_month = date.fromisoformat(pop_date).strftime("%B") if pop_date else ""
+    # one swatch per source, in the order the sentence names them
+    mix_key = t("home", "mix_key", gs_n=mix.get("google_scholar", 0), oa_n=mix.get("openalex", 0),
+                pop_n=mix.get("pop", 0), pop_month=pop_month, scholar_help=SCHOLAR_HELP)
+    mix_key = ('<i class="k gs"></i>' + mix_key.replace(" &middot; ", ' &middot; <i class="k oa"></i>', 1))
+    head, sep, tail = mix_key.partition(' &middot; <i class="k oa"></i>')
+    tail = tail.replace(" &middot; ", ' &middot; <i class="k pop"></i>', 1)
+    mix_key = head + sep + tail
+    if found_li or moves_li or promos_li or ch["departed"]:
+        new_block = f"""
+  <h2>{t("home", "new_heading")}</h2>
+  <p class="sub" style="margin:-6px 0 14px">{t("home", "new_lede", update_month=update_month)}</p>
+  <div class="cols2">
+    <div class="col"><h3>{t("home", "new_found_heading")} <span class="count">{len(found)}</span></h3>
+      <p class="sub">{t("home", "new_found_note")}</p>
+      <ul class="plain">{found_li}</ul></div>
+    <div class="col"><h3>{t("home", "new_moves_heading")} <span class="count">{len(ch["moves"])}</span></h3>
+      <ul class="plain">{moves_li}</ul></div>
+  </div>
+  <details class="fold" style="margin-top:14px"><summary>{t("home", "new_promos_heading")} <span class="count">{len(ch["promos"])}</span></summary>
+    <ul class="plain two">{promos_li}</ul></details>
+  <p class="sub" style="margin-top:12px">{t("home", "new_departed", n=ch["departed"], repo=REPO)}</p>"""
+    else:
+        new_block = f"""
+  <h2>{t("home", "new_heading")}</h2>
+  <p class="sub">{t("home", "new_empty", update_month=update_month)}</p>"""
+
     body = f"""<main class="narrow">
   <section class="beta" aria-labelledby="beta-h">
     <h2 id="beta-h">{t("home", "beta_title")}</h2>
@@ -414,19 +530,41 @@ def index_page(data, slugs, dslugs, base) -> str:
   </div>
   <p class="sub" style="font-size:13.5px">{t("home", "search_hint", scholar_date=e(gs))}</p>
 
-  <h2>{t("home", "top_faculty_heading")}</h2>
-  <div class="tw"><table>
-    <thead><tr><th data-nosort></th><th>Name</th><th>School</th><th class="n">Citations</th><th class="n">h-index</th></tr></thead>
-    <tbody>{prow}</tbody>
-  </table></div>
-  <p class="sub" style="margin-top:10px"><a href="{base}rankings.html">{t("home", "top_faculty_link")}</a></p>
+  <section class="status" aria-label="Dataset status">
+    <div class="tiles">
+      <div class="tile"><div class="n">{len(people):,}</div><div class="l">{t("home", "status_faculty")}</div></div>
+      <div class="tile"><div class="n">{len(depts)}</div><div class="l">{t("home", "status_programs")}</div></div>
+      <div class="tile"><div class="n" style="font-size:19px">{e(longdate(gs)) if gs else "&mdash;"}</div><div class="l">{t("home", "status_scholar")}</div></div>
+      <div class="tile"><div class="n" style="font-size:19px">{e(longdate(oa_date)) if oa_date else "&mdash;"}</div><div class="l">{t("home", "status_openalex")}</div></div>
+    </div>
+    <div class="mix" role="img" aria-label="Source of each headline figure">
+      <span class="seg gs" style="flex:{mix.get('google_scholar', 0)}"></span><span class="seg oa" style="flex:{mix.get('openalex', 0)}"></span><span class="seg pop" style="flex:{mix.get('pop', 0)}"></span>
+    </div>
+    <p class="sub mixkey">{mix_key}</p>
+  </section>
 
-  <h2>{t("home", "top_departments_heading")}</h2>
+  <h2>{t("home", "field_heading")}</h2>
   <div class="tw"><table>
-    <thead><tr><th data-nosort></th><th>School</th><th class="n">Faculty</th><th class="n">Median</th><th class="n">Mean</th></tr></thead>
-    <tbody>{drow}</tbody>
+    <thead><tr><th>{t("home", "th_rank")}</th><th class="n">{t("home", "th_faculty")}</th><th class="n">{t("home", "th_median")}</th><th class="n">{t("home", "th_p75")}</th><th class="n">{t("home", "th_median_h")}</th></tr></thead>
+    <tbody>{brow}</tbody>
   </table></div>
-  <p class="sub" style="margin-top:10px">{t("home", "top_departments_note", departments_href=f"{base}departments.html")}</p>
+  <p class="sub" style="margin-top:10px">{t("home", "field_note", scholar_date=e(longdate(gs)) if gs else "", assistant_median=num(a_med))}</p>
+{new_block}
+
+  <h2>{t("home", "boards_heading")}</h2>
+  <p class="sub" style="margin:-6px 0 12px">{t("home", "boards_lede", rankings_href=f"{base}rankings.html", departments_href=f"{base}departments.html")}</p>
+  <details class="fold"><summary>{t("home", "top_faculty_heading")}</summary>
+    <div class="tw"><table>
+      <thead><tr><th data-nosort></th><th>Name</th><th>School</th><th class="n">Citations</th><th class="n">h-index</th></tr></thead>
+      <tbody>{prow}</tbody>
+    </table></div>
+    <p class="sub" style="margin-top:10px"><a href="{base}rankings.html">{t("home", "top_faculty_link")}</a></p></details>
+  <details class="fold"><summary>{t("home", "top_departments_heading")}</summary>
+    <div class="tw"><table>
+      <thead><tr><th data-nosort></th><th>School</th><th class="n">Faculty</th><th class="n">Median</th><th class="n">Mean</th></tr></thead>
+      <tbody>{drow}</tbody>
+    </table></div>
+    <p class="sub" style="margin-top:10px">{t("home", "top_departments_note", departments_href=f"{base}departments.html")}</p></details>
 
   <h2>{t("home", "caveats_heading")}</h2>
   <p>{t("home", "caveats_body", methods_href=f"{base}methods.html")}</p>
