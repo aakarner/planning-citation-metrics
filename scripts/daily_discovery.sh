@@ -74,6 +74,22 @@ if [ "$LEFT" = "0" ]; then
 fi
 
 say "starting: $LEFT people left to search, doing up to $BATCH"
+
+# launchd fires a slot the moment the Mac wakes, often before Wi-Fi is back.
+# Both slots on 2026-09-18 failed five requests in two seconds for that reason.
+# Wait for the network rather than spend the slot on a machine that is offline.
+online() { curl -s --max-time 5 -o /dev/null "https://scholar.google.com/robots.txt"; }
+tries=0
+until online; do
+  tries=$((tries + 1))
+  if [ "$tries" -ge 8 ]; then
+    say "no network after two minutes; leaving the day open for the next slot"
+    exit 0
+  fi
+  sleep 15
+done
+[ "$tries" -gt 0 ] && say "network came up after $((tries * 15))s"
+
 git pull --rebase --autostash --quiet origin main >> "$LOG" 2>&1 || say "pull failed; continuing on the local copy"
 
 OUT="$("$PY" -m pipeline.find_scholar_profiles --limit "$BATCH" 2>&1)"
