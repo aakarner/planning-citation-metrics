@@ -465,7 +465,8 @@ def index_page(data, slugs, dslugs, base) -> str:
     oa_date = data["asof"].get("openalex", "")
     pop_date = data["asof"].get("pop", "")
     mix = data["mix"]
-    by_pid = {p["person_id"]: p for p in people}
+    # keyed by string: the affiliation rows and the review CSV disagree on the type
+    by_pid = {str(p["person_id"]): p for p in people}
     plink = lambda pid: (f'<a href="{base}person/{slugs[id(by_pid[pid])]}.html">{e(by_pid[pid]["display_name"])}</a>'
                          if pid in by_pid else "")
     rank_label = {"assistant": t("home", "rank_assistant"), "associate": t("home", "rank_associate"),
@@ -480,13 +481,16 @@ def index_page(data, slugs, dslugs, base) -> str:
     since = collection_window(data["gs_dates"])
     ch = recent_changes(data["affs"], since)
     found = discovery_finds(since)
-    found_li = "".join(f'<li>{plink(str(r["person_id"]))}<span class="d">{e(r["department"] or "")}</span>'
-                       f'<span class="when">{e(longdate(r["reviewed_at"]))}</span></li>'
-                       for r in found if str(r["person_id"]) in by_pid)
-    moves_li = "".join(f'<li>{plink(str(pid))}<span class="d">{e(o)} &rarr; <b>{e(n)}</b></span></li>'
-                       for pid, o, n in ch["moves"] if str(pid) in by_pid)
-    promos_li = "".join(f'<li>{plink(str(pid))}<span class="d">{e(d)} &middot; {o} &rarr; <b>{n}</b></span></li>'
-                        for pid, d, o, n in ch["promos"] if str(pid) in by_pid)
+    # Build the items first and count those, so a badge can never disagree
+    # with the list under it (someone found and since departed is in neither).
+    found_items = [f'<li>{plink(str(r["person_id"]))}<span class="d">{e(r["department"] or "")}</span>'
+                   f'<span class="when">{e(longdate(r["reviewed_at"]))}</span></li>'
+                   for r in found if str(r["person_id"]) in by_pid]
+    move_items = [f'<li>{plink(str(pid))}<span class="d">{e(o)} &rarr; <b>{e(n)}</b></span></li>'
+                  for pid, o, n in ch["moves"] if str(pid) in by_pid]
+    promo_items = [f'<li>{plink(str(pid))}<span class="d">{e(d)} &middot; {o} &rarr; <b>{n}</b></span></li>'
+                   for pid, d, o, n in ch["promos"] if str(pid) in by_pid]
+    found_li, moves_li, promos_li = "".join(found_items), "".join(move_items), "".join(promo_items)
     update_month = date.fromisoformat(since).strftime("%B") if since else ""
     pop_month = date.fromisoformat(pop_date).strftime("%B") if pop_date else ""
     # one swatch per source, in the order the sentence names them
@@ -501,13 +505,13 @@ def index_page(data, slugs, dslugs, base) -> str:
   <h2>{t("home", "new_heading")}</h2>
   <p class="sub" style="margin:-6px 0 14px">{t("home", "new_lede", update_month=update_month)}</p>
   <div class="cols2">
-    <div class="col"><h3>{t("home", "new_found_heading")} <span class="count">{len(found)}</span></h3>
+    <div class="col"><h3>{t("home", "new_found_heading")} <span class="count">{len(found_items)}</span></h3>
       <p class="sub">{t("home", "new_found_note")}</p>
       <ul class="plain">{found_li}</ul></div>
-    <div class="col"><h3>{t("home", "new_moves_heading")} <span class="count">{len(ch["moves"])}</span></h3>
+    <div class="col"><h3>{t("home", "new_moves_heading")} <span class="count">{len(move_items)}</span></h3>
       <ul class="plain">{moves_li}</ul></div>
   </div>
-  <details class="fold" style="margin-top:14px"><summary>{t("home", "new_promos_heading")} <span class="count">{len(ch["promos"])}</span></summary>
+  <details class="fold" style="margin-top:14px"><summary>{t("home", "new_promos_heading")} <span class="count">{len(promo_items)}</span></summary>
     <ul class="plain two">{promos_li}</ul></details>
   <p class="sub" style="margin-top:12px">{t("home", "new_departed", n=ch["departed"], repo=REPO)}</p>"""
     else:

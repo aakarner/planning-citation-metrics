@@ -61,3 +61,41 @@ def test_rank_benchmarks_view_reports_median_and_75th_percentile():
                     (i, c, c // 50))
     row = con.execute("SELECT * FROM v_rank_benchmarks WHERE rank='assistant'").fetchone()
     assert row[1] == 5 and row[2] == 300 and row[3] == 400 and row[4] == 6
+
+
+def test_the_change_lists_render_their_rows_and_badges_agree(monkeypatch):
+    """The live page shipped with badges reading 6 / 13 / 47 over empty lists:
+    the people index was keyed by int and looked up by str. Render the page
+    with a few synthetic people and check every badge equals the number of
+    rows under it, and that the rows name the right people."""
+    import re
+    from pipeline import build_site
+    from pipeline.build_site import index_page, uniq_slugs
+
+    def person(pid, name, dept, rank="assistant", cites=100):
+        return {"person_id": pid, "display_name": name, "department": dept, "department_id": 1,
+                "rank": rank, "total_citations": cites, "h_index": 5}
+    people = [person(1, "Ada Lovelace", "D2"), person(2, "Grace Hopper", "D1", "full"), person(3, "Mary Somerville", "D1")]
+    depts = [{"department_id": 1, "short_name": "D1", "n_faculty": 3, "median_citations": 100, "mean_citations": 100,
+              "university": "D1", "total_citations": 300},
+             {"department_id": 2, "short_name": "D2", "n_faculty": 3, "median_citations": 90, "mean_citations": 90,
+              "university": "D2", "total_citations": 270}]
+    affs = [aff(1, 1, 1, "assistant", end="2026-09-15"), aff(2, 1, 2, "assistant", start="2026-09-15"),   # Ada moved
+            aff(3, 2, 1, "associate", end="2026-09-15"), aff(4, 2, 1, "full", start="2026-09-15"),       # Grace promoted
+            aff(5, 3, 1, "assistant")]
+    data = {"people": people, "depts": depts, "asof": {"google_scholar": "2026-09-16", "openalex": "2026-09-15",
+            "pop": "2026-02-20"}, "mix": {"google_scholar": 2, "openalex": 1, "pop": 0},
+            "bench": {"assistant": {"n": 2, "median_citations": 100, "p75_citations": 100, "median_h_index": 5}},
+            "affs": affs, "gs_dates": ["2026-03-01", "2026-09-15", "2026-09-16"]}
+    # discovery finds normally come from the review CSV; give the page one for Mary
+    monkeypatch.setattr(build_site, "discovery_finds",
+                        lambda since: [{"person_id": "3", "department": "D1", "reviewed_at": "2026-09-16"}])
+    html = index_page(data, uniq_slugs(people, lambda p: p["display_name"]),
+                      uniq_slugs(depts, lambda d: d["short_name"]), "")
+
+    badges = [int(n) for n in re.findall(r'class="count">(\d+)<', html)]
+    lists = re.findall(r'<ul class="plain[^"]*">(.*?)</ul>', html, flags=re.S)
+    assert badges == [1, 1, 1]
+    assert [l.count("<li>") for l in lists] == [1, 1, 1]
+    assert "Mary Somerville" in lists[0] and "Ada Lovelace" in lists[1] and "Grace Hopper" in lists[2]
+    assert "D1 &rarr; <b>D2</b>" in lists[1] and "associate &rarr; <b>full</b>" in lists[2]
