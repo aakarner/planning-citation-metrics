@@ -20,6 +20,10 @@ in the latest run:
      (appointment closed, destination kept in the note)
   5. anything else                                          -> no change
 
+A profile with fewer than THIN_CITES citations for someone THIN_YEARS or more
+past the PhD is reported as a probable namesake and never acted on, unless it
+names the current department.
+
 Rank comes from the affiliation text when it says Assistant/Associate/
 Professor, otherwise the existing rank carries over. Nothing is deleted:
 the old appointment is closed with end_date = the snapshot date, and the
@@ -55,6 +59,12 @@ FOREIGN_FIELDS = ("electrical engineering", "computer science", "biochem", "chem
 # Tracked-department names that are prefixes of campuses we do not track.
 UNTRACKED_CAMPUS = ("tacoma", "bothell", "dearborn", "flint", "duluth", "omaha", "kearney")
 RANK_ORDER = {"assistant": 0, "associate": 1, "full": 2}
+# A profile with almost no citations for someone years past the PhD is more
+# likely a namesake than a record of their career. Jenny Liu's inherited id
+# pointed at a Guelph entomologist with 6 citations, and the rules moved her
+# there. Such a profile is reported for a person to look at, never acted on.
+THIN_CITES = 25
+THIN_YEARS = 5
 
 
 def email_home_check(email, home, a) -> bool:
@@ -72,7 +82,7 @@ def rank_from_text(text: str, default: str) -> str:
     return default
 
 
-def decide(text, email, rank, cur, depts, home, domain_owner):
+def decide(text, email, rank, cur, depts, home, domain_owner, cites=None, years_since_phd=None):
     """One profile against one appointment -> (action, destination).
 
     Returns (None, None) to leave the appointment alone. Kept separate from
@@ -81,11 +91,16 @@ def decide(text, email, rank, cur, depts, home, domain_owner):
 
     `rank` is the rank on the appointment, `cur` the department on file, `home`
     its set of email domains, and `domain_owner` maps a domain to the department
-    that owns it.
+    that owns it. `cites` and `years_since_phd`, when known, let a thin profile
+    be reported instead of trusted.
     """
     low = text.lower()
     if any(w in low for w in PRE_FACULTY):
         return None, None                                  # stale pre-appointment profile
+    if (cites is not None and years_since_phd is not None
+            and cites < THIN_CITES and years_since_phd >= THIN_YEARS
+            and not (text and affiliation_names_dept(text, cur))):
+        return "wrong", None                               # too thin to move anyone on; probably a namesake
     # Typo-tolerant here on purpose: a profile that misspells its own school
     # must not read as a departure from it. Initiating a move still needs an
     # exact match below.
@@ -160,8 +175,11 @@ def main(argv=None) -> None:
         raw = json.loads(r["raw_json"] or "{}")
         text = raw.get("affiliation") or ""
         email = registrable(raw.get("email_domain"))
+        phd = people.get(pid, {}).get("phd_year")
+        years = (int(r["collected_at"][:4]) - int(phd)) if phd else None
+        cites = int(r["total_citations"]) if r.get("total_citations") else None
         kind, target = decide(text, email, a["rank"], depts[a["department_id"]], depts,
-                              home[a["department_id"]], domain_owner)
+                              home[a["department_id"]], domain_owner, cites=cites, years_since_phd=years)
         if kind:
             actions.append((kind, pid, a, target, text, email, r["collected_at"]))
 

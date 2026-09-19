@@ -123,3 +123,23 @@ def test_an_institution_named_in_french_is_still_an_institution():
     kind, _ = decide("Professor, Polytechnique Montréal", "polymtl.ca", "assistant",
                      DEPTS["7"], DEPTS, HOME["7"], OWNER)
     assert kind == "depart"
+
+
+def test_a_thin_profile_years_past_the_phd_is_reported_not_acted_on():
+    # Jenny Liu: a Guelph entomologist's profile, 6 citations, inherited by mistake.
+    DEPTS["8"] = dept("8", "University of Guelph", "uoguelph.ca"); HOME["8"] = {"uoguelph.ca"}; OWNER["uoguelph.ca"] = "8"
+    DEPTS["9"] = dept("9", "Portland State University", "pdx.edu"); HOME["9"] = {"pdx.edu"}
+    kind, target = decide("University of Guelph", "uoguelph.ca", "associate", DEPTS["9"], DEPTS, HOME["9"], OWNER,
+                          cites=6, years_since_phd=16)
+    assert (kind, target) == ("wrong", None)
+    # the same text with a substantial record is a real move
+    kind, target = decide("University of Guelph", "uoguelph.ca", "associate", DEPTS["9"], DEPTS, HOME["9"], OWNER,
+                          cites=900, years_since_phd=16)
+    assert kind == "move" and target["short_name"] == "University of Guelph"
+    # a thin profile that names the current department is not suspicious: a new-ish field, a quiet career
+    kind, _ = decide("Professor, Portland State University", "pdx.edu", "associate", DEPTS["9"], DEPTS, HOME["9"], OWNER,
+                     cites=6, years_since_phd=16)
+    assert kind in (None, "promote")
+    # without the extra evidence the rule is silent, as before
+    kind, _ = decide("University of Guelph", "uoguelph.ca", "associate", DEPTS["9"], DEPTS, HOME["9"], OWNER)
+    assert kind == "move"

@@ -295,7 +295,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 294,293,39,associate,regular,1,,,workbook-2026
 295,294,39,associate,regular,1,,,workbook-2026
 296,295,39,full,regular,1,,,workbook-2026
-297,296,39,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: move; change from Scholar profile 2026-09-15: email @uoguelph.ca; affiliation ""University of Guelph"""
+297,296,39,associate,regular,1,,,"workbook-2026 | closed 2026-09-15: move; change from Scholar profile 2026-09-15: email @uoguelph.ca; affiliation ""University of Guelph"" | REVERSED 2026-09-19: not a move. Scholar id oirhrhsAAAAJ inherited from the workbook belongs to a University of Guelph entomologist (6 citations; interests entomology, food security), not this UC Berkeley PhD in transportation and resource economics. Id cleared; she stays at Portland State. Alex spotted it."
 298,297,39,associate,regular,1,,,workbook-2026
 299,298,39,associate,regular,1,,,workbook-2026
 300,299,39,associate,regular,1,,,workbook-2026
@@ -1066,7 +1066,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 1066,228,27,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @mit.edu; affiliation ""Professor of Urban Design and Public Policy, MIT"""
 1067,249,12,assistant,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @cornell.edu; affiliation ""Cornell University College of Architecture, Art, and Planning"""
 1068,272,37,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @nau.edu; affiliation ""Associate Professor, Northern Arizona University"""
-1069,296,76,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @uoguelph.ca; affiliation ""University of Guelph"""
+1069,296,76,associate,regular,1,2026-09-15,2026-09-15,"change from Scholar profile 2026-09-15: email @uoguelph.ca; affiliation ""University of Guelph"" | REVERSED 2026-09-19: opened from a namesake's profile; never a real appointment."
 1070,330,43,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @rutgers.edu; affiliation ""Associate Professor, Bloustein School of Planning and Public Policy, Rutgers University"""
 1071,336,43,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @rutgers.edu; affiliation ""Professor, Rutgers University"""
 1072,338,43,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @rutgers.edu; affiliation ""Associate Professor at Rutgers University"""
