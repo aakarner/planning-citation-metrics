@@ -60,7 +60,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 59,Eric,A.,Morris,Eric Morris,2011,UCLA,"Transportation Planning, Policy, Economics, Equity and History, Transportation and Land Use, Transportation and the Environment, Travel Behavior, Regional Economics and Economic Geography, Cities, Planning and Well-Being.",Fc1IlK8AAAAJ,A5082165165,0000-0001-8690-6644,,https://researchgate.net/profile/Eric_Morris6,,,
 60,Roland,,Anglin,Roland Anglin,1991,University of Chicago,,,A5067237139,,,,,,
 61,Joanna,,Ganning,Joanna Ganning,2010,"University of Illinois, Urbana-Champaign","Regional and Community Economic Development: Urban-Rural Linkages, Urban and Rural Amenities, and the Economic Role of Universities in Regions",tEoLIlAAAAAJ,A5008867275,0000-0002-8448-0288,,,,,
-62,Thomas,,Hilde,Thomas Hilde,2017,"University of Texas, Austin",,9pJph3wAAAAJ,,0000-0001-6584-3066,,,,,"un-accepted 2026-09-15: OpenAlex 3,489 citations against 136 from google_scholar (25.7x); probable namesake"
+62,Thomas,,Hilde,Thomas Hilde,2017,"University of Texas, Austin",,9pJph3wAAAAJ,,,,,,,"un-accepted 2026-09-15: OpenAlex 3,489 citations against 136 from google_scholar (25.7x); probable namesake ORCID 0000-0001-6584-3066 cleared 2026-09-20: it came from an OpenAlex record later rejected as a namesake."
 63,Brian,A.,Mikelbank,Brian Mikelbank,2000,Ohio State University,"Quantitative Spatial Analysis, Urban Geographic Information Systems, Urban Geography, Economic Geography.",ZlxKpwEAAAAJ,A5058360151,0009-0004-6914-9089,,,https://linkedin.com/in/brian-mikelbank-99843984,,
 64,Stephanie,,Ryberg-Webster,Stephanie Ryberg-Webster,2010,University of Pennsylvania,,iwUHlEgAAAAJ,A5052127889,0000-0002-7601-0294,,,,,
 65,Hiba,,Akar,Hiba Bou Akar,2012,UC Berkeley,,hvXw6qgAAAAJ,A5059844203,0000-0002-9696-1396,,,,,
@@ -145,7 +145,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 144,Carole,,Voulgaris,Carole Voulgaris,2017,UCLA,,BmzXltMAAAAJ,A5060988135,0000-0003-0556-924X,,,,,
 145,Rachel,,Weber,Rachel Weber,1998,Cornell University,"Economic Development Planning, Planning Theory, Public Finance and Fiscal Planning",-nMertYAAAAJ,,,,https://researchgate.net/profile/Rachel_Weber,https://linkedin.com/in/rachel-weber-1b6404a,,
 146,Stefan,,AL,Stefan Al,2010,UC Berkeley,,IrrSGOYAAAAJ,A5100665696,0000-0003-0605-8601,,,,,
-147,Nicholas,,Bloom,Nicholas Bloom,1999,Brandeis University,,,,0000-0002-1600-7819,,,,,"un-accepted 2026-09-15: OpenAlex 65,929 citations against 770 from pop (85.6x); probable namesake"
+147,Nicholas,,Bloom,Nicholas Bloom,1999,Brandeis University,,,,,,,,,"un-accepted 2026-09-15: OpenAlex 65,929 citations against 770 from pop (85.6x); probable namesake ORCID 0000-0002-1600-7819 cleared 2026-09-20: it came from an OpenAlex record later rejected as a namesake."
 148,John,,Chin,John Chin,2001,Columbia University,"community participation, urban health, immigrant communities and non-profits",gV7SKuUAAAAJ,A5012453075,0009-0003-2960-6452,,,,,
 149,Owen,,Gutfreund,Owen Gutfreund,1998,Columbia University,"urban history, transportation policy, suburbanization, sustainable development, public finance, and comparative urbanization",P9xC7acAAAAJ,A5056358076,0000-0003-1113-6619,,,,,
 150,Mehdi,,Heris,Mehdi Heris,2018,"University of Colorado, Denver",,JO0Whw8AAAAJ,A5033965436,0000-0002-4418-5030,,,,,
@@ -332,7 +332,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 331,Kelcie,,Ralph,Kelcie Ralph,2015,UCLA,,1TPJPWwAAAAJ,A5067088159,0000-0003-4316-3195,,,,,
 332,Andrea,,Restrepo-Mieth,Andrea Restrepo-Mieth,2019,Cornell University,,ws6Obu8AAAAJ,A5071886532,0000-0002-6791-7345,,,,,
 333,Hal,,Salzman,Hal Salzman,1998,Brandeis University,,,A5000469305,0000-0003-3036-3286,,,,,
-334,Eric,,Seymour,Eric Seymour,2016,University of Michigan,,2sca56AAAAAJ,,0000-0002-1906-3701,,,,,"un-accepted 2026-09-15: OpenAlex 2,329 citations against 739 from google_scholar (3.2x); probable namesake"
+334,Eric,,Seymour,Eric Seymour,2016,University of Michigan,,2sca56AAAAAJ,,,,,,,"un-accepted 2026-09-15: OpenAlex 2,329 citations against 739 from google_scholar (3.2x); probable namesake ORCID 0000-0002-1906-3701 cleared 2026-09-20: it came from an OpenAlex record later rejected as a namesake."
 335,Mi,,Shih,Mi Shih,2010,Rutgers University,"Processes of Urbanization in China and how they shape Chinese Cities, Local Places, and People’s Everyday Lives, Urban Redevelopment and its impact on Property and Civil Rights, Land Commodification, Urban Expansion and Rural Land Conversion in Peri-urban Areas, and Grassroots Participation and Urban Planning.",Yu63i0UAAAAJ,A5010209545,0000-0002-9197-9386,,,https://linkedin.com/in/mi-shih-69b32343,,
 336,Michael,,Smart,Michael Smart,2011,UCLA,"How Social Networks Influence Activity Patterns in Neighborhoods, Urban Modeling and Simulation, and Geographic Information Science.",pZuyPwYAAAAJ,A5103045655,0000-0003-3739-2725,,https://researchgate.net/profile/Michael_Smart2,https://linkedin.com/in/mike-smart-3b5a363,,
 337,Piyushimita,,Thakuriah,Piyushimita Thakuriah,1994,"University of Illinois, Chicago",,,A5011913902,0000-0002-5681-2353,,,,,
@@ -600,7 +600,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 599,Mark,R.,Stevens,Mark Stevens,2008,UNC,Environmental and Land Use Planning.,AAf0iL8AAAAJ,A5078903162,0000-0003-2097-362X,,https://researchgate.net/profile/Mark_Stevens12,,,
 600,Martino,,Tran,Martino Tran,2011,Oxford University,,MMmkrosAAAAJ,A5038912348,0000-0002-8947-3829,,,,,
 601,Alberto,,de Salvatierra,Alberto de Salvatierra,2017,Harvard University,,,A5013944437,0000-0002-3931-0132,,,,,
-602,Rebecca,,Laycock Pedersen,Rebecca Pedersen,2017,Keele University,,eytkhI0AAAAJ,,0000-0002-5966-5141,,,,,"un-accepted 2026-09-15: OpenAlex 126 citations against 4,943 from google_scholar (0.0x); probable namesake"
+602,Rebecca,,Laycock Pedersen,Rebecca Pedersen,2017,Keele University,,eytkhI0AAAAJ,,,,,,,"un-accepted 2026-09-15: OpenAlex 126 citations against 4,943 from google_scholar (0.0x); probable namesake ORCID 0000-0002-5966-5141 cleared 2026-09-20: it came from an OpenAlex record later rejected as a namesake."
 603,Joseli,,Macedo,Joseli Macedo,2000,University of Florida,,U7N1ZiIAAAAJ,A5040799704,0000-0003-2494-4754,,,,,
 604,Fabian,,Neuhaus,Fabian Neuhaus,2013,University College London,,,A5027909698,0000-0001-5297-4163,,,,,
 605,Beverly,A.,Sandalack,Beverly Sandalack,1998,"University of Brookes, Oxford",,,A5016265147,,,,,,
@@ -609,7 +609,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 608,Christopher,,Auffrey,Christopher Auffrey,1994,University of Michigan,"Healthy Urban Planning, Environmental Justice, Sustainable Development",i1HJzW0AAAAJ,A5036774424,0000-0002-0183-6833,,,https://linkedin.com/in/chris-auffrey-66588330,,
 609,Carla,,Chifos,Carla Chifos,1996,Cornell University,"Sustainable Development, Urban Environment, International Development",,A5082020561,,,,https://linkedin.com/in/carla-chifos-b386709,,
 610,David,J.,Edelman,David Edelman,1976,Cornell University,"Urban Environmental Management, Energy Policy Planning, Development Planning and Management",NNs5cqcAAAAJ,A5046673039,0000-0003-0354-0232,,,https://linkedin.com/in/david-j-edelman-mcp-phd-faicp-fsu-eur-ing-sia-kivi-260266a,,
-611,Jan,Marie,Fritz,Jan Fritz,1978,American University,"Community Development, Environmental Justice, Mediation and Facilitation of Organizational and Public Policy Disputes",XzRcQIAAAAAJ,,0000-0002-0605-4152,,,,,"un-accepted 2026-09-15: OpenAlex 4 citations against 1,079 from google_scholar (0.0x); probable namesake"
+611,Jan,Marie,Fritz,Jan Fritz,1978,American University,"Community Development, Environmental Justice, Mediation and Facilitation of Organizational and Public Policy Disputes",XzRcQIAAAAAJ,,,,,,,"un-accepted 2026-09-15: OpenAlex 4 citations against 1,079 from google_scholar (0.0x); probable namesake ORCID 0000-0002-0605-4152 cleared 2026-09-20: it came from an OpenAlex record later rejected as a namesake."
 612,Rainer,vom,Hofe,Rainer Hofe,2002,Cornell University,"Regional Analysis, Economic Development, Quantitative Methods, Urban and Regional Economics",,A5067406116,,,,https://linkedin.com/in/rainer-vom-hofe-9295b09,,
 613,Leah,,Hollstein,Leah Hollstein,2014,"University of Texas, Austin",,,A5049534165,0000-0002-6243-7772,,,,,
 614,Hyesung,,Jeong,Hyesun Jeong,2016,Illinois Institute of Technology,,pXhTRzwAAAAJ,A5000684130,0000-0001-7794-397X,,,,,
@@ -633,7 +633,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 632,Ilir,,Bejleri,Ilir Bejleri,1994,"Polytechnic University, Tirana, Albania","Urban Design, Urban Simulation, Information Technology for Planning",,A5071777797,,,,https://linkedin.com/in/ilir-bejleri-06a61010,,
 633,Kathryn,,Frank,Kathryn Frank,2009,Georgia Tech,"Ecosystem management, regional sustainability, Collaborative planning and policy making, alternative dispute resolution, water resources and aquatic/coastal ecosystems, children and youth participation in planning",2Jao6ucAAAAJ,,,,,https://linkedin.com/in/kathryn-frank-61773477,,
 634,Cleary,,Larkin,Cleary Larkin,2019,University of Florida,,,,,,,,,
-635,Kristin,,Larsen,Kristin Larsen,2001,Cornell University,"Planning History, Housing, Historic Preservation",D7jbFnoAAAAJ,,0000-0002-4014-2543,,,https://linkedin.com/in/kristin-larsen-57423646,,"un-accepted 2026-09-15: OpenAlex 4,531 citations against 331 from google_scholar (13.7x); probable namesake"
+635,Kristin,,Larsen,Kristin Larsen,2001,Cornell University,"Planning History, Housing, Historic Preservation",D7jbFnoAAAAJ,,,,,https://linkedin.com/in/kristin-larsen-57423646,,"un-accepted 2026-09-15: OpenAlex 4,531 citations against 331 from google_scholar (13.7x); probable namesake ORCID 0000-0002-4014-2543 cleared 2026-09-20: it came from an OpenAlex record later rejected as a namesake."
 636,Zhong-Ren,,Peng,Zhong-Ren Peng,1994,Portland State University,"Transportation Planning, Transportation and Land Use Integration, Information Technology for Planning",ngiXpvgAAAAJ,,,,https://researchgate.net/profile/Zhong-Ren_Peng,,,
 637,Ruth,L.,Steiner,Ruth Steiner,1996,UC Berkeley,,zbew56MAAAAJ,,,,https://researchgate.net/profile/Ruth_Steiner,https://linkedin.com/in/ruth-steiner-9293218,,
 638,Renee,,Tapp,Renee Tapp,2018,Clark University,,83Irs68AAAAJ,A5079538021,0000-0002-2893-2534,,,,,
@@ -711,7 +711,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 710,Aaron,,Rollins,Aaron Rollins,2013,Mississippi State University,,,A5060186319,,,,,,
 711,Matthew,,Ruther,Matthew Ruther,2012,University of Pennsylvania,,ewXHmhMAAAAJ,A5056648477,0000-0002-1375-2792,,,,,
 712,Margath,,Walker,Margath Walker,2009,University of Kentucky,,Wjo2ri0AAAAJ,A5038114992,0000-0002-9006-1100,,,,,
-713,Sumei,,Zhang,Sumei Zhang,2008,Ohio State University,"Land Use Planning, Planning Theory, Research Methods",KOzyUC0AAAAJ,,0000-0001-5779-3281,,,,,"un-accepted 2026-09-15: OpenAlex 7,952 citations against 751 from google_scholar (10.6x); probable namesake"
+713,Sumei,,Zhang,Sumei Zhang,2008,Ohio State University,"Land Use Planning, Planning Theory, Research Methods",KOzyUC0AAAAJ,,,,,,,"un-accepted 2026-09-15: OpenAlex 7,952 citations against 751 from google_scholar (10.6x); probable namesake ORCID 0000-0001-5779-3281 cleared 2026-09-20: it came from an OpenAlex record later rejected as a namesake."
 714,Raphael,,Ayambire,Raphael Ayambire,2022,University of Waterloo,,nJM_A2EAAAAJ,A5062318096,0000-0002-3752-0830,,,,,
 715,Rae,,Bridgman,Rae Bridgman,1993,York University,,B7VbV0AAAAAJ,A5112931255,,,,,,
 716,Sarah,,Cooper,Sarah Cooper,2018,"University of Illinois, Chicago",,Avbh3P4AAAAJ,A5048434422,0000-0001-9450-2199,,,,,
@@ -743,7 +743,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 742,John,,Duff,John Duff,1997,University of Mississippi,,,A5071035247,,,,,,
 743,Lorena,,Estrada-Martinez,Lorena Estrada-Martinez,2009,University of Michigan,,zxWTHW4AAAAJ,A5088617300,0000-0001-8992-600X,,,,,
 744,Chi-Kan,Richard,Hung,Richard Hung,1997,Indiana University,,,A5044802606,,,,,,
-745,Michael,,Johnson,Michael Johnson,2000,Northwestern University,,XZ5n0n0AAAAJ,,0000-0002-4466-5886,,,,,"un-accepted 2026-09-15: OpenAlex 5,273 citations against 117 from google_scholar (45.1x); probable namesake"
+745,Michael,,Johnson,Michael Johnson,2000,Northwestern University,,XZ5n0n0AAAAJ,,,,,,,"un-accepted 2026-09-15: OpenAlex 5,273 citations against 117 from google_scholar (45.1x); probable namesake ORCID 0000-0002-4466-5886 cleared 2026-09-20: it came from an OpenAlex record later rejected as a namesake."
 746,Antonio,,Raciti,Antonio Raciti,2012,University of Catania,"Urban Planning, Community Development, and Urban Design.",SkM-vXkAAAAJ,A5037596469,0000-0003-3744-9605,,,,,
 747,Kenneth,,Reardon,Kenneth Reardon,1990,Cornell University,,n02_iqAAAAAJ,A5038951953,,,,,,
 748,Eduardo,,Siqueira,Eduardo Siqueira,2004,University of Massachusetts Lowell,,kJY5LJAAAAAJ,A5005560594,0000-0001-8993-3031,,,,,
@@ -944,7 +944,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 943,Jan,,Whittington,Jan Whittington,2008,UC Berkeley,"Infrastructure Development and Management, Transportation Project Delivery",K_llbN8AAAAJ,A5050736585,,,https://researchgate.net/profile/Jan_Whittington,https://linkedin.com/in/jan-whittington-a6b68210,,
 944,Martine,,August,Martine August,2014,University of Toronto,,JqcxamAAAAAJ,A5056527280,,,,,,
 945,Janice,,Barry,Janice Barry,2011,University of British Columbia,,DwtbmIgAAAAJ,A5035156700,0000-0003-4251-2015,,,,,
-946,Jeff,,Casello,Jeff Casello,2003,University of Pennsylvania,"Urban transportation systems, Public transport system planning, design and operation, Multimodal transportation modeling, Transportation and land use impacts, Urban spatial analysis, GIS applications; Jointly appointed with Civil Engineering",,,0000-0002-9246-9759,,https://researchgate.net/profile/Jeffrey_Casello,,,un-accepted 2026-09-15: OpenAlex 663 citations against 123 from pop (5.4x); probable namesake
+946,Jeff,,Casello,Jeff Casello,2003,University of Pennsylvania,"Urban transportation systems, Public transport system planning, design and operation, Multimodal transportation modeling, Transportation and land use impacts, Urban spatial analysis, GIS applications; Jointly appointed with Civil Engineering",,,,,https://researchgate.net/profile/Jeffrey_Casello,,,un-accepted 2026-09-15: OpenAlex 663 citations against 123 from pop (5.4x); probable namesake ORCID 0000-0002-9246-9759 cleared 2026-09-20: it came from an OpenAlex record later rejected as a namesake.
 947,Jennifer,,Dean,Jennifer Dean,2012,McMaster University,,CZ1SucoAAAAJ,A5003309377,0000-0003-2642-7638,,,,,
 948,Brian,,Doucet,Brian Doucet,2010,Utrecth University,,VP_AYC4AAAAJ,A5041417928,0000-0002-4268-0185,,,,,
 949,Michael,,Drescher,Michael Drescher,2003,Wageningen University,"forestry dynamics, environmental planning, simulation and forecasting, coupled human-natural systems in urbanizing regions",n3TldkEAAAAJ,A5037764925,0000-0002-5407-9231,,,https://linkedin.com/in/mdrescher,,

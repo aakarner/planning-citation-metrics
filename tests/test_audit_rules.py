@@ -12,7 +12,11 @@ with far *fewer* is usually OpenAlex holding a fragment of the right person, so
 pending rows are audited on the high side only.
 """
 
+from pathlib import Path
+
 from pipeline.audit_matches import MAX_RATIO, MIN_BASE, implausible
+
+ROOT = Path(__file__).resolve().parent.parent
 
 
 def test_a_namesake_with_far_more_citations_is_ruled_out():
@@ -79,3 +83,13 @@ def test_scholar_is_preferred_over_publish_or_perish_as_the_base():
     assert base["2"] == ("google_scholar", 900)
     assert base["3"] == ("pop", 250)
     assert "4" not in base
+
+
+def test_un_accepting_a_match_also_drops_the_orcid_copied_from_it():
+    """The matcher copies an accepted record's ORCID onto the roster. When the
+    audit later rejects that record as a namesake, the ORCID is the
+    namesake's too -- nine pages linked to strangers' ORCIDs before this."""
+    import re
+    src = (ROOT / "pipeline" / "audit_matches.py").read_text()
+    block = src[src.index('if p["person_id"] in bad:'):src.index("write_csv(ppath")]
+    assert 'p["openalex_author_id"] = None' in block and 'p["orcid"] = None' in block

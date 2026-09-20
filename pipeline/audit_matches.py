@@ -163,6 +163,9 @@ def main(argv=None) -> None:
             if p["person_id"] in bad:
                 p["notes"] = " ".join(filter(None, [p.get("notes"), bad[p["person_id"]]]))
                 p["openalex_author_id"] = None
+                # The matcher copied the record's ORCID onto the roster on acceptance;
+                # it is the namesake's too, and renders as a public link.
+                p["orcid"] = None
         write_csv(ppath, pfields, people)
         print(f"cleared {len(bad)} ids from {ppath}")
 
