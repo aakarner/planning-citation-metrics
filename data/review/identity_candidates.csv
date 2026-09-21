@@ -3191,11 +3191,11 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 932,Barbara Wilson,University of Virginia,openalex,A5024221492,Barbara L. Wilson,0.729,1.0,0.5,0.861,3.573,108,1254,19,University of Utah,https://orcid.org/0000-0002-5852-8137,rejected,audit_matches,2026-09-16,"rejected 2026-09-16: OpenAlex 1,254 citations against 401 from google_scholar (3.1x); probable namesake"
 932,Barbara Wilson,University of Virginia,openalex,A5113644437,Barbara Wilson,0.7,1.0,0.5,0.0,1.291,48,453,14,Medical College of Wisconsin,,pending,,,
 932,Barbara Wilson,University of Virginia,openalex,A5109000992,Barbara Wilson,0.7,1.0,0.0,1.0,0.259,8,91,3,,,pending,,,
-935,Christine Bae,University of Washington,openalex,A5087736214,Chang‐Hee Christine Bae,0.964,0.92,1.0,1.0,0.396,61,771,14,University of Washington,https://orcid.org/0000-0003-0579-0913,pending,,,
-935,Christine Bae,University of Washington,openalex,A5037072529,Christine L. Bae,0.939,1.0,1.0,0.596,0.538,55,1046,18,Virginia Commonwealth University,https://orcid.org/0000-0002-3492-7598,pending,,,
+935,Christine Bae,University of Washington,openalex,A5087736214,Chang‐Hee Christine Bae,0.964,0.92,1.0,1.0,0.396,61,771,14,University of Washington,https://orcid.org/0000-0003-0579-0913,accepted,Alex Karner,2026-09-21,"Chang-Hee Christine Bae, University of Washington, with ORCID. The roster person."
+935,Christine Bae,University of Washington,openalex,A5037072529,Christine L. Bae,0.939,1.0,1.0,0.596,0.538,55,1046,18,Virginia Commonwealth University,https://orcid.org/0000-0002-3492-7598,rejected,Alex Karner,2026-09-21,"Christine L. Bae at VCU: educational psychologist, same wrong person as Scholar BZ36t5gAAAAJ."
 935,Christine Bae,University of Washington,openalex,A5014935940,Christine You-jin Bae,0.625,1.0,0.0,0.5,0.117,5,228,4,University of Toronto,,pending,,,
 935,Christine Bae,University of Washington,openalex,A5065697603,Christine Chang-hee Bae,0.6,1.0,0.0,1.0,0.001,1,1,1,,,pending,,,
-935,Christine Bae,University of Washington,openalex,A5140773643,Christine Lee Bae,0.6,1.0,0.0,1.0,0.0,1,0,0,Virginia Commonwealth University,,pending,,,
+935,Christine Bae,University of Washington,openalex,A5140773643,Christine Lee Bae,0.6,1.0,0.0,1.0,0.0,1,0,0,Virginia Commonwealth University,,rejected,Alex Karner,2026-09-21,Christine Lee Bae at VCU: fragment of the same educational psychologist.
 938,Karen Chen,University of Washington,openalex,A5012655879,Tzu‐Hsin Karen Chen,0.787,0.576,1.0,0.852,0.145,25,688,11,University of Washington,https://orcid.org/0000-0002-0343-6147,pending,,,
 938,Karen Chen,University of Washington,openalex,A5037227044,Karen Caiyun Chen,0.644,1.0,0.0,0.625,0.111,8,525,7,,,pending,,,
 938,Karen Chen,University of Washington,openalex,A5084653699,Karen Chen,0.589,1.0,0.0,0.258,0.403,137,1915,21,North Carolina State University,https://orcid.org/0000-0003-2904-1394,pending,,,
@@ -3706,7 +3706,7 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 905,Mary Schlemper,University of Toledo,google_scholar,1yOmQkoAAAAJ,M. Beth Schlemper,0.96,0.92,1.0,,1.535,,706,,University of Toledo,,accepted,matcher,2026-09-21,
 906,Sujata Shetty,University of Toledo,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-21,
 911,Katharine Rankin,University of Toronto,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-21,
-913,Tim Ross,University of Toronto,google_scholar,ON5KEFQAAAAJ,Timothy Ross,0.81,0.92,1.0,,8.363,,1129,,University of Toronto,,pending,,,
+913,Tim Ross,University of Toronto,google_scholar,ON5KEFQAAAAJ,Timothy Ross,0.81,0.92,1.0,,8.363,,1129,,University of Toronto,,accepted,Alex Karner,2026-09-21,"Profile 'Timothy Ross', U of Toronto, verified utoronto.ca email; planning, school transport, children's mobility. Matches PhD 2017 Toronto."
 913,Tim Ross,University of Toronto,google_scholar,2CnhrQoAAAAJ,Tom Ross,0.463,0.925,0.0,,131.711,,17781,,University of Tasmania,,rejected,matcher,2026-09-21,
 914,Matti Siemiatycki,University of Toronto,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-21,
 918,Arnab Chakraborty,University of Utah,google_scholar,olIYV_QAAAAJ,Arnab Chakraborty,1.0,1.0,1.0,,1.319,,1814,,"Dean and Professor, University of Utah",,accepted,matcher,2026-09-21,
@@ -3714,7 +3714,7 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 918,Arnab Chakraborty,University of Utah,google_scholar,MS1eW40AAAAJ,Arnab Chakraborty,0.5,1.0,0.0,,0.16,,220,,Louisiana State University,,rejected,matcher,2026-09-21,
 928,Suzanne Morse Moomaw,University of Virginia,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-21,
 933,Daniel Abramson,University of Washington,google_scholar,DC6o_moAAAAJ,Daniel M. Abramson,0.65,1.0,0.0,,0.501,,604,,Boston University,,rejected,matcher,2026-09-21,
-935,Christine Bae,University of Washington,google_scholar,BZ36t5gAAAAJ,Christine Lee Bae,0.65,1.0,0.0,,1.831,,3562,,Virginia Commonwealth University,,pending,,,
+935,Christine Bae,University of Washington,google_scholar,BZ36t5gAAAAJ,Christine Lee Bae,0.65,1.0,0.0,,1.831,,3562,,Virginia Commonwealth University,,rejected,Alex Karner,2026-09-21,"Christine Lee Bae, educational psychologist at VCU (cognition, creativity, STEM teaching). Not the UW planner Chang-Hee Christine Bae."
 939,Sofia Dermisi,University of Washington,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-21,
 946,Jeff Casello,"University of Waterloo, Ontario",google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-21,
 953,John Lewis,"University of Waterloo, Ontario",google_scholar,CvOXwt4AAAAJ,John T. Lewis (1932 - 2004),0.5,1.0,0.0,,9.714,,8354,,"Professor, Dublin Institute for Advanced Studies",,rejected,matcher,2026-09-21,
