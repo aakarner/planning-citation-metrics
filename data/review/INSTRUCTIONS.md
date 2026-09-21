@@ -64,6 +64,11 @@ For each row:
 2. Pick the title in **Actual rank**. If the page gives the year they were
    promoted, put it in **Since (year)**.
 3. Paste the address of the page you used in **Where you saw it**.
+4. If the page shows an **ORCID** (a 16-digit id like `0000-0002-1825-0097`,
+   usually a green icon or an orcid.org link), copy it into **ORCID (if
+   shown)**. Don't go looking for it elsewhere. Fill this in even on rows
+   where you leave the rank blank — it's the one identifier we can't get any
+   other way.
 
 The dropdown options:
 

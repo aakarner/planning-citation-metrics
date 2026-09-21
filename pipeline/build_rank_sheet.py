@@ -33,7 +33,7 @@ SCHOLAR_URL = "https://scholar.google.com/citations?user={}"
 OUTCOMES = ["assistant", "associate", "full", "emeritus", "adjunct or lecturer", "left the program", "unclear"]
 HEADERS = ["Band", "Name", "Program", "Rank on file", "PhD year", "Years", "Basis", "Scholar profile says",
            "Citations", "Pct in rank", "Scholar profile", "Program website",
-           "Actual rank", "Since (year)", "Where you saw it", "Reviewed by", "Date", "Notes",
+           "Actual rank", "Since (year)", "ORCID (if shown)", "Where you saw it", "Reviewed by", "Date", "Notes",
            "person_id", "affiliation_id"]
 BANDS = {"A": "14 or more years. Almost certainly a stale rank, or not a tenure-track post at all.",
          "B": "10 to 13 years.", "C": f"{RANK_REVIEW_YEARS} to 9 years."}
@@ -97,7 +97,7 @@ def write_sheet(path: Path, review: list[dict]) -> int:
         ws.cell(i, col["person_id"], r["person_id"])
         ws.cell(i, col["affiliation_id"], r["affiliation_id"])
         dv.add(ws.cell(i, col["Actual rank"]))
-        for h in ("Actual rank", "Since (year)", "Where you saw it", "Reviewed by", "Date", "Notes"):
+        for h in ("Actual rank", "Since (year)", "ORCID (if shown)", "Where you saw it", "Reviewed by", "Date", "Notes"):
             ws.cell(i, col[h]).fill = ASK_FILL
         for c in ws[i]:
             c.border = Border(bottom=HAIR)
@@ -109,7 +109,7 @@ def write_sheet(path: Path, review: list[dict]) -> int:
 
     widths = {"Band": 6, "Name": 22, "Program": 26, "Rank on file": 11, "PhD year": 8, "Years": 6, "Basis": 34,
               "Scholar profile says": 34, "Citations": 10, "Pct in rank": 8, "Scholar profile": 13,
-              "Program website": 13, "Actual rank": 17, "Since (year)": 10, "Where you saw it": 30,
+              "Program website": 13, "Actual rank": 17, "Since (year)": 10, "ORCID (if shown)": 21, "Where you saw it": 30,
               "Reviewed by": 13, "Date": 11, "Notes": 30, "person_id": 9, "affiliation_id": 11}
     for h, w in widths.items():
         ws.column_dimensions[get_column_letter(col[h])].width = w
@@ -127,6 +127,12 @@ def write_sheet(path: Path, review: list[dict]) -> int:
         ("For each row, open the Scholar profile and the program website (the two link columns) and find the "
          "person's current title. Pick it in 'Actual rank'. If the page gives a year they were promoted, put it in "
          "'Since (year)'. Paste the page address in 'Where you saw it'. Leave a row blank to come back to it.", False),
+        ("", False),
+        ("ORCID (if shown)", True),
+        ("If the faculty page shows an ORCID (a 16-digit id like 0000-0002-1825-0097, often as a green icon or a "
+         "link to orcid.org), copy it in. Skip it if the page does not show one; do not search for it elsewhere. "
+         "This is the one identifier we cannot get any other way, and it is worth filling in even on rows where you "
+         "leave the rank blank.", False),
         ("", False),
         ("The options", True),
         ("assistant / associate / full   their tenure-line rank today. Picking the same rank that is on file "

@@ -122,3 +122,40 @@ def test_a_rank_set_by_review_counts_as_verified_that_day():
     assert verified_on(new["source"]) == date(2026, 9, 17)
     assert rank_review(new["rank"], new["start_date"], 2005, date(2026, 9, 17),
                        verified=verified_on(new["source"])) is None
+
+
+def test_the_sheet_has_the_orcid_column_and_the_importer_reads_it(tmp_path):
+    from pipeline.import_rank_review import parse_orcid
+    out = tmp_path / "r.xlsx"
+    write_sheet(out, [row(), row(person_id="2", affiliation_id="11", display_name="Bob")])
+    wb = load_workbook(out); ws = wb["Review"]
+    col = {c.value: c.column for c in ws[1]}
+    assert "ORCID (if shown)" in col
+    ws.cell(2, col["ORCID (if shown)"], "https://orcid.org/0000-0002-1825-0097")   # rank left blank
+    ws.cell(3, col["Actual rank"], "unclear"); ws.cell(3, col["ORCID (if shown)"], "0000-0001-5109-3700")
+    wb.save(out)
+    ds = read_decisions(out)
+    assert [(d["person_id"], d["decision"], d["orcid"]) for d in ds] == \
+        [("1", "", "0000-0002-1825-0097"), ("2", "", "0000-0001-5109-3700")]
+    assert parse_orcid(" 0000-0002-1825-009x ") == "0000-0002-1825-009X"
+    assert parse_orcid("not an orcid") is None and parse_orcid(None) is None
+
+
+def test_orcids_are_written_with_provenance_and_conflicts_are_flagged():
+    from pipeline.import_rank_review import apply_orcids
+    people = [{"person_id": "1", "orcid": "", "openalex_author_id": "A1", "notes": ""},
+              {"person_id": "2", "orcid": "0000-0002-1825-0097", "openalex_author_id": "A2", "notes": ""},
+              {"person_id": "3", "orcid": "0000-0003-0000-0000", "openalex_author_id": "A3", "notes": ""}]
+    ds = [decision(person_id="1", decision="", orcid="0000-0002-1825-0097"),
+          decision(person_id="2", decision="", orcid="0000-0002-1825-0097"),       # confirms
+          decision(person_id="3", decision="", orcid="0000-0001-5109-3700")]       # conflicts
+    people, log = apply_orcids(ds, people)
+    assert people[0]["orcid"] == "0000-0002-1825-0097" and "faculty page" in people[0]["notes"]
+    assert "confirms" in people[1]["notes"]
+    assert people[2]["orcid"] == "0000-0001-5109-3700" and "REPLACES 0000-0003-0000-0000" in people[2]["notes"]
+    assert any(l.startswith("CONFLICT") and "A3" in l for l in log)
+
+
+def test_an_orcid_only_row_does_not_touch_the_appointment():
+    affs, log = apply([decision(decision="", orcid="0000-0002-1825-0097")], [aff()])
+    assert len(affs) == 1 and affs[0]["end_date"] == "" and log == []
