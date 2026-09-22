@@ -54,8 +54,8 @@ remaining() {
   "$PY" - <<'PYEOF'
 import csv
 people = list(csv.DictReader(open("data/roster/person.csv")))
-searched = {r["person_id"] for r in csv.DictReader(open("data/review/identity_candidates.csv"))
-            if r["source"] == "google_scholar"}
+from pipeline.find_scholar_profiles import searched_ids
+searched = searched_ids(list(csv.DictReader(open("data/review/identity_candidates.csv"))))
 print(sum(1 for p in people if not p["google_scholar_id"] and p["person_id"] not in searched))
 PYEOF
 }

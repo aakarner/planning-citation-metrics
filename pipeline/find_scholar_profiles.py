@@ -62,6 +62,16 @@ class ScholarBlocked(RuntimeError):
     pass
 
 
+def searched_ids(rows: list[dict]) -> set[str]:
+    """People discovery has actually searched: those with a google_scholar row
+    the matcher wrote (reviewed_by 'matcher', or still pending). A row a person
+    entered by hand -- vetoing a wrong id inherited from the workbook -- is not a
+    search, and treating it as one would stop us ever looking for the real
+    profile. Jenny Liu and David van Vliet were hidden from discovery that way."""
+    return {r["person_id"] for r in rows
+            if r["source"] == "google_scholar" and (r.get("reviewed_by") or "matcher") == "matcher"}
+
+
 def search_profile_links(name: str) -> dict[str, str]:
     """Publication search by author name -> {scholar_id: linked author text}."""
     url = SEARCH_URL.format(name=urllib.parse.quote_plus(name))
@@ -434,7 +444,7 @@ def main(argv=None) -> None:
     stale = {x.strip() for x in args.stale.split(",") if x.strip()}
     review_path = REVIEW_DIR / "identity_candidates.csv"
     existing = read_csv(review_path)[1] if review_path.exists() else []
-    searched = {r["person_id"] for r in existing if r["source"] == "google_scholar"}
+    searched = searched_ids(existing)
 
     todo = [p for p in persons
             if (not p.get("google_scholar_id") or p.get("google_scholar_id") in stale)

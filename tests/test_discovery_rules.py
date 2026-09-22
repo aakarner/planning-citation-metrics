@@ -134,3 +134,14 @@ def test_keeps_a_candidate_whose_citation_count_is_close_to_ours():
 
 def test_a_missing_ratio_decides_nothing():
     assert classify(ratio_cand(None), DEPTS) == "pending"
+
+
+def test_a_hand_entered_veto_does_not_count_as_a_search():
+    """Liu and van Vliet had wrong inherited ids vetoed by hand, which left them
+    with a google_scholar row and so, under the old rule, 'already searched'."""
+    from pipeline.find_scholar_profiles import searched_ids
+    rows = [{"person_id": "1", "source": "google_scholar", "reviewed_by": "matcher", "status": "rejected"},
+            {"person_id": "2", "source": "google_scholar", "reviewed_by": "", "status": "pending"},
+            {"person_id": "3", "source": "google_scholar", "reviewed_by": "Alex Karner", "status": "rejected"},
+            {"person_id": "4", "source": "openalex", "reviewed_by": "matcher", "status": "accepted"}]
+    assert searched_ids(rows) == {"1", "2"}
