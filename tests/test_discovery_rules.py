@@ -145,3 +145,20 @@ def test_a_hand_entered_veto_does_not_count_as_a_search():
             {"person_id": "3", "source": "google_scholar", "reviewed_by": "Alex Karner", "status": "rejected"},
             {"person_id": "4", "source": "openalex", "reviewed_by": "matcher", "status": "accepted"}]
     assert searched_ids(rows) == {"1", "2"}
+
+
+def test_a_rejected_profile_is_vetoed_for_that_person_only():
+    from pipeline.find_scholar_profiles import vetoed_ids
+    rows = [{"person_id": "1", "source": "google_scholar", "status": "rejected", "external_id": "AAA"},
+            {"person_id": "1", "source": "google_scholar", "status": "rejected", "external_id": "BBB"},
+            {"person_id": "2", "source": "google_scholar", "status": "pending", "external_id": "AAA"},
+            {"person_id": "3", "source": "google_scholar", "status": "rejected", "external_id": ""},   # 'none' placeholder
+            {"person_id": "4", "source": "openalex", "status": "rejected", "external_id": "CCC"}]
+    assert vetoed_ids(rows) == {"1": {"AAA", "BBB"}}
+
+
+def test_an_existing_row_is_never_duplicated():
+    from pipeline.find_scholar_profiles import listed_pairs
+    rows = [{"person_id": "1", "source": "google_scholar", "status": "rejected", "external_id": "AAA"},
+            {"person_id": "1", "source": "google_scholar", "status": "rejected", "external_id": ""}]
+    assert listed_pairs(rows) == {("1", "AAA")}

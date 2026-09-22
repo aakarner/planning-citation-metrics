@@ -72,6 +72,25 @@ def searched_ids(rows: list[dict]) -> set[str]:
             if r["source"] == "google_scholar" and (r.get("reviewed_by") or "matcher") == "matcher"}
 
 
+def vetoed_ids(rows: list[dict]) -> dict[str, set[str]]:
+    """person_id -> Scholar ids rejected for that person, by anyone. A profile a
+    reviewer has ruled out is never fetched, scored or proposed again. Robert
+    Patrick's Rutgers economist came back as pending an hour after Alex
+    rejected it, because nothing here looked."""
+    out: dict[str, set[str]] = {}
+    for r in rows:
+        if r["source"] == "google_scholar" and r["status"] == "rejected" and (r.get("external_id") or "").strip():
+            out.setdefault(r["person_id"], set()).add(r["external_id"])
+    return out
+
+
+def listed_pairs(rows: list[dict]) -> set[tuple[str, str]]:
+    """(person_id, external_id) pairs already in the queue: a decision lives on
+    one row, so a re-run must not write a second one beside it."""
+    return {(r["person_id"], r["external_id"]) for r in rows
+            if r["source"] == "google_scholar" and (r.get("external_id") or "").strip()}
+
+
 def search_profile_links(name: str) -> dict[str, str]:
     """Publication search by author name -> {scholar_id: linked author text}."""
     url = SEARCH_URL.format(name=urllib.parse.quote_plus(name))
@@ -445,6 +464,8 @@ def main(argv=None) -> None:
     review_path = REVIEW_DIR / "identity_candidates.csv"
     existing = read_csv(review_path)[1] if review_path.exists() else []
     searched = searched_ids(existing)
+    vetoed = vetoed_ids(existing)
+    listed = listed_pairs(existing)
 
     todo = [p for p in persons
             if (not p.get("google_scholar_id") or p.get("google_scholar_id") in stale)
@@ -473,8 +494,9 @@ def main(argv=None) -> None:
                     a = scholarly.search_author_id(sid)
                     found.append({"scholar_id": sid, "name": a.get("name"), "affiliation": a.get("affiliation"),
                                   "citedby": a.get("citedby"), "email_domain": a.get("email_domain")})
-            # A stale id must never be re-accepted.
-            found = [c for c in found if c.get("scholar_id") and c["scholar_id"] not in stale]
+            # A stale id must never be re-accepted, and neither may one a reviewer rejected.
+            veto = stale | vetoed.get(person["person_id"], set())
+            found = [c for c in found if c.get("scholar_id") and c["scholar_id"] not in veto]
             consecutive = 0
         except Exception as e:
             tally["failed"] += 1
@@ -494,6 +516,8 @@ def main(argv=None) -> None:
             person["google_scholar_id"] = None      # the old id is dead either way
             person["notes"] = ((person.get("notes") or "") + f" Scholar id {list(stale & {person['google_scholar_id']}) or ''} stopped resolving {date.today().isoformat()}.").strip()
         for rank, s in enumerate(scored):
+            if (person["person_id"], s["external_id"]) in listed:
+                continue                                   # already has a row, and a decision, in the queue
             st = statuses[rank]
             settled = st in ("accepted", "rejected")
             rows.append({"person_id": person["person_id"], "display_name": person["display_name"],
