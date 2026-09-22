@@ -25,7 +25,7 @@ read that tab before starting each one.
 
 ## 1. `openalex_review.xlsx` — which OpenAlex record is theirs?
 
-**75 people, 218 rows.** Each person has several candidate OpenAlex author
+**72 people, 206 rows.** Each person has several candidate OpenAlex author
 records; most are either namesakes or fragments of the same person. Your job
 is to say which one is the person's *main* record.
 
