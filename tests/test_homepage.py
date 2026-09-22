@@ -99,3 +99,20 @@ def test_the_change_lists_render_their_rows_and_badges_agree(monkeypatch):
     assert [l.count("<li>") for l in lists] == [1, 1, 1]
     assert "Mary Somerville" in lists[0] and "Ada Lovelace" in lists[1] and "Grace Hopper" in lists[2]
     assert "D1 &rarr; <b>D2</b>" in lists[1] and "associate &rarr; <b>full</b>" in lists[2]
+
+
+def test_snapshot_files_chain_into_one_run(tmp_path, monkeypatch):
+    """A two-person fetch eight days after a quarterly run belongs to that run.
+    Anchoring the window on the newest file split it and reported the first
+    day's 89 people as 'missing from the latest run'."""
+    import csv as _csv
+    from pipeline import detect_changes
+    d = tmp_path / "google_scholar"; d.mkdir()
+    for day, pids in [("2026-03-01", ["1", "2"]), ("2026-09-14", ["1"]), ("2026-09-15", ["2"]), ("2026-09-22", ["3"])]:
+        with (d / f"{day}.csv").open("w", newline="") as f:
+            w = _csv.DictWriter(f, fieldnames=["person_id", "total_citations", "raw_json"]); w.writeheader()
+            for pid in pids: w.writerow({"person_id": pid, "total_citations": 10, "raw_json": "{}"})
+    monkeypatch.setattr(detect_changes, "SNAPSHOT_DIR", tmp_path)
+    latest, prev = detect_changes.latest_two("google_scholar")
+    assert {r["person_id"] for r in latest} == {"1", "2", "3"}     # 14th, 15th and 22nd are one run
+    assert {r["person_id"] for r in prev} == {"1", "2"}             # March is the previous one

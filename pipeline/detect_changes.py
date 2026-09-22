@@ -10,6 +10,9 @@ Flags, per person:
   * headline citation count fell more than 20% since the previous snapshot of
     the same source (almost always a wrong or merged profile, not a real drop);
   * profile fetched last time but missing from the latest run;
+    (Scholar flags apply only to ids still on the roster, the same rule the
+    site publishes by: a row from an id since cleared as a namesake is not
+    evidence about the person.)
   * a Publish or Perish figure that a rejected Scholar namesake's count nearly
     equals: Tom's lookup probably swept in that person's papers, so the figure
     we publish is largely someone else's (Robert Patrick: PoP 2,103 against a
@@ -130,8 +133,15 @@ def latest_two(source: str) -> tuple[list[dict], list[dict]]:
     files = sorted((SNAPSHOT_DIR / source).glob("*.csv"))
     if not files:
         return [], []
-    newest = date.fromisoformat(files[-1].stem)
-    latest_files = [f for f in files if (newest - date.fromisoformat(f.stem)).days <= WINDOW_DAYS]
+    # Chain files whose dates are within WINDOW_DAYS of the *previous* file, not
+    # of the newest: a two-person fetch eight days after a quarterly run must
+    # join that run, not split it and report the first day's people as missing.
+    latest_files = [files[-1]]
+    for f in reversed(files[:-1]):
+        if (date.fromisoformat(latest_files[0].stem) - date.fromisoformat(f.stem)).days <= WINDOW_DAYS:
+            latest_files.insert(0, f)
+        else:
+            break
     older = [f for f in files if f not in latest_files]
     latest: dict[str, dict] = {}
     for f in latest_files:                      # ascending, so later files win
@@ -204,6 +214,9 @@ def main(argv=None) -> None:
                 doms.add(top)
         home_domains[did] = doms
 
+    held = {pid: (p.get("google_scholar_id") or "").strip() for pid, p in people.items()}
+    gs_latest = [r for r in gs_latest
+                 if held.get(r["person_id"]) and held[r["person_id"]] == (json.loads(r["raw_json"] or "{}").get("scholar_id") or held[r["person_id"]])]
     for r in gs_latest:
         pid = r["person_id"]
         aff = current.get(pid)
