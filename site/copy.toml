@@ -205,7 +205,8 @@ sources_openalex = """<strong>OpenAlex</strong> covers the remaining {fallback_c
      could find. Those figures are marked <span class="pill pill-oa">OpenAlex</span> everywhere they
      appear. OpenAlex is journal-centric and normally reports fewer citations than Scholar for the
      same person, so those numbers are very likely undercounts and are not comparable to the Scholar
-     ones. We do not adjust or scale them; we label them.
+     ones. We do not adjust or scale them; we label them. Where OpenAlex has split one person
+     across several author records, we add the records together.
      Last refreshed {openalex_date}."""
 sources_invitation = """Anyone shown with an OpenAlex figure can move to the Scholar series by
      <a href="{scholar_help}">creating a Scholar profile</a>. We re-check for new profiles each

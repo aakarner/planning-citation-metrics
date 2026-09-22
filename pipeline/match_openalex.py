@@ -196,6 +196,12 @@ def is_stub(c: dict) -> bool:
     return (c.get("works_count") or 0) <= STUB_WORKS and (c.get("cited_by_count") or 0) < STUB_CITES
 
 
+def primary_id(accepted: list[dict]) -> str:
+    """Of a person's accepted records, the one with the most works (ties: most cited)."""
+    best = max(accepted, key=lambda c: ((c.get("works_count") or 0), (c.get("cited_by_count") or 0)))
+    return best["external_id"]
+
+
 def decide(scored: list[dict]) -> str:
     """'accepted' for a clear winner, else 'pending'.
 
@@ -319,9 +325,14 @@ def main(argv=None) -> None:
             prior = decided.get((person["person_id"], s["external_id"]))
             if prior:
                 row.update({k: prior[k] for k in ("status", "reviewed_by", "reviewed_at")})
-                if prior["status"] == "accepted":
-                    person["openalex_author_id"] = s["external_id"]
             review_rows.append(row)
+        # Several rows may be accepted for one person (OpenAlex splits authors; the
+        # collector adds the records together). The roster carries one primary id:
+        # the accepted record with the most works, which the site links to.
+        accepted_here = [s for s in scored
+                         if (decided.get((person["person_id"], s["external_id"])) or {}).get("status") == "accepted"]
+        if accepted_here:
+            person["openalex_author_id"] = primary_id(accepted_here)
         if status == "none":
             # 'none', not 'pending': the search returned no candidate, so there is
             # nothing for a reviewer to decide. Writing these as pending padded the

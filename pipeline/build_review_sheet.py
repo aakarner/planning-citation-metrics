@@ -9,11 +9,11 @@ or Perish: a hand-built number from February 2026 that nothing refreshes.
 Confirming a match moves them onto the monthly OpenAlex series, so this is the
 subset where a decision actually changes what the site shows.
 
-Candidates within a person are ordered by works then citations, because the usual
-question is not "is this them" but "which of these records is the main one".
-OpenAlex routinely splits one author across several records, and that is exactly
-what holds these rows back: the matcher will not auto-accept a winner that a
-substantive sibling record sits close behind.
+Candidates within a person are ordered by works then citations. OpenAlex
+routinely splits one author across several records, and that is exactly what
+holds these rows back: the matcher will not auto-accept a winner that a
+substantive sibling record sits close behind. The reviewer accepts every
+record that is the person; the collector adds them together.
 
 Bands put the quick decisions first. Run audit_matches beforehand so the
 namesakes the numbers already rule out never reach the sheet.
@@ -186,15 +186,17 @@ def write_sheet(path: Path, groups) -> tuple[int, int]:
          "OpenAlex record that may be theirs. Confirming one moves them onto the monthly series.", False),
         ("", False),
         ("What to do", True),
-        ("Put 'accepted' or 'rejected' in the Decision column. Accept at most one record per "
-         "person: the one that is their main OpenAlex record. Leave a row blank to decide later. "
-         "Put your name in 'Reviewed by' if you like; Notes is free text and is kept.", False),
+        ("Put 'accepted' or 'rejected' in the Decision column. Accept EVERY record that is this "
+         "person, and reject the ones that are not. OpenAlex often splits one author across several "
+         "records, and we add a person's records together, so the question is only 'is this them?', "
+         "never 'which one is the main one?'. Leave a row blank to decide later. Put your name in "
+         "'Reviewed by' if you like; Notes is free text and is kept.", False),
         ("", False),
         ("Why most of these are here", True),
-        ("OpenAlex often splits one author across several records. The matcher will not accept a "
-         "winner while a substantive sibling record scores close behind, so these wait for a person "
-         "to say which is the main one. That is why the rows are ordered by Works: the fullest "
-         "record is usually the right one, and 'best match' marks the matcher's pick.", False),
+        ("OpenAlex often splits one author across several records. The matcher will not accept on "
+         "its own while a substantive sibling record scores close behind, so these wait for a person "
+         "to say which records are theirs. Rows are ordered by Works, fullest first; 'best match' "
+         "marks the matcher's pick, which is almost always one of theirs.", False),
         ("", False),
         ("Columns", True),
         ("Our figure / Source  the citation count the site shows now, and where it came from", False),

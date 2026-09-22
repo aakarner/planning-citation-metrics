@@ -6,7 +6,9 @@
 Rows with a Decision of 'accepted' or 'rejected' update the matching
 (person_id, external_id) row in data/review/identity_candidates.csv, with
 reviewed_by and reviewed_at. Blank decisions are left pending. Nothing else
-in the CSV changes.
+in the CSV changes. A person may have several accepted records; the collector
+adds them together, and the record with the most works becomes the roster's
+primary id.
 """
 
 from __future__ import annotations
@@ -64,16 +66,12 @@ def main(argv=None) -> None:
             applied += 1
             if d["status"] == "accepted":
                 accepted_people.add(r["person_id"])
-    # Two accepted candidates for one person is a mistake worth stopping on.
-    per_person = {}
-    for r in rows:
-        if r["source"] == args.source and r["status"] == "accepted":
-            per_person.setdefault(r["person_id"], []).append(r["external_id"])
-    dupes = {p: e for p, e in per_person.items() if len(e) > 1}
-    if dupes:
-        sys.exit(f"more than one accepted candidate for: {dupes}; fix the sheet and re-run")
+    # Several accepted records for one person are expected: OpenAlex splits
+    # authors, and the collector adds a person's records together.
+    multi = sum(1 for p in {r["person_id"] for r in rows if r["source"] == args.source and r["status"] == "accepted"}
+                if sum(1 for r in rows if r["person_id"] == p and r["source"] == args.source and r["status"] == "accepted") > 1)
     write_csv(path, REVIEW_FIELDS, rows)
-    print(f"applied {applied} decisions ({len(accepted_people)} people accepted); "
+    print(f"applied {applied} decisions ({len(accepted_people)} people accepted, {multi} with more than one record); "
           f"now run: python -m pipeline.match_openalex --rescore")
 
 

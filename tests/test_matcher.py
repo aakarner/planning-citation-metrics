@@ -43,3 +43,12 @@ def test_decide_ignores_stub_runner_ups_but_not_real_ones():
 def test_decide_requires_institution_match():
     top = {"score": 0.80, "name_sim": 1.0, "inst_match": 0.0, "works_count": 40, "cited_by_count": 500}
     assert decide([top]) == "pending"
+
+
+def test_the_primary_id_is_the_accepted_record_with_the_most_works():
+    from pipeline.match_openalex import primary_id
+    acc = [{"external_id": "small", "works_count": 2, "cited_by_count": 900},
+           {"external_id": "big", "works_count": 40, "cited_by_count": 100},
+           {"external_id": "mid", "works_count": 40, "cited_by_count": 50}]
+    assert primary_id(acc) == "big"                       # most works; ties broken by citations
+    assert primary_id([{"external_id": "only", "works_count": None, "cited_by_count": None}]) == "only"

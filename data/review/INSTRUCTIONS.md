@@ -26,16 +26,19 @@ read that tab before starting each one.
 ## 1. `openalex_review.xlsx` — which OpenAlex record is theirs?
 
 **72 people, 206 rows.** Each person has several candidate OpenAlex author
-records; most are either namesakes or fragments of the same person. Your job
-is to say which one is the person's *main* record.
+records; most are either namesakes or fragments of the same person. OpenAlex
+often splits one author across several records, and we add a person's
+records together — so the question is only *is this record them?*, never
+*which one is the main one?*
 
 For each person:
 
 1. Click the **OpenAlex** link on each of their rows and compare it with what
    we know: their name, program ("Department"), and our citation figure
    ("Our figure").
-2. Mark **at most one** row `accepted` — the record that is clearly this
-   person and holds most of their work. Mark the rest `rejected`.
+2. Mark **every** row that is this person `accepted`, and every row that is
+   someone else `rejected`. Two or three accepted rows for one person is
+   normal.
 3. If none of the candidates is them, reject them all.
 4. `Suggested = best match` is the computer's guess — check it, don't trust it.
 

@@ -193,6 +193,15 @@ on every push that touches `data/`, `sql/`, or `pipeline/`:
 
 <https://aakarner.github.io/planning-citation-metrics/>
 
+## Split OpenAlex records
+
+OpenAlex often splits one author across several records. A person's records are every id
+accepted for them in the review queue plus the one on the roster row; the collector fetches each
+(free by-id lookups), sums citations, works and i10, and takes the largest h-index, a lower bound
+that is exact when the extra records are the usual one- and two-work fragments. The record with the
+most works is the primary: the roster row and the site link to it. Reviewers therefore accept every
+record that is the person rather than choosing one.
+
 ## Audit OpenAlex matches
 
 ```bash
