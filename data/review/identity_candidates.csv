@@ -3681,7 +3681,7 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 815,Patricia Lambert,University of Oregon,google_scholar,9VmIf-oAAAAJ,Patricia M Lambert,0.5,1.0,0.0,,24.407,,3661,,Utah State University,,rejected,matcher,2026-09-20,
 823,Gerardo Sandoval,University of Oregon,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-20,
 825,Yizhao Yang,University of Oregon,google_scholar,GFGufBUAAAAJ,Zhifang Wang,0.375,0.6,0.0,,2.539,,4190,,Peking University,,rejected,matcher,2026-09-20,
-839,Sarah Lopez,University of Pennsylvania,google_scholar,cqVkZbwAAAAJ,Sarah Lopez,0.65,1.0,0.0,,1.003,,371,,Unknown affiliation,,pending,,,
+839,Sarah Lopez,University of Pennsylvania,google_scholar,cqVkZbwAAAAJ,Sarah Lopez,0.65,1.0,0.0,,1.003,,371,,Unknown affiliation,,pending,,,"Held 2026-09-22: verified email is @jagmail.southalabama.edu, a student domain; checking the paper list before accepting."
 846,Rafael Odlum,University of Puerto Rico,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-20,
 847,Criseida Navarro-Diaz,University of Puerto Rico,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-20,
 848,Maritza Orta,University of Puerto Rico,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-20,
@@ -3691,13 +3691,13 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 862,Florence Paulhiac,University of Quebec in Montreal,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-20,
 864,François Racine,University of Quebec in Montreal,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-20,
 866,Michel Rochefort,University of Quebec in Montreal,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-20,
-870,Robert Patrick,University of Saskatchewan,google_scholar,tR_BwTAAAAAJ,Robert H. Patrick,0.65,1.0,0.0,,0.969,,2038,,"Professor Emeritus, Finance and Economics, Rutgers University",,pending,,,
-871,Ryan Walker,University of Saskatchewan,google_scholar,CPJfx04AAAAJ,Ryan J Walker,0.65,1.0,0.0,,1.682,,1051,,JPMorgan Chase,,pending,,,
+870,Robert Patrick,University of Saskatchewan,google_scholar,tR_BwTAAAAAJ,Robert H. Patrick,0.65,1.0,0.0,,0.969,,2038,,"Professor Emeritus, Finance and Economics, Rutgers University",,rejected,Alex Karner,2026-09-22,"Rutgers finance emeritus; a namesake. Note his 2,038 citations against our PoP 2,103 -- the PoP figure likely includes this person's papers."
+871,Ryan Walker,University of Saskatchewan,google_scholar,CPJfx04AAAAJ,Ryan J Walker,0.65,1.0,0.0,,1.682,,1051,,JPMorgan Chase,,rejected,Alex Karner,2026-09-22,A JPMorgan Chase banker; a namesake.
 871,Ryan Walker,University of Saskatchewan,google_scholar,u_AdYjMAAAAJ,Ryan G. Walker,0.575,1.0,0.0,,2.014,,1259,,"Post Doc, University of Cincinnati; co-founder of Elevian, Inc.",,rejected,matcher,2026-09-20,
 871,Ryan Walker,University of Saskatchewan,google_scholar,ajgxr9QAAAAJ,Ryan W Walker,0.5,1.0,0.0,,7.531,,4707,,"Associate Professor, Environmental Medicine, Mount Sinai",,rejected,matcher,2026-09-20,
 878,Yuseung Kim,University of Southern Maine,google_scholar,Okd804MAAAAJ,Yu Seung Kim,0.46,0.92,0.0,,226.574,,29228,,Los Alamos National Laboratory,,rejected,matcher,2026-09-20,
 879,Jianling Li,"University of Texas, Arlington",google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-20,
-882,Ariadna Reyes-Sanchez,"University of Texas, Arlington",google_scholar,lS3zIxsAAAAJ,Ariadna Reyes,0.65,0.6,1.0,,19.692,,256,,University of Texas at Arlington,,pending,,,
+882,Ariadna Reyes-Sanchez,"University of Texas, Arlington",google_scholar,lS3zIxsAAAAJ,Ariadna Reyes,0.65,0.6,1.0,,19.692,,256,,University of Texas at Arlington,,accepted,Alex Karner,2026-09-22,"Ariadna Reyes at UT Arlington: her profile, second surname dropped. Alex Karner."
 890,Michael Oden,"University of Texas, Austin",google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-20,
 893,Bjorn Sletto,"University of Texas, Austin",google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-20,
 899,Bhuiyan Alam,University of Toledo,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-20,

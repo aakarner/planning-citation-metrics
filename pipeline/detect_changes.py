@@ -10,6 +10,10 @@ Flags, per person:
   * headline citation count fell more than 20% since the previous snapshot of
     the same source (almost always a wrong or merged profile, not a real drop);
   * profile fetched last time but missing from the latest run;
+  * a Publish or Perish figure that a rejected Scholar namesake's count nearly
+    equals: Tom's lookup probably swept in that person's papers, so the figure
+    we publish is largely someone else's (Robert Patrick: PoP 2,103 against a
+    Rutgers economist's 2,038);
   * rank review: assistant or associate for RANK_REVIEW_YEARS or more, so a
     promotion may have been missed. Promotions are only applied when the
     profile text states a rank, and many profiles never do (Geoff Boeing's
@@ -35,7 +39,7 @@ from datetime import date
 from pathlib import Path
 from urllib.parse import urlparse
 
-from . import BUILD_DIR, ROSTER_DIR, SNAPSHOT_DIR
+from . import BUILD_DIR, REPO_ROOT, ROSTER_DIR, SNAPSHOT_DIR
 from .find_scholar_profiles import affiliation_match
 from .openalex import short_id
 
@@ -62,6 +66,23 @@ def registrable(host: str | None) -> str | None:
 
 
 WINDOW_DAYS = 7
+POP_NAMESAKE_TOL = 0.10   # a rejected namesake within this of the PoP figure taints it
+
+
+def pop_tainted_by(pop_cites, rejected_counts) -> int | None:
+    """The rejected Scholar namesake's count that nearly equals our PoP figure, if any.
+
+    Publish or Perish counts Scholar citations for a name; when a namesake's
+    own profile total lands within POP_NAMESAKE_TOL of it, the PoP lookup most
+    likely counted that person's papers, and the figure is not ours to publish
+    with a straight face.
+    """
+    if not pop_cites or pop_cites < 25:
+        return None
+    for c in rejected_counts:
+        if c and abs(c - pop_cites) / pop_cites <= POP_NAMESAKE_TOL:
+            return c
+    return None
 RANK_REVIEW_YEARS = 7            # this long as assistant or associate: check for a promotion
 PHD_PROXY_RANKS = ("assistant",)  # where years since the PhD stands in for an unknown rank start
 
@@ -252,6 +273,28 @@ def main(argv=None) -> None:
         con.close()
     except sqlite3.Error:
         pass
+
+    # ---- PoP figures a rejected namesake's count nearly equals ---------------
+    review_csv = REPO_ROOT / "data" / "review" / "identity_candidates.csv"
+    if review_csv.exists():
+        rejected: dict[str, list[int]] = defaultdict(list)
+        with review_csv.open(newline="", encoding="utf-8") as f:
+            for r in csv.DictReader(f):
+                if r["source"] == "google_scholar" and r["status"] == "rejected" and (r.get("cited_by_count") or "").strip():
+                    rejected[r["person_id"]].append(int(float(r["cited_by_count"])))
+        pop_by = {}
+        try:
+            con = sqlite3.connect(BUILD_DIR / "citations.sqlite")
+            pop_by = {str(pid): c for pid, c in con.execute(
+                "SELECT person_id, total_citations FROM v_headline_metrics WHERE source='pop'")}
+            con.close()
+        except sqlite3.Error:
+            pass
+        for pid, counts in rejected.items():
+            hit = pop_tainted_by(pop_by.get(pid), counts)
+            if hit is not None:
+                flags[pid].append(f"Publish or Perish figure {pop_by[pid]:,} nearly equals a rejected Scholar namesake's "
+                                  f"{hit:,}; the PoP lookup probably counted that person's papers")
 
     # ---- rank review: promotions the profile text never announced ----------
     today = date.today()

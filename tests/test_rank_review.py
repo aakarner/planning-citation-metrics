@@ -63,3 +63,12 @@ def test_a_recent_verification_silences_the_flag_and_an_old_one_does_not():
     assert verified_on(src) == date(2026, 9, 17)          # the latest note wins
     assert verified_on("workbook-2026") is None
     assert verified_on(None) is None
+
+
+def test_a_pop_figure_matching_a_rejected_namesake_is_flagged():
+    from pipeline.detect_changes import pop_tainted_by
+    assert pop_tainted_by(2103, [2038]) == 2038            # Robert Patrick: within 3.1%
+    assert pop_tainted_by(2103, [1051, 6]) is None          # namesakes far off
+    assert pop_tainted_by(370, [371]) == 371                # would flag -- which is why an accepted match is not passed in
+    assert pop_tainted_by(13, [256]) is None                # tiny base: not judged
+    assert pop_tainted_by(None, [100]) is None
