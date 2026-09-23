@@ -200,6 +200,12 @@ details.fold summary{cursor:pointer;padding:11px 0;font-weight:600;list-style:no
 details.fold summary::before{content:"\\25B8";display:inline-block;width:16px;color:var(--muted)}details.fold[open] summary::before{content:"\\25BE"}
 details.fold[open]{padding-bottom:12px}
 @media(max-width:720px){.cols2{grid-template-columns:1fr}ul.plain.two{columns:1}}
+
+/* footer donate line: quiet, one small button */
+footer p.donate{margin-top:14px;padding-top:12px;border-top:1px solid var(--rule-soft)}
+.btn{display:inline-block;margin-left:6px;padding:4px 11px;border-radius:999px;border:1px solid var(--accent);
+  color:var(--accent);font:600 12.5px/1.4 "Source Sans 3",sans-serif;text-decoration:none;vertical-align:baseline}
+.btn:hover{background:var(--accent);color:var(--bg)}
 """
 
 SEARCH_JS = """

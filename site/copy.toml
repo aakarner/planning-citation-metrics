@@ -32,6 +32,12 @@ footer_about = """Citation metrics for urban planning faculty in the United Stat
        dataset Tom Sanchez maintained from 2017 to 2026.
        <a href="{methods_href}">How these numbers are produced</a> &middot;
        <a href="{repo}">Source and data on GitHub</a>"""
+# Donations. Leave donate_url empty and the button does not appear at all. Put the
+# link to wherever money should go (GitHub Sponsors, Ko-fi, a PayPal.me page) and
+# it shows in the footer of every page. Values for donate_text: none.
+donate_url = ""
+donate_text = """This site costs about $100 a year to run. If it is useful to you, you can chip in."""
+donate_button = "Chip in"
 footer_corrections = """Counts come from public profile pages and change constantly; treat them as approximate.
        This site is in beta. Spotted something wrong, or want your entry changed or removed?
        Email <a href="mailto:{contact}?subject=Planning%20Citation%20Metrics">{contact}</a>

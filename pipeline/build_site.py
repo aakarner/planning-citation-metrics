@@ -166,6 +166,15 @@ def pct_row(label, value) -> str:
 
 # ----------------------------------------------------------------- template
 
+def donate_block() -> str:
+    """The footer's donate line, or nothing at all while no destination is set."""
+    url = (COPY["site"].get("donate_url") or "").strip()
+    if not url:
+        return ""
+    return (f'    <p class="donate">{t("site", "donate_text")} '
+            f'<a class="btn" href="{e(url)}" rel="noopener">{t("site", "donate_button")}</a></p>\n')
+
+
 def page(title, body, base, active="", description="", extra_js=()) -> str:
     nav = [(t("site", "nav_rankings"), "rankings.html"),
            (t("site", "nav_departments"), "departments.html"),
@@ -202,7 +211,7 @@ def page(title, body, base, active="", description="", extra_js=()) -> str:
   <div class="bar-in">
     <p>{t("site", "footer_about", methods_href=f"{base}methods.html", repo=REPO, contact=CONTACT)}</p>
     <p>{t("site", "footer_corrections", methods_href=f"{base}methods.html", repo=REPO, contact=CONTACT)}</p>
-  </div>
+{donate_block()}  </div>
 </footer>
 {scripts}
 </body>
