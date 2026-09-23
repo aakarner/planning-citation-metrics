@@ -98,6 +98,38 @@ def save_people(fields: list[str], rows: list[dict]) -> None:
         w.writerows(rows)
 
 
+def all_snapshot_rows() -> list[dict]:
+    rows = []
+    for f in sorted((SNAPSHOT_DIR / "google_scholar").glob("*.csv")):
+        with f.open(newline="", encoding="utf-8") as fh:
+            rows.extend(csv.DictReader(fh))
+    return rows
+
+
+def ids_missing_readings(people: list[dict], snapshot_rows: list[dict]) -> set[str]:
+    """Roster Scholar ids with no snapshot row behind them.
+
+    A row counts for an id if its raw_json names that id, or names none: the
+    migrated 2026 rows and one early collection day stored no id, and those
+    people are not missing anything. A person whose id changed -- a namesake's
+    cleared, the real profile found -- has rows for the old id only, so the new
+    one is fetched. This is what turns a discovery find into a figure.
+    """
+    seen: dict[str, set] = {}
+    for r in snapshot_rows:
+        try:
+            sid = json.loads(r.get("raw_json") or "{}").get("scholar_id")
+        except ValueError:
+            sid = None
+        seen.setdefault(r["person_id"], set()).add(sid)
+    out = set()
+    for p in people:
+        gid = (p.get("google_scholar_id") or "").strip()
+        if gid and not ({gid, None} & seen.get(p["person_id"], set())):
+            out.add(gid)
+    return out
+
+
 def already_done(path: Path, window_days: int = 7) -> set[str]:
     """People collected in this file or in any Scholar snapshot within the last
     window_days. A run that spans several days (rate limits, budgets) should
@@ -173,6 +205,9 @@ def main(argv=None) -> None:
     ap.add_argument("--ids", metavar="ID,ID,...", default="",
                     help="only these Scholar ids; comma-separated, and written as --ids=... "
                          "because a Scholar id can start with '-'")
+    ap.add_argument("--missing", action="store_true",
+                    help="only people whose roster id has never been fetched: a profile discovery "
+                         "accepted, or one set by hand. Cheap, and what the daily wrapper runs")
     ap.add_argument("--via", choices=["serpapi", "scholarly"],
                     default="serpapi" if os.environ.get("SERPAPI_KEY") else "scholarly")
     args = ap.parse_args(argv)
@@ -198,6 +233,12 @@ def main(argv=None) -> None:
     fields, everyone = load_people()
     people = [p for p in everyone if p["google_scholar_id"]]
     wanted = {x.strip() for x in args.ids.split(",") if x.strip()}
+    if args.missing:
+        wanted |= ids_missing_readings(people, all_snapshot_rows())
+        if not wanted:
+            print("every roster id has a reading; nothing to fetch")
+            return
+        print(f"{len(wanted)} roster id(s) with no reading yet")
     if wanted:
         people = [p for p in people if p["google_scholar_id"] in wanted]
         missing = wanted - {p["google_scholar_id"] for p in people}

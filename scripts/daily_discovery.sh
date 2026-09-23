@@ -98,8 +98,22 @@ printf '%s\n' "$OUT" >> "$LOG"
 SUMMARY="$(printf '%s' "$OUT" | grep -E "^summary:" | head -1)"
 say "finished. ${SUMMARY:-no summary line; see above}"
 
-if ! git diff --quiet -- data/roster/person.csv data/review/identity_candidates.csv; then
-  git add data/roster/person.csv data/review/identity_candidates.csv
+# A found profile is only an id until its figures are fetched; without this the
+# person stays on their Publish or Perish number until the quarterly collection
+# while the homepage announces the find. One SerpApi request per new profile.
+# Skips, and says so, when no key is configured, so cancelling the subscription
+# later just defers the figures to the quarterly run.
+if grep -qiE '^SERPAPI(_API)?_KEY=.+' "$REPO/.env" 2>/dev/null; then
+  FETCH="$("$PY" -m pipeline.collect_scholar --missing 2>&1)"
+  printf '%s\n' "$FETCH" >> "$LOG"
+  say "fetched figures for newly found profiles: $(printf '%s' "$FETCH" | grep -E '^done:' | head -1 || echo 'nothing to fetch')"
+else
+  say "no SerpApi key in .env; figures for new profiles will arrive with the quarterly collection"
+fi
+
+if ! git diff --quiet -- data/roster/person.csv data/review/identity_candidates.csv data/snapshots/google_scholar \
+   || [ -n "$(git ls-files --others --exclude-standard data/snapshots/google_scholar)" ]; then
+  git add data/roster/person.csv data/review/identity_candidates.csv data/snapshots/google_scholar
   git commit -q -m "Scholar profile discovery, $(date '+%Y-%m-%d') (automated daily batch)" \
     >> "$LOG" 2>&1 && say "committed"
   if git push --quiet origin main >> "$LOG" 2>&1; then
