@@ -234,3 +234,6 @@ build/site/
 
 # local dev-server config for the desktop app preview pane
 .claude/launch.json
+
+# Excel lock files, left beside any open workbook
+~$*.xlsx
