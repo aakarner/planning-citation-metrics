@@ -112,17 +112,24 @@ caveats_body = """Citation counts measure attention, not quality, and they diffe
 [person]
 # One page per faculty member. Values: source, scholar_help, collected_at, rank_label,
 #                                      methods_href, name, rank, department
+# fallback_note_openalex / fallback_note_pop: shown under the figures when the headline
+# is not from Google Scholar; the site picks the one matching the source.
 meta_description = "Citation metrics for {name}, {rank_label} at {department}."
 eyebrow = "Faculty"
 citations_label = "citations"
 h_index_label = "h-index"
 as_of = "As of {collected_at}."
-fallback_note = """This person has no Google Scholar profile we know of, so the
-       figures above come from <strong>{source}</strong>. OpenAlex indexes fewer books,
+fallback_note_openalex = """This person has no Google Scholar profile we know of, so the
+       figures above come from <strong>OpenAlex</strong>. OpenAlex indexes fewer books,
        reports and other non-journal work than Scholar does, so this is very likely an
        undercount next to the Scholar numbers shown elsewhere on this site.
        <a href="{scholar_help}">Creating a Scholar profile</a> takes a few minutes and
        fixes it at the next update."""
+fallback_note_pop = """This person has no Google Scholar profile we know of, and no OpenAlex record we
+       could match, so the figures above are the <strong>Publish or Perish</strong> lookup
+       from the original dataset, dated {collected_at}. Nothing refreshes that figure.
+       <a href="{scholar_help}">Creating a Scholar profile</a> takes a few minutes and
+       replaces it at the next update."""
 pct_citations_all = "Citations, all"
 pct_citations_rank = "Citations, {rank}s"
 pct_h_all = "h-index, all"
@@ -165,9 +172,10 @@ tile_scholar_share = "have a Scholar profile"
 faculty_heading = "Faculty"
 filter_rank = "Rank"
 shown = "shown"
-fallback_footnote = """Rows marked
-     <span class="pill pill-oa">OpenAlex</span> have no Google Scholar profile, so their figures
-     come from OpenAlex and are likely undercounts. See <a href="{methods_href}">Methods</a>."""
+fallback_footnote = """Rows marked <span class="pill pill-oa">OpenAlex</span> or
+     <span class="pill pill-oa">PoP</span> have no Google Scholar profile, so their figures come
+     from OpenAlex or from the original Publish or Perish lookup, and are likely undercounts.
+     See <a href="{methods_href}">Methods</a>."""
 
 [rankings]
 # Values: people_count
@@ -175,9 +183,9 @@ meta_description = "Urban planning faculty ranked by total citations, sortable a
 eyebrow = "Rankings"
 heading = "Faculty by total citations"
 browser_title = "Faculty rankings"
-lede = """Click any column to re-sort. Rows marked <span class="pill pill-oa">OA</span>
-     use OpenAlex figures because the person has no Google Scholar profile; those are likely
-     undercounts."""
+lede = """Click any column to re-sort. Rows marked <span class="pill pill-oa">OA</span> or
+     <span class="pill pill-oa">PoP</span> have no Google Scholar profile, so their figures come
+     from OpenAlex or from the original Publish or Perish lookup; those are likely undercounts."""
 filter_rank = "Rank"
 filter_country = "Country"
 shown = "shown"

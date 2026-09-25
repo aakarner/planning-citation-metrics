@@ -58,3 +58,11 @@ def test_every_passage_in_the_file_is_reachable_with_the_values_it_documents():
         for key, template in entries.items():
             names = set(re.findall(r"\{(\w+)\}", template))
             t(section, key, **{n: "x" for n in names})
+
+
+def test_a_publish_or_perish_page_does_not_talk_about_openalex():
+    from pipeline.build_site import fallback_note
+    pop = fallback_note("pop", scholar_help="x", collected_at="2026-02-20")
+    oa = fallback_note("openalex", scholar_help="x", collected_at="2026-09-19")
+    assert "OpenAlex indexes" not in pop and "Publish or Perish" in pop and "2026-02-20" in pop
+    assert "OpenAlex" in oa and "Publish or Perish" not in oa

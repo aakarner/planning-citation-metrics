@@ -47,6 +47,10 @@ from . import BUILD_DIR, ROSTER_DIR
 from .match_openalex import REVIEW_DIR, REVIEW_FIELDS, read_csv, write_csv
 
 MAX_RATIO = 3.0     # OpenAlex claiming >3x Scholar is a bigger namesake
+SETTLE_NAME = 0.95      # a pending candidate this close on name, at the right institution...
+SETTLE_RATIO = 1.5      # ...and at most this many times our own figure, is the person
+SIBLING_SUM_RATIO = 1.2 # a further record for someone already matched may not push the OpenAlex sum past this
+FRAGMENT_WORKS = 3      # a record this small settles on name and institution alone
 MIN_RATIO = 0.05    # OpenAlex claiming <5% of Scholar is an empty or wrong record
 MIN_BASE = 25       # below this the ratio is noise, so don't judge
 
@@ -64,6 +68,31 @@ def implausible(oa_cites, base_cites, *, high_only: bool = False) -> float | Non
     if ratio > MAX_RATIO or (not high_only and ratio < MIN_RATIO):
         return ratio
     return None
+
+
+def settles(name_sim, inst_match, oa_cites, works, base_cites, accepted_cites=0) -> bool:
+    """Accept a pending candidate without a reviewer?
+
+    Name and institution must both match. A fragment (FRAGMENT_WORKS or fewer)
+    then settles on that alone. Anything larger needs our own figure to compare
+    against, and the test is stricter than the audit's un-accept threshold
+    because accepting adds a stranger's citations while un-accepting only
+    removes a figure. For a person with no record yet, the candidate must be at
+    most SETTLE_RATIO times our figure; for a person who already has one, the
+    summed OpenAlex total must stay under SIBLING_SUM_RATIO times it, since
+    OpenAlex normally lands below Scholar and a sum well above it means two
+    people. Jenny Liu's two same-campus records (135 and 5,394, no base) and
+    Robert Brown's 16,190-citation namesake beside his 9,517 both stay pending.
+    """
+    if (name_sim or 0) < SETTLE_NAME or (inst_match or 0) < 1.0:
+        return False
+    if (works or 0) <= FRAGMENT_WORKS:
+        return True
+    if not base_cites or base_cites < MIN_BASE or oa_cites is None:
+        return False
+    if accepted_cites:
+        return (accepted_cites + oa_cites) / base_cites <= SIBLING_SUM_RATIO
+    return oa_cites / base_cites <= SETTLE_RATIO
 
 
 def base_counts(con) -> dict[str, tuple[str, int]]:
@@ -142,6 +171,34 @@ def main(argv=None) -> None:
             print(f"  {r['display_name'][:26]:26} <- {(r['candidate_name'] or '-')[:26]:26} "
                   f"ours {base_cites:>7,} ({base_source})  openalex {int(oa):>7,}  {ratio:>7.1f}x")
 
+    # ---- pending candidates the evidence already settles --------------------
+    # Name and institution both match and the numbers do not object: the person.
+    # OpenAlex splits authors, so several such rows for one person are all theirs.
+    accepted_now: dict[int, str] = {}
+    newly_matched: dict[str, list[dict]] = {}
+    have: dict[str, float] = {}                     # OpenAlex citations already accepted per person
+    for r in review:
+        if r["source"] == "openalex" and r["status"] == "accepted" and r["cited_by_count"] not in (None, ""):
+            have[str(r["person_id"])] = have.get(str(r["person_id"]), 0.0) + float(r["cited_by_count"])
+    for r in review:
+        if r["source"] != "openalex" or r["status"] != "pending" or not r["external_id"] or id(r) in flagged:
+            continue
+        b = base.get(str(r["person_id"]))
+        try:
+            oa = float(r["cited_by_count"]) if r["cited_by_count"] not in (None, "") else None
+            works = float(r["works_count"]) if r["works_count"] not in (None, "") else None
+            ns, im = float(r["name_sim"] or 0), float(r["inst_match"] or 0)
+        except (TypeError, ValueError):
+            continue
+        if settles(ns, im, oa, works, b[1] if b else None, have.get(str(r["person_id"]), 0.0)):
+            if oa is not None:
+                have[str(r["person_id"])] = have.get(str(r["person_id"]), 0.0) + oa   # later siblings see the running sum
+            accepted_now[id(r)] = (f"accepted {today}: name and institution match, "
+                                   + (f"{int(oa):,} against {b[1]:,} from {b[0]}" if b and oa is not None else f"{int(works or 0)}-work fragment"))
+            newly_matched.setdefault(str(r["person_id"]), []).append(r)
+    if accepted_now:
+        print(f"\n{len(accepted_now)} pending candidates settled as the person, across {len(newly_matched)} people")
+
     settled = sorted(name for pid, rs in per_person.items()
                      if rs and all(id(r) in flagged for r in rs)
                      for name in [rs[0]["display_name"]])
@@ -153,7 +210,7 @@ def main(argv=None) -> None:
     if args.dry_run:
         print("\n(dry run, nothing written)")
         return
-    if not bad and not flagged:
+    if not bad and not flagged and not accepted_now:
         return
 
     if bad:
@@ -169,8 +226,22 @@ def main(argv=None) -> None:
         write_csv(ppath, pfields, people)
         print(f"cleared {len(bad)} ids from {ppath}")
 
+    if accepted_now:
+        # a newly matched person with no roster id gets the accepted record with the most works
+        ppath = ROSTER_DIR / "person.csv"
+        pfields, people = read_csv(ppath)
+        for p in people:
+            rs = newly_matched.get(p["person_id"])
+            if rs and not (p.get("openalex_author_id") or "").strip():
+                best = max(rs, key=lambda r: (float(r["works_count"] or 0), float(r["cited_by_count"] or 0)))
+                p["openalex_author_id"] = best["external_id"]
+        write_csv(ppath, pfields, people)
     for r in review:
         if r["source"] != "openalex":
+            continue
+        if id(r) in accepted_now:
+            r["status"], r["reviewed_by"], r["reviewed_at"] = "accepted", "audit_matches", today
+            r["notes"] = " ".join(filter(None, [r.get("notes"), accepted_now[id(r)]]))
             continue
         if r["person_id"] in bad and r["status"] == "accepted":
             r["status"], r["reviewed_by"], r["reviewed_at"] = "rejected", "audit_matches", today
@@ -179,7 +250,7 @@ def main(argv=None) -> None:
             r["status"], r["reviewed_by"], r["reviewed_at"] = "rejected", "audit_matches", today
             r["notes"] = " ".join(filter(None, [r.get("notes"), flagged[id(r)]]))
     write_csv(rpath, REVIEW_FIELDS, review)
-    print(f"rejected {len(bad) + len(flagged)} review rows in {rpath}")
+    print(f"rejected {len(bad) + len(flagged)} and accepted {len(accepted_now)} review rows in {rpath}")
 
 
 if __name__ == "__main__":

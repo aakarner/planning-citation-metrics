@@ -73,6 +73,15 @@ RANK_LABEL = {"assistant": "Assistant Professor", "associate": "Associate Profes
               "full": "Professor", "other": "Faculty"}
 SOURCE_LABEL = {"google_scholar": "Google Scholar", "openalex": "OpenAlex",
                 "pop": "Publish or Perish", "manual": "entered by hand"}
+PILL_LABEL = {"openalex": "OpenAlex", "pop": "PoP", "manual": "manual"}     # on a fallback row
+PILL_SHORT = {"openalex": "OA", "pop": "PoP", "manual": "manual"}           # in the dense rankings table
+
+
+def fallback_note(source: str, **values) -> str:
+    """The wording under a non-Scholar figure, by source. A Publish or Perish
+    page used to describe OpenAlex, which it had nothing to do with."""
+    key = "fallback_note_pop" if source == "pop" else "fallback_note_openalex"
+    return t("person", key, **values)
 REPO = "https://github.com/aakarner/planning-citation-metrics"
 CONTACT = "planning-citations@austin.utexas.edu"
 CONTACT_NAME = "Alex Karner"
@@ -260,7 +269,7 @@ def person_page(p, slugs, dslug, oa, series, base) -> str:
     note = ""
     if fallback:
         note = ('<div class="note"><p>'
-                + t("person", "fallback_note", source=e(src), scholar_help=SCHOLAR_HELP)
+                + fallback_note(p["source"], scholar_help=SCHOLAR_HELP, collected_at=e(p["collected_at"] or ""))
                 + '</p></div>')
 
     head = [(d, v) for d, v in sorted(series.get(p["person_id"], {}).get(p["source"], []))]
@@ -351,7 +360,7 @@ def person_page(p, slugs, dslug, oa, series, base) -> str:
 def department_page(d, roster, slugs, base) -> str:
     rows = []
     for p in roster:
-        pill = ' <span class="pill pill-oa">OpenAlex</span>' if p["is_fallback"] else ""
+        pill = f' <span class="pill pill-oa">{PILL_LABEL.get(p["source"], e(p["source"]))}</span>' if p["is_fallback"] else ""
         rows.append(f"""<tr data-rank="{e(p['rank'])}">
   <td class="name"><a href="{base}person/{slugs[id(p)]}.html">{e(p['display_name'])}</a>{pill}</td>
   <td>{RANK_LABEL.get(p['rank'], p['rank'])}</td>
@@ -591,7 +600,7 @@ def rankings_page(data, slugs, base) -> str:
     people = sorted(data["people"], key=lambda p: -(p["total_citations"] or 0))
     rows = []
     for i, p in enumerate(people, 1):
-        pill = ' <span class="pill pill-oa">OA</span>' if p["is_fallback"] else ""
+        pill = f' <span class="pill pill-oa">{PILL_SHORT.get(p["source"], e(p["source"]))}</span>' if p["is_fallback"] else ""
         rows.append(f"""<tr data-rank="{e(p['rank'])}" data-country="{e(p['country'])}">
   <td class="rank">{i}</td>
   <td class="name"><a href="{base}person/{slugs[id(p)]}.html">{e(p['display_name'])}</a>{pill}</td>
