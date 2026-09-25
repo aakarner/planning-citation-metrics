@@ -70,29 +70,38 @@ def implausible(oa_cites, base_cites, *, high_only: bool = False) -> float | Non
     return None
 
 
-def settles(name_sim, inst_match, oa_cites, works, base_cites, accepted_cites=0) -> bool:
+def settles(name_sim, inst_match, oa_cites, works, base_cites, accepted_cites=0, has_record=False) -> bool:
     """Accept a pending candidate without a reviewer?
 
-    Name and institution must both match. A fragment (FRAGMENT_WORKS or fewer)
-    then settles on that alone. Anything larger needs our own figure to compare
-    against, and the test is stricter than the audit's un-accept threshold
-    because accepting adds a stranger's citations while un-accepting only
-    removes a figure. For a person with no record yet, the candidate must be at
-    most SETTLE_RATIO times our figure; for a person who already has one, the
-    summed OpenAlex total must stay under SIBLING_SUM_RATIO times it, since
-    OpenAlex normally lands below Scholar and a sum well above it means two
-    people. Jenny Liu's two same-campus records (135 and 5,394, no base) and
-    Robert Brown's 16,190-citation namesake beside his 9,517 both stay pending.
+    Name and institution must both match. Then:
+
+    * For a person who already has an accepted record (`has_record`), a
+      fragment of FRAGMENT_WORKS or fewer is theirs on the match alone, and a
+      larger record is theirs if the summed OpenAlex total stays under
+      SIBLING_SUM_RATIO times our own figure -- OpenAlex normally lands below
+      Scholar, and a sum well above it means two people.
+    * For a person with no record yet, nothing settles without our own figure
+      to compare against, and the candidate must be between MIN_RATIO and
+      SETTLE_RATIO times it. The low bound matters as much as the high one: a
+      fragment accepted as someone's *only* record becomes their whole OpenAlex
+      figure, and for a Publish or Perish person it becomes their headline --
+      Edmund Merem's 736 turned into 1 the day fragments were allowed to settle
+      alone.
+
+    Accepting deserves a stricter test than un-accepting: accepting adds a
+    stranger's citations, un-accepting only removes a figure.
     """
     if (name_sim or 0) < SETTLE_NAME or (inst_match or 0) < 1.0:
         return False
-    if (works or 0) <= FRAGMENT_WORKS:
-        return True
+    if has_record:
+        if (works or 0) <= FRAGMENT_WORKS:
+            return True
+        if not base_cites or base_cites < MIN_BASE or oa_cites is None:
+            return False
+        return (accepted_cites + oa_cites) / base_cites <= SIBLING_SUM_RATIO
     if not base_cites or base_cites < MIN_BASE or oa_cites is None:
         return False
-    if accepted_cites:
-        return (accepted_cites + oa_cites) / base_cites <= SIBLING_SUM_RATIO
-    return oa_cites / base_cites <= SETTLE_RATIO
+    return MIN_RATIO <= oa_cites / base_cites <= SETTLE_RATIO
 
 
 def base_counts(con) -> dict[str, tuple[str, int]]:
@@ -178,8 +187,8 @@ def main(argv=None) -> None:
     newly_matched: dict[str, list[dict]] = {}
     have: dict[str, float] = {}                     # OpenAlex citations already accepted per person
     for r in review:
-        if r["source"] == "openalex" and r["status"] == "accepted" and r["cited_by_count"] not in (None, ""):
-            have[str(r["person_id"])] = have.get(str(r["person_id"]), 0.0) + float(r["cited_by_count"])
+        if r["source"] == "openalex" and r["status"] == "accepted" and r["external_id"]:
+            have[str(r["person_id"])] = have.get(str(r["person_id"]), 0.0) + float(r["cited_by_count"] or 0)
     for r in review:
         if r["source"] != "openalex" or r["status"] != "pending" or not r["external_id"] or id(r) in flagged:
             continue
@@ -190,7 +199,8 @@ def main(argv=None) -> None:
             ns, im = float(r["name_sim"] or 0), float(r["inst_match"] or 0)
         except (TypeError, ValueError):
             continue
-        if settles(ns, im, oa, works, b[1] if b else None, have.get(str(r["person_id"]), 0.0)):
+        if settles(ns, im, oa, works, b[1] if b else None, have.get(str(r["person_id"]), 0.0),
+                   has_record=str(r["person_id"]) in have):
             if oa is not None:
                 have[str(r["person_id"])] = have.get(str(r["person_id"]), 0.0) + oa   # later siblings see the running sum
             accepted_now[id(r)] = (f"accepted {today}: name and institution match, "

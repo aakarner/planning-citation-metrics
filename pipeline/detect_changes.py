@@ -287,6 +287,25 @@ def main(argv=None) -> None:
     except sqlite3.Error:
         pass
 
+    # ---- summed OpenAlex records that exceed the person's own figure ----------
+    # Several accepted records are added together. OpenAlex normally lands below
+    # Scholar, so a sum above it is the signature of a namesake among them.
+    try:
+        con = sqlite3.connect(BUILD_DIR / "citations.sqlite")
+        for pid, name, oa, raw, src, base_c in con.execute("""
+            SELECT o.person_id, p.display_name, o.total_citations, m.raw_json, b.source, b.total_citations
+            FROM v_openalex_metrics o JOIN person p USING(person_id)
+            JOIN metric_snapshot m ON m.snapshot_id = o.snapshot_id
+            JOIN v_latest_metrics b ON b.person_id = o.person_id AND b.source IN ('google_scholar','pop')
+            WHERE m.raw_json LIKE '%"records"%' AND b.total_citations >= 25 AND o.total_citations > b.total_citations"""):
+            recs = json.loads(raw).get("records") or []
+            parts = ", ".join(f"{(x.get('cited_by_count') or 0):,}" for x in recs)
+            flags[str(pid)].append(f"{len(recs)} OpenAlex records summed to {oa:,}, above the {src} figure of {base_c:,}: "
+                                   f"one may be a namesake ({parts})")
+        con.close()
+    except sqlite3.Error:
+        pass
+
     # ---- PoP figures a rejected namesake's count nearly equals ---------------
     review_csv = REPO_ROOT / "data" / "review" / "identity_candidates.csv"
     if review_csv.exists():
