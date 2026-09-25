@@ -20,6 +20,14 @@ def test_the_collection_window_merges_a_run_spread_over_days():
     assert collection_window([]) is None
 
 
+def test_targeted_fetches_a_week_later_join_the_run_instead_of_splitting_it():
+    # The homepage showed zero promotions once fetches on the 22nd and 23rd made
+    # the 14th and 15th fall more than seven days behind the newest file.
+    dates = ["2026-03-01", "2026-09-14", "2026-09-15", "2026-09-16", "2026-09-22", "2026-09-23"]
+    assert collection_window(dates) == "2026-09-14"
+    assert collection_window(["2026-03-01", "2026-06-10", "2026-09-14"]) == "2026-09-14"   # a real gap still separates runs
+
+
 def test_a_move_a_promotion_and_a_departure_are_told_apart():
     affs = [
         aff(1, "a", 1, "assistant", end="2026-09-15"), aff(2, "a", 2, "assistant", start="2026-09-15"),   # move

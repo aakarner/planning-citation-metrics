@@ -418,12 +418,24 @@ def longdate(iso: str) -> str:
 
 
 def collection_window(dates: list[str]) -> str | None:
-    """First day of the latest collection run: the earliest of the dates
-    within WINDOW_DAYS of the newest. Changes dated from here are 'new'."""
+    """First day of the latest collection run.
+
+    Files chain into a run when each is within WINDOW_DAYS of the one before
+    it -- not of the newest. A two-person fetch a week after a quarterly run
+    belongs to that run; anchoring on the newest file split it, and the
+    homepage reported zero promotions the moment a targeted fetch landed.
+    Quarterly runs are ninety days apart, so a chain never bridges two.
+    """
     if not dates:
         return None
-    newest = date.fromisoformat(dates[-1])
-    return min(d for d in dates if (newest - date.fromisoformat(d)).days <= WINDOW_DAYS)
+    dates = sorted(dates)
+    start = dates[-1]
+    for d in reversed(dates[:-1]):
+        if (date.fromisoformat(start) - date.fromisoformat(d)).days <= WINDOW_DAYS:
+            start = d
+        else:
+            break
+    return start
 
 
 def recent_changes(affs: list[dict], since: str | None) -> dict:
