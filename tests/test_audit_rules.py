@@ -95,21 +95,22 @@ def test_un_accepting_a_match_also_drops_the_orcid_copied_from_it():
     assert 'p["openalex_author_id"] = None' in block and 'p["orcid"] = None' in block
 
 
-def test_a_first_record_needs_a_base_and_a_ratio_inside_both_bounds():
+def test_a_first_record_needs_a_base_and_only_a_high_bound():
     from pipeline.audit_matches import settles
     assert settles(1.0, 1.0, 54, 8, 78)                    # Andrew Jacobs: 0.7x PoP 78
     assert settles(1.0, 1.0, 110, 30, 78)                  # 1.4x: within the accept bound
     assert not settles(1.0, 1.0, 160, 30, 78)              # 2x our figure: too high to accept unseen
-    assert not settles(1.0, 1.0, 1, 2, 736)                # Edmund Merem's fragment must not become his only record
-    assert not settles(1.0, 1.0, 2, 1, None)               # no base: nothing settles, fragment or not
-    assert not settles(1.0, 1.0, 5394, 228, None)          # Jenny Liu's gerontologist
+    assert settles(1.0, 1.0, 4, 3, 93)                     # John Shapiro's 4 citations at Pratt: his, and his figure
+    assert settles(1.0, 1.0, 1, 2, 736)                    # a fragment settles on the match alone
+    assert settles(1.0, 1.0, 2, 1, None)                   # even without a base
+    assert not settles(1.0, 1.0, 5394, 228, None)          # Jenny Liu's gerontologist: large, no base
+    assert not settles(1.0, 1.0, 135, 38, None)            # her real record waits too; a person decides
     assert not settles(0.9, 1.0, 54, 8, 78)                # name too far
     assert not settles(1.0, 0.5, 54, 8, 78)                # institution not matched
 
 
 def test_a_sibling_fragment_settles_and_a_large_sibling_is_judged_on_the_sum():
     from pipeline.audit_matches import settles
-    assert settles(1.0, 1.0, 0, 1, 736, accepted_cites=700, has_record=True)          # fragment beside a real record
-    assert settles(1.0, 1.0, 5, 2, None, accepted_cites=700, has_record=True)         # even with no base
+    assert settles(1.0, 1.0, 0, 1, 736, accepted_cites=700, has_record=True)
     assert not settles(1.0, 1.0, 16190, 932, 11093, accepted_cites=9517, has_record=True)   # Robert Brown's namesake
     assert settles(1.0, 1.0, 900, 40, 11093, accepted_cites=9517, has_record=True)

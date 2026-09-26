@@ -7,8 +7,11 @@ The matcher decides from names, institutions and topics, before any OpenAlex
 metrics exist. Once a snapshot is in, a much blunter test is available: an
 author's OpenAlex citation count should be in the same world as the Scholar or
 Publish or Perish count we already hold for them. OpenAlex is journal-centric
-and normally lands near 0.7 of Scholar, so anything beyond MAX_RATIO or below
-MIN_RATIO is a different person with the same name.
+and normally lands near 0.7 of Scholar, so anything beyond MAX_RATIO is a
+different person with the same name. Too few citations proves nothing: a real
+record can be tiny, and since 2026-09-26 a small OpenAlex record is simply the
+person's figure -- Publish or Perish is a deprecated source, and a Scholar
+profile is the way to a larger number.
 
 Offenders lose their openalex_author_id in person.csv and their review row is
 marked 'rejected' with the evidence, so the matcher will not pick the same
@@ -51,7 +54,7 @@ SETTLE_NAME = 0.95      # a pending candidate this close on name, at the right i
 SETTLE_RATIO = 1.5      # ...and at most this many times our own figure, is the person
 SIBLING_SUM_RATIO = 1.2 # a further record for someone already matched may not push the OpenAlex sum past this
 FRAGMENT_WORKS = 3      # a record this small settles on name and institution alone
-MIN_RATIO = 0.05    # OpenAlex claiming <5% of Scholar is an empty or wrong record
+MIN_RATIO = 0.05    # kept for implausible()'s two-sided mode; policy no longer un-accepts on the low side
 MIN_BASE = 25       # below this the ratio is noise, so don't judge
 
 
@@ -73,35 +76,29 @@ def implausible(oa_cites, base_cites, *, high_only: bool = False) -> float | Non
 def settles(name_sim, inst_match, oa_cites, works, base_cites, accepted_cites=0, has_record=False) -> bool:
     """Accept a pending candidate without a reviewer?
 
-    Name and institution must both match. Then:
+    Name and institution decide identity. Size can disprove it in one direction
+    only: far more citations than our own figure means a namesake, far fewer
+    means nothing -- a real record can be tiny, and policy (2026-09-26) is
+    that a small OpenAlex record is the person's figure and a Scholar profile
+    is the way to a larger one. So:
 
-    * For a person who already has an accepted record (`has_record`), a
-      fragment of FRAGMENT_WORKS or fewer is theirs on the match alone, and a
-      larger record is theirs if the summed OpenAlex total stays under
-      SIBLING_SUM_RATIO times our own figure -- OpenAlex normally lands below
-      Scholar, and a sum well above it means two people.
-    * For a person with no record yet, nothing settles without our own figure
-      to compare against, and the candidate must be between MIN_RATIO and
-      SETTLE_RATIO times it. The low bound matters as much as the high one: a
-      fragment accepted as someone's *only* record becomes their whole OpenAlex
-      figure, and for a Publish or Perish person it becomes their headline --
-      Edmund Merem's 736 turned into 1 the day fragments were allowed to settle
-      alone.
-
-    Accepting deserves a stricter test than un-accepting: accepting adds a
-    stranger's citations, un-accepting only removes a figure.
+    * A fragment (FRAGMENT_WORKS or fewer) settles on the match alone.
+    * A larger record needs our own figure to compare against. For a person
+      with no record yet it must be at most SETTLE_RATIO times it; for someone
+      already matched, the summed OpenAlex total must stay under
+      SIBLING_SUM_RATIO times it, since a sum well above Scholar means two
+      people. Jenny Liu's two same-campus records (no base) and Robert Brown's
+      16,190-citation namesake beside his 9,517 both stay with a reviewer.
     """
     if (name_sim or 0) < SETTLE_NAME or (inst_match or 0) < 1.0:
         return False
-    if has_record:
-        if (works or 0) <= FRAGMENT_WORKS:
-            return True
-        if not base_cites or base_cites < MIN_BASE or oa_cites is None:
-            return False
-        return (accepted_cites + oa_cites) / base_cites <= SIBLING_SUM_RATIO
+    if (works or 0) <= FRAGMENT_WORKS:
+        return True
     if not base_cites or base_cites < MIN_BASE or oa_cites is None:
         return False
-    return MIN_RATIO <= oa_cites / base_cites <= SETTLE_RATIO
+    if has_record:
+        return (accepted_cites + oa_cites) / base_cites <= SIBLING_SUM_RATIO
+    return oa_cites / base_cites <= SETTLE_RATIO
 
 
 def base_counts(con) -> dict[str, tuple[str, int]]:
@@ -145,7 +142,7 @@ def main(argv=None) -> None:
             continue
         base_source, base_cites = b
         oa = r["oa_cites"]
-        ratio = implausible(oa, base_cites)
+        ratio = implausible(oa, base_cites, high_only=True)   # too few citations never proves a wrong record
         if ratio is not None:
             bad[str(r["person_id"])] = (
                 f"un-accepted {date.today().isoformat()}: OpenAlex {oa:,} citations against "
