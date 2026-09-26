@@ -76,3 +76,13 @@ def test_the_decision_cells_offer_a_dropdown(tmp_path):
     dvs = ws.data_validations.dataValidation
     assert len(dvs) == 1
     assert "accepted" in dvs[0].formula1 and "rejected" in dvs[0].formula1
+
+
+def test_band_e_rows_write_like_any_other(tmp_path):
+    from pipeline.build_review_sheet import BANDS
+    assert "E" in BANDS and "ALREADY" in BANDS["E"]
+    ws = _build(tmp_path, [("E", {**PERSON, "base_source": "openalex", "base_cites": 4},
+                             [cand(1.0, 0.0, external_id="S2", cited_by_count=30, works_count=2)])])["Review"]
+    col = {c.value: i for i, c in enumerate(ws[1])}
+    row = list(ws.iter_rows(min_row=2, values_only=True))[0]
+    assert row[col["Band"]] == "E" and row[col["Source"]] == "openalex" and row[col["Ratio"]] == 7.5

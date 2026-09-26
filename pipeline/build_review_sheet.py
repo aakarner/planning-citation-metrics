@@ -44,6 +44,9 @@ BANDS = {
     "B": "Institution matches, the name differs a little. Check the name is a form of theirs.",
     "C": "Name matches, the institution does not say our program. Check it is the right person.",
     "D": "Weaker on both. These need the most thought.",
+    "E": ("This person ALREADY has an accepted record, and 'Our figure' is that record's OpenAlex total. "
+          "These are other records with the same name. Accept any that are also them (an earlier post, a "
+          "name variant, a stray paper) and their citations are added; reject the rest."),
 }
 HEAD_FILL = PatternFill("solid", fgColor="1F3864")
 BAND_FILL = PatternFill("solid", fgColor="DCE6F1")
@@ -74,17 +77,20 @@ def band_of(best: dict) -> str:
 def load(db_path: Path, scope: str):
     con = sqlite3.connect(db_path)
     con.row_factory = sqlite3.Row
-    people = {str(r["person_id"]): r for r in con.execute("""
+    everyone = {str(r["person_id"]): r for r in con.execute("""
         SELECT h.person_id, p.display_name, d.short_name AS dept, h.source AS base_source,
-               h.total_citations AS base_cites
+               h.total_citations AS base_cites, p.openalex_author_id AS oa_id, p.google_scholar_id AS gs_id
         FROM v_headline_metrics h
         JOIN person p ON p.person_id = h.person_id
         JOIN v_current_affiliation ca ON ca.person_id = h.person_id
-        JOIN department d ON d.department_id = ca.department_id
-        WHERE p.openalex_author_id IS NULL OR p.openalex_author_id = ''""")}
+        JOIN department d ON d.department_id = ca.department_id""")}
     con.close()
+    people = {k: v for k, v in everyone.items() if not (v["oa_id"] or "").strip()}
     if scope == "pop-fallback":
         people = {k: v for k, v in people.items() if v["base_source"] == "pop"}
+    # already matched, published on OpenAlex (no Scholar profile): candidates for band E
+    matched = {k: v for k, v in everyone.items()
+               if (v["oa_id"] or "").strip() and not (v["gs_id"] or "").strip() and v["base_source"] == "openalex"}
 
     rows = [r for r in csv.DictReader((REVIEW_DIR / "identity_candidates.csv").open())
             if r["source"] == "openalex"]
@@ -96,13 +102,24 @@ def load(db_path: Path, scope: str):
     for pid, person in people.items():
         rs = by.get(pid, [])
         if any(r["status"] == "accepted" for r in rs):
-            continue                            # already settled
+            continue                            # already settled; see band E below
         pending = [r for r in rs if r["status"] == "pending" and (r["external_id"] or "").strip()]
         if not pending:
             continue                            # nothing to decide
         best = max(pending, key=lambda r: num(r["score"]) or 0)
         pending.sort(key=lambda r: (-(num(r["works_count"]) or 0), -(num(r["cited_by_count"]) or 0)))
         out.append((band_of(best), person, pending))
+    # Band E: people already matched whose published figure IS their OpenAlex sum
+    # (no Scholar profile), with same-name records still pending that carry
+    # citations. Every one a reviewer accepts raises a published number.
+    for pid, person in matched.items():
+        rs = by.get(pid, [])
+        extra = [r for r in rs if r["status"] == "pending" and (r["external_id"] or "").strip()
+                 and (num(r["name_sim"]) or 0) >= 0.95 and (num(r["cited_by_count"]) or 0) > 0]
+        if not extra:
+            continue
+        extra.sort(key=lambda r: (-(num(r["works_count"]) or 0), -(num(r["cited_by_count"]) or 0)))
+        out.append(("E", person, extra))
     out.sort(key=lambda t: (t[0], t[1]["display_name"]))
     return out
 
@@ -181,9 +198,11 @@ def write_sheet(path: Path, groups) -> tuple[int, int]:
     doc = wb.create_sheet("How to use this")
     lines = [
         ("What this is", True),
-        (f"{len(groups)} faculty whose published citation figure still comes from Publish or Perish, "
-         "a hand-built number from February 2026 that nothing refreshes. Each has at least one "
-         "OpenAlex record that may be theirs. Confirming one moves them onto the monthly series.", False),
+        (f"{len(groups)} faculty. Bands A-D: their published figure still comes from Publish or Perish, a "
+         "hand-built number from February 2026 that nothing refreshes; each has at least one OpenAlex "
+         "record that may be theirs, and confirming one moves them onto the monthly series. Band E: "
+         "already on OpenAlex, with further same-name records that may also be theirs; each one you "
+         "accept is added to their published figure.", False),
         ("", False),
         ("What to do", True),
         ("Put 'accepted' or 'rejected' in the Decision column. Accept EVERY record that is this "

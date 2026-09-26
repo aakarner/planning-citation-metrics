@@ -25,7 +25,7 @@ read that tab before starting each one.
 
 ## 1. `openalex_review.xlsx` — which OpenAlex record is theirs?
 
-**34 people, 74 rows.** Each person has several candidate OpenAlex author
+**124 people, 252 rows.** Each person has several candidate OpenAlex author
 records; most are either namesakes or fragments of the same person. OpenAlex
 often splits one author across several records, and we add a person's
 records together — so the question is only *is this record them?*, never
@@ -41,6 +41,12 @@ For each person:
    normal.
 3. If none of the candidates is them, reject them all.
 4. `Suggested = best match` is the computer's guess — check it, don't trust it.
+
+**Band E** is different: that person *already* has an accepted record, and
+"Our figure" is its OpenAlex total. The rows are other records with the same
+name. Accept any that are also them — an earlier job, a name variant, a stray
+paper — and their citations are added to the person's figure; reject the
+rest. Most are strangers; the ones that are theirs are usually small.
 
 Things that help: **Inst = 1** means the record's institution matches their
 program. **Ratio** is the candidate's citations divided by ours; OpenAlex
