@@ -5,9 +5,11 @@
     python -m pipeline.import_review data/review/openalex_review.xlsx
 
 The default scope is the people whose published figure still comes from Publish
-or Perish: a hand-built number from February 2026 that nothing refreshes.
-Confirming a match moves them onto the monthly OpenAlex series, so this is the
-subset where a decision actually changes what the site shows.
+or Perish -- a hand-built number from February 2026 that nothing refreshes --
+plus anyone with no figure at all, who does not appear on the site until a
+record is matched. Confirming a match puts or moves them onto the monthly
+OpenAlex series, so this is the subset where a decision actually changes what
+the site shows.
 
 Candidates within a person are ordered by works then citations. OpenAlex
 routinely splits one author across several records, and that is exactly what
@@ -77,17 +79,20 @@ def band_of(best: dict) -> str:
 def load(db_path: Path, scope: str):
     con = sqlite3.connect(db_path)
     con.row_factory = sqlite3.Row
+    # LEFT JOIN on the headline: a person with no figure at all -- a new hire
+    # nobody has matched yet -- is invisible on the site, and is the row a
+    # reviewer most needs to see. base_source 'none' for them.
     everyone = {str(r["person_id"]): r for r in con.execute("""
-        SELECT h.person_id, p.display_name, d.short_name AS dept, h.source AS base_source,
+        SELECT p.person_id, p.display_name, d.short_name AS dept, COALESCE(h.source, 'none') AS base_source,
                h.total_citations AS base_cites, p.openalex_author_id AS oa_id, p.google_scholar_id AS gs_id
-        FROM v_headline_metrics h
-        JOIN person p ON p.person_id = h.person_id
-        JOIN v_current_affiliation ca ON ca.person_id = h.person_id
-        JOIN department d ON d.department_id = ca.department_id""")}
+        FROM person p
+        JOIN v_current_affiliation ca ON ca.person_id = p.person_id
+        JOIN department d ON d.department_id = ca.department_id
+        LEFT JOIN v_headline_metrics h ON h.person_id = p.person_id""")}
     con.close()
     people = {k: v for k, v in everyone.items() if not (v["oa_id"] or "").strip()}
     if scope == "pop-fallback":
-        people = {k: v for k, v in people.items() if v["base_source"] == "pop"}
+        people = {k: v for k, v in people.items() if v["base_source"] in ("pop", "none")}
     # already matched, published on OpenAlex (no Scholar profile): candidates for band E
     matched = {k: v for k, v in everyone.items()
                if (v["oa_id"] or "").strip() and not (v["gs_id"] or "").strip() and v["base_source"] == "openalex"}

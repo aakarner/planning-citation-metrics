@@ -3462,17 +3462,17 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 373,Rui Li,State University of New York at Albany,openalex,A5100758993,Rui Li,0.65,1.0,0.0,1.0,2.909,188,4238,38,Sun Yat-sen University,https://orcid.org/0000-0003-2101-3209,pending,,,
 373,Rui Li,State University of New York at Albany,openalex,A5100758991,Rui Li,0.636,1.0,0.0,0.906,2.66,234,3875,32,Shihezi University,https://orcid.org/0000-0003-1097-6683,pending,,,
 373,Rui Li,State University of New York at Albany,openalex,A5100448362,Rui Li,0.596,1.0,0.0,0.64,2.933,206,4274,34,Shanxi Medical University,https://orcid.org/0000-0001-7698-6927,pending,,,
-373,Rui Li,State University of New York at Albany,openalex,A5100448575,Rui Li,0.585,1.0,0.0,0.903,9.091,546,13246,58,Qingdao University of Science and Technology,https://orcid.org/0000-0002-9736-6468,pending,,,
+373,Rui Li,State University of New York at Albany,openalex,A5100448575,Rui Li,0.585,1.0,0.0,0.903,9.091,546,13246,58,Qingdao University of Science and Technology,https://orcid.org/0000-0002-9736-6468,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 13,246 citations against 1,457 from google_scholar (9.1x); probable namesake"
 579,Aaron Flores,Arizona State University,openalex,A5036410753,Aaron B. Flores,1.0,1.0,1.0,1.0,0.753,30,832,14,Arizona State University,https://orcid.org/0000-0003-0933-1386,accepted,matcher,2026-09-27,
-579,Aaron Flores,Arizona State University,openalex,A5126456116,Aaron Flores,0.825,1.0,1.0,0.5,0.0,2,0,0,Arizona State University,,pending,,,
+579,Aaron Flores,Arizona State University,openalex,A5126456116,Aaron Flores,0.825,1.0,1.0,0.5,0.0,2,0,0,Arizona State University,,accepted,audit_matches,2026-09-27,"accepted 2026-09-27: name and institution match, 0 against 1,105 from google_scholar"
 579,Aaron Flores,Arizona State University,openalex,A5011129537,Aaron M. Flores,0.6,1.0,0.0,1.0,0.002,1,2,1,San Jose State University,,pending,,,
 579,Aaron Flores,Arizona State University,openalex,A5136340999,Aaron Flores,0.6,1.0,0.0,1.0,0.0,1,0,0,,,pending,,,
 579,Aaron Flores,Arizona State University,openalex,A5079114525,Aarón Flores,0.6,1.0,0.0,1.0,0.0,1,0,0,,,pending,,,
 807,John Harris,University of Oklahoma,openalex,A5102363622,John Harris,0.95,1.0,1.0,1.0,2.882,45,683,14,University of Oklahoma,,accepted,matcher,2026-09-27,
 807,John Harris,University of Oklahoma,openalex,A5103531635,John Harris,0.652,1.0,0.0,0.682,1.295,25,307,8,,,pending,,,
-807,John Harris,University of Oklahoma,openalex,A5103218815,John L. Harris,0.6,1.0,0.0,1.0,12.291,102,2913,22,National Audubon Society,https://orcid.org/0000-0002-4641-1476,pending,,,
-807,John Harris,University of Oklahoma,openalex,A5080217688,John William Harris,0.596,1.0,0.0,0.973,85.903,717,20359,71,Wright State University,https://orcid.org/0000-0002-8535-3061,pending,,,
-807,John Harris,University of Oklahoma,openalex,A5110389275,John Harris,0.583,1.0,0.0,0.884,7.553,157,1790,19,Shell (Netherlands),,pending,,,
+807,John Harris,University of Oklahoma,openalex,A5103218815,John L. Harris,0.6,1.0,0.0,1.0,12.291,102,2913,22,National Audubon Society,https://orcid.org/0000-0002-4641-1476,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 2,913 citations against 237 from google_scholar (12.3x); probable namesake"
+807,John Harris,University of Oklahoma,openalex,A5080217688,John William Harris,0.596,1.0,0.0,0.973,85.903,717,20359,71,Wright State University,https://orcid.org/0000-0002-8535-3061,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 20,359 citations against 237 from google_scholar (85.9x); probable namesake"
+807,John Harris,University of Oklahoma,openalex,A5110389275,John Harris,0.583,1.0,0.0,0.884,7.553,157,1790,19,Shell (Netherlands),,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 1,790 citations against 237 from google_scholar (7.6x); probable namesake"
 1050,Ryan Miller,"Cal Poly, San Luis Obispo",openalex,A5101448666,Ryan Miller,0.895,1.0,1.0,0.632,,40,440,9,California Polytechnic State University,https://orcid.org/0009-0008-6437-5609,accepted,matcher,2026-09-27,
 1050,Ryan Miller,"Cal Poly, San Luis Obispo",openalex,A5052537589,Ryan A. Miller,0.65,1.0,0.0,1.0,,94,1116,18,University of North Carolina at Charlotte,https://orcid.org/0000-0002-1855-9887,pending,,,
 1050,Ryan Miller,"Cal Poly, San Luis Obispo",openalex,A5110840099,Ryan Miller,0.594,1.0,0.0,0.625,,10,306,6,,,pending,,,
@@ -3599,22 +3599,22 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 354,Gordon Douglas,San Jose State University,openalex,A5110668492,Douglas Gordon,0.657,1.0,0.0,0.714,1.166,135,1082,11,Gauteng Department of Agriculture and Rural Development,,pending,,,
 354,Gordon Douglas,San Jose State University,openalex,A5027732429,Gordon Douglas Bull,0.65,1.0,0.0,1.0,1.73,5,1605,4,James Cook University,,pending,,,
 372,David Lewis,State University of New York at Albany,openalex,A5101417889,David Lewis,0.65,1.0,0.0,1.0,2.293,50,1149,15,University of Exeter,https://orcid.org/0000-0002-8655-6178,pending,,,
-372,David Lewis,State University of New York at Albany,openalex,A5103087738,David Lewis,0.582,1.0,0.0,0.88,33.421,570,16744,54,London School of Economics and Political Science,https://orcid.org/0000-0003-0732-9020,pending,,,
-372,David Lewis,State University of New York at Albany,openalex,A5027104174,David Lewis,0.547,1.0,0.0,0.65,4.996,134,2503,19,Boys Town National Research Hospital,,pending,,,
-372,David Lewis,State University of New York at Albany,openalex,A5061902402,David Lewis,0.537,1.0,0.0,0.581,4.246,191,2127,19,University of Edinburgh,https://orcid.org/0000-0002-0253-5530,pending,,,
-372,David Lewis,State University of New York at Albany,openalex,A5109491703,David K. Lewis,0.524,1.0,0.0,0.491,24.329,165,12189,30,University of Pittsburgh,,pending,,,
+372,David Lewis,State University of New York at Albany,openalex,A5103087738,David Lewis,0.582,1.0,0.0,0.88,33.421,570,16744,54,London School of Economics and Political Science,https://orcid.org/0000-0003-0732-9020,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 16,744 citations against 501 from pop (33.4x); probable namesake"
+372,David Lewis,State University of New York at Albany,openalex,A5027104174,David Lewis,0.547,1.0,0.0,0.65,4.996,134,2503,19,Boys Town National Research Hospital,,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 2,503 citations against 501 from pop (5.0x); probable namesake"
+372,David Lewis,State University of New York at Albany,openalex,A5061902402,David Lewis,0.537,1.0,0.0,0.581,4.246,191,2127,19,University of Edinburgh,https://orcid.org/0000-0002-0253-5530,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 2,127 citations against 501 from pop (4.2x); probable namesake"
+372,David Lewis,State University of New York at Albany,openalex,A5109491703,David K. Lewis,0.524,1.0,0.0,0.491,24.329,165,12189,30,University of Pittsburgh,,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 12,189 citations against 501 from pop (24.3x); probable namesake"
 375,Jeffrey Doshna,Temple University,openalex,A5052260807,Jeffrey Peter Doshna,0.6,1.0,0.0,1.0,0.027,1,2,1,,,pending,,,
 380,Ivy Hu,Texas A&M University,openalex,A5028899129,Ivy Hu,0.51,1.0,0.0,0.4,0.001,2,2,1,Saint Agnes Medical Center,,pending,,,
-384,Wei Li,Texas A&M University,openalex,A5100342619,Wei Li,0.6,1.0,0.0,1.0,8.135,80,17678,45,Nanchong Central Hospital,https://orcid.org/0000-0001-7565-762X,pending,,,
-384,Wei Li,Texas A&M University,openalex,A5079956770,Wei Li,0.544,1.0,0.0,0.63,9.939,4349,21597,67,Nankai University,https://orcid.org/0000-0002-5277-6850,pending,,,
-384,Wei Li,Texas A&M University,openalex,A5100748681,Wen‐Wei Li,0.54,0.92,0.0,0.843,12.252,515,26623,84,University of Science and Technology of China,https://orcid.org/0000-0001-9280-0045,pending,,,
-384,Wei Li,Texas A&M University,openalex,A5052226698,Wei Li,0.54,1.0,0.0,0.602,5.908,381,12837,56,Wuhan University,https://orcid.org/0000-0002-0789-0320,pending,,,
-384,Wei Li,Texas A&M University,openalex,A5100318419,Wei Li,0.519,1.0,0.0,0.46,11.867,432,25787,76,Kunming University of Science and Technology,https://orcid.org/0000-0003-2802-7443,pending,,,
+384,Wei Li,Texas A&M University,openalex,A5100342619,Wei Li,0.6,1.0,0.0,1.0,8.135,80,17678,45,Nanchong Central Hospital,https://orcid.org/0000-0001-7565-762X,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 17,678 citations against 2,173 from google_scholar (8.1x); probable namesake"
+384,Wei Li,Texas A&M University,openalex,A5079956770,Wei Li,0.544,1.0,0.0,0.63,9.939,4349,21597,67,Nankai University,https://orcid.org/0000-0002-5277-6850,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 21,597 citations against 2,173 from google_scholar (9.9x); probable namesake"
+384,Wei Li,Texas A&M University,openalex,A5100748681,Wen‐Wei Li,0.54,0.92,0.0,0.843,12.252,515,26623,84,University of Science and Technology of China,https://orcid.org/0000-0001-9280-0045,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 26,623 citations against 2,173 from google_scholar (12.3x); probable namesake"
+384,Wei Li,Texas A&M University,openalex,A5052226698,Wei Li,0.54,1.0,0.0,0.602,5.908,381,12837,56,Wuhan University,https://orcid.org/0000-0002-0789-0320,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 12,837 citations against 2,173 from google_scholar (5.9x); probable namesake"
+384,Wei Li,Texas A&M University,openalex,A5100318419,Wei Li,0.519,1.0,0.0,0.46,11.867,432,25787,76,Kunming University of Science and Technology,https://orcid.org/0000-0003-2802-7443,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 25,787 citations against 2,173 from google_scholar (11.9x); probable namesake"
 391,Yang Song,Texas A&M University,openalex,A5101423078,Yang Song,0.566,1.0,0.0,0.437,2.996,152,3625,33,China Pharmaceutical University,https://orcid.org/0000-0002-4702-8962,pending,,,
 391,Yang Song,Texas A&M University,openalex,A5037430663,Yang Song,0.563,1.0,0.0,0.421,2.347,93,2840,25,Nanjing Xiaozhuang University,https://orcid.org/0000-0001-6787-0279,pending,,,
 391,Yang Song,Texas A&M University,openalex,A5115604106,Yang Song,0.546,1.0,0.0,0.306,2.299,69,2782,24,,https://orcid.org/0009-0002-4380-2065,pending,,,
 391,Yang Song,Texas A&M University,openalex,A5054014646,Yang Song,0.519,1.0,0.0,0.126,2.517,217,3046,29,Human Genome Sciences (United States),https://orcid.org/0000-0002-2454-8498,pending,,,
-391,Yang Song,Texas A&M University,openalex,A5046721150,Yang Song,0.507,1.0,0.0,0.378,12.521,525,15150,61,Hong Kong Polytechnic University,https://orcid.org/0000-0001-7716-9216,pending,,,
+391,Yang Song,Texas A&M University,openalex,A5046721150,Yang Song,0.507,1.0,0.0,0.378,12.521,525,15150,61,Hong Kong Polytechnic University,https://orcid.org/0000-0001-7716-9216,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 15,150 citations against 1,210 from google_scholar (12.5x); probable namesake"
 404,Bryna Sanger,The New School,openalex,A5005260414,Mary Bryna Sanger,0.919,0.869,1.0,0.85,0.381,25,450,8,Purdue University West Lafayette,,pending,,,
 408,Christopher DeSousa,Toronto Metropolitan University,openalex,,,0,,,,,,,,,,none,matcher,2026-09-27,
 409,Nemoy Lewis,Toronto Metropolitan University,openalex,A5140596687,Nemoy Lewis,0.6,1.0,0.0,1.0,0.0,1,0,0,Metropolitan University,,pending,,,
@@ -3626,11 +3626,11 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 418,Christine Wen,Toronto Metropolitan University,openalex,A5081544715,Christine Wen Leng Yau,0.591,1.0,0.0,0.273,0.875,11,112,5,,,pending,,,
 418,Christine Wen,Toronto Metropolitan University,openalex,A5068258585,Christine Wen Chan,0.56,1.0,0.0,0.4,0.07,3,9,1,,,pending,,,
 418,Christine Wen,Toronto Metropolitan University,openalex,A5055856196,Christine Wen Yu,0.55,1.0,0.0,0.0,1.211,4,155,3,BC Cancer Agency,,pending,,,
-451,Hun Kim,UC Irvine,openalex,A5100752482,Hun Kim,0.45,1.0,0.0,0.0,18.369,135,2939,29,Korea Research Institute of Chemical Technology,https://orcid.org/0000-0001-6727-4469,pending,,,
-451,Hun Kim,UC Irvine,openalex,A5082211784,Sae Hun Kim,0.443,0.9,0.0,0.251,35.325,179,5652,40,Korea University,https://orcid.org/0000-0002-0990-2268,pending,,,
-451,Hun Kim,UC Irvine,openalex,A5100387017,Tae‐Hun Kim,0.441,0.9,0.0,0.237,34.444,417,5511,40,Kyung Hee University,https://orcid.org/0000-0002-8448-3219,pending,,,
-451,Hun Kim,UC Irvine,openalex,A5100733146,Dong‐Hun Kim,0.438,0.807,0.0,0.5,25.825,185,4132,33,Pennsylvania State University,https://orcid.org/0000-0003-2136-8528,pending,,,
-451,Hun Kim,UC Irvine,openalex,A5100723856,Seong‐Hun Kim,0.433,0.849,0.0,0.34,38.769,316,6203,40,,https://orcid.org/0000-0002-5030-1894,pending,,,
+451,Hun Kim,UC Irvine,openalex,A5100752482,Hun Kim,0.45,1.0,0.0,0.0,18.369,135,2939,29,Korea Research Institute of Chemical Technology,https://orcid.org/0000-0001-6727-4469,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 2,939 citations against 160 from pop (18.4x); probable namesake"
+451,Hun Kim,UC Irvine,openalex,A5082211784,Sae Hun Kim,0.443,0.9,0.0,0.251,35.325,179,5652,40,Korea University,https://orcid.org/0000-0002-0990-2268,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 5,652 citations against 160 from pop (35.3x); probable namesake"
+451,Hun Kim,UC Irvine,openalex,A5100387017,Tae‐Hun Kim,0.441,0.9,0.0,0.237,34.444,417,5511,40,Kyung Hee University,https://orcid.org/0000-0002-8448-3219,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 5,511 citations against 160 from pop (34.4x); probable namesake"
+451,Hun Kim,UC Irvine,openalex,A5100733146,Dong‐Hun Kim,0.438,0.807,0.0,0.5,25.825,185,4132,33,Pennsylvania State University,https://orcid.org/0000-0003-2136-8528,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 4,132 citations against 160 from pop (25.8x); probable namesake"
+451,Hun Kim,UC Irvine,openalex,A5100723856,Seong‐Hun Kim,0.433,0.849,0.0,0.34,38.769,316,6203,40,,https://orcid.org/0000-0002-5030-1894,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 6,203 citations against 160 from pop (38.8x); probable namesake"
 453,Eli Knaap,UC Irvine,openalex,A5038943885,eli knaap,0.45,1.0,0.0,0.0,0.015,38,1,1,UC Irvine Health,,pending,,,
 455,William Lester,UC Irvine,openalex,A5068355127,T. William Lester,0.944,0.875,1.0,1.0,0.637,67,3178,21,"University of California, Irvine",https://orcid.org/0000-0003-2132-8665,pending,,,
 455,William Lester,UC Irvine,openalex,A5037034635,William Stewart Lester,0.6,1.0,0.0,1.0,0.001,2,5,1,,,pending,,,
@@ -3690,21 +3690,21 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 635,Kristin Larsen,University of Florida,openalex,A5067504938,Kristin A. Larsen,0.575,1.0,0.0,0.5,0.066,2,22,2,The University of Texas at San Antonio Health Science Center,,pending,,,
 635,Kristin Larsen,University of Florida,openalex,A5005868083,Kristin Tveitan Larsen,0.56,1.0,0.0,0.067,0.245,12,81,5,Oslo University Hospital,https://orcid.org/0000-0002-1310-8243,pending,,,
 635,Kristin Larsen,University of Florida,openalex,A5109289956,Kristin Larsen,0.55,1.0,0.0,0.0,0.846,7,280,5,,,pending,,,
-640,Yan Wang,University of Florida,openalex,A5115695483,Yan Wang,0.75,1.0,1.0,0.0,8.474,1101,20474,64,Jilin University,https://orcid.org/0000-0002-1743-6383,pending,,,
-640,Yan Wang,University of Florida,openalex,A5100322823,Yan Wang,0.75,1.0,1.0,0.0,6.222,228,15033,50,Guangdong Technion-Israel Institute of Technology,https://orcid.org/0000-0002-8648-2172,pending,,,
-640,Yan Wang,University of Florida,openalex,A5100322574,Yan Wang,0.75,1.0,1.0,0.0,5.175,743,12504,52,Shenyang Pharmaceutical University,https://orcid.org/0000-0001-9786-7492,pending,,,
-640,Yan Wang,University of Florida,openalex,A5100322552,Yan Wang,0.6,1.0,0.5,0.0,8.024,1170,19386,61,Georgia Institute of Technology,https://orcid.org/0000-0001-9324-4191,pending,,,
-640,Yan Wang,University of Florida,openalex,A5100322883,Yan Wang,0.586,1.0,0.0,0.905,4.966,383,11998,56,Shaoxing University,https://orcid.org/0000-0003-0899-7899,pending,,,
+640,Yan Wang,University of Florida,openalex,A5115695483,Yan Wang,0.75,1.0,1.0,0.0,8.474,1101,20474,64,Jilin University,https://orcid.org/0000-0002-1743-6383,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 20,474 citations against 2,416 from google_scholar (8.5x); probable namesake"
+640,Yan Wang,University of Florida,openalex,A5100322823,Yan Wang,0.75,1.0,1.0,0.0,6.222,228,15033,50,Guangdong Technion-Israel Institute of Technology,https://orcid.org/0000-0002-8648-2172,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 15,033 citations against 2,416 from google_scholar (6.2x); probable namesake"
+640,Yan Wang,University of Florida,openalex,A5100322574,Yan Wang,0.75,1.0,1.0,0.0,5.175,743,12504,52,Shenyang Pharmaceutical University,https://orcid.org/0000-0001-9786-7492,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 12,504 citations against 2,416 from google_scholar (5.2x); probable namesake"
+640,Yan Wang,University of Florida,openalex,A5100322552,Yan Wang,0.6,1.0,0.5,0.0,8.024,1170,19386,61,Georgia Institute of Technology,https://orcid.org/0000-0001-9324-4191,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 19,386 citations against 2,416 from google_scholar (8.0x); probable namesake"
+640,Yan Wang,University of Florida,openalex,A5100322883,Yan Wang,0.586,1.0,0.0,0.905,4.966,383,11998,56,Shaoxing University,https://orcid.org/0000-0003-0899-7899,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 11,998 citations against 2,416 from google_scholar (5.0x); probable namesake"
 642,Jack Crowley,University of Georgia,openalex,A5112327844,Jack Crowley,0.679,1.0,0.0,0.857,0.353,13,42,1,,,pending,,,
 642,Jack Crowley,University of Georgia,openalex,A5004094115,Jack Crowley,0.6,1.0,0.0,1.0,0.0,2,0,0,,,pending,,,
 642,Jack Crowley,University of Georgia,openalex,A5128505389,Jack Crowley,0.6,1.0,0.0,1.0,0.0,1,0,0,,,pending,,,
 642,Jack Crowley,University of Georgia,openalex,A5000285728,Jack C. Crowley,0.58,1.0,0.0,0.2,0.37,8,44,2,Cornell University,https://orcid.org/0000-0003-4220-8152,pending,,,
 642,Jack Crowley,University of Georgia,openalex,A5101281365,Jack L Crowley,0.55,1.0,0.0,0.0,0.176,1,21,1,Lake Erie College of Osteopathic Medicine,,pending,,,
 646,Alison Smith,University of Georgia,openalex,A5104097433,Alison Smith,0.61,1.0,0.0,0.4,1.255,3,128,2,University of Cambridge,,pending,,,
-646,Alison Smith,University of Georgia,openalex,A5042769136,Alison Smith,0.56,1.0,0.0,0.735,19.853,61,2025,20,University of Nottingham,https://orcid.org/0000-0003-4596-6653,pending,,,
-646,Alison Smith,University of Georgia,openalex,A5006660580,Alison F. Smith,0.548,1.0,0.0,0.652,8.569,22,874,8,Louisiana State University,https://orcid.org/0000-0002-2707-5286,pending,,,
-646,Alison Smith,University of Georgia,openalex,A5101690196,Alison Smith,0.54,1.0,0.0,0.6,10.873,43,1109,13,Mansfield University,https://orcid.org/0000-0002-4847-3195,pending,,,
-646,Alison Smith,University of Georgia,openalex,A5060234034,Alison Smith,0.539,1.0,0.0,0.594,17.01,71,1735,21,Royal Women's Hospital,https://orcid.org/0000-0003-3065-5377,pending,,,
+646,Alison Smith,University of Georgia,openalex,A5042769136,Alison Smith,0.56,1.0,0.0,0.735,19.853,61,2025,20,University of Nottingham,https://orcid.org/0000-0003-4596-6653,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 2,025 citations against 102 from pop (19.9x); probable namesake"
+646,Alison Smith,University of Georgia,openalex,A5006660580,Alison F. Smith,0.548,1.0,0.0,0.652,8.569,22,874,8,Louisiana State University,https://orcid.org/0000-0002-2707-5286,rejected,audit_matches,2026-09-27,rejected 2026-09-27: OpenAlex 874 citations against 102 from pop (8.6x); probable namesake
+646,Alison Smith,University of Georgia,openalex,A5101690196,Alison Smith,0.54,1.0,0.0,0.6,10.873,43,1109,13,Mansfield University,https://orcid.org/0000-0002-4847-3195,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 1,109 citations against 102 from pop (10.9x); probable namesake"
+646,Alison Smith,University of Georgia,openalex,A5060234034,Alison Smith,0.539,1.0,0.0,0.594,17.01,71,1735,21,Royal Women's Hospital,https://orcid.org/0000-0003-3065-5377,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 1,735 citations against 102 from pop (17.0x); probable namesake"
 647,Ashley Steffens,University of Georgia,openalex,A5028369118,Ashley Steffens,0.929,1.0,1.0,0.857,2.0,4,4,1,University of Georgia,,pending,,,
 647,Ashley Steffens,University of Georgia,openalex,A5071127114,Ashley Steffens,0.45,1.0,0.0,0.0,0.0,1,0,0,,,pending,,,
 649,Nicholas Brunet,University of Guelph,openalex,A5057268347,Nicholas Brunet-Filion,0.45,1.0,0.0,0.0,0.009,2,14,1,University of Ottawa,,pending,,,
@@ -3727,13 +3727,13 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 731,John Park,University of Maryland,openalex,A5046057771,John Park Roberts,0.6,1.0,0.0,0.667,2.429,6,255,4,University of North Carolina Wilmington,,pending,,,
 731,John Park,University of Maryland,openalex,A5130863216,John Park,0.6,1.0,0.0,0.333,0.476,1,50,1,Houston Methodist,,pending,,,
 731,John Park,University of Maryland,openalex,A5064242065,John Park,0.55,1.0,0.0,0.0,1.01,6,106,3,State University of New York,,pending,,,
-731,John Park,University of Maryland,openalex,A5079689480,John Chulhoon Park,0.521,1.0,0.0,0.471,4.352,10,457,8,Pohang University of Science and Technology,https://orcid.org/0000-0001-5705-2862,pending,,,
+731,John Park,University of Maryland,openalex,A5079689480,John Chulhoon Park,0.521,1.0,0.0,0.471,4.352,10,457,8,Pohang University of Science and Technology,https://orcid.org/0000-0001-5705-2862,rejected,audit_matches,2026-09-27,rejected 2026-09-27: OpenAlex 457 citations against 105 from pop (4.4x); probable namesake
 731,John Park,University of Maryland,openalex,A5082792915,John B. Park,0.521,1.0,0.0,0.143,2.819,25,296,5,Beth Israel Deaconess Medical Center,,pending,,,
-745,Michael Johnson,University of Massachusetts-Boston,openalex,A5037103180,Michael D. Johnson,0.6,1.0,0.5,0.0,141.778,303,16588,64,Georgetown University,https://orcid.org/0000-0001-6260-7586,pending,,,
-745,Michael Johnson,University of Massachusetts-Boston,openalex,A5007837293,Michael G. Johnson,0.6,1.0,0.5,0.0,90.051,364,10536,55,Royal Children's Hospital,https://orcid.org/0000-0001-9213-0598,pending,,,
-745,Michael Johnson,University of Massachusetts-Boston,openalex,A5041651873,Michael P. Johnson,0.6,1.0,0.0,1.0,88.65,166,10372,37,Australian Orthopaedic Association,https://orcid.org/0000-0002-5675-8019,pending,,,
-745,Michael Johnson,University of Massachusetts-Boston,openalex,A5013224421,Michael E. Johnson,0.6,1.0,0.5,0.0,85.427,406,9995,53,RMIT University,https://orcid.org/0000-0002-8246-4081,pending,,,
-745,Michael Johnson,University of Massachusetts-Boston,openalex,A5039085339,Michael Johnson,0.594,1.0,0.0,0.957,32.41,128,3792,35,Berkeley Air Monitoring Group (United States),https://orcid.org/0000-0002-4886-1534,pending,,,
+745,Michael Johnson,University of Massachusetts-Boston,openalex,A5037103180,Michael D. Johnson,0.6,1.0,0.5,0.0,141.778,303,16588,64,Georgetown University,https://orcid.org/0000-0001-6260-7586,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 16,588 citations against 117 from google_scholar (141.8x); probable namesake"
+745,Michael Johnson,University of Massachusetts-Boston,openalex,A5007837293,Michael G. Johnson,0.6,1.0,0.5,0.0,90.051,364,10536,55,Royal Children's Hospital,https://orcid.org/0000-0001-9213-0598,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 10,536 citations against 117 from google_scholar (90.1x); probable namesake"
+745,Michael Johnson,University of Massachusetts-Boston,openalex,A5041651873,Michael P. Johnson,0.6,1.0,0.0,1.0,88.65,166,10372,37,Australian Orthopaedic Association,https://orcid.org/0000-0002-5675-8019,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 10,372 citations against 117 from google_scholar (88.6x); probable namesake"
+745,Michael Johnson,University of Massachusetts-Boston,openalex,A5013224421,Michael E. Johnson,0.6,1.0,0.5,0.0,85.427,406,9995,53,RMIT University,https://orcid.org/0000-0002-8246-4081,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 9,995 citations against 117 from google_scholar (85.4x); probable namesake"
+745,Michael Johnson,University of Massachusetts-Boston,openalex,A5039085339,Michael Johnson,0.594,1.0,0.0,0.957,32.41,128,3792,35,Berkeley Air Monitoring Group (United States),https://orcid.org/0000-0002-4886-1534,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 3,792 citations against 117 from google_scholar (32.4x); probable namesake"
 751,Atyeh Ashtari,,openalex,A5018423086,Atyeh Ashtari,0.85,1.0,0.5,1.0,0.6,2,9,2,University of Illinois Urbana-Champaign,,pending,,,
 760,Joseph Grengs,University of Michigan,openalex,,,0,,,,,,,,,,none,matcher,2026-09-27,
 768,Anna Paula Pimentel Walker,University of Michigan,openalex,,,0,,,,,,,,,,none,matcher,2026-09-27,
@@ -3812,9 +3812,9 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 946,Jeff Casello,"University of Waterloo, Ontario",openalex,,,0,,,,,,,,,,none,matcher,2026-09-27,
 953,John Lewis,"University of Waterloo, Ontario",openalex,A5086968933,John Lewis McAdoo,0.675,1.0,0.0,0.833,1.013,15,871,8,,,pending,,,
 953,John Lewis,"University of Waterloo, Ontario",openalex,A5020599785,John Lewis,0.632,1.0,0.0,0.548,0.457,76,393,8,Texas A&M University – Kingsville,,pending,,,
-953,John Lewis,"University of Waterloo, Ontario",openalex,A5029935997,John A. Lewis,0.619,1.0,0.5,0.124,17.929,266,15419,54,Georgia Institute of Technology,https://orcid.org/0000-0002-3992-7837,pending,,,
-953,John Lewis,"University of Waterloo, Ontario",openalex,A5077276358,John Lewis Gaddis,0.6,1.0,0.0,1.0,8.388,232,7214,39,,,pending,,,
-953,John Lewis,"University of Waterloo, Ontario",openalex,A5109286381,John Lewis,0.6,1.0,0.0,1.0,3.378,166,2905,23,Indiana University School of Medicine,,pending,,,
+953,John Lewis,"University of Waterloo, Ontario",openalex,A5029935997,John A. Lewis,0.619,1.0,0.5,0.124,17.929,266,15419,54,Georgia Institute of Technology,https://orcid.org/0000-0002-3992-7837,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 15,419 citations against 860 from pop (17.9x); probable namesake"
+953,John Lewis,"University of Waterloo, Ontario",openalex,A5077276358,John Lewis Gaddis,0.6,1.0,0.0,1.0,8.388,232,7214,39,,,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 7,214 citations against 860 from pop (8.4x); probable namesake"
+953,John Lewis,"University of Waterloo, Ontario",openalex,A5109286381,John Lewis,0.6,1.0,0.0,1.0,3.378,166,2905,23,Indiana University School of Medicine,,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 2,905 citations against 860 from pop (3.4x); probable namesake"
 960,Joe Qian,"University of Waterloo, Ontario",openalex,A5072030073,Michelle Joe Qian Cheah,0.396,0.658,0.0,0.667,0.024,1,10,1,Manipal University College Malaysia,,pending,,,
 972,Revel Sims,"University of Wisconsin, Madison",openalex,A5052438575,J. Revel Sims,0.93,0.844,1.0,1.0,0.493,11,147,6,University of Wisconsin–Madison,https://orcid.org/0000-0001-9806-881X,pending,,,
 972,Revel Sims,"University of Wisconsin, Madison",openalex,A5035113690,Revel Sims,0.7,1.0,0.0,1.0,0.181,1,54,1,,,pending,,,
@@ -3828,14 +3828,14 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 999,James Smither,Virginia Commonwealth University,openalex,A5088660355,James G. Smither,0.65,1.0,0.0,1.0,0.04,1,1,1,,,pending,,,
 999,James Smither,Virginia Commonwealth University,openalex,A5135199498,James Smither,0.55,1.0,0.0,0.667,0.0,34,0,0,,,pending,,,
 1005,Maggie Cowell,Virginia Tech,openalex,,,0,,,,,,,,,,none,matcher,2026-09-27,
-1014,Yang Zhang,Virginia Tech,openalex,A5100354807,Yang Zhang,0.6,1.0,0.5,0.0,3.399,293,5330,38,Jinan University,https://orcid.org/0000-0003-3722-6807,pending,,,
-1014,Yang Zhang,Virginia Tech,openalex,A5100354816,Yang Zhang,0.573,1.0,0.0,0.819,3.614,301,5666,44,Shandong University,https://orcid.org/0000-0003-4366-6382,pending,,,
-1014,Yang Zhang,Virginia Tech,openalex,A5100354731,Yang Zhang,0.527,1.0,0.0,0.512,4.946,241,7755,44,Northeastern University,https://orcid.org/0000-0002-8495-1860,pending,,,
-1014,Yang Zhang,Virginia Tech,openalex,A5100354665,Yang Zhang,0.522,1.0,0.0,0.479,13.534,665,21221,78,Beijing Institute of Technology,https://orcid.org/0000-0002-3002-4367,pending,,,
-1014,Yang Zhang,Virginia Tech,openalex,A5115596907,Yang Zhang,0.506,1.0,0.0,0.37,3.714,377,5823,31,Qinghai University,https://orcid.org/0000-0002-3588-4702,pending,,,
+1014,Yang Zhang,Virginia Tech,openalex,A5100354807,Yang Zhang,0.6,1.0,0.5,0.0,3.399,293,5330,38,Jinan University,https://orcid.org/0000-0003-3722-6807,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 5,330 citations against 1,568 from pop (3.4x); probable namesake"
+1014,Yang Zhang,Virginia Tech,openalex,A5100354816,Yang Zhang,0.573,1.0,0.0,0.819,3.614,301,5666,44,Shandong University,https://orcid.org/0000-0003-4366-6382,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 5,666 citations against 1,568 from pop (3.6x); probable namesake"
+1014,Yang Zhang,Virginia Tech,openalex,A5100354731,Yang Zhang,0.527,1.0,0.0,0.512,4.946,241,7755,44,Northeastern University,https://orcid.org/0000-0002-8495-1860,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 7,755 citations against 1,568 from pop (4.9x); probable namesake"
+1014,Yang Zhang,Virginia Tech,openalex,A5100354665,Yang Zhang,0.522,1.0,0.0,0.479,13.534,665,21221,78,Beijing Institute of Technology,https://orcid.org/0000-0002-3002-4367,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 21,221 citations against 1,568 from pop (13.5x); probable namesake"
+1014,Yang Zhang,Virginia Tech,openalex,A5115596907,Yang Zhang,0.506,1.0,0.0,0.37,3.714,377,5823,31,Qinghai University,https://orcid.org/0000-0002-3588-4702,rejected,audit_matches,2026-09-27,"rejected 2026-09-27: OpenAlex 5,823 citations against 1,568 from pop (3.7x); probable namesake"
 1037,Samuel Ndegeah,Westfield State University,openalex,,,0,,,,,,,,,,none,matcher,2026-09-27,
 1051,Zakhary Mallett,Alabama A&M University,openalex,A5052096904,Zakhary Mallett,0.943,1.0,1.0,0.955,,11,18,2,Alabama Agricultural and Mechanical University,https://orcid.org/0000-0002-2204-4130,accepted,matcher,2026-09-27,
-1052,Pascal Buggs,Alabama A&M University,openalex,A5120149277,Pascal Buggs,0.9,1.0,1.0,0.667,,1,0,0,Alabama Agricultural and Mechanical University,,pending,,,
+1052,Pascal Buggs,Alabama A&M University,openalex,A5120149277,Pascal Buggs,0.9,1.0,1.0,0.667,,1,0,0,Alabama Agricultural and Mechanical University,,accepted,audit_matches,2026-09-27,"accepted 2026-09-27: name and institution match, 1-work fragment"
 1052,Pascal Buggs,Alabama A&M University,openalex,A5066728315,Pascal Buggs,0.65,1.0,0.0,1.0,,3,65,3,"University at Buffalo, State University of New York",,pending,,,
 1053,Rayford Richardson,Alabama A&M University,openalex,,,0,,,,,,,,,,none,matcher,2026-09-27,
 1054,Kristin Edquist,Eastern Washington,openalex,A5029197660,Kristin Edquist,0.931,1.0,1.0,0.875,,9,42,4,Eastern Washington University,https://orcid.org/0000-0003-2853-9545,accepted,matcher,2026-09-27,
@@ -3858,24 +3858,24 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 1060,Glenn Goldman,New Jersey Institute of Technology,openalex,A5039889997,Glenn and Zdepski Goldman,0.6,1.0,0.0,0.667,,1,2,1,,,pending,,,
 1060,Glenn Goldman,New Jersey Institute of Technology,openalex,A5084911637,Glenn Goldman,0.525,1.0,0.0,0.167,,4,12,2,,,pending,,,
 1060,Glenn Goldman,New Jersey Institute of Technology,openalex,A5077784486,Glenn D. Goldman,0.5,1.0,0.0,0.0,,80,1044,16,Four Seasons,,pending,,,
-1061,John Billings,New York University,openalex,A5111841248,John C. Billings,0.925,1.0,1.0,0.833,,2,184,2,Wagner College,,pending,,,
+1061,John Billings,New York University,openalex,A5111841248,John C. Billings,0.925,1.0,1.0,0.833,,2,184,2,Wagner College,,accepted,audit_matches,2026-09-27,"accepted 2026-09-27: name and institution match, 2-work fragment"
 1061,John Billings,New York University,openalex,A5004051006,John S. Billings,0.922,1.0,1.0,0.816,,104,669,10,Wagner College,,pending,,,
 1061,John Billings,New York University,openalex,A5111792534,John Billings,0.892,1.0,1.0,0.612,,98,4840,28,Wagner College,,pending,,,
 1061,John Billings,New York University,openalex,A5041577894,John S. Billings,0.65,1.0,0.0,1.0,,2,4,1,,,pending,,,
 1061,John Billings,New York University,openalex,A5072562011,John Richard Billings,0.65,1.0,0.0,1.0,,1,0,0,,,pending,,,
 1062,Sewin Chan,New York University,openalex,A5102484529,Sewin Chan,0.909,1.0,1.0,0.728,,61,2393,23,Wagner College,,accepted,matcher,2026-09-27,
-1063,Charles McGlynn,Rowan University,openalex,A5088424942,Charles McGlynn,0.8,1.0,1.0,0.0,,1,1,1,Rowan University,,pending,,,
+1063,Charles McGlynn,Rowan University,openalex,A5088424942,Charles McGlynn,0.8,1.0,1.0,0.0,,1,1,1,Rowan University,,accepted,audit_matches,2026-09-27,"accepted 2026-09-27: name and institution match, 1-work fragment"
 1064,John Mullen,Rowan University,openalex,A5045674674,John T. Mullen,0.916,1.0,1.0,0.771,,76,551,9,Roswell Park Comprehensive Cancer Center,https://orcid.org/0000-0002-9822-0591,accepted,matcher,2026-09-27,
 1064,John Mullen,Rowan University,openalex,A5039586443,John Conrad Mullen,0.65,1.0,0.0,1.0,,140,80,4,Université de Rouen Normandie,,pending,,,
 1064,John Mullen,Rowan University,openalex,A5002395445,John K. Mullen,0.631,1.0,0.0,0.872,,39,440,13,Rhode Island Department of Health,,pending,,,
 1064,John Mullen,Rowan University,openalex,A5104369247,MSc John Mullen BSc,0.623,1.0,0.0,0.818,,13,2,1,,,pending,,,
 1064,John Mullen,Rowan University,openalex,A5103949986,John D. Mullen,0.601,1.0,0.0,0.672,,141,1282,21,,,pending,,,
 1065,Paul Kaplan,San Diego State University,openalex,A5026177863,Paul J. Kaplan,0.95,1.0,1.0,1.0,,58,91,6,San Diego State University,https://orcid.org/0000-0001-9022-1816,pending,,,
-1065,Paul Kaplan,San Diego State University,openalex,A5139365207,Paul Kaplan,0.875,1.0,1.0,0.5,,2,0,0,San Diego State University,,pending,,,
+1065,Paul Kaplan,San Diego State University,openalex,A5139365207,Paul Kaplan,0.875,1.0,1.0,0.5,,2,0,0,San Diego State University,,accepted,audit_matches,2026-09-27,"accepted 2026-09-27: name and institution match, 2-work fragment"
 1065,Paul Kaplan,San Diego State University,openalex,A5111752960,Paul G. Kaplan,0.825,1.0,1.0,0.165,,113,537,12,,,pending,,,
 1065,Paul Kaplan,San Diego State University,openalex,A5059474120,Paul H. D. Kaplan,0.65,1.0,0.0,1.0,,32,122,4,Purchase College,,pending,,,
 1065,Paul Kaplan,San Diego State University,openalex,A5117737005,Paul Kaplan,0.65,1.0,0.0,1.0,,3,0,0,,,pending,,,
-1066,Megan Carroll,San Diego State University,openalex,A5128793500,Megan Welsh Carroll,0.95,1.0,1.0,1.0,,1,0,0,San Diego State University,,pending,,,
+1066,Megan Carroll,San Diego State University,openalex,A5128793500,Megan Welsh Carroll,0.95,1.0,1.0,1.0,,1,0,0,San Diego State University,,accepted,audit_matches,2026-09-27,"accepted 2026-09-27: name and institution match, 1-work fragment"
 1066,Megan Carroll,San Diego State University,openalex,A5031943815,Megan Carroll,0.65,1.0,0.0,1.0,,2,16,2,Woods Hole Oceanographic Institution,,pending,,,
 1066,Megan Carroll,San Diego State University,openalex,A5121852779,Megan Carroll,0.65,1.0,0.0,1.0,,2,0,0,Feinstein Institute for Medical Research,,pending,,,
 1066,Megan Carroll,San Diego State University,openalex,A5054912279,Megan Carroll,0.629,1.0,0.0,0.857,,78,618,11,,https://orcid.org/0000-0003-3817-6573,pending,,,
