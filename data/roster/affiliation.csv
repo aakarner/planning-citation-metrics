@@ -6,7 +6,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 5,5,1,assistant,regular,1,,,workbook-2026
 6,6,1,assistant,regular,1,,,workbook-2026
 7,7,2,assistant,regular,1,,,workbook-2026
-8,8,2,associate,regular,1,,,workbook-2026
+8,8,2,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://geo.appstate.edu/faculty-staff
 9,9,2,assistant,regular,1,,2026-09-14,"workbook-2026 | closed 2026-09-14: depart; change from Scholar profile 2026-09-14: email @uncg.edu; affiliation ""University of North Carolina at Greensboro"""
 10,10,3,associate,regular,1,,2026-09-14,"workbook-2026 | closed 2026-09-14: depart; change from Scholar profile 2026-09-14: email @uci.edu; affiliation ""Associate Professor, University of California, Irvine"" | RECLASSIFIED 2026-09-16: move to UC Irvine, not a departure. The profile names a tracked program our department labels did not recognise, and the @uci.edu address confirms it."
 11,11,3,full,regular,1,,2026-09-14,"workbook-2026 | closed 2026-09-14: move; change from Scholar profile 2026-09-14: email @buffalo.edu; affiliation ""SUNY-Buffalo"""
@@ -81,7 +81,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 80,80,12,associate,regular,1,,,workbook-2026
 81,81,12,full,regular,1,,,workbook-2026
 82,82,12,associate,regular,1,,,workbook-2026
-83,83,12,assistant,regular,1,,,workbook-2026
+83,83,12,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://aap.cornell.edu/planning/crp-people/
 84,84,12,full,regular,1,,,workbook-2026
 85,85,12,full,regular,1,,,workbook-2026
 86,86,12,assistant,regular,1,,,workbook-2026
@@ -105,7 +105,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 104,103,17,associate,regular,1,,,workbook-2026
 105,104,17,assistant,regular,1,,,workbook-2026
 106,105,17,associate,regular,1,,,workbook-2026
-107,106,17,full,regular,1,,,workbook-2026
+107,106,17,full,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: demotion read from department page https://www.fau.edu/science/departments/urban-regional-planning/
 108,107,17,assistant,regular,1,,2026-09-14,"workbook-2026 | closed 2026-09-14: depart; change from Scholar profile 2026-09-14: email @life.edu; affiliation ""Life University / Florida International University"""
 109,108,18,full,regular,1,,,workbook-2026
 110,109,18,full,regular,1,,,workbook-2026
@@ -213,7 +213,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 212,211,27,full,regular,1,,,workbook-2026
 213,212,27,full,regular,1,,,workbook-2026
 214,213,27,assistant,regular,1,,,workbook-2026
-215,214,27,assistant,regular,1,,,workbook-2026
+215,214,27,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://dusp.mit.edu/people
 216,215,27,assistant,regular,1,,,workbook-2026
 217,216,27,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @mit.edu; affiliation ""Associate Professor of Urban Science and Planning at MIT Dept of Urban Studies and Planning"""
 218,217,27,full,regular,1,,,workbook-2026
@@ -221,9 +221,9 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 220,219,27,full,regular,1,,,workbook-2026
 221,220,27,full,regular,1,,,workbook-2026
 222,221,27,associate,regular,1,,,workbook-2026
-223,222,27,assistant,regular,1,,,workbook-2026
-224,223,27,associate,regular,1,,,workbook-2026
-225,224,27,associate,regular,1,,,workbook-2026
+223,222,27,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://dusp.mit.edu/people
+224,223,27,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://dusp.mit.edu/people
+225,224,27,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://dusp.mit.edu/people
 226,225,27,full,regular,1,,,workbook-2026
 227,226,27,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @mit.edu; affiliation ""Professor of Law and Development, MIT"""
 228,227,27,full,regular,1,,,workbook-2026
@@ -232,11 +232,11 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 231,230,27,full,regular,1,,,workbook-2026
 232,231,27,associate,regular,1,,,workbook-2026
 233,232,27,full,regular,1,,,workbook-2026
-234,233,27,associate,regular,1,,,workbook-2026
+234,233,27,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://dusp.mit.edu/people
 235,234,27,full,regular,1,,,workbook-2026
-236,235,27,associate,regular,1,,,workbook-2026
+236,235,27,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://dusp.mit.edu/people
 237,236,27,full,regular,1,,,workbook-2026
-238,237,27,assistant,regular,1,,,workbook-2026
+238,237,27,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://dusp.mit.edu/people
 239,238,27,associate,regular,1,,,workbook-2026
 240,239,27,full,regular,1,,,workbook-2026
 241,240,27,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @mit.edu; affiliation ""Professor of Cities and Transportation, Massachusetts Institute of Technology"""
@@ -244,14 +244,14 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 243,242,33,associate,regular,1,,,workbook-2026
 244,243,33,assistant,regular,1,,,workbook-2026
 245,244,33,full,regular,1,,,workbook-2026
-246,245,33,associate,regular,1,,,workbook-2026
+246,245,33,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://www.morgan.edu/design-and-planning/city-and-regional-planning/faculty
 247,246,33,associate,regular,1,,,workbook-2026
 248,247,34,full,regular,1,,,workbook-2026
-249,248,34,associate,regular,1,,,workbook-2026
+249,248,34,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://design.njit.edu/faculty-research-and-practice
 250,249,34,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: move; change from Scholar profile 2026-09-15: email @cornell.edu; affiliation ""Cornell University College of Architecture, Art, and Planning"""
 251,250,34,associate,regular,1,,,workbook-2026
-252,251,34,associate,regular,1,,,workbook-2026
-253,252,34,associate,regular,1,,,workbook-2026
+252,251,34,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://design.njit.edu/our-people
+253,252,34,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://design.njit.edu/our-people
 254,253,34,associate,regular,1,,,workbook-2026
 255,254,35,associate,regular,1,,,workbook-2026
 256,255,35,full,regular,1,,,workbook-2026
@@ -265,7 +265,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 264,263,36,assistant,regular,1,,,workbook-2026
 265,264,36,assistant,regular,1,,,workbook-2026
 266,265,36,full,regular,1,,,workbook-2026
-267,266,36,associate,regular,1,,,workbook-2026
+267,266,36,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://cssh.northeastern.edu/policyschool/people/faculty/
 268,267,36,full,regular,1,,,workbook-2026
 269,268,36,assistant,regular,1,,,workbook-2026
 270,269,36,full,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: depart; change from Scholar profile 2026-09-15: email @gsu.edu; affiliation ""Dean and Professor, Georgia State University"""
@@ -307,18 +307,18 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 306,305,40,associate,regular,1,,,workbook-2026
 307,306,40,full,regular,1,,,workbook-2026
 308,307,41,associate,regular,1,,,workbook-2026
-309,308,41,associate,regular,1,,,workbook-2026
+309,308,41,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://www.queensu.ca/geographyandplanning/people/surp-faculty
 310,309,41,full,regular,1,,,workbook-2026
 311,310,41,full,regular,1,,,workbook-2026
-312,311,41,assistant,regular,1,,,workbook-2026
+312,311,41,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://www.queensu.ca/geographyandplanning/people/surp-faculty
 313,312,41,associate,regular,1,,,workbook-2026
 314,313,41,associate,regular,1,,,workbook-2026
 315,314,42,full,regular,1,,,workbook-2026
 316,315,42,full,regular,1,,,workbook-2026
 317,316,42,assistant,regular,1,,,workbook-2026
-318,317,42,associate,regular,1,,,workbook-2026
+318,317,42,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://earth.rowan.edu/departments/geography/facstaff/faculty.html
 319,318,42,associate,regular,1,,,workbook-2026
-320,319,42,associate,regular,1,,,workbook-2026
+320,319,42,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://earth.rowan.edu/departments/geography/facstaff/faculty.html
 321,320,43,full,regular,1,,,workbook-2026
 322,321,43,full,regular,1,,,workbook-2026
 323,322,43,assistant,regular,1,,,workbook-2026
@@ -334,7 +334,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 333,332,43,assistant,regular,1,,,workbook-2026
 334,333,43,full,regular,1,,,workbook-2026
 335,334,43,associate,regular,1,,,workbook-2026
-336,335,43,associate,regular,1,,,workbook-2026
+336,335,43,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: demotion read from department page https://bloustein.rutgers.edu/faculty/
 337,336,43,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @rutgers.edu; affiliation ""Professor, Rutgers University"""
 338,337,43,full,regular,1,,,workbook-2026
 339,338,43,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @rutgers.edu; affiliation ""Associate Professor at Rutgers University"""
@@ -370,7 +370,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 369,368,49,full,regular,1,,,workbook-2026
 370,369,49,associate,regular,1,,,workbook-2026
 371,370,50,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @albany.edu; affiliation ""Associate Professor, State University of New York at Albany"""
-372,371,50,associate,regular,1,,,workbook-2026
+372,371,50,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://www.albany.edu/geographyplanning/faculty-and-staff
 373,372,50,associate,regular,1,,,workbook-2026
 374,373,50,assistant,regular,1,,,workbook-2026
 375,374,51,assistant,regular,1,,,workbook-2026
@@ -439,7 +439,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 438,437,58,full,regular,1,,,workbook-2026
 439,438,58,full,regular,1,,,workbook-2026
 440,439,58,associate,regular,1,,,workbook-2026
-441,440,58,associate,regular,1,,,workbook-2026
+441,440,58,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://ced.berkeley.edu/about-ced/people/faculty
 442,441,58,assistant,regular,1,,,workbook-2026
 443,442,58,assistant,regular,1,,,workbook-2026
 444,443,58,assistant,regular,1,,,workbook-2026
@@ -509,7 +509,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 508,507,62,full,regular,1,,,workbook-2026
 509,508,62,assistant,regular,1,,,workbook-2026
 510,509,62,assistant,regular,1,,,workbook-2026
-511,510,62,assistant,regular,1,,,workbook-2026
+511,510,62,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://planning.unc.edu/people/full-time-faculty/
 512,511,62,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @unc.edu; affiliation ""Professor of City and Regional Planning, University of North Carolina at Chapel Hill"""
 513,512,62,full,regular,1,,,workbook-2026
 514,513,62,assistant,regular,1,,,workbook-2026
@@ -519,7 +519,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 518,517,62,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @unc.edu; affiliation ""Associate Professor of City and Regional Planning, University of North Carolina at Chapel Hill"""
 519,518,62,full,regular,1,,,workbook-2026
 520,519,62,assistant,regular,1,,,workbook-2026
-521,520,62,assistant,regular,1,,,workbook-2026
+521,520,62,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://planning.unc.edu/people/full-time-faculty/
 522,521,62,full,regular,1,,,workbook-2026
 523,522,65,full,regular,1,,,workbook-2026
 524,523,65,full,regular,1,,,workbook-2026
@@ -546,7 +546,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 545,544,64,associate,regular,1,,,workbook-2026
 546,545,64,full,regular,1,,,workbook-2026
 547,546,64,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: depart; change from Scholar profile 2026-09-15: email @polymtl.ca; affiliation ""Professor, Polytechnique Montréal"""
-548,547,66,assistant,regular,1,,,workbook-2026
+548,547,66,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://archplan.buffalo.edu/People/faculty/department-of-urban-and-regional-planning-faculty.html
 549,548,66,assistant,regular,1,,,workbook-2026
 550,549,66,assistant,regular,1,,,workbook-2026
 551,550,66,assistant,regular,1,,,workbook-2026
@@ -580,8 +580,8 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 579,578,68,associate,regular,1,,,workbook-2026
 580,579,68,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: move; change from Scholar profile 2026-09-15: email @asu.edu; affiliation ""School of Geographical Sciences & Urban Planning, Arizona State University"""
 581,580,68,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @arizona.edu; affiliation ""Associate Professor and Distinguished Scholar, University of Arizona"""
-582,581,68,assistant,regular,1,,,workbook-2026
-583,582,68,associate,regular,1,,,workbook-2026
+582,581,68,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://capla.arizona.edu/directory
+583,582,68,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://capla.arizona.edu/directory
 584,583,68,full,regular,1,,,workbook-2026
 585,584,68,associate,regular,1,,,workbook-2026
 586,585,69,full,regular,1,,,workbook-2026
@@ -612,12 +612,12 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 611,610,71,full,regular,1,,,workbook-2026
 612,611,71,full,regular,1,,,workbook-2026
 613,612,71,full,regular,1,,,workbook-2026
-614,613,71,assistant,regular,1,,,workbook-2026
+614,613,71,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://www.daap.uc.edu/academic-programs/graduate-programs/daap-graduate-faculty.html
 615,614,71,assistant,regular,1,,,workbook-2026
 616,615,71,associate,regular,1,,,workbook-2026
 617,616,71,full,regular,1,,,workbook-2026
 618,617,71,full,regular,1,,,workbook-2026
-619,618,71,assistant,regular,1,,,workbook-2026
+619,618,71,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://www.daap.uc.edu/academic-programs/graduate-programs/daap-graduate-faculty.html
 620,619,71,full,regular,1,,,workbook-2026
 621,620,72,assistant,regular,1,,,workbook-2026
 622,621,72,full,regular,1,,,workbook-2026
@@ -625,7 +625,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 624,623,72,full,regular,1,,,workbook-2026
 625,624,72,assistant,regular,1,,,workbook-2026
 626,625,72,full,regular,1,,,workbook-2026
-627,626,73,assistant,regular,1,,,workbook-2026
+627,626,73,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://www.udel.edu/academics/colleges/biden-school/people/
 628,627,73,associate,regular,1,,,workbook-2026
 629,628,73,full,regular,1,,,workbook-2026
 630,629,73,full,regular,1,,,workbook-2026
@@ -644,17 +644,17 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 643,642,75,full,regular,1,,,workbook-2026
 644,643,75,assistant,regular,1,,,workbook-2026
 645,644,75,full,regular,1,,,workbook-2026
-646,645,75,assistant,regular,1,,,workbook-2026
-647,646,75,assistant,regular,1,,,workbook-2026
+646,645,75,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://ced.uga.edu/about/people/
+647,646,75,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://ced.uga.edu/about/people/
 648,647,75,associate,regular,1,,,workbook-2026
 649,648,75,full,regular,1,,,workbook-2026
 650,649,76,assistant,regular,1,,,workbook-2026
 651,650,76,full,regular,1,,,workbook-2026
 652,651,76,associate,regular,1,,,workbook-2026
-653,652,76,assistant,regular,1,,,workbook-2026
-654,653,76,associate,regular,1,,,workbook-2026
-655,654,76,assistant,regular,1,,,workbook-2026
-656,655,76,assistant,regular,1,,,workbook-2026
+653,652,76,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://www.uoguelph.ca/sedrd/people/tag/173
+654,653,76,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://www.uoguelph.ca/sedrd/people/tag/173
+655,654,76,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://www.uoguelph.ca/sedrd/people/tag/173
+656,655,76,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://www.uoguelph.ca/sedrd/people/tag/173
 657,656,77,full,regular,1,,,workbook-2026
 658,657,77,associate,regular,1,,,workbook-2026
 659,658,77,associate,regular,1,,,workbook-2026
@@ -699,7 +699,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 698,697,80,assistant,regular,1,,,workbook-2026
 699,698,81,associate,regular,1,,,workbook-2026
 700,699,81,full,regular,1,,,workbook-2026
-701,700,81,associate,regular,1,,,workbook-2026
+701,700,81,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://spaa.ku.edu/people/faculty
 702,701,81,assistant,regular,1,,,workbook-2026
 703,702,82,assistant,regular,1,,,workbook-2026
 704,703,82,associate,regular,1,,,workbook-2026
@@ -790,12 +790,12 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 789,788,91,associate,regular,1,,,workbook-2026
 790,789,91,full,regular,1,,,workbook-2026
 791,790,92,full,regular,1,,,workbook-2026
-792,791,92,associate,regular,1,,,workbook-2026
+792,791,92,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://crp.unm.edu/about/faculty.html
 793,792,92,full,regular,1,,,workbook-2026
 794,793,92,full,regular,1,,,workbook-2026
-795,794,92,associate,regular,1,,,workbook-2026
+795,794,92,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://crp.unm.edu/about/faculty.html
 796,795,92,assistant,regular,1,,,workbook-2026
-797,796,92,assistant,regular,1,,,workbook-2026
+797,796,92,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://crp.unm.edu/about/faculty.html
 798,797,93,assistant,regular,1,,,workbook-2026
 799,798,93,associate,regular,1,,,workbook-2026
 800,799,93,full,regular,1,,,workbook-2026
@@ -835,7 +835,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 834,832,97,assistant,regular,1,,,workbook-2026
 835,833,97,full,regular,1,,,workbook-2026
 836,834,97,assistant,regular,1,,,workbook-2026
-837,835,97,associate,regular,1,,,workbook-2026
+837,835,97,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://www.design.upenn.edu/people
 838,836,97,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @upenn.edu; affiliation ""Associate Professor of Urban Planning, University of Pennsylvania"""
 839,837,97,assistant,regular,1,,,workbook-2026
 840,838,97,associate,regular,1,,,workbook-2026
@@ -877,8 +877,8 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 876,874,101,assistant,regular,1,,,workbook-2026
 877,875,101,associate,regular,1,,,workbook-2026
 878,876,101,associate,regular,1,,,workbook-2026
-879,877,102,associate,regular,1,,,workbook-2026
-880,878,102,assistant,regular,1,,,workbook-2026
+879,877,102,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://usm.maine.edu/policy-planning-management/people/
+880,878,102,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://usm.maine.edu/policy-planning-management/people/
 881,879,103,full,regular,1,,,workbook-2026
 882,880,103,full,regular,1,,,workbook-2026
 883,881,103,assistant,regular,1,,,workbook-2026
@@ -888,13 +888,13 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 887,885,103,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @uta.edu; affiliation ""Associate Professor, University of Texas at Arlington"""
 888,886,104,associate,regular,1,,,workbook-2026
 889,887,104,associate,regular,1,,,workbook-2026
-890,888,104,assistant,regular,1,,,workbook-2026
+890,888,104,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://soa.utexas.edu/faculty
 891,889,104,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @utexas.edu; affiliation ""Professor of Community and Regional Planning, University of Texas at Austin"""
 892,890,104,associate,regular,1,,,workbook-2026
-893,891,104,full,regular,1,,,workbook-2026
+893,891,104,full,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: demotion read from department page https://soa.utexas.edu/faculty
 894,892,104,assistant,regular,1,,,workbook-2026
 895,893,104,associate,regular,1,,,workbook-2026
-896,894,104,assistant,regular,1,,,workbook-2026
+896,894,104,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://soa.utexas.edu/faculty
 897,895,104,associate,regular,1,,,workbook-2026
 898,896,104,full,regular,1,,,workbook-2026
 899,897,105,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: depart; change from Scholar profile 2026-09-15: email @utdallas.edu; affiliation ""Assistant Professor of Sustainability Planning and Policy, University of Texas at Dallas"""
@@ -923,8 +923,8 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 922,920,108,full,regular,1,,,workbook-2026
 923,921,108,full,regular,1,,,workbook-2026
 924,922,108,assistant,regular,1,,,workbook-2026
-925,923,108,assistant,regular,1,,,workbook-2026
-926,924,108,associate,regular,1,,,workbook-2026
+925,923,108,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://plan.cap.utah.edu/directory/
+926,924,108,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://plan.cap.utah.edu/directory/
 927,925,108,associate,regular,1,,,workbook-2026
 928,926,109,full,regular,1,,,workbook-2026
 929,927,109,associate,regular,1,,,workbook-2026
@@ -972,7 +972,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 971,969,112,full,regular,1,,,workbook-2026
 972,970,112,full,regular,1,,,workbook-2026
 973,971,112,full,regular,1,,,workbook-2026
-974,972,112,assistant,regular,1,,,workbook-2026
+974,972,112,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://dpla.wisc.edu/faculty-instructors/
 975,973,112,assistant,regular,1,,,workbook-2026
 976,974,113,associate,regular,1,,,workbook-2026
 977,975,113,associate,regular,1,,,workbook-2026
@@ -996,7 +996,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 995,993,114,full,regular,1,,,workbook-2026
 996,994,114,full,regular,1,,,workbook-2026
 997,995,114,associate,regular,1,,,workbook-2026
-998,996,114,associate,regular,1,,,workbook-2026
+998,996,114,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://wilder.vcu.edu/academic-programs/view-by-program-area/urban-and-regional-studiesplanning/
 999,997,114,associate,regular,1,,,workbook-2026
 1000,998,114,associate,regular,1,,,workbook-2026
 1001,999,114,associate,regular,1,,,workbook-2026
@@ -1026,7 +1026,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 1025,1023,117,full,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: depart; change from Scholar profile 2026-09-15: email @smc.edu; affiliation ""Professor of Geography, Santa Monica College"""
 1026,1024,117,associate,regular,1,,,workbook-2026
 1027,1025,117,full,regular,1,,,workbook-2026
-1028,1026,117,assistant,regular,1,,,workbook-2026
+1028,1026,117,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://www.wcupa.edu/business-PublicManagement/geographyPlanning/facultyStaff.aspx
 1029,1027,117,full,regular,1,,,workbook-2026
 1030,1028,118,associate,regular,1,,,workbook-2026
 1031,1029,118,assistant,regular,1,,,workbook-2026
@@ -1062,7 +1062,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 1062,176,26,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @ksu.edu; affiliation ""Associate Professor, Kansas State University"""
 1063,178,26,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @ksu.edu; affiliation ""Associate Professor of Regional and Community Planning, Kansas State University"""
 1064,216,27,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @mit.edu; affiliation ""Associate Professor of Urban Science and Planning at MIT Dept of Urban Studies and Planning"""
-1065,226,27,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @mit.edu; affiliation ""Professor of Law and Development, MIT"""
+1065,226,27,full,regular,1,2026-09-15,2026-09-27,"change from Scholar profile 2026-09-15: email @mit.edu; affiliation ""Professor of Law and Development, MIT"" | closed 2026-09-27: demotion read from department page https://dusp.mit.edu/people"
 1066,228,27,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @mit.edu; affiliation ""Professor of Urban Design and Public Policy, MIT"""
 1067,249,12,assistant,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @cornell.edu; affiliation ""Cornell University College of Architecture, Art, and Planning"""
 1068,272,37,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @nau.edu; affiliation ""Associate Professor, Northern Arizona University"""
@@ -1077,13 +1077,13 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 1077,436,58,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @berkeley.edu; affiliation ""Professor, City & Regional Planning; Interim Dean, College of Environmental Design; UC Berkeley"""
 1078,490,61,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @ucla.edu; affiliation ""Professor of Urban Planning and Public Policy, UCLA"""
 1079,526,65,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @umontreal.ca; affiliation ""Professor of urban planning - Université de Montréal"""
-1080,562,66,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @buffalo.edu; affiliation ""Professor, Urban and Regional Planning, University at Buffalo"""
+1080,562,66,full,regular,1,2026-09-15,2026-09-27,"change from Scholar profile 2026-09-15: email @buffalo.edu; affiliation ""Professor, Urban and Regional Planning, University at Buffalo"" | closed 2026-09-27: demotion read from department page https://archplan.buffalo.edu/People/faculty/department-of-urban-and-regional-planning-faculty.html"
 1081,579,3,assistant,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @asu.edu; affiliation ""School of Geographical Sciences & Urban Planning, Arizona State University"""
 1082,580,68,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @arizona.edu; affiliation ""Associate Professor and Distinguished Scholar, University of Arizona"""
 1083,639,74,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @ufl.edu; affiliation ""Associate Professor, University of Florida"""
 1084,640,74,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @ufl.edu; affiliation ""Associate Professor in the Department of Urban and Regional Planning at the University of Florida"""
 1085,677,78,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @uic.edu; affiliation ""Professor, Department of Urban Planning and Policy, University of Illinois Chicago"""
-1086,683,97,assistant,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @?; affiliation ""University of Pennsylvania"""
+1086,683,97,assistant,regular,1,2026-09-15,2026-09-27,"change from Scholar profile 2026-09-15: email @?; affiliation ""University of Pennsylvania"" | closed 2026-09-27: promotion read from department page https://www.design.upenn.edu/people?area=70"
 1087,695,80,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @uiowa.edu; affiliation ""Professor, School of Planning & Public Affairs, University of Iowa"""
 1088,711,82,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @louisville.edu; affiliation ""Professor, University of Louisville"""
 1089,717,83,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @umanitoba.ca; affiliation ""Associate Professor, City Planning, University of Manitoba"""
@@ -1110,3 +1110,57 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 1110,517,62,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @unc.edu; affiliation ""Associate Professor of City and Regional Planning, University of North Carolina at Chapel Hill"""
 1111,982,63,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @usc.edu; affiliation ""Associate Professor, Sol Price School of Public Policy, University of Southern California"""
 1112,464,59,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @uci.edu; affiliation ""Professor, University of California Irvine"""
+1113,8,2,full,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://geo.appstate.edu/faculty-staff: ""professor"""
+1114,83,12,associate,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://aap.cornell.edu/planning/crp-people/: ""associate professor"""
+1115,106,17,associate,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://www.fau.edu/science/departments/urban-regional-planning/: ""associate professor"""
+1116,214,27,associate,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://dusp.mit.edu/people: ""associate professor"""
+1117,222,27,associate,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://dusp.mit.edu/people: ""associate professor"""
+1118,223,27,full,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://dusp.mit.edu/people: ""professor"""
+1119,224,27,full,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://dusp.mit.edu/people: ""professor"""
+1120,233,27,full,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://dusp.mit.edu/people: ""professor"""
+1121,235,27,full,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://dusp.mit.edu/people: ""professor"""
+1122,237,27,associate,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://dusp.mit.edu/people: ""associate professor"""
+1123,226,27,associate,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://dusp.mit.edu/people: ""associate professor"""
+1124,245,33,full,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://www.morgan.edu/design-and-planning/city-and-regional-planning/faculty: ""professor"""
+1125,248,34,full,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://design.njit.edu/faculty-research-and-practice: ""professor"""
+1126,251,34,full,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://design.njit.edu/our-people: ""professor"""
+1127,252,34,full,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://design.njit.edu/our-people: ""professor"""
+1128,266,36,full,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://cssh.northeastern.edu/policyschool/people/faculty/: ""professor"""
+1129,308,41,full,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://www.queensu.ca/geographyandplanning/people/surp-faculty: ""professor"""
+1130,311,41,associate,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://www.queensu.ca/geographyandplanning/people/surp-faculty: ""associate professor"""
+1131,317,42,full,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://earth.rowan.edu/departments/geography/facstaff/faculty.html: ""professor"""
+1132,319,42,full,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://earth.rowan.edu/departments/geography/facstaff/faculty.html: ""professor"""
+1133,335,43,assistant,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://bloustein.rutgers.edu/faculty/: ""assistant professor"""
+1134,371,50,full,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://www.albany.edu/geographyplanning/faculty-and-staff: ""professor"""
+1135,440,58,full,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://ced.berkeley.edu/about-ced/people/faculty: ""professor"""
+1136,510,62,associate,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://planning.unc.edu/people/full-time-faculty/: ""associate professor"""
+1137,520,62,full,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://planning.unc.edu/people/full-time-faculty/: ""professor"""
+1138,547,66,associate,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://archplan.buffalo.edu/People/faculty/department-of-urban-and-regional-planning-faculty.html: ""associate professor"""
+1139,562,66,associate,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://archplan.buffalo.edu/People/faculty/department-of-urban-and-regional-planning-faculty.html: ""associate professor"""
+1140,581,68,associate,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://capla.arizona.edu/directory: ""associate professor"""
+1141,582,68,full,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://capla.arizona.edu/directory: ""professor"""
+1142,613,71,associate,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://www.daap.uc.edu/academic-programs/graduate-programs/daap-graduate-faculty.html: ""associate professor"""
+1143,618,71,associate,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://www.daap.uc.edu/academic-programs/graduate-programs/daap-graduate-faculty.html: ""associate professor"""
+1144,626,73,associate,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://www.udel.edu/academics/colleges/biden-school/people/: ""associate professor"""
+1145,645,75,full,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://ced.uga.edu/about/people/: ""professor"""
+1146,646,75,associate,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://ced.uga.edu/about/people/: ""associate professor"""
+1147,652,76,associate,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://www.uoguelph.ca/sedrd/people/tag/173: ""associate professor"""
+1148,653,76,full,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://www.uoguelph.ca/sedrd/people/tag/173: ""professor"""
+1149,654,76,associate,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://www.uoguelph.ca/sedrd/people/tag/173: ""associate professor"""
+1150,655,76,associate,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://www.uoguelph.ca/sedrd/people/tag/173: ""associate professor"""
+1151,700,81,full,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://spaa.ku.edu/people/faculty: ""professor"""
+1152,791,92,full,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://crp.unm.edu/about/faculty.html: ""professor"""
+1153,794,92,full,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://crp.unm.edu/about/faculty.html: ""professor"""
+1154,796,92,associate,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://crp.unm.edu/about/faculty.html: ""associate professor"""
+1155,835,97,full,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://www.design.upenn.edu/people: ""professor"""
+1156,683,97,associate,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://www.design.upenn.edu/people?area=70: ""associate professor"""
+1157,877,102,full,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://usm.maine.edu/policy-planning-management/people/: ""professor"""
+1158,878,102,associate,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://usm.maine.edu/policy-planning-management/people/: ""associate professor"""
+1159,888,104,associate,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://soa.utexas.edu/faculty: ""associate professor"""
+1160,891,104,associate,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://soa.utexas.edu/faculty: ""associate professor"""
+1161,894,104,associate,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://soa.utexas.edu/faculty: ""associate professor"""
+1162,923,108,associate,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://plan.cap.utah.edu/directory/: ""associate professor"""
+1163,924,108,full,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://plan.cap.utah.edu/directory/: ""professor"""
+1164,972,112,associate,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://dpla.wisc.edu/faculty-instructors/: ""associate professor"""
+1165,996,114,full,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://wilder.vcu.edu/academic-programs/view-by-program-area/urban-and-regional-studiesplanning/: ""professor"""
+1166,1026,117,associate,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://www.wcupa.edu/business-PublicManagement/geographyPlanning/facultyStaff.aspx: ""associate professor"""

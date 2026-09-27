@@ -2,16 +2,21 @@
 
     python -m pipeline.scan_departments                    # crawl, write build/department_scan_<date>.csv
     python -m pipeline.scan_departments --text-dir DIR     # also read pages saved from a browser
-    python -m pipeline.scan_departments --apply            # promotions and tenure-line new hires -> roster
+    python -m pipeline.scan_departments --apply ranks      # rank changes (either direction) -> roster
+    python -m pipeline.scan_departments --apply all        # ranks, and tenure-line new hires
 
 One polite fetch per page, a handful of pages per program: the stored URL and
 the faculty/people/directory pages it links to. A page that names at least
 LISTING_MIN of the program's current roster is treated as its faculty listing.
 
 For each roster person found on a page, the nearest title is read. A title of
-assistant, associate or full professor is a rank; anything else (of practice,
-clinical, adjunct, visiting, research, teaching, lecturer, instructor,
-emeritus, affiliate) is not tenure-line and is reported, not applied.
+assistant, associate or full professor is a rank and, with --apply, becomes
+the person's rank in either direction: the department page is the better
+source (Alex, 2026-09-27), and five people a Scholar profile's loose
+"Professor" had promoted turned out to be associates. Anything else (of
+practice, clinical, adjunct, visiting, research, teaching, lecturer,
+instructor, emeritus, affiliate, a named chair) is not tenure-line and is
+reported, not applied.
 
 New hires: tenure-line titles on a listing page whose name matches nobody we
 hold (at any program, current or departed) are added to the roster when
@@ -318,7 +323,7 @@ def scan_department(dept: dict, roster: list[dict], everyone: list[dict], saved:
                 "chair_title?" if title == "named chair" else
                 "rank_ok" if rank == p["rank"] else
                 "promotion" if rank and RANK_ORDER[rank] > RANK_ORDER[p["rank"]] else
-                "demotion?" if rank else "non_tenure_title?")
+                "demotion" if rank else "non_tenure_title?")
         rows.append({"department_id": dept["department_id"], "department": dept["short_name"], "status": status,
                      "url": u, "person_id": p["person_id"], "name": p["display_name"], "roster_rank": p["rank"],
                      "site_title": title or "", "site_rank": rank or "", "kind": kind, "snippet": snip})
@@ -369,7 +374,8 @@ def main(argv=None) -> None:
     ap.add_argument("--text-dir", type=Path, help="pages saved from a browser: <department_id>__*.txt, URL on line 1")
     ap.add_argument("--only", help="comma-separated department_ids")
     ap.add_argument("--out", type=Path, default=BUILD_DIR / f"department_scan_{date.today().isoformat()}.csv")
-    ap.add_argument("--apply", action="store_true", help="write promotions and tenure-line new hires to the roster")
+    ap.add_argument("--apply", choices=("ranks", "all"),
+                    help="ranks: write rank changes in either direction; all: also add tenure-line new hires")
     ap.add_argument("--workers", type=int, default=4)
     args = ap.parse_args(argv)
     sys.stdout.reconfigure(line_buffering=True)
@@ -418,17 +424,17 @@ def main(argv=None) -> None:
     next_pid = max(int(p["person_id"]) for p in people) + 1
     promoted = added = 0
     for r in rows:
-        if r["kind"] == "promotion":
+        if r["kind"] in ("promotion", "demotion"):
             for a in affs:
                 if a["person_id"] == r["person_id"] and not a["end_date"] and a["is_primary"] == "1":
                     a["end_date"] = today
-                    a["source"] = f"{a['source']} | closed {today}: promotion read from department page {r['url']}"
+                    a["source"] = f"{a['source']} | closed {today}: {r['kind']} read from department page {r['url']}"
                     affs.append({"affiliation_id": next_aff, "person_id": a["person_id"], "department_id": a["department_id"],
                                  "rank": r["site_rank"], "appointment_type": "regular", "is_primary": 1, "start_date": today,
                                  "end_date": None, "source": f"rank verified {today}; department page {r['url']}: \"{r['site_title']}\""})
                     next_aff += 1; promoted += 1
                     break
-        elif r["kind"] == "new_hire" and r["status"] == "ok":
+        elif r["kind"] == "new_hire" and r["status"] == "ok" and args.apply == "all":
             parts = r["name"].split()
             people.append({k: None for k in pfields} | {"person_id": next_pid, "first_name": parts[0],
                           "last_name": parts[-1], "middle_name": " ".join(parts[1:-1]) or None,
@@ -440,7 +446,7 @@ def main(argv=None) -> None:
             next_aff += 1; next_pid += 1; added += 1
     write_csv(ROSTER_DIR / "affiliation.csv", aff_fields, affs)
     write_csv(ROSTER_DIR / "person.csv", pfields, people)
-    print(f"applied: {promoted} promotions, {added} new hires")
+    print(f"applied: {promoted} rank changes, {added} new hires" + (" (new hires held; --apply all adds them)" if args.apply == "ranks" else ""))
 
 
 if __name__ == "__main__":

@@ -110,3 +110,11 @@ def test_known_person_handles_apostrophes_middle_names_and_short_forms():
     assert known_person("Phillip Thompson", people)["person_id"] == "2"
     assert known_person("Nora Angeles", people)["person_id"] == "3"
     assert known_person("Jake Lewandowski", people) is None
+
+
+def test_a_lower_rank_on_the_page_is_a_demotion_not_a_question():
+    # the kind name is what --apply ranks acts on; the department page outranks a Scholar profile
+    import pipeline.scan_departments as sd
+    src = open(sd.__file__).read()
+    assert '"demotion" if rank else' in src and '"demotion?"' not in src
+    assert 'r["kind"] in ("promotion", "demotion")' in src

@@ -12,8 +12,9 @@ do not hold — new hires. It reached **61 of 120 programs**. The other **59** n
 browser: **32 stored URLs are dead** and **27 sites showed no listing** to a
 script (usually a JavaScript directory, sometimes a listing two clicks deep).
 
-Nothing from the scan has been applied to the roster yet. Applying is the last
-step below, done once, after the browser pass, with Alex.
+Rank changes from the 61 readable programs were applied on 2026-09-27 (49 up,
+5 down). New hires from those programs are held for Alex's glance; the browser
+pass adds the other 59 programs, then `--apply all` once, with Alex.
 
 ## Per program, two things
 
@@ -40,16 +41,15 @@ Read the CSV with Alex before applying. The kinds that matter:
 
 | kind | meaning | action |
 |---|---|---|
-| `promotion` | page shows a higher tenure-line rank than the roster | applied by `--apply` |
-| `new_hire` | tenure-line name on the program's listing, unknown to us | applied by `--apply` (Alex, 2026-09-27: new hires go straight into the roster if tenure-track) |
+| `promotion` / `demotion` | page shows a different tenure-line rank from the roster | applied by `--apply ranks` (Alex, 2026-09-27: the department page is the better source, both directions) |
+| `new_hire` | tenure-line name on the program's listing, unknown to us | applied by `--apply all` (Alex, 2026-09-27: new hires go straight into the roster if tenure-track) |
 | `new_hire?` | same, but the page lists more unknown names than ours — a college-wide directory | **not** applied; ignore unless the program is genuinely that large |
-| `demotion?` | page shows a *lower* rank | not applied; a decision for Alex — five in the crawl looked real (a Scholar profile's loose "Professor" had promoted them) |
 | `chair_title?` | a named chair; rank unreadable | not applied; look up by hand if wanted |
 | `non_tenure_title?` | roster person shown as emeritus / lecturer / adjunct / director | not applied; may mean an appointment-type change |
 | `possible_move` | a name matching someone we hold at *another* program | not applied; check |
 
 ```bash
-.venv/bin/python -m pipeline.scan_departments --text-dir build/dept_pages --apply    # promotions + new_hire rows -> roster
+.venv/bin/python -m pipeline.scan_departments --text-dir build/dept_pages --apply all    # rank changes + new_hire rows -> roster
 .venv/bin/python -m pipeline.build_db && .venv/bin/python -m pipeline.build_site
 .venv/bin/python -m pipeline.match_openalex          # give new people OpenAlex candidates
 git add data/roster && git commit && git push          # CI deploys
