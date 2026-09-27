@@ -65,9 +65,24 @@ CHAIR_WORDS = re.compile(r"\b(chair|professorship|distinguished|endowed|career d
 TITLE_RE = re.compile(r"\b(assistant professor|associate professor|full professor|professor|lecturer|instructor|"
                       r"professor of practice|teaching professor|research professor|clinical professor|adjunct|"
                       r"emerit[ua]s?|visiting|affiliate|senior lecturer|postdoctoral|fellow|dean|director)\b", re.I)
-NOT_TENURE = re.compile(r"\b(of practice|clinical|adjunct|visiting|research (assistant|associate|professor)|"
-                        r"teaching (assistant|associate|professor)|lecturer|instructor|emerit\w*|affiliate|"
-                        r"postdoc\w*|fellow|honorary|courtesy|in residence|part[- ]time)\b", re.I)
+NOT_TENURE = re.compile(r"\b(of (the )?practice|clinical|adjunct|visiting|research (assistant|associate|professor)|"
+                        r"teaching (assistant|associate|professor|stream)|of teaching|of instruction|instructional|sessional|"
+                        r"lecturer|instructor|emerit\w*|affiliate|postdoc\w*|fellow|honorary|courtesy|in residence|"
+                        r"part[- ]time|research[- ]stream)\b|\((status|clta)\)", re.I)
+# Section headings under which a listing's people are not the program's
+# tenure-line faculty, whatever their title line says: Wayne State lists
+# "Emeritus faculty" with a bare "Professor" under each name, Dalhousie its
+# cross-appointed sociologists as "Associate Professor, Department of ...".
+# A core heading ("Faculty", "Core faculty") ends such a section.
+SIDE_SECTION = re.compile(r"^\s*(professors? emerit\w*|emerit\w*( faculty| professors)?|faculty emerit\w*|"
+                          r"retired faculty|former faculty|in memoriam|cross[- ]appointed( faculty)?|"
+                          r"affiliated? faculty|faculty affiliates|adjunct( and affiliated)? faculty|"
+                          r"part[- ]time( faculty| lecturers)?|(sessional )?lecturers|staff|"
+                          r"administrative staff|visiting (faculty|scholars)|courtesy (faculty|appointments))\s*$", re.I)
+CORE_SECTION = re.compile(r"^\s*((core|full[- ]time|tenure[- ]track|tenured|current|our)\s+)?faculty( members)?\s*$", re.I)
+# ", Ph.D., AICP" after a name on the listing line
+CREDENTIALS = re.compile(r"(?:,?\s+(?:Ph\.?\s?D\.?|Ed\.?D\.?|M\.?[A-Z]{1,4}\.?|F?AICP|ASLA|FASLA|FAIA|AIA|MCIP|RPP|"
+                         r"PPL|LEED AP|AoU|Jr\.?|Sr\.?|II|III|IV|FRSC|FAcSS))+\s*$")
 NAME_RE = re.compile(r"((?:[A-Z][a-zA-Z'’\-\.]+ ){1,3}[A-Z][a-zA-Z'’\-]+)")
 NOT_NAME_WORDS = {"assistant", "associate", "professor", "department", "planning", "urban", "regional", "school",
                   "college", "university", "faculty", "director", "chair", "program", "email", "phone", "office",
@@ -77,7 +92,9 @@ NOT_NAME_WORDS = {"assistant", "associate", "professor", "department", "planning
                   "curriculum", "vitae", "spotlight", "stories", "story", "student", "students", "center", "centre",
                   "leadership", "thought", "campus", "search", "publications", "publication", "press", "meet",
                   "recent", "news", "events", "idea", "affiliated", "faculy", "staff", "team", "welcome", "about",
-                  "home", "apply", "admissions", "alumni", "people", "institute", "lab", "laboratory", "seminar"}
+                  "home", "apply", "admissions", "alumni", "people", "institute", "lab", "laboratory", "seminar",
+                  "coordinator", "manager", "assistant", "advisor", "specialist", "officer", "administrative",
+                  "main", "content", "skip", "navigation", "menu", "breadcrumb", "sidebar", "footer"}
 
 
 def norm(s: str) -> str:
@@ -167,6 +184,16 @@ def rank_on_page(text: str, display_name: str, last_name: str) -> tuple[str | No
                 continue                                        # prose or a headline, not an entry
             nxt = text.find("\n", line_end + 1); nxt2 = text.find("\n", nxt + 1) if nxt >= 0 else -1
             window = text[ls:(nxt2 if nxt2 >= 0 else len(text))]
+            # Stop at the next person: Pratt lists "Eve Baron" with no title,
+            # then "Jonathan Martin / Professor", and Martin's title is not hers.
+            # A repeat of the same name (card heading and link text) is not a
+            # next person.
+            wl = window.split("\n")
+            for k in range(1, len(wl)):
+                if TITLE_RE.search(wl[k]):
+                    break
+                if is_name_line(wl[k]) and norm(CREDENTIALS.sub("", wl[k].strip())) != norm(CREDENTIALS.sub("", line.strip())):
+                    window = "\n".join(wl[:k]); break
             rank, title = classify_title(window)
             snippet = re.sub(r"\s+", " ", window[:160]).strip()
             if rank:
@@ -176,12 +203,42 @@ def rank_on_page(text: str, display_name: str, last_name: str) -> tuple[str | No
     return fallback
 
 
+def name_of(line: str) -> str | None:
+    """The person's name if this line is essentially a name ("Dr. Ada
+    Lovelace, Ph.D., AICP", "Ada Lovelace (she/her)"), else None."""
+    clean = HONORIFIC.sub("", line.strip()).strip()
+    clean = re.sub(r"\s*\([^)]*\)", "", clean).strip()
+    clean = CREDENTIALS.sub("", clean).strip(" ,")
+    words = clean.split()
+    if (NAME_RE.fullmatch(clean) and not (set(norm(clean).split()) & NOT_NAME_WORDS) and 2 <= len(words) <= 4
+            and not clean.isupper()                                           # SPOTLIGHT STORIES
+            and sum(1 for w in words if w[:1].isupper()) == len(words)):
+        return clean
+    return None
+
+
+def is_name_line(line: str) -> bool:
+    return name_of(line) is not None
+
+
 def names_with_tenure_titles(text: str) -> list[tuple[str, str]]:
     """(name, rank) for every tenure-line title on the page that has a
     name-like line just before it. Strict on purpose: a false new hire puts a
     stranger on the site."""
     out = []
+    side, pos = [], 0                  # (start, end) of emeritus / adjunct / staff sections
+    start = None
+    for line in text.split("\n"):
+        if SIDE_SECTION.match(line) and start is None:
+            start = pos
+        elif CORE_SECTION.match(line) and start is not None:
+            side.append((start, pos)); start = None
+        pos += len(line) + 1
+    if start is not None:
+        side.append((start, len(text)))
     for m in TITLE_RE.finditer(text):
+        if any(a <= m.start() < b for a, b in side):
+            continue
         ls = text.rfind("\n", 0, m.start()) + 1
         le = text.find("\n", m.end())
         rank, title = classify_title(text[ls:le if le >= 0 else len(text)])
@@ -190,13 +247,11 @@ def names_with_tenure_titles(text: str) -> list[tuple[str, str]]:
         before = text[max(0, m.start() - 140):m.start()]
         lines = [l.strip(" ,|•·-") for l in before.split("\n") if l.strip()]
         cand = None
-        for line in reversed(lines[-3:]):
-            clean = HONORIFIC.sub("", line.strip()).strip()
-            nm = NAME_RE.fullmatch(clean)
-            words = clean.split()
-            if (nm and not (set(norm(clean).split()) & NOT_NAME_WORDS) and 2 <= len(words) <= 4
-                    and not clean.isupper()                                   # SPOTLIGHT STORIES
-                    and sum(1 for w in words if w[:1].isupper()) == len(words)):
+        for i, line in enumerate(reversed(lines[-3:])):
+            if i > 0 and TITLE_RE.search(line):
+                break                          # the previous entry's title: its name is not this one's
+            clean = name_of(line)
+            if clean:
                 cand = clean; break
         if cand:
             out.append((cand, rank))
@@ -205,6 +260,22 @@ def names_with_tenure_titles(text: str) -> list[tuple[str, str]]:
         if norm(n) not in seen:
             seen.add(norm(n)); uniq.append((n, r))
     return uniq
+
+
+NICKNAMES = {"dave": {"david"}, "trish": {"patricia"}, "patty": {"patricia"}, "tish": {"patricia"},
+             "tim": {"timothy"}, "chris": {"christopher", "christine", "christina"}, "bill": {"william"},
+             "will": {"william"}, "bob": {"robert"}, "rob": {"robert"}, "bert": {"robert"}, "dick": {"richard"},
+             "rick": {"richard"}, "jim": {"james"}, "jimmy": {"james"}, "mike": {"michael"}, "tom": {"thomas"},
+             "joe": {"joseph"}, "jeff": {"jeffrey"}, "steve": {"steven", "stephen"}, "tony": {"anthony"},
+             "ted": {"theodore", "edward"}, "ed": {"edward"}, "ken": {"kenneth"}, "ron": {"ronald"},
+             "don": {"donald"}, "dan": {"daniel"}, "danny": {"daniel"}, "sam": {"samuel", "samantha"},
+             "alex": {"alexander", "alexandra"}, "kate": {"katherine", "kathryn", "catherine"},
+             "katie": {"katherine", "kathryn"}, "kathy": {"katherine", "kathryn", "kathleen"},
+             "liz": {"elizabeth"}, "beth": {"elizabeth"}, "betsy": {"elizabeth"}, "jen": {"jennifer"},
+             "jenny": {"jennifer"}, "sue": {"susan", "suzanne"}, "meg": {"margaret", "megan"},
+             "peggy": {"margaret"}, "maggie": {"margaret"}, "andy": {"andrew"}, "drew": {"andrew"},
+             "nick": {"nicholas"}, "matt": {"matthew"}, "greg": {"gregory"}, "larry": {"lawrence"},
+             "jerry": {"gerald", "jerome"}, "jake": {"jacob"}, "ben": {"benjamin"}, "bev": {"beverly"}}
 
 
 def known_person(name: str, people: list[dict]) -> dict | None:
@@ -230,14 +301,18 @@ def known_person(name: str, people: list[dict]) -> dict | None:
             return 0.9                                            # an initial
         if len(a) >= 3 and len(b) >= 3 and (a.endswith(b) or b.endswith(a)):
             return 0.9                                            # a short form
+        if b in NICKNAMES.get(a, ()) or a in NICKNAMES.get(b, ()):
+            return 0.9                                            # "Dave" for David, "Trish" for Patricia
         return jaro_winkler(a, b)
 
     for p in people:
         ours = norm(p["display_name"]).split()
-        if not ours or ours[-1] != last:
-            pl = norm(p.get("last_name") or "").split()
-            if not pl or pl[-1] != last:
-                continue
+        pl = norm(p.get("last_name") or "").split()
+        # the page's surname is ours, or one part of a compound one: "Aurora
+        # Echavarria" for Echavarria Canales, "Hassaan Furqan" for Hassaan Furqan
+        # Khan, "Elgeneidy" for El-Geneidy
+        if not ours or (last != ours[-1] and last not in pl and last not in ours[1:] and "".join(pl) != last):
+            continue
         ours_given = ours[:-1] or norm(p.get("first_name") or "").split()
         s = max((agrees(g, o) for g in given for o in ours_given), default=0.0)
         if s >= 0.85 and s > score:
@@ -358,6 +433,19 @@ FIELDS = ["department_id", "department", "status", "url", "person_id", "name", "
           "site_title", "site_rank", "kind", "snippet"]
 
 
+HOLD_FILE = ROSTER_DIR / "new_hire_hold.csv"
+
+
+def load_hold() -> set[tuple[str, str]]:
+    """(department_id, normalised name) of new_hire rows --apply all must skip:
+    names from a school- or department-wide page that are not the planning
+    program's (Alex, 2026-09-27), and names awaiting review. Each row says why."""
+    if not HOLD_FILE.exists():
+        return set()
+    _, rows = read_csv(HOLD_FILE)
+    return {(r["department_id"], norm(r["name"])) for r in rows}
+
+
 def load_saved(text_dir: Path | None) -> dict[str, list[tuple[str, str]]]:
     out: dict[str, list] = {}
     if not text_dir or not text_dir.exists():
@@ -422,7 +510,8 @@ def main(argv=None) -> None:
     pfields, people = read_csv(ROSTER_DIR / "person.csv")
     next_aff = max(int(a["affiliation_id"]) for a in affs) + 1
     next_pid = max(int(p["person_id"]) for p in people) + 1
-    promoted = added = 0
+    hold = load_hold()
+    promoted = added = held = 0
     for r in rows:
         if r["kind"] in ("promotion", "demotion"):
             for a in affs:
@@ -435,6 +524,9 @@ def main(argv=None) -> None:
                     next_aff += 1; promoted += 1
                     break
         elif r["kind"] == "new_hire" and r["status"] == "ok" and args.apply == "all":
+            if (r["department_id"], norm(r["name"])) in hold:
+                held += 1
+                continue
             parts = r["name"].split()
             people.append({k: None for k in pfields} | {"person_id": next_pid, "first_name": parts[0],
                           "last_name": parts[-1], "middle_name": " ".join(parts[1:-1]) or None,
@@ -446,7 +538,8 @@ def main(argv=None) -> None:
             next_aff += 1; next_pid += 1; added += 1
     write_csv(ROSTER_DIR / "affiliation.csv", aff_fields, affs)
     write_csv(ROSTER_DIR / "person.csv", pfields, people)
-    print(f"applied: {promoted} rank changes, {added} new hires" + (" (new hires held; --apply all adds them)" if args.apply == "ranks" else ""))
+    print(f"applied: {promoted} rank changes, {added} new hires" + (" (new hires held; --apply all adds them)" if args.apply == "ranks"
+          else f"; {held} held by {HOLD_FILE.name}"))
 
 
 if __name__ == "__main__":

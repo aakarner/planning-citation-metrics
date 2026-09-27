@@ -16,6 +16,66 @@ Rank changes from the 61 readable programs were applied on 2026-09-27 (49 up,
 5 down). New hires from those programs are held for Alex's glance; the browser
 pass adds the other 59 programs, then `--apply all` once, with Alex.
 
+## Applied 2026-09-27, after the browser pass
+
+`--apply all` wrote 30 rank changes (27 up, 3 down) and one new person, Ryan G.
+Miller (Cal Poly SLO; OpenAlex matched). Alex held back the 19 school-wide rows
+below. Everything else is also held, in `data/roster/new_hire_hold.csv`, with a
+reason per row: the 48 new hires from the first 61 programs are still waiting
+for Alex's review (UC San Diego and MIT first), and so is UCLA's Eric Avila.
+To release a name, delete its row and re-run `--apply all`.
+
+Sabrina Harris (Iowa) turned out to be "Assistant Professor of Instruction",
+so she is not a new hire; the extractor now reads "of instruction" as non-tenure.
+
+## Browser pass: done 2026-09-27
+
+The fresh scan found the same 59 programs. All 59 were attempted: 38 page files
+saved in `build/dept_pages/` (local; `build/` is ignored), 33 URLs fixed in
+`department.csv`, per-program notes in `build/dept_pages/NOTES.md`. The merged
+run reads **98 of 120** programs. It proposes 27 promotions, 3 demotions and 68
+new hires, 22 of them from the browser pass. Nothing is applied.
+
+Before `--apply all`, decide on these `new_hire` rows. The page is a whole
+department or school, and the guard for that did not trip:
+
+- **Arizona State (10)**: Cerveny, Asner, Balling, Dorn, Pasqualetti, Schmeeckle,
+  Hondula, Baier, Elmallah, Hsu. These are geographers and climate scientists
+  from the SGSUP school-wide page.
+- **Northern Arizona (3)**: Friederici, Heath, Keleman Saxena. The department
+  includes recreation, and Saxena's page says "Department of Anthropology".
+- **Texas A&M (5)**: Dvorak, Huang, Li, McNair, Zhu. The department is
+  landscape architecture plus planning; Dvorak coordinates the MLA.
+- **Toledo (1)**: Minxuan Lan, from the geography department's list.
+
+The ones that look like real planning hires are Ryan G. Miller (Cal Poly SLO)
+and probably Sabrina Harris (Iowa).
+
+The extractor gained guards from real misreads, each with a test. Under the old
+code these would have been applied:
+- teaching-stream, "Professor of Teaching", status and instructional titles
+  were read as tenure-line;
+- names under emeritus, cross-appointed, adjunct and staff headings became
+  new hires;
+- a title was credited to the person above it (Pratt's Eve Baron would have
+  been promoted);
+- ", Ph.D., AICP" after a name hid the name;
+- "GIS Coordinator" and "Main Content" were read as names;
+- nicknames and compound surnames (Dave/David, Trish/Patricia, Echavarria
+  Canales, Furqan Khan, El-Geneidy) made duplicates of people we hold.
+
+Some programs still read as `dead_url` even though they are live:
+- FSU, Georgia Tech and York serve incomplete certificate chains that Python's
+  urllib rejects.
+- Ball State, Eastern Michigan and UCLA return 403 to the crawler's User-Agent.
+
+Their saved pages are still read, and rank rows from them do apply.
+
+Ranks the extractor cannot read (French or Spanish pages, pages without titles,
+single-person programs) are in `NOTES.md`. Montréal has three associates who are
+now *titulaire* (full), and Puerto Rico has four rank changes. The ranks were not
+entered by hand.
+
 ## Per program, two things
 
 1. **Find the faculty listing page** for the *planning program* (not the whole
