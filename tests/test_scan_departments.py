@@ -78,3 +78,35 @@ def test_a_news_paragraph_is_not_a_listing_entry():
     assert rank_on_page(news, "Elmond Bandauko", "Bandauko")[:2] == ("assistant", "assistant professor")
     prose_only = text_of("<p>Andi Binet publishes a reflection on working with the Professor of Practice programme.</p>")
     assert rank_on_page(prose_only, "Andi Binet", "Binet")[0] is None
+
+
+def test_junk_lines_are_not_names():
+    page = text_of("<h3>Curriculum Vitae</h3><p>Professor</p><h3>SPOTLIGHT STORIES</h3><p>Professor</p>"
+                   "<h3>IDEA Center</h3><p>Associate Professor</p><h3>Meet Dr. Rachel Berney</h3><p>Assistant Professor</p>"
+                   "<h3>Emmy Noether</h3><p>Assistant Professor</p>")
+    assert dict(names_with_tenure_titles(page)) == {"Emmy Noether": "assistant"}
+
+
+def test_a_single_word_named_chair_is_not_a_rank():
+    assert classify_title("Mariana Arcaya Germeshausen Professor of Urban Planning") == (None, "named chair")
+    assert classify_title("Germeshausen Professor of Urban Planning") == (None, "named chair")
+    assert classify_title("Justin Steil Professor of Law and Urban Planning") == (None, "named chair")   # unpunctuated name reads the same; a comma is what listings use
+    assert classify_title("Moises Gonzales, Professor CRP") == ("full", "professor")
+    assert classify_title("Professor of Urban Planning") == ("full", "professor")
+
+
+def test_a_headline_about_someone_is_not_their_entry():
+    page = text_of("<h2>Magdalena Novoa’s Work with Chilean Women Featured at Krannert Art Museum</h2>"
+                   "<p>Professor of Planning Jane Doe introduced the exhibit.</p>")
+    assert rank_on_page(page, "Magdalena Novoa", "Novoa")[0] is None
+
+
+def test_known_person_handles_apostrophes_middle_names_and_short_forms():
+    people = [{"person_id": "1", "first_name": "Catherine", "last_name": "D\u2019Ignazio", "display_name": "Catherine D\u2019Ignazio"},
+              {"person_id": "2", "first_name": "Phillip", "last_name": "Thompson", "display_name": "J. Phillip Thompson"},
+              {"person_id": "3", "first_name": "Leonora", "last_name": "Angeles", "display_name": "Leonora Angeles"}]
+    assert known_person("Catherine D'Ignazio", people)["person_id"] == "1"
+    assert known_person("J. Phillip Thompson", people)["person_id"] == "2"
+    assert known_person("Phillip Thompson", people)["person_id"] == "2"
+    assert known_person("Nora Angeles", people)["person_id"] == "3"
+    assert known_person("Jake Lewandowski", people) is None

@@ -68,12 +68,17 @@ NOT_NAME_WORDS = {"assistant", "associate", "professor", "department", "planning
                   "college", "university", "faculty", "director", "chair", "program", "email", "phone", "office",
                   "research", "interests", "education", "contact", "the", "of", "and", "graduate", "undergraduate",
                   "studies", "policy", "design", "architecture", "landscape", "community", "city", "environmental",
-                  "read", "more", "view", "profile", "bio", "full", "emeritus", "emerita", "dean", "lecturer"}
+                  "read", "more", "view", "profile", "bio", "full", "emeritus", "emerita", "dean", "lecturer",
+                  "curriculum", "vitae", "spotlight", "stories", "story", "student", "students", "center", "centre",
+                  "leadership", "thought", "campus", "search", "publications", "publication", "press", "meet",
+                  "recent", "news", "events", "idea", "affiliated", "faculy", "staff", "team", "welcome", "about",
+                  "home", "apply", "admissions", "alumni", "people", "institute", "lab", "laboratory", "seminar"}
 
 
 def norm(s: str) -> str:
-    s = unicodedata.normalize("NFKD", s or "").encode("ascii", "ignore").decode()
-    return re.sub(r"[^a-z ]", " ", s.lower()).strip()
+    s = (s or "").replace("\u2019", "").replace("'", "")            # D'Ignazio and D\u2019Ignazio -> dignazio
+    s = unicodedata.normalize("NFKD", s).encode("ascii", "ignore").decode()
+    return re.sub(r"\s+", " ", re.sub(r"[^a-z ]", " ", s.lower())).strip()
 
 
 def text_of(page: str) -> str:
@@ -109,9 +114,15 @@ def classify_title(window: str) -> tuple[str | None, str | None]:
         # a named chair precedes the word ("Daniel Rose Professor of..."); a
         # departmental chair follows it ("Professor and Chair") and is fine
         before = phrase[:phrase.lower().find("professor")]
+        # one or more capitalised words immediately before "Professor", not
+        # separated from it by punctuation: "Germeshausen Professor", "Daniel
+        # Rose Professor". A person's own name is separated by a comma or a
+        # line break in every listing we have seen ("Ada Lovelace, Professor").
+        tail = before.rstrip()
         named = CHAIR_WORDS.search(before) or (
-            re.search(r"\b[A-Z][a-z]+ (?:[A-Z]\.? ?)?[A-Z][a-z]+ $", before.rstrip() + " ")
-            and not re.search(r"(,|;|\||\.|AICP|Ph\.?D\.?)\s*$", before.rstrip()))
+            re.search(r"(?:^|\s)(?:[A-Z][\w\.\-]*\s+){1,4}$", tail + " ")
+            and not re.search(r"(,|;|\||\.|AICP|Ph\.?D\.?|\)|//)\s*$", tail)
+            and not re.fullmatch(r"\s*(Full|Assistant|Associate|Adjunct|Visiting|Clinical)?\s*", tail))
         if named:
             return None, "named chair"          # rank unreadable from a chair title
     return RANKS[title], title
@@ -146,8 +157,9 @@ def rank_on_page(text: str, display_name: str, last_name: str) -> tuple[str | No
             ls = text.rfind("\n", 0, m.start()) + 1
             line_end = text.find("\n", m.end()); line_end = len(text) if line_end < 0 else line_end
             line = text[ls:line_end]
-            if len(line) > 110:
-                continue                                        # prose, not an entry
+            extra = len(line.strip()) - (m.end() - m.start())
+            if len(line) > 110 or extra > 45:
+                continue                                        # prose or a headline, not an entry
             nxt = text.find("\n", line_end + 1); nxt2 = text.find("\n", nxt + 1) if nxt >= 0 else -1
             window = text[ls:(nxt2 if nxt2 >= 0 else len(text))]
             rank, title = classify_title(window)
@@ -176,7 +188,10 @@ def names_with_tenure_titles(text: str) -> list[tuple[str, str]]:
         for line in reversed(lines[-3:]):
             clean = HONORIFIC.sub("", line.strip()).strip()
             nm = NAME_RE.fullmatch(clean)
-            if nm and not (set(norm(clean).split()) & NOT_NAME_WORDS) and 2 <= len(clean.split()) <= 4:
+            words = clean.split()
+            if (nm and not (set(norm(clean).split()) & NOT_NAME_WORDS) and 2 <= len(words) <= 4
+                    and not clean.isupper()                                   # SPOTLIGHT STORIES
+                    and sum(1 for w in words if w[:1].isupper()) == len(words)):
                 cand = clean; break
         if cand:
             out.append((cand, rank))
@@ -188,27 +203,40 @@ def names_with_tenure_titles(text: str) -> list[tuple[str, str]]:
 
 
 def known_person(name: str, people: list[dict]) -> dict | None:
-    """The roster person this page name is, if any: same last name and a
-    first name that matches, is an initial, or is a close variant of ours.
+    """The roster person this page name is, if any: same last name, and a
+    given name that agrees with one of ours.
 
-    Deliberately generous on the first name. "Adam" and "Ada" Lovelace cannot
-    be told apart by string distance, and treating a near-name as someone we
-    already hold is the safe error: it can cost a missed new hire, never a
-    stranger added to the site."""
-    n = norm(name).split()
-    if len(n) < 2:
+    "Agrees" means equal, an initial of it, a close variant (Jaro-Winkler),
+    or a short form -- "Nora" for Leonora, "Beth" for Elizabeth -- checked
+    against every given-name token we hold, so "J. Phillip Thompson" on a
+    page matches the roster's "J. Phillip Thompson" even though our first_name
+    field says Phillip. Deliberately generous: treating a near-name as someone
+    we already hold can cost a missed new hire, never a stranger on the site."""
+    toks = norm(name).split()
+    if len(toks) < 2:
         return None
-    first, last = n[0], n[-1]
+    given, last = toks[:-1], toks[-1]
     best, score = None, 0.0
+
+    def agrees(a: str, b: str) -> float:
+        if a == b:
+            return 1.0
+        if len(a) <= 2 and b.startswith(a[0]) or len(b) <= 2 and a.startswith(b[0]):
+            return 0.9                                            # an initial
+        if len(a) >= 3 and len(b) >= 3 and (a.endswith(b) or b.endswith(a)):
+            return 0.9                                            # a short form
+        return jaro_winkler(a, b)
+
     for p in people:
-        pl = norm(p["last_name"] or p["display_name"].split()[-1]).split()[-1:]
-        if not pl or pl[0] != last:
-            continue
-        pf = norm(p["first_name"] or p["display_name"].split()[0]).split()[:1]
-        s = jaro_winkler(first, pf[0]) if pf else 0.0
-        if first and pf and (first == pf[0] or first[0] == pf[0][0] and len(first) <= 2 or s >= 0.85):
-            if s > score:
-                best, score = p, s
+        ours = norm(p["display_name"]).split()
+        if not ours or ours[-1] != last:
+            pl = norm(p.get("last_name") or "").split()
+            if not pl or pl[-1] != last:
+                continue
+        ours_given = ours[:-1] or norm(p.get("first_name") or "").split()
+        s = max((agrees(g, o) for g in given for o in ours_given), default=0.0)
+        if s >= 0.85 and s > score:
+            best, score = p, s
     return best
 
 
@@ -261,14 +289,26 @@ def scan_department(dept: dict, roster: list[dict], everyone: list[dict], saved:
     def named_on(text):
         return sum(1 for p in roster if find_person(text, p["display_name"], p["last_name"]) >= 0)
     listing = [(u, t) for u, t in pages if named_on(t) >= LISTING_MIN]
+
+    def distinguishes_ranks(text):
+        """Laval's English page calls every professeur 'Professor'. If a page
+        gives our people titles and none of them is assistant or associate,
+        it is not telling us ranks, and its 'Professor' means nothing."""
+        seen = [classify_title(text[find_person(text, p["display_name"], p["last_name"]):][:300])[1]
+                for p in roster if find_person(text, p["display_name"], p["last_name"]) >= 0]
+        seen = [t for t in seen if t]
+        return len(seen) < 2 or any(t in ("assistant professor", "associate professor") for t in seen)
     if status == "ok" and not listing:
         status = "no_listing_found" if pages else "unreadable"
     rows.append({"department_id": dept["department_id"], "department": dept["short_name"], "status": status,
                  "url": (listing[0][0] if listing else dept.get("url")), "kind": "status"})
+    flat = {u for u, t in listing if not distinguishes_ranks(t)}
     for p in roster:
         best = (None, None, "", "")
         for u, t in (listing or pages):
             rank, title, snip = rank_on_page(t, p["display_name"], p["last_name"])
+            if rank == "full" and u in flat:
+                rank, title = None, "professor (page does not distinguish ranks)"
             if rank:
                 best = (rank, title, snip, u); break
             if title and not best[1]:
