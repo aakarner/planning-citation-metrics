@@ -1,7 +1,4 @@
 department_id,department,name,site_rank,reason,held_on
-1,Alabama A&M University,Pascal Buggs,assistant,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-1,Alabama A&M University,Rayford Richardson,assistant,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-1,Alabama A&M University,Zakhary Mallett,assistant,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
 3,Arizona State University,Cheng-Kai Hsu,assistant,"school- or department-wide page, not the planning program (Alex, 2026-09-27)",2026-09-27
 3,Arizona State University,David Hondula,associate,"school- or department-wide page, not the planning program (Alex, 2026-09-27)",2026-09-27
 3,Arizona State University,Greg Asner,full,"school- or department-wide page, not the planning program (Alex, 2026-09-27)",2026-09-27
@@ -12,58 +9,16 @@ department_id,department,name,site_rank,reason,held_on
 3,Arizona State University,Robert Balling,full,"school- or department-wide page, not the planning program (Alex, 2026-09-27)",2026-09-27
 3,Arizona State University,Ronald Dorn,full,"school- or department-wide page, not the planning program (Alex, 2026-09-27)",2026-09-27
 3,Arizona State University,Salma Elmallah,assistant,"school- or department-wide page, not the planning program (Alex, 2026-09-27)",2026-09-27
-16,Eastern Washington,Kristin Edquist,full,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-16,Eastern Washington,Ning Li,associate,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-16,Eastern Washington,Robert Zinke,full,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-25,Jackson State University,Firas Al-Douri,,pending Alex's review of the new hires from the first 61 programs (seen in an earlier run today),2026-09-27
-31,"Minnesota State University, Mankato",Paul Prew,full,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-34,New Jersey Institute of Technology,Glenn Goldman,full,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-34,New Jersey Institute of Technology,Hannah Berkin-Harper,associate,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-34,New Jersey Institute of Technology,Maurie Cohen,full,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-35,New York University,John Billings,full,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-35,New York University,Sewin Chan,associate,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
+25,Jackson State University,Firas Al-Douri,,"page shows no rank, so tenure-line status is unknown; not added",2026-09-27
 37,Northern Arizona University,Alder Keleman Saxena,assistant,"school- or department-wide page, not the planning program (Alex, 2026-09-27)",2026-09-27
 37,Northern Arizona University,Peter Friederici,full,"school- or department-wide page, not the planning program (Alex, 2026-09-27)",2026-09-27
 37,Northern Arizona University,Sandra Eileen Heath,assistant,"school- or department-wide page, not the planning program (Alex, 2026-09-27)",2026-09-27
-42,Rowan University,Charles McGlynn,assistant,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-42,Rowan University,John Mullen,assistant,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-46,San Diego State University,Megan Welsh Carroll,full,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-46,San Diego State University,Paul Kaplan,associate,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
 52,Texas A&M University,Bruce Dvorak,full,"school- or department-wide page, not the planning program (Alex, 2026-09-27)",2026-09-27
 52,Texas A&M University,Chang-Shan Huang,associate,"school- or department-wide page, not the planning program (Alex, 2026-09-27)",2026-09-27
 52,Texas A&M University,Michael McNair,assistant,"school- or department-wide page, not the planning program (Alex, 2026-09-27)",2026-09-27
 52,Texas A&M University,Rui Zhu,assistant,"school- or department-wide page, not the planning program (Alex, 2026-09-27)",2026-09-27
 52,Texas A&M University,Shengxiao Li,assistant,"school- or department-wide page, not the planning program (Alex, 2026-09-27)",2026-09-27
-60,UC San Diego,Christo Sims,associate,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-60,UC San Diego,Danielle Raudenbush,associate,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-60,UC San Diego,Elana Zilberg,associate,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-60,UC San Diego,Fonna Forman,full,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-60,UC San Diego,Gary Fields,full,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-60,UC San Diego,K. Wayne Yang,full,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-60,UC San Diego,Lilly Irani,full,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-60,UC San Diego,Sharon Rose,full,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-60,UC San Diego,Teddy Cruz,full,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-60,UC San Diego,Zoltan L. Hajnal,full,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
 61,UCLA,Eric Avila,full,Chicana/o Studies and History with a courtesy urban planning title,2026-09-27
-62,UNC,Kate Harwood,assistant,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-62,UNC,Noah Kittner,associate,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-62,UNC,Tab Combs,assistant,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-66,"University at Buffalo, The State University of New York",Jin Young Song,associate,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-73,University of Delaware,Joseph Trainor,full,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-74,University of Florida,Michael A.N. Montilla,assistant,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-74,University of Florida,Vivian Wong,assistant,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-74,University of Florida,Zhaoxi Zhang,assistant,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-75,University of Georgia,Jessica Fernandez,associate,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-75,University of Georgia,Scott Nesbit,associate,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-79,"University of Illinois, Urbana-Champaign",Brian Deal,full,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-79,"University of Illinois, Urbana-Champaign",Irene Farah,assistant,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-79,"University of Illinois, Urbana-Champaign",Sean Kennedy,assistant,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-87,University of Memphis,Andy Guthrie,,pending Alex's review of the new hires from the first 61 programs (seen in an earlier run today),2026-09-27
-88,University of Michigan,Catie Newell,full,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-92,University of New Mexico,Elspeth Iralu,assistant,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-102,University of Southern Maine,Carolyn Arcand,assistant,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
+87,University of Memphis,Andy Guthrie,,"page shows no rank, so tenure-line status is unknown; not added",2026-09-27
 106,University of Toledo,Minxuan Lan,assistant,"school- or department-wide page, not the planning program (Alex, 2026-09-27)",2026-09-27
-114,Virginia Commonwealth University,Jim Smither,,pending Alex's review of the new hires from the first 61 programs (seen in an earlier run today),2026-09-27
-114,Virginia Commonwealth University,Susan T. Gooden,full,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-117,West Chester University,Amy J. Lynch,associate,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
-117,West Chester University,Yingying Lyu,assistant,pending Alex's review of the new hires from the first 61 programs (UC San Diego and MIT lists first),2026-09-27
+114,Virginia Commonwealth University,Jim Smither,,"page shows no rank, so tenure-line status is unknown; not added",2026-09-27

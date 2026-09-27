@@ -59,10 +59,19 @@ Rough time: about 2 minutes per person.
 
 ## 2. `rank_review.xlsx` — is this person's rank still right?
 
-**139 people, one row each.** We hold each of them as an assistant or
+**99 people, one row each.** We hold each of them as an assistant or
 associate professor and have for seven years or more, so a promotion may have
 happened without our knowing. Some will turn out not to be tenure-line faculty
 at all.
+
+Why these 99 and not more: on 27 September we read every program website we
+could and took ranks straight from the faculty listings — 84 rank changes, and
+the people whose listing confirmed their rank dropped off this sheet. What is
+left is the people whose program page we could not read (a directory that
+only works in a browser, a dead link, a page in French or Spanish) or that did
+not list them. So the **Program website** link may not show them directly;
+the person's own profile page, a Google search of their name and university,
+or the university directory are the next places to look.
 
 For each row:
 
