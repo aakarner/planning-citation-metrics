@@ -88,7 +88,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 87,87,33,associate,regular,1,,,workbook-2026; move verified 2026-09-13 against Scholar profile (verified email domain) and department page
 88,87,13,assistant,regular,1,,2026-09-13,"workbook-2026; stale duplicate row, closed at migration, actual end date unknown"
 89,88,13,associate,regular,1,,2026-09-14,"workbook-2026 | closed 2026-09-14: promote; change from Scholar profile 2026-09-14: email @dal.ca; affiliation ""Professor of School of Planning, and Civil and Resource Engineering, Dalhousie University"""
-90,89,13,full,regular,1,,,workbook-2026
+90,89,13,full,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: adjunct; listed only under Adjunct Faculty on the Dalhousie School of Planning page (browser pass 2026-09-27)
 91,90,13,associate,regular,1,,,workbook-2026
 92,91,13,assistant,regular,1,,,workbook-2026
 93,92,13,assistant,regular,1,,2026-09-14,"workbook-2026 | closed 2026-09-14: promote; change from Scholar profile 2026-09-14: email @dal.ca; affiliation ""Associate Professor, Dalhousie University"""
@@ -150,7 +150,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 149,148,22,full,regular,1,,,workbook-2026
 150,149,22,associate,regular,1,,,workbook-2026
 151,150,22,assistant,regular,1,,,workbook-2026
-152,151,22,full,regular,1,,,workbook-2026
+152,151,22,full,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: emeritus; listed under Professors Emeriti on the Hunter College faculty page (browser pass 2026-09-27)
 153,152,22,associate,regular,1,,,workbook-2026
 154,153,22,associate,regular,1,,,workbook-2026
 155,154,22,full,regular,1,,,workbook-2026
@@ -404,7 +404,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 403,402,54,associate,regular,1,,,workbook-2026
 404,403,54,full,regular,1,,,workbook-2026
 405,404,54,full,regular,1,,,workbook-2026
-406,405,54,full,regular,1,,,workbook-2026
+406,405,54,full,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: emeritus; 'Professor Emeritus' on his New School NSSR profile (browser pass 2026-09-27)
 407,406,55,assistant,regular,1,,,workbook-2026
 408,407,55,associate,regular,1,,,workbook-2026
 409,408,55,full,regular,1,,,workbook-2026
@@ -526,13 +526,13 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 525,524,65,full,regular,1,,,workbook-2026
 526,525,65,associate,regular,1,,,workbook-2026
 527,526,65,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @umontreal.ca; affiliation ""Professor of urban planning - Université de Montréal"""
-528,527,65,associate,regular,1,,,workbook-2026
-529,528,65,associate,regular,1,,,workbook-2026
+528,527,65,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion; 'Professeur titulaire' on department page https://urbanismepaysage.umontreal.ca/a-propos/corps-professoral/ (browser pass 2026-09-27; French titles)
+529,528,65,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion; 'Professeur titulaire' on department page https://urbanismepaysage.umontreal.ca/a-propos/corps-professoral/ (browser pass 2026-09-27; French titles)
 530,529,65,associate,regular,1,,,workbook-2026
 531,530,65,associate,regular,1,,,workbook-2026
 532,531,65,full,regular,1,,,workbook-2026
 533,532,65,full,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: depart; change from Scholar profile 2026-09-15: email @uclouvain.be; affiliation ""Université catholique de Louvain"""
-534,533,65,associate,regular,1,,,workbook-2026
+534,533,65,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion; 'Professeur titulaire' on department page https://urbanismepaysage.umontreal.ca/a-propos/corps-professoral/ (browser pass 2026-09-27; French titles)
 535,534,64,associate,regular,1,,,workbook-2026
 536,535,64,full,regular,1,,,workbook-2026
 537,536,64,assistant,regular,1,,,workbook-2026
@@ -712,7 +712,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 711,710,82,associate,regular,1,,,workbook-2026
 712,711,82,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @louisville.edu; affiliation ""Professor, University of Louisville"""
 713,712,82,associate,regular,1,,,workbook-2026
-714,713,82,associate,regular,1,,,workbook-2026
+714,713,82,associate,regular,1,,2026-09-27,"workbook-2026 | closed 2026-09-27: promotion; 'Professor' on her Louisville profile (browser pass 2026-09-27, via search)"
 715,714,83,assistant,regular,1,,,workbook-2026
 716,715,83,full,regular,1,,,workbook-2026
 717,716,83,associate,regular,1,,,workbook-2026
@@ -732,7 +732,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 731,730,84,assistant,regular,1,,,workbook-2026
 732,731,84,assistant,regular,1,,,workbook-2026
 733,732,84,associate,regular,1,,,workbook-2026
-734,733,85,assistant,regular,1,,,workbook-2026
+734,733,85,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion; 'Associate Professor' on the UMass Amherst LARP directory (browser pass 2026-09-27; extractor read 'Director' first)
 735,734,85,full,regular,1,,,workbook-2026
 736,735,85,associate,regular,1,,,workbook-2026
 737,736,85,full,regular,1,,,workbook-2026
@@ -786,7 +786,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 785,784,90,associate,regular,1,,,workbook-2026
 786,785,90,full,regular,1,,,workbook-2026
 787,786,90,associate,regular,1,,,workbook-2026
-788,787,91,assistant,regular,1,,,workbook-2026
+788,787,91,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: move; 'Assistant Professor' on the Cal Poly SLO planning faculty page; not on the Nebraska page (browser pass 2026-09-27)
 789,788,91,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://architecture.unl.edu/people/college-directory/
 790,789,91,full,regular,1,,,workbook-2026
 791,790,92,full,regular,1,,,workbook-2026
@@ -845,11 +845,11 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 844,842,97,associate,regular,1,,,workbook-2026
 845,843,97,full,regular,1,,,workbook-2026
 846,844,97,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @upenn.edu; affiliation ""Professor of City Planning and Urban Studies, University of Pennsylvania"""
-847,845,98,assistant,regular,1,,,workbook-2026
+847,845,98,assistant,regular,1,,2026-09-27,"workbook-2026 | closed 2026-09-27: promotion; 'Catedrática Asociada' on department page https://planificacion.uprrp.edu/facultad/ (browser pass 2026-09-27; Spanish titles, page dated 2024-10-31)"
 848,846,98,full,regular,1,,,workbook-2026
-849,847,98,associate,regular,1,,,workbook-2026
+849,847,98,associate,regular,1,,2026-09-27,"workbook-2026 | closed 2026-09-27: promotion; 'Catedrática y Directora' on department page https://planificacion.uprrp.edu/facultad/ (browser pass 2026-09-27; Spanish titles, page dated 2024-10-31)"
 850,848,98,full,regular,1,,,workbook-2026
-851,849,98,associate,regular,1,,,workbook-2026
+851,849,98,associate,regular,1,,2026-09-27,"workbook-2026 | closed 2026-09-27: promotion; 'Catedrática' on department page https://planificacion.uprrp.edu/facultad/ (browser pass 2026-09-27; Spanish titles, page dated 2024-10-31)"
 852,850,98,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @upr.edu; affiliation ""Associate Professor, Graduate School of Planning, University of Puerto Rico - Río Piedras"""
 853,851,98,assistant,regular,1,,,workbook-2026
 854,852,99,full,regular,1,,,workbook-2026
@@ -913,7 +913,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 912,910,107,full,regular,1,,,workbook-2026
 913,911,107,full,regular,1,,,workbook-2026
 914,912,107,assistant,regular,1,,,workbook-2026
-915,913,107,assistant,regular,1,,,workbook-2026
+915,913,107,assistant,regular,1,,2026-09-27,"workbook-2026 | closed 2026-09-27: other; 'Assistant Professor (Status)' on the Toronto geography & planning directory: a status-only appointment, not a regular line (browser pass 2026-09-27)"
 916,914,107,full,regular,1,,,workbook-2026
 917,915,107,assistant,regular,1,,,workbook-2026
 918,916,107,full,regular,1,,,workbook-2026
@@ -931,7 +931,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 930,928,109,associate,regular,1,,,workbook-2026
 931,929,109,associate,regular,1,,,workbook-2026
 932,930,109,full,regular,1,,,workbook-2026
-933,931,109,associate,regular,1,,,workbook-2026
+933,931,109,associate,regular,1,,2026-09-27,"workbook-2026 | closed 2026-09-27: promotion; 'Professor' on his UVA profile (browser pass 2026-09-27, via search; directory is JS)"
 934,932,109,associate,regular,1,,,workbook-2026
 935,933,110,associate,regular,1,,,workbook-2026
 936,934,110,full,regular,1,,,workbook-2026
@@ -1085,7 +1085,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 1085,677,78,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @uic.edu; affiliation ""Professor, Department of Urban Planning and Policy, University of Illinois Chicago"""
 1086,683,97,assistant,regular,1,2026-09-15,2026-09-27,"change from Scholar profile 2026-09-15: email @?; affiliation ""University of Pennsylvania"" | closed 2026-09-27: promotion read from department page https://www.design.upenn.edu/people?area=70"
 1087,695,80,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @uiowa.edu; affiliation ""Professor, School of Planning & Public Affairs, University of Iowa"""
-1088,711,82,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @louisville.edu; affiliation ""Professor, University of Louisville"""
+1088,711,82,full,regular,1,2026-09-15,2026-09-27,"change from Scholar profile 2026-09-15: email @louisville.edu; affiliation ""Professor, University of Louisville"" | closed 2026-09-27: demotion; 'Associate Professor' on his Louisville profile (browser pass 2026-09-27, via search; department list is a JS widget)"
 1089,717,83,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @umanitoba.ca; affiliation ""Associate Professor, City Planning, University of Manitoba"""
 1090,750,74,assistant,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @ufl.edu; affiliation ""University of Florida"""
 1091,808,46,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @sdsu.edu; affiliation ""San Diego State University"""
@@ -1093,7 +1093,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 1093,836,97,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @upenn.edu; affiliation ""Associate Professor of Urban Planning, University of Pennsylvania"""
 1094,841,97,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @upenn.edu; affiliation ""Professor, University of Pennsylvania"""
 1095,844,97,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @upenn.edu; affiliation ""Professor of City Planning and Urban Studies, University of Pennsylvania"""
-1096,850,98,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @upr.edu; affiliation ""Associate Professor, Graduate School of Planning, University of Puerto Rico - Río Piedras"""
+1096,850,98,associate,regular,1,2026-09-15,2026-09-27,"change from Scholar profile 2026-09-15: email @upr.edu; affiliation ""Associate Professor, Graduate School of Planning, University of Puerto Rico - Río Piedras"" | closed 2026-09-27: demotion; 'Catedrático Auxiliar' on department page https://planificacion.uprrp.edu/facultad/ (browser pass 2026-09-27; Spanish titles, page dated 2024-10-31)"
 1097,885,103,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @uta.edu; affiliation ""Associate Professor, University of Texas at Arlington"""
 1098,889,104,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @utexas.edu; affiliation ""Professor of Community and Regional Planning, University of Texas at Austin"""
 1099,943,110,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @uw.edu; affiliation ""Professor of Urban Design and Planning, University of Washington"""
@@ -1195,3 +1195,19 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 1195,962,111,associate,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://uwaterloo.ca/planning/contacts?title=&group%5B68%5D=68: ""associate professor"""
 1196,1007,115,full,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://spia.vt.edu/people/Faculty.html: ""professor"""
 1197,1044,120,full,regular,1,2026-09-27,,"rank verified 2026-09-27; department page https://www.yorku.ca/euc/our-people/our-faculty/: ""professor"""
+1198,527,65,full,regular,1,2026-09-27,,rank verified 2026-09-27; 'Professeur titulaire' on department page https://urbanismepaysage.umontreal.ca/a-propos/corps-professoral/ (browser pass 2026-09-27; French titles)
+1199,528,65,full,regular,1,2026-09-27,,rank verified 2026-09-27; 'Professeur titulaire' on department page https://urbanismepaysage.umontreal.ca/a-propos/corps-professoral/ (browser pass 2026-09-27; French titles)
+1200,533,65,full,regular,1,2026-09-27,,rank verified 2026-09-27; 'Professeur titulaire' on department page https://urbanismepaysage.umontreal.ca/a-propos/corps-professoral/ (browser pass 2026-09-27; French titles)
+1201,845,98,associate,regular,1,2026-09-27,,"rank verified 2026-09-27; 'Catedrática Asociada' on department page https://planificacion.uprrp.edu/facultad/ (browser pass 2026-09-27; Spanish titles, page dated 2024-10-31)"
+1202,847,98,full,regular,1,2026-09-27,,"rank verified 2026-09-27; 'Catedrática y Directora' on department page https://planificacion.uprrp.edu/facultad/ (browser pass 2026-09-27; Spanish titles, page dated 2024-10-31)"
+1203,849,98,full,regular,1,2026-09-27,,"rank verified 2026-09-27; 'Catedrática' on department page https://planificacion.uprrp.edu/facultad/ (browser pass 2026-09-27; Spanish titles, page dated 2024-10-31)"
+1204,850,98,assistant,regular,1,2026-09-27,,"rank verified 2026-09-27; 'Catedrático Auxiliar' on department page https://planificacion.uprrp.edu/facultad/ (browser pass 2026-09-27; Spanish titles, page dated 2024-10-31)"
+1205,733,85,associate,regular,1,2026-09-27,,rank verified 2026-09-27; 'Associate Professor' on the UMass Amherst LARP directory (browser pass 2026-09-27; extractor read 'Director' first)
+1206,711,82,associate,regular,1,2026-09-27,,"rank verified 2026-09-27; 'Associate Professor' on his Louisville profile (browser pass 2026-09-27, via search; department list is a JS widget)"
+1207,713,82,full,regular,1,2026-09-27,,"rank verified 2026-09-27; 'Professor' on her Louisville profile (browser pass 2026-09-27, via search)"
+1208,931,109,full,regular,1,2026-09-27,,"rank verified 2026-09-27; 'Professor' on his UVA profile (browser pass 2026-09-27, via search; directory is JS)"
+1209,405,54,full,emeritus,1,2026-09-27,,rank verified 2026-09-27; 'Professor Emeritus' on his New School NSSR profile (browser pass 2026-09-27)
+1210,89,13,full,adjunct,1,2026-09-27,,rank verified 2026-09-27; listed only under Adjunct Faculty on the Dalhousie School of Planning page (browser pass 2026-09-27)
+1211,913,107,assistant,other,1,2026-09-27,,"rank verified 2026-09-27; 'Assistant Professor (Status)' on the Toronto geography & planning directory: a status-only appointment, not a regular line (browser pass 2026-09-27)"
+1212,787,7,assistant,regular,1,2026-09-27,,rank verified 2026-09-27; 'Assistant Professor' on the Cal Poly SLO planning faculty page; not on the Nebraska page (browser pass 2026-09-27)
+1213,151,22,full,emeritus,1,2026-09-27,,rank verified 2026-09-27; listed under Professors Emeriti on the Hunter College faculty page (browser pass 2026-09-27)
