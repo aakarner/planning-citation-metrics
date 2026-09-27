@@ -170,11 +170,33 @@ def write_sheet(path: Path, review: list[dict]) -> int:
     return len(review)
 
 
+def refuse_to_overwrite_reviewer_work(path: Path, entry_columns: tuple, force: bool) -> None:
+    """Stop if `path` already holds reviewer entries. A rebuild that silently
+    replaced a half-reviewed sheet lost a row on 2026-09-27; a message is not
+    a gate, so this raises unless --force is given."""
+    if force or not path.exists():
+        return
+    from openpyxl import load_workbook
+    try:
+        ws = load_workbook(path, read_only=True)["Review"]
+    except Exception:
+        return                                              # not one of ours; overwrite
+    rows = ws.iter_rows(min_row=1, values_only=True)
+    hdr = next(rows, None) or ()
+    idx = [hdr.index(c) for c in entry_columns if c in hdr]
+    filled = sum(1 for r in rows if any(r[i] not in (None, "") for i in idx))
+    if filled:
+        raise SystemExit(f"{path} holds {filled} row(s) with reviewer entries; import them first "
+                         f"(pipeline.import_review / import_rank_review) or pass --force to discard them")
+
+
 def main(argv=None) -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--db", type=Path, default=BUILD_DIR / "citations.sqlite")
+    ap.add_argument("--force", action="store_true", help="overwrite even if the existing sheet holds reviewer entries")
     ap.add_argument("--out", type=Path, default=REVIEW_DIR / "rank_review.xlsx")
     args = ap.parse_args(argv)
+    refuse_to_overwrite_reviewer_work(args.out, ("Actual rank", "Since (year)", "ORCID (if shown)", "Where you saw it", "Reviewed by", "Notes"), args.force)
     review = load(args.db)
     if not review:
         raise SystemExit("nobody is due a rank check")

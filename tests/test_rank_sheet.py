@@ -159,3 +159,19 @@ def test_orcids_are_written_with_provenance_and_conflicts_are_flagged():
 def test_an_orcid_only_row_does_not_touch_the_appointment():
     affs, log = apply([decision(decision="", orcid="0000-0002-1825-0097")], [aff()])
     assert len(affs) == 1 and affs[0]["end_date"] == "" and log == []
+
+
+def test_a_sheet_with_reviewer_entries_is_not_silently_overwritten(tmp_path):
+    import pytest
+    from openpyxl import load_workbook
+    from pipeline.build_rank_sheet import refuse_to_overwrite_reviewer_work
+    out = tmp_path / "r.xlsx"
+    write_sheet(out, [row()])
+    cols = ("Actual rank", "Since (year)", "ORCID (if shown)", "Where you saw it", "Reviewed by", "Notes")
+    refuse_to_overwrite_reviewer_work(out, cols, force=False)           # empty sheet: fine
+    wb = load_workbook(out); ws = wb["Review"]; c = {x.value: x.column for x in ws[1]}
+    ws.cell(2, c["Actual rank"], "associate"); wb.save(out)
+    with pytest.raises(SystemExit, match="1 row"):
+        refuse_to_overwrite_reviewer_work(out, cols, force=False)
+    refuse_to_overwrite_reviewer_work(out, cols, force=True)            # explicit discard
+    refuse_to_overwrite_reviewer_work(tmp_path / "absent.xlsx", cols, force=False)
