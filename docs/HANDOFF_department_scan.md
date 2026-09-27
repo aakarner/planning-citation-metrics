@@ -58,7 +58,19 @@ git add data/roster && git commit && git push          # CI deploys
 New people have no PhD year, so the rank-review flag will not see them; the
 Scholar discovery agent will search them on its next batch automatically.
 
-## Dead URLs — 32 programs
+## Start by re-running the scan
+
+```bash
+.venv/bin/python -m pipeline.scan_departments        # read-only; ~5 min
+```
+
+Work from the `kind = status` rows of the CSV it writes, **not from the tables
+below**. The tables are one run's view, and `dead_url` is noisy: a later run
+found only 10 dead against 32 here, because most `URLError` results were
+timeouts, not dead links. The `no_listing_found` set is stable. Anything that
+reads `ok` on the fresh run needs no browser work.
+
+## Dead URLs — 32 programs in the run this brief was written from
 
 | id | Program | Stored URL |
 |---|---|---|
@@ -95,7 +107,7 @@ Scholar discovery agent will search them on its next batch automatically.
 | 118 | Western Washington University | https://huxley.wwu.edu/urban-planning-and-sustainable-development-program |
 | 119 | Westfield State University | http://westfield.ma.edu/academics/geography-and-regional-planning-department |
 
-## Reachable but no listing found — 27 programs
+## Reachable but no listing found — 27 programs (stable across runs)
 
 | id | Program | Stored URL |
 |---|---|---|
