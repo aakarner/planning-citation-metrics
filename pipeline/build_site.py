@@ -461,7 +461,10 @@ def recent_changes(affs: list[dict], since: str | None) -> dict:
         elif new["department_id"] != old["department_id"]:
             out["moves"].append((old["person_id"], old["dept"], new["dept"]))
         elif RANK_ORDER.get(new["rank"], -1) > RANK_ORDER.get(old["rank"], -1):
-            out["promos"].append((old["person_id"], new["dept"], old["rank"], new["rank"]))
+            # where the new rank was read: a program website during a roster
+            # review (mostly records catching up) or a change on a Scholar profile
+            origin = "website" if "department page" in (new.get("source") or "") else "profile"
+            out["promos"].append((old["person_id"], new["dept"], old["rank"], new["rank"], origin))
     return out
 
 
@@ -513,15 +516,19 @@ def index_page(data, slugs, dslugs, base) -> str:
     found = discovery_finds(since)
     # Build the items first and count those, so a badge can never disagree
     # with the list under it (someone found and since departed is in neither).
+    update_month = date.fromisoformat(since).strftime("%B") if since else ""
     found_items = [f'<li>{plink(str(r["person_id"]))}<span class="d">{e(r["department"] or "")}</span>'
                    f'<span class="when">{e(longdate(r["reviewed_at"]))}</span></li>'
                    for r in found if str(r["person_id"]) in by_pid]
     move_items = [f'<li>{plink(str(pid))}<span class="d">{e(o)} &rarr; <b>{e(n)}</b></span></li>'
                   for pid, o, n in ch["moves"] if str(pid) in by_pid]
     promo_items = [f'<li>{plink(str(pid))}<span class="d">{e(d)} &middot; {o} &rarr; <b>{n}</b></span></li>'
-                   for pid, d, o, n in ch["promos"] if str(pid) in by_pid]
+                   for pid, d, o, n, _ in ch["promos"] if str(pid) in by_pid]
+    n_web = sum(1 for pid, *_, origin in ch["promos"] if str(pid) in by_pid and origin == "website")
+    n_prof = len(promo_items) - n_web
+    promo_note = (f'<p class="sub" style="margin:8px 0 6px">{t("home", "new_promos_note", n_pages=n_web, n_profiles=n_prof, update_month=update_month)}</p>'
+                  if promo_items else "")
     found_li, moves_li, promos_li = "".join(found_items), "".join(move_items), "".join(promo_items)
-    update_month = date.fromisoformat(since).strftime("%B") if since else ""
     pop_month = date.fromisoformat(pop_date).strftime("%B") if pop_date else ""
     # one swatch per source, in the order the sentence names them
     mix_key = t("home", "mix_key", gs_n=mix.get("google_scholar", 0), oa_n=mix.get("openalex", 0),
@@ -542,7 +549,7 @@ def index_page(data, slugs, dslugs, base) -> str:
       <ul class="plain">{moves_li}</ul></div>
   </div>
   <details class="fold" style="margin-top:14px"><summary>{t("home", "new_promos_heading")} <span class="count">{len(promo_items)}</span></summary>
-    <ul class="plain two">{promos_li}</ul></details>
+    {promo_note}<ul class="plain two">{promos_li}</ul></details>
   <p class="sub" style="margin-top:12px">{t("home", "new_departed", n=ch["departed"], repo=REPO)}</p>"""
     else:
         new_block = f"""

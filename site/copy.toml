@@ -46,7 +46,7 @@ footer_corrections = """Counts come from public profile pages and change constan
 [home]
 # Values: people_count, dept_count, scholar_date, openalex_date, rankings_href, departments_href,
 #         methods_href, contact, repo, scholar_help, gs_n, oa_n, pop_n, pop_month, update_month,
-#         assistant_median, n (departed count)
+#         assistant_median, n (departed count), n_pages, n_profiles (promotions by where they were read)
 meta_description = """Citation metrics for {people_count} urban planning faculty at {dept_count} programs in the US and Canada."""
 beta_title = "Beta &middot; in active development"
 beta_body_1 = """This site is new and under active development. Figures, rosters and rankings will change as
@@ -90,7 +90,11 @@ new_found_heading = "Scholar profiles found"
 new_found_note = """People previously shown on OpenAlex or Publish or Perish figures who now have a Scholar
      profile on record. The daily search adds more as it finds them."""
 new_moves_heading = "Now at a new program"
-new_promos_heading = "Promotions read from profiles"
+new_promos_heading = "Promotions recorded"
+new_promos_note = """{n_pages} of these were read from program websites during the {update_month} roster
+     review, which mostly brought records up to date rather than marking promotions this term;
+     {n_profiles} were read from changes on Google Scholar profiles. Neither tells us when a
+     promotion actually happened."""
 new_departed = """{n} people left the tracked programs and are no longer listed; their earlier figures
      remain in the <a href="{repo}/tree/main/data">downloadable data</a>."""
 new_empty = "Nothing has changed since the {update_month} collection."

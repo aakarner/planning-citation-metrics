@@ -9,9 +9,10 @@ from pipeline.build_site import collection_window, recent_changes
 ROOT = Path(__file__).resolve().parent.parent
 
 
-def aff(aid, pid, dept, rank, start="", end="", dept_name=None):
+def aff(aid, pid, dept, rank, start="", end="", dept_name=None, source=""):
     return {"affiliation_id": aid, "person_id": pid, "department_id": dept, "dept": dept_name or f"D{dept}",
-            "rank": rank, "appointment_type": "regular", "is_primary": 1, "start_date": start, "end_date": end}
+            "rank": rank, "appointment_type": "regular", "is_primary": 1, "start_date": start, "end_date": end,
+            "source": source}
 
 
 def test_the_collection_window_merges_a_run_spread_over_days():
@@ -38,7 +39,7 @@ def test_a_move_a_promotion_and_a_departure_are_told_apart():
     ]
     ch = recent_changes(affs, "2026-09-14")
     assert ch["moves"] == [("a", "D1", "D2")]
-    assert ch["promos"] == [("b", "D1", "associate", "full")]
+    assert ch["promos"] == [("b", "D1", "associate", "full", "profile")]
     assert ch["departed"] == 1
 
 
@@ -124,3 +125,12 @@ def test_snapshot_files_chain_into_one_run(tmp_path, monkeypatch):
     latest, prev = detect_changes.latest_two("google_scholar")
     assert {r["person_id"] for r in latest} == {"1", "2", "3"}     # 14th, 15th and 22nd are one run
     assert {r["person_id"] for r in prev} == {"1", "2"}             # March is the previous one
+
+
+def test_promotions_say_where_the_rank_was_read():
+    affs = [aff(1, "a", 1, "assistant", end="2026-09-27"),
+            aff(2, "a", 1, "associate", start="2026-09-27", source="rank verified 2026-09-27; department page https://x/faculty"),
+            aff(3, "b", 1, "associate", end="2026-09-15"),
+            aff(4, "b", 1, "full", start="2026-09-15", source="change from Scholar profile 2026-09-15: ...")]
+    ch = recent_changes(affs, "2026-09-14")
+    assert sorted(p[4] for p in ch["promos"]) == ["profile", "website"]
