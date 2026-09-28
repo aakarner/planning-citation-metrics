@@ -191,7 +191,12 @@ anywhere in it. Plain
 Python and SQLite, no Node toolchain. Deployed to GitHub Pages by `.github/workflows/deploy.yml`
 on every push that touches `data/`, `sql/`, or `pipeline/`:
 
-<https://aakarner.github.io/planning-citation-metrics/>
+<https://scholarmetrics.com/>
+
+The custom domain is set in the repository's Pages settings, not by a `CNAME` file, because
+the workflow deploys an artifact. DNS is at NearlyFreeSpeech: four A and four AAAA records for
+GitHub Pages on the apex, and `www` as a CNAME to `aakarner.github.io.`. The old
+`aakarner.github.io/planning-citation-metrics/` address redirects to it.
 
 ## Split OpenAlex records
 
