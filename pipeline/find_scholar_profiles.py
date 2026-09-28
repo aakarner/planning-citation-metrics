@@ -194,6 +194,7 @@ ALIASES = {
     "Virginia Tech": ["Virginia Polytechnic Institute and State University"],
     "MIT": ["Massachusetts Institute of Technology"],
     "Universite de Montreal": ["University of Montreal", "Universite de Montreal"],
+    "New York University": ["NYU"],
 }
 
 # Label suffixes a profile can legitimately omit. Campus names are deliberately absent.

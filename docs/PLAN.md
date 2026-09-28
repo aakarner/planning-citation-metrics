@@ -191,7 +191,7 @@ Each run appends a snapshot file under `data/snapshots/<source>/<YYYY-MM-DD>.csv
 
 ## 6. Website
 
-A **static site** is the right shape: about 1,200 entities, read-only for visitors, updated a few times a month. No server, no database to keep alive, free hosting on GitHub Pages. Decided 2026-09-15: launch at the default address, `aakarner.github.io/planning-citation-metrics`, and revisit a custom or UT domain once the site exists. Moved to `scholarmetrics.com` on 2026-09-28; the old address redirects.
+A **static site** is the right shape: about 1,200 entities, read-only for visitors, updated a few times a month. No server, no database to keep alive, free hosting on GitHub Pages. Decided 2026-09-15: launch at the default address, `scholarmetrics.com`, and revisit a custom or UT domain once the site exists. Moved to `scholarmetrics.com` on 2026-09-28; the old address redirects.
 
 **Built 2026-09-15 as plain Python instead (`pipeline/build_site.py`).** The pages are read-only
 and the charts are two-point sparklines, so a JavaScript framework would have added a Node

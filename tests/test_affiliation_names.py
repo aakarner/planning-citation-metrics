@@ -20,7 +20,7 @@ def dept(label, **extra):
 
 
 D = {name: dept(name) for name in (
-    "UC Irvine", "UC Berkeley", "UCLA", "UC San Diego", "USC", "UNC", "MIT",
+    "New York University", "UC Irvine", "UC Berkeley", "UCLA", "UC San Diego", "USC", "UNC", "MIT",
     "Georgia Tech", "Virginia Tech", "Cal Poly, Pomona", "Cal Poly, San Luis Obispo",
     "University of New Mexico", "University of Colorado, Denver",
     "University of Illinois, Urbana-Champaign", "University of Illinois, Chicago",
@@ -43,6 +43,7 @@ def test_spelled_out_name_matches_our_abbreviation():
         ("Harry West Chair Professor, Georgia Institute of Technology", "Georgia Tech"),
         ("Virginia Polytechnic Institute and State University", "Virginia Tech"),
         ("Professor of Cities and Transportation, Massachusetts Institute of Technology", "MIT"),
+        ("Professor of Health Policy and Public Service, NYU", "New York University"),
     ]:
         assert affiliation_match(text, D[want]) == 1.0, text
 

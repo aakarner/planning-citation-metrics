@@ -196,7 +196,7 @@ on every push that touches `data/`, `sql/`, or `pipeline/`:
 The custom domain is set in the repository's Pages settings, not by a `CNAME` file, because
 the workflow deploys an artifact. DNS is at NearlyFreeSpeech: four A and four AAAA records for
 GitHub Pages on the apex, and `www` as a CNAME to `aakarner.github.io.`. The old
-`aakarner.github.io/planning-citation-metrics/` address redirects to it.
+`scholarmetrics.com/` address redirects to it.
 
 ## Split OpenAlex records
 
