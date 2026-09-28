@@ -3983,14 +3983,14 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 1050,Ryan Miller,"Cal Poly, San Luis Obispo",google_scholar,ZNfUZaIAAAAJ,Ryan S. Miller,0.575,1.0,0.0,,,,5925,,"Ecologist, USDA Centers for Epidemiology and Animal Health",,rejected,matcher,2026-09-27,
 1050,Ryan Miller,"Cal Poly, San Luis Obispo",google_scholar,bJYJJVMAAAAJ,Ryan A. Miller,0.575,1.0,0.0,,,,3332,,Maastricht University,,rejected,matcher,2026-09-27,
 1050,Ryan Miller,"Cal Poly, San Luis Obispo",google_scholar,e0wMNNkAAAAJ,Ryan A. Miller,0.575,1.0,0.0,,,,2369,,"Professor of Higher Education, University of Tennessee, Knoxville",,rejected,matcher,2026-09-27,
-1050,Ryan Miller,"Cal Poly, San Luis Obispo",google_scholar,0uREQQ0AAAAJ,Ryan Daniel Miller,0.575,1.0,0.0,,,,204,,PhD Northeastern University,,pending,,,
+1050,Ryan Miller,"Cal Poly, San Luis Obispo",google_scholar,0uREQQ0AAAAJ,Ryan Daniel Miller,0.575,1.0,0.0,,,,204,,PhD Northeastern University,,rejected,"Claude, on Alex's behalf",2026-09-27,Namesake: Ryan Daniel Miller (Northeastern PhD); ours is Ryan G. Miller.
 1051,Zakhary Mallett,Alabama A&M University,google_scholar,aqnoHbsAAAAJ,Zakhary Mallett,0.925,1.0,1.0,,,,33,,"Assistant Professor, Community and Regional Planning, Alabama A&M University",,accepted,matcher,2026-09-27,
 1052,Pascal Buggs,Alabama A&M University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-27,
 1053,Rayford Richardson,Alabama A&M University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-27,
 1054,Kristin Edquist,Eastern Washington,google_scholar,KUOXWt8AAAAJ,Kristin Edquist,0.925,1.0,1.0,,,,91,,Eastern Washington University,,accepted,matcher,2026-09-27,
 1055,Ning Li,Eastern Washington,google_scholar,ce0mkEcAAAAJ,Ning Li,0.575,1.0,0.0,,,,1833,,"School of Physics, Sun Yat-sen University",,rejected,matcher,2026-09-27,
 1055,Ning Li,Eastern Washington,google_scholar,2F562voAAAAJ,Ning Li,0.575,1.0,0.0,,,,2319,,"Dalian Institute of Chemical Physics, CAS, Biofuel Division",,rejected,matcher,2026-09-27,
-1056,Robert Zinke,Eastern Washington,google_scholar,YJEsRZUAAAAJ,Robert Zinke,0.575,1.0,0.0,,,,1381,,"JPL, Caltech",,pending,,,
+1056,Robert Zinke,Eastern Washington,google_scholar,YJEsRZUAAAAJ,Robert Zinke,0.575,1.0,0.0,,,,1381,,"JPL, Caltech",,rejected,"Claude, on Alex's behalf",2026-09-27,Namesake: JPL/Caltech planetary scientist.
 1057,Paul Prew,"Minnesota State University, Mankato",google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-27,
 1058,Hannah Berkin-Harper,New Jersey Institute of Technology,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-27,
 1059,Maurie Cohen,New Jersey Institute of Technology,google_scholar,JTU1NXAAAAAJ,Maurie Cohen,0.925,1.0,1.0,,,,7189,,New Jersey Institute of Technology,,accepted,matcher,2026-09-27,
@@ -3999,7 +3999,7 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 1063,Charles McGlynn,Rowan University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-27,
 1064,John Mullen,Rowan University,google_scholar,Z2ssVMkAAAAJ,John Mullen,0.575,1.0,0.0,,,,11056,,Dartmouth Hitchcock Medical Center,,rejected,matcher,2026-09-27,
 1065,Paul Kaplan,San Diego State University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-27,
-1066,Megan Carroll,San Diego State University,google_scholar,kstgLLkAAAAJ,Megan Carroll,0.575,1.0,0.0,,,,1048,,"Statistician, Google",,pending,,,
+1066,Megan Carroll,San Diego State University,google_scholar,kstgLLkAAAAJ,Megan Carroll,0.575,1.0,0.0,,,,1048,,"Statistician, Google",,rejected,"Claude, on Alex's behalf",2026-09-27,"Namesake: statistician at Google; ours is Megan Welsh Carroll, SDSU public affairs."
 1066,Megan Carroll,San Diego State University,google_scholar,VC5cRQUAAAAJ,Megan Carroll,0.575,1.0,0.0,,,,319,,"California State University, San Bernardino",,rejected,matcher,2026-09-27,
 1067,Teddy Cruz,UC San Diego,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-27,
 1068,Gary Fields,UC San Diego,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-27,
@@ -4011,9 +4011,9 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 1074,Christo Sims,UC San Diego,google_scholar,sczBQE8AAAAJ,Christo Sims,0.925,1.0,1.0,,,,4231,,"Associate Professor, Communication, UCSD; Institute for Advanced Study, 2020-21",,accepted,matcher,2026-09-27,
 1075,K. Yang,UC San Diego,google_scholar,G64qs1wAAAAJ,"Kailin Yang, MD, PhD",0.535,0.92,0.0,,,,14466,,"Department of Radiation Oncology, Holden Comprehensive Cancer Center, University of Iowa",,rejected,matcher,2026-09-27,
 1075,K. Yang,UC San Diego,google_scholar,ZVKWcokAAAAJ,Kun Yang,0.535,0.92,0.0,,,,11570,,Johns Hopkins University School of Medicine,,rejected,matcher,2026-09-27,
-1075,K. Yang,UC San Diego,google_scholar,sRpY9TIAAAAJ,Kevin Yang,0.535,0.92,0.0,,,,8899,,UC Berkeley,,pending,,,
-1075,K. Yang,UC San Diego,google_scholar,mq-Vzk8AAAAJ,Kevin K. Yang,0.535,0.92,0.0,,,,5916,,Microsoft Research,,pending,,,
+1075,K. Yang,UC San Diego,google_scholar,sRpY9TIAAAAJ,Kevin Yang,0.535,0.92,0.0,,,,8899,,UC Berkeley,,rejected,"Claude, on Alex's behalf",2026-09-27,"Namesake: Kevin Yang, UC Berkeley; ours is K. Wayne Yang, ethnic studies."
+1075,K. Yang,UC San Diego,google_scholar,mq-Vzk8AAAAJ,Kevin K. Yang,0.535,0.92,0.0,,,,5916,,Microsoft Research,,rejected,"Claude, on Alex's behalf",2026-09-27,"Namesake: Kevin K. Yang, Microsoft Research."
 1076,Elana Zilberg,UC San Diego,google_scholar,p97_4fgAAAAJ,Elana J Zilberg,0.925,1.0,1.0,,,,865,,University of California San Diego,,accepted,matcher,2026-09-27,
 1077,Tab Combs,UNC,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-27,
-1078,Kate Harwood,UNC,google_scholar,t_xeY9gAAAAJ,Kate Harwood,0.575,1.0,0.0,,,,158,,Unknown affiliation,,pending,,,
+1078,Kate Harwood,UNC,google_scholar,t_xeY9gAAAAJ,Kate Harwood,0.575,1.0,0.0,,,,158,,Unknown affiliation,,rejected,Alex Karner,2026-09-27,"Namesake: Columbia email, two COVID papers (2021, 2023)."
 1079,Noah Kittner,UNC,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-27,
