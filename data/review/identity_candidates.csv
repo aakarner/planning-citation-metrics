@@ -3655,11 +3655,11 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 1080,Jin Song,"University at Buffalo, The State University of New York",google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-28,
 1081,Joseph Trainor,University of Delaware,google_scholar,TAGJAKgAAAAJ,Joseph E Trainor,0.575,1.0,0.0,,,,404,,St. John's University,,rejected,matcher,2026-09-28,
 1081,Joseph Trainor,University of Delaware,google_scholar,rlNYv80AAAAJ,Joseph Trainor,0.575,1.0,0.0,,,,3419,,"Professor,  Joseph R. Biden School of Public Policy and Administration, University of",,rejected,matcher,2026-09-28,
-1082,Michael Montilla,University of Florida,google_scholar,Il6J_W4AAAAJ,Michael A. N. Montilla,0.575,1.0,0.0,,,,26,,"Researcher, University of California, Berkeley",,pending,,,
-1083,Vivian Wong,University of Florida,google_scholar,leCzD58AAAAJ,Vivian Wong,0.575,1.0,0.0,,,,4293,,University of Virginia,,pending,,,
+1082,Michael Montilla,University of Florida,google_scholar,Il6J_W4AAAAJ,Michael A. N. Montilla,0.575,1.0,0.0,,,,26,,"Researcher, University of California, Berkeley",,accepted,AK,2026-09-29,exact initials; pre-hire Berkeley profile
+1083,Vivian Wong,University of Florida,google_scholar,leCzD58AAAAJ,Vivian Wong,0.575,1.0,0.0,,,,4293,,University of Virginia,,rejected,AK,2026-09-29,UVA education researcher
 1084,Zhaoxi Zhang,University of Florida,google_scholar,ssesMYEAAAAJ,Zhaoxi Zhang,0.575,1.0,0.0,,,,216,,"Mphi Student, Peking University",,rejected,matcher,2026-09-28,
 1085,Jessica Fernandez,University of Georgia,google_scholar,SR0YdrEAAAAJ,Jessica Fernandez,0.925,1.0,1.0,,,,439,,"Director of Graduate Studies in Landscape Architecture, Associate Professor, University of Georgia",,accepted,matcher,2026-09-28,
-1085,Jessica Fernandez,University of Georgia,google_scholar,GyvBEhsAAAAJ,Jessica Cisneros Fernandez,0.575,1.0,0.0,,,,728,,"University of Wisconsin, Madison",,pending,,,
+1085,Jessica Fernandez,University of Georgia,google_scholar,GyvBEhsAAAAJ,Jessica Cisneros Fernandez,0.575,1.0,0.0,,,,728,,"University of Wisconsin, Madison",,rejected,AK,2026-09-29,different person; she already has an accepted UGA profile
 1086,Scott Nesbit,University of Georgia,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-28,
 1087,Sean Kennedy,"University of Illinois, Urbana-Champaign",google_scholar,MOToPEIAAAAJ,Sean P Kennedy,0.575,1.0,0.0,,,,24010,,"Department of Computational Biology, Pasteur Institute",,rejected,matcher,2026-09-28,
 1087,Sean Kennedy,"University of Illinois, Urbana-Champaign",google_scholar,O_m0U4EAAAAJ,Sean A. Kennedy,0.575,1.0,0.0,,,,2321,,University of Toronto,,rejected,AK,2026-09-28,medical researcher at Toronto; not the Illinois planner

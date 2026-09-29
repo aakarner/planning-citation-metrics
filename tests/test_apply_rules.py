@@ -13,7 +13,7 @@ that somebody left.
 
 import pytest
 
-from pipeline.apply_changes import decide
+from pipeline.apply_changes import decide, recently_verified
 
 
 def dept(did, label, domain):
@@ -143,3 +143,16 @@ def test_a_thin_profile_years_past_the_phd_is_reported_not_acted_on():
     # without the extra evidence the rule is silent, as before
     kind, _ = decide("University of Guelph", "uoguelph.ca", "associate", DEPTS["9"], DEPTS, HOME["9"], OWNER)
     assert kind == "move"
+
+
+def test_a_recent_department_page_reading_outranks_the_profile():
+    # Montilla: added from Florida's faculty page on 27 Sept; his profile still said Berkeley two days later.
+    src = "rank verified 2026-09-27; new hire from department page https://dcp.ufl.edu/urp/people/"
+    assert recently_verified(src, "2026-09-29")
+    assert recently_verified(src, "2027-03-01")            # still inside the window
+    assert not recently_verified(src, "2027-06-01")        # the page reading has gone stale
+    assert recently_verified(src, "2026-09-21")            # a profile read before the page is staler still
+    assert not recently_verified("change from Scholar profile 2026-09-15: email @ufl.edu", "2026-09-29")
+    assert not recently_verified("", "2026-09-29") and not recently_verified(None, "2026-09-29")
+    # a reviewer's check counts the same way; the latest note wins
+    assert recently_verified("rank verified 2025-01-10 | rank verified 2026-09-20; rank review sheet", "2026-09-29")

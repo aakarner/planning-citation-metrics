@@ -24,6 +24,12 @@ A profile with fewer than THIN_CITES citations for someone THIN_YEARS or more
 past the PhD is reported as a probable namesake and never acted on, unless it
 names the current department.
 
+An appointment carrying a 'rank verified <date>' note from the last
+VERIFIED_TRUST_DAYS (a department page read, or a reviewer's check) is held:
+the profile's move, promotion or departure is printed but not applied. The
+program's own listing is the better source, and a Scholar profile is often
+years behind it (a new hire's profile still reads "Researcher, Berkeley").
+
 Rank comes from the affiliation text when it says Assistant/Associate/
 Professor, otherwise the existing rank carries over. Nothing is deleted:
 the old appointment is closed with end_date = the snapshot date, and the
@@ -40,7 +46,9 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 from . import ROSTER_DIR
-from .detect_changes import latest_two, registrable, rows
+from datetime import date
+
+from .detect_changes import latest_two, registrable, rows, verified_on
 from .find_scholar_profiles import affiliation_match, affiliation_names_dept
 from .match_openalex import norm
 
@@ -65,6 +73,21 @@ RANK_ORDER = {"assistant": 0, "associate": 1, "full": 2}
 # there. Such a profile is reported for a person to look at, never acted on.
 THIN_CITES = 25
 THIN_YEARS = 5
+# A rank verified from the program's own page or by a reviewer outranks a
+# Scholar profile for this long. Montilla (Florida, 2026-09-27 department
+# page) still had a "Researcher, UC Berkeley" profile two days later.
+VERIFIED_TRUST_DAYS = 180
+
+
+def recently_verified(source, when, days=VERIFIED_TRUST_DAYS) -> bool:
+    """True if the appointment's source notes a 'rank verified' date no more than
+    `days` before `when`. A verification dated after the profile reading counts
+    too: it is simply the fresher evidence."""
+    v = verified_on(source)
+    if v is None:
+        return False
+    when = date.fromisoformat(when) if isinstance(when, str) else when
+    return (when - v).days <= days
 
 
 def email_home_check(email, home, a) -> bool:
@@ -180,6 +203,8 @@ def main(argv=None) -> None:
         cites = int(r["total_citations"]) if r.get("total_citations") else None
         kind, target = decide(text, email, a["rank"], depts[a["department_id"]], depts,
                               home[a["department_id"]], domain_owner, cites=cites, years_since_phd=years)
+        if kind in ("move", "promote", "depart") and recently_verified(a.get("source"), r["collected_at"]):
+            kind = "held"
         if kind:
             actions.append((kind, pid, a, target, text, email, r["collected_at"]))
 
@@ -192,13 +217,16 @@ def main(argv=None) -> None:
                   f"{a['rank']}->{new_rank}  [{email or '-'}; \"{text[:60]}\"]")
         elif kind == "promote":
             print(f"PROMOTE {p['display_name']:<28} {cur['short_name'][:28]:<28} {a['rank']}->{rank_from_text(text, a['rank'])}  [\"{text[:60]}\"]")
+        elif kind == "held":
+            print(f"HELD    {p['display_name']:<28} {cur['short_name'][:28]:<28} rank verified {verified_on(a.get('source'))}; "
+                  f"profile not applied [{email or '-'}; \"{text[:60]}\"]")
         elif kind == "wrong":
             print(f"WRONG?  {p['display_name']:<28} {cur['short_name'][:28]:<28} profile looks like a namesake; not applied "
                   f"[{email or '-'}; \"{text[:60]}\"]")
         else:
             print(f"DEPART  {p['display_name']:<28} {cur['short_name'][:28]:<28} -> (untracked) "
                   f"[{email or '-'}; \"{text[:70]}\"]")
-        if args.dry_run or kind == "wrong":
+        if args.dry_run or kind in ("wrong", "held"):
             continue
         evidence = f"change from Scholar profile {when}: email @{email or '?'}; affiliation \"{text[:120]}\""
         a["end_date"] = when
@@ -211,6 +239,7 @@ def main(argv=None) -> None:
 
     c = Counter(x[0] for x in actions)
     print(f"\n{c['move']} moves, {c['promote']} promotions, {c['depart']} departures, {c['wrong']} suspected wrong profiles (not applied)"
+          + (f", {c['held']} held by a recent rank verification" if c['held'] else "")
           + (" (dry run, nothing written)" if args.dry_run else ""))
     if not args.dry_run and actions:
         with aff_path.open("w", newline="", encoding="utf-8") as f:
