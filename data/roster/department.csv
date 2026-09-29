@@ -33,7 +33,7 @@ department_id,short_name,name,university,country,url,openalex_institution_id,ror
 32,Missouri State University,Missouri State University,Missouri State University,US,http://geosciences.missouristate.edu/,I119942284,https://ror.org/01d2sez20,full,1
 33,Morgan State University,Morgan State University,Morgan State University,US,http://morgan.edu/sap/crep,I83909951,https://ror.org/017d8gk22,full,1
 34,New Jersey Institute of Technology,New Jersey Institute of Technology,New Jersey Institute of Technology,US,http://architecture.njit.edu/academics/graduate/mip.php,I118118575,https://ror.org/05e74xb87,none,1
-35,New York University,New York University,New York University,US,http://wagner.nyu.edu/urbanplanning,I57206974,https://ror.org/0190ak572,full,1
+35,New York University,New York University,New York University,US,https://wagner.nyu.edu/education/degrees/master-urban-planning,I57206974,https://ror.org/0190ak572,full,1
 36,Northeastern University,Northeastern University,Northeastern University,US,https://cssh.northeastern.edu/policyschool/program/ms-in-urban-planning-and-policy/,I12912129,https://ror.org/04t5xt781,full,1
 37,Northern Arizona University,Northern Arizona University,Northern Arizona University,US,http://nau.edu/SBS/GPR/Degrees-Programs/Geography/,I203172682,https://ror.org/0272j5188,none,1
 38,Ohio State University,Ohio State University,Ohio State University,US,http://knowlton.osu.edu/programs/city-and-regional-planning,I52357470,https://ror.org/00rs6vg23,full,1

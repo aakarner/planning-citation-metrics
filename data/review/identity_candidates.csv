@@ -3533,12 +3533,6 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 1060,Glenn Goldman,New Jersey Institute of Technology,openalex,A5039889997,Glenn and Zdepski Goldman,0.6,1.0,0.0,0.667,,1,2,1,,,pending,,,
 1060,Glenn Goldman,New Jersey Institute of Technology,openalex,A5084911637,Glenn Goldman,0.525,1.0,0.0,0.167,,4,12,2,,,pending,,,
 1060,Glenn Goldman,New Jersey Institute of Technology,openalex,A5077784486,Glenn D. Goldman,0.5,1.0,0.0,0.0,,80,1044,16,Four Seasons,,pending,,,
-1061,John Billings,New York University,openalex,A5111841248,John C. Billings,0.925,1.0,1.0,0.833,,2,184,2,Wagner College,,accepted,audit_matches,2026-09-27,"accepted 2026-09-27: name and institution match, 2-work fragment"
-1061,John Billings,New York University,openalex,A5004051006,John S. Billings,0.922,1.0,1.0,0.816,,104,669,10,Wagner College,,pending,,,
-1061,John Billings,New York University,openalex,A5111792534,John Billings,0.892,1.0,1.0,0.612,,98,4840,28,Wagner College,,pending,,,
-1061,John Billings,New York University,openalex,A5041577894,John S. Billings,0.65,1.0,0.0,1.0,,2,4,1,,,pending,,,
-1061,John Billings,New York University,openalex,A5072562011,John Richard Billings,0.65,1.0,0.0,1.0,,1,0,0,,,pending,,,
-1062,Sewin Chan,New York University,openalex,A5102484529,Sewin Chan,0.909,1.0,1.0,0.728,,61,2393,23,Wagner College,,accepted,matcher,2026-09-27,
 1063,Charles McGlynn,Rowan University,openalex,A5088424942,Charles McGlynn,0.8,1.0,1.0,0.0,,1,1,1,Rowan University,,accepted,audit_matches,2026-09-27,"accepted 2026-09-27: name and institution match, 1-work fragment"
 1064,John Mullen,Rowan University,openalex,A5045674674,John T. Mullen,0.916,1.0,1.0,0.771,,76,551,9,Roswell Park Comprehensive Cancer Center,https://orcid.org/0000-0002-9822-0591,accepted,matcher,2026-09-27,
 1064,John Mullen,Rowan University,openalex,A5039586443,John Conrad Mullen,0.65,1.0,0.0,1.0,,140,80,4,Université de Rouen Normandie,,pending,,,
@@ -3635,7 +3629,6 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 1058,Hannah Berkin-Harper,New Jersey Institute of Technology,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-27,
 1059,Maurie Cohen,New Jersey Institute of Technology,google_scholar,JTU1NXAAAAAJ,Maurie Cohen,0.925,1.0,1.0,,,,7189,,New Jersey Institute of Technology,,accepted,matcher,2026-09-27,
 1060,Glenn Goldman,New Jersey Institute of Technology,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-27,
-1062,Sewin Chan,New York University,google_scholar,osXXlqoAAAAJ,Sewin Chan,0.925,1.0,1.0,,,,3230,,New York University,,accepted,matcher,2026-09-27,
 1063,Charles McGlynn,Rowan University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-27,
 1064,John Mullen,Rowan University,google_scholar,Z2ssVMkAAAAJ,John Mullen,0.575,1.0,0.0,,,,11056,,Dartmouth Hitchcock Medical Center,,rejected,matcher,2026-09-27,
 1065,Paul Kaplan,San Diego State University,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-27,
@@ -3658,7 +3651,6 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 1078,Kate Harwood,UNC,google_scholar,t_xeY9gAAAAJ,Kate Harwood,0.575,1.0,0.0,,,,158,,Unknown affiliation,,rejected,Alex Karner,2026-09-27,"Namesake: Columbia email, two COVID papers (2021, 2023)."
 1079,Noah Kittner,UNC,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-27,
 1056,Robert Zinke,Eastern Washington,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-28,
-1061,John Billings,New York University,google_scholar,RH6TC-EAAAAJ,John Billings,0.575,1.0,0.0,,,,8891,,"Professor of Health Policy and Public Service, NYU",,pending,,,
 1078,Kate Harwood,UNC,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-28,
 1080,Jin Song,"University at Buffalo, The State University of New York",google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-28,
 1081,Joseph Trainor,University of Delaware,google_scholar,TAGJAKgAAAAJ,Joseph E Trainor,0.575,1.0,0.0,,,,404,,St. John's University,,rejected,matcher,2026-09-28,
