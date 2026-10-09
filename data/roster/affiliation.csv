@@ -3,7 +3,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 2,2,1,associate,regular,1,,,workbook-2026
 3,3,1,full,regular,1,,,workbook-2026
 4,4,1,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: depart; change from Scholar profile 2026-09-15: email @urbanedge.net; affiliation ""professor of urban design, cairo university"""
-5,5,1,assistant,regular,1,,,workbook-2026
+5,5,1,assistant,regular,1,,2023-01-01,"workbook-2026 | closed 2023-01-01: left the program; rank verified 2026-09-30; rank review 2026-09-30 by Maddie: Joyce Pressley LinkedIn (She was an assitant professor in planning for 11 years until 2023, when she retired)"
 6,6,1,assistant,regular,1,,,workbook-2026
 7,7,2,assistant,regular,1,,,workbook-2026
 8,8,2,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://geo.appstate.edu/faculty-staff
@@ -47,7 +47,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 46,46,7,full,regular,1,,,workbook-2026
 47,47,7,associate,regular,1,,,workbook-2026
 48,48,7,full,regular,1,,,workbook-2026
-49,49,7,assistant,regular,1,,,workbook-2026
+49,49,7,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-01; rank review 2026-10-01 by Maddie: LinkedIn
 50,50,7,assistant,regular,1,,,workbook-2026
 51,51,8,associate,regular,1,,,workbook-2026
 52,52,8,full,regular,1,,,workbook-2026
@@ -60,13 +60,13 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 59,59,9,full,regular,1,,,workbook-2026
 60,60,10,full,regular,1,,,workbook-2026
 61,61,10,associate,regular,1,,,workbook-2026
-62,62,10,assistant,regular,1,,,workbook-2026
+62,62,10,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: orcid site
 63,63,10,associate,regular,1,,,workbook-2026
 64,64,10,full,regular,1,,,workbook-2026
 65,65,11,associate,regular,1,,,workbook-2026
 66,66,11,assistant,regular,1,,,workbook-2026
 67,67,11,full,regular,1,,,workbook-2026
-68,68,11,assistant,regular,1,,,workbook-2026
+68,68,11,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-01; rank review 2026-10-01 by Maddie: https://vanky.co/hello/sample-page/
 69,69,11,full,regular,1,,,workbook-2026
 70,70,12,full,regular,1,,,workbook-2026
 71,71,12,full,regular,1,,2026-09-14,"workbook-2026 | closed 2026-09-14: depart; change from Scholar profile 2026-09-14: email @gwu.edu; affiliation ""George Washington University Law School"""
@@ -75,7 +75,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 74,74,12,associate,regular,1,,,workbook-2026
 75,75,12,associate,regular,1,,,workbook-2026
 76,76,12,associate,regular,1,,,workbook-2026
-77,77,12,assistant,regular,1,,,workbook-2026
+77,77,12,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: linkedin
 78,78,12,assistant,regular,1,,2026-09-14,"workbook-2026 | closed 2026-09-14: promote; change from Scholar profile 2026-09-14: email @cornell.edu; affiliation ""Associate Professor, Cornell University"""
 79,79,12,full,regular,1,,,workbook-2026
 80,80,12,associate,regular,1,,,workbook-2026
@@ -90,7 +90,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 89,88,13,associate,regular,1,,2026-09-14,"workbook-2026 | closed 2026-09-14: promote; change from Scholar profile 2026-09-14: email @dal.ca; affiliation ""Professor of School of Planning, and Civil and Resource Engineering, Dalhousie University"""
 90,89,13,full,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: adjunct; listed only under Adjunct Faculty on the Dalhousie School of Planning page (browser pass 2026-09-27)
 91,90,13,associate,regular,1,,,workbook-2026
-92,91,13,assistant,regular,1,,,workbook-2026
+92,91,13,assistant,regular,1,,2026-09-30,workbook-2026 | closed 2026-09-30: associate; rank verified 2026-09-30; rank review 2026-09-30 by Maddie: Google Scholar
 93,92,13,assistant,regular,1,,2026-09-14,"workbook-2026 | closed 2026-09-14: promote; change from Scholar profile 2026-09-14: email @dal.ca; affiliation ""Associate Professor, Dalhousie University"""
 94,93,14,associate,regular,1,,,workbook-2026
 95,94,14,full,regular,1,,,workbook-2026
@@ -139,17 +139,17 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 138,137,21,full,regular,1,,,workbook-2026
 139,138,21,assistant,regular,1,,,workbook-2026
 140,139,21,full,regular,1,,,workbook-2026
-141,140,21,assistant,regular,1,,,workbook-2026
+141,140,21,assistant,regular,1,,2021-01-01,"workbook-2026 | closed 2021-01-01: associate; rank verified 2026-09-30; rank review 2026-09-30 by Maddie: Personal website (She was an associate prof until this year, now a researcher [AK 2026-10-09: GSD announced her appointment as Plimpton Associate Professor in June 2021; since-year corrected from 2026])"
 142,141,21,full,regular,1,,,workbook-2026
 143,142,21,full,regular,1,,,workbook-2026
-144,143,21,assistant,regular,1,,,workbook-2026
+144,143,21,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: program website
 145,144,21,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @harvard.edu; affiliation ""Associate Professor, Urban Planning and Design, Harvard University"""
 146,145,21,full,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: move; change from Scholar profile 2026-09-15: email @uic.edu; affiliation ""Department of Urban Planning and Policy, University of Illinois at Chicago"""
 147,146,22,associate,regular,1,,,workbook-2026
 148,147,22,full,regular,1,,,workbook-2026
 149,148,22,full,regular,1,,,workbook-2026
 150,149,22,associate,regular,1,,,workbook-2026
-151,150,22,assistant,regular,1,,,workbook-2026
+151,150,22,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: program website
 152,151,22,full,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: emeritus; listed under Professors Emeriti on the Hunter College faculty page (browser pass 2026-09-27)
 153,152,22,associate,regular,1,,,workbook-2026
 154,153,22,associate,regular,1,,,workbook-2026
@@ -161,14 +161,14 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 160,159,24,associate,regular,1,,,workbook-2026
 161,160,24,full,regular,1,,,workbook-2026
 162,161,24,associate,regular,1,,,workbook-2026
-163,162,24,assistant,regular,1,,,workbook-2026
+163,162,24,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: ORCID site
 164,163,24,associate,regular,1,,,workbook-2026
 165,164,24,full,regular,1,,,workbook-2026
 166,165,24,full,regular,1,,,workbook-2026
 167,166,24,associate,regular,1,,,workbook-2026
 168,167,24,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @iastate.edu; affiliation ""Professor of Urban and Regional Planning, Iowa State University"""
 169,168,24,full,regular,1,,,workbook-2026
-170,169,25,assistant,regular,1,,,workbook-2026
+170,169,25,assistant,regular,1,,,"workbook-2026 | rank verified 2026-09-30; rank review 2026-09-30 by Maddie: Moe Chowdhury Jackson State (Referred to his LinkedIn, program website, and resume.)"
 171,170,25,associate,regular,1,,,workbook-2026
 172,171,25,associate,regular,1,,,workbook-2026
 173,172,25,full,regular,1,,,workbook-2026
@@ -209,12 +209,12 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 208,207,32,assistant,regular,1,,,workbook-2026
 209,208,32,associate,regular,1,,,workbook-2026
 210,209,32,associate,regular,1,,,workbook-2026
-211,210,27,assistant,regular,1,,,workbook-2026
+211,210,27,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-01; rank review 2026-10-01 by Maddie: LinkedIn
 212,211,27,full,regular,1,,,workbook-2026
 213,212,27,full,regular,1,,,workbook-2026
-214,213,27,assistant,regular,1,,,workbook-2026
+214,213,27,assistant,regular,1,,2024-01-01,workbook-2026 | closed 2024-01-01: associate; rank verified 2026-10-01; rank review 2026-10-01 by Maddie: personal website
 215,214,27,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://dusp.mit.edu/people
-216,215,27,assistant,regular,1,,,workbook-2026
+216,215,27,assistant,regular,1,,,"workbook-2026 | rank verified 2026-10-01; rank review 2026-10-01 by Maddie: LinkedIn ([AK 2026-10-09: MIT DUSP page reads 'Class of 1958 Career Development Professor', a junior-faculty chair; kept assistant])"
 217,216,27,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @mit.edu; affiliation ""Associate Professor of Urban Science and Planning at MIT Dept of Urban Studies and Planning"""
 218,217,27,full,regular,1,,,workbook-2026
 219,218,27,full,regular,1,,,workbook-2026
@@ -242,7 +242,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 241,240,27,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @mit.edu; affiliation ""Professor of Cities and Transportation, Massachusetts Institute of Technology"""
 242,241,27,full,regular,1,,,workbook-2026
 243,242,33,associate,regular,1,,,workbook-2026
-244,243,33,assistant,regular,1,,,workbook-2026
+244,243,33,assistant,regular,1,,2023-01-01,workbook-2026 | closed 2023-01-01: associate; rank verified 2026-09-30; rank review 2026-09-30 by Maddie: CV
 245,244,33,full,regular,1,,,workbook-2026
 246,245,33,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://www.morgan.edu/design-and-planning/city-and-regional-planning/faculty
 247,246,33,associate,regular,1,,,workbook-2026
@@ -262,7 +262,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 261,260,35,full,regular,1,,,workbook-2026
 262,261,36,full,regular,1,,,workbook-2026
 263,262,36,full,regular,1,,,workbook-2026
-264,263,36,assistant,regular,1,,,workbook-2026
+264,263,36,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-01; rank review 2026-10-01 by Maddie: ORCID site
 265,264,36,assistant,regular,1,,,workbook-2026
 266,265,36,full,regular,1,,,workbook-2026
 267,266,36,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://cssh.northeastern.edu/policyschool/people/faculty/
@@ -277,7 +277,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 276,275,37,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://directory.nau.edu/departments?id=11110&src=department-geography-planning-recreation
 277,276,37,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://directory.nau.edu/departments?id=11110&src=department-geography-planning-recreation
 278,277,38,assistant,regular,1,,,workbook-2026
-279,278,38,assistant,regular,1,,,workbook-2026
+279,278,38,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: orcid
 280,279,38,associate,regular,1,,,workbook-2026
 281,280,38,associate,regular,1,,,workbook-2026
 282,281,38,full,regular,1,,,workbook-2026
@@ -331,7 +331,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 330,329,43,full,regular,1,,,workbook-2026
 331,330,43,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @rutgers.edu; affiliation ""Associate Professor, Bloustein School of Planning and Public Policy, Rutgers University"""
 332,331,43,associate,regular,1,,,workbook-2026
-333,332,43,assistant,regular,1,,,workbook-2026
+333,332,43,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: program website
 334,333,43,full,regular,1,,,workbook-2026
 335,334,43,associate,regular,1,,,workbook-2026
 336,335,43,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: demotion read from department page https://bloustein.rutgers.edu/faculty/
@@ -372,12 +372,12 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 371,370,50,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @albany.edu; affiliation ""Associate Professor, State University of New York at Albany"""
 372,371,50,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://www.albany.edu/geographyplanning/faculty-and-staff
 373,372,50,associate,regular,1,,,workbook-2026
-374,373,50,assistant,regular,1,,,workbook-2026
-375,374,51,assistant,regular,1,,,workbook-2026
+374,373,50,assistant,regular,1,,2020-01-01,workbook-2026 | closed 2020-01-01: associate; rank verified 2026-10-01; rank review 2026-10-01 by Maddie: Program website (He is also the associate dean of the department.)
+375,374,51,assistant,regular,1,,,workbook-2026 | rank verified 2026-09-30; rank review 2026-09-30 by Maddie: LinkedIn
 376,375,51,associate,regular,1,,,workbook-2026
 377,376,51,associate,regular,1,,,workbook-2026
 378,377,52,full,regular,1,,,workbook-2026
-379,378,52,assistant,regular,1,,,workbook-2026
+379,378,52,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: program website
 380,379,52,associate,regular,1,,,workbook-2026
 381,380,52,full,regular,1,,,workbook-2026
 382,381,52,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://www.arch.tamu.edu/directory/?filter%5Bteam%5D=landscape-architecture-and-urban-planning&filter%5Brole%5D=faculty&s=
@@ -386,7 +386,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 385,384,52,full,regular,1,,,workbook-2026
 386,385,52,associate,regular,1,,,workbook-2026
 387,386,52,full,regular,1,,,workbook-2026
-388,387,52,assistant,regular,1,,,workbook-2026
+388,387,52,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-01; rank review 2026-10-01 by Maddie: program website
 389,388,52,full,regular,1,,,workbook-2026
 390,389,52,full,regular,1,,,workbook-2026
 391,390,52,assistant,regular,1,,,workbook-2026
@@ -405,10 +405,10 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 404,403,54,full,regular,1,,,workbook-2026
 405,404,54,full,regular,1,,,workbook-2026
 406,405,54,full,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: emeritus; 'Professor Emeritus' on his New School NSSR profile (browser pass 2026-09-27)
-407,406,55,assistant,regular,1,,,workbook-2026
+407,406,55,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: linkedin
 408,407,55,associate,regular,1,,,workbook-2026
 409,408,55,full,regular,1,,,workbook-2026
-410,409,55,assistant,regular,1,,,workbook-2026
+410,409,55,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: program website
 411,410,55,full,regular,1,,,workbook-2026
 412,411,55,assistant,regular,1,,,workbook-2026
 413,412,55,full,regular,1,,,workbook-2026
@@ -417,17 +417,17 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 416,415,55,full,regular,1,,,workbook-2026
 417,416,55,associate,regular,1,,,workbook-2026
 418,417,55,associate,regular,1,,,workbook-2026
-419,418,55,assistant,regular,1,,,workbook-2026
+419,418,55,assistant,regular,1,,,"workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: program website, linkedin"
 420,419,55,associate,regular,1,,,workbook-2026
 421,420,56,full,regular,1,,,workbook-2026
 422,421,56,associate,regular,1,,,workbook-2026
 423,422,56,full,regular,1,,,workbook-2026
 424,423,56,full,regular,1,,,workbook-2026
-425,424,56,assistant,regular,1,,,workbook-2026
-426,425,56,assistant,regular,1,,,workbook-2026
+425,424,56,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-01; rank review 2026-10-01 by Maddie: Program website (Teaches in both the engineering department and the urban planning departments)
+426,425,56,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: program website
 427,426,56,associate,regular,1,,,workbook-2026
-428,427,56,assistant,regular,1,,,workbook-2026
-429,428,57,assistant,regular,1,,,workbook-2026
+428,427,56,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-01; rank review 2026-10-01 by Maddie: Personal website link in program page
+429,428,57,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-01; rank review 2026-10-01 by Maddie: ORCID site
 430,429,57,assistant,regular,1,,,workbook-2026
 431,430,57,associate,regular,1,,,workbook-2026
 432,431,57,assistant,regular,1,,,workbook-2026
@@ -440,19 +440,19 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 439,438,58,full,regular,1,,,workbook-2026
 440,439,58,associate,regular,1,,,workbook-2026
 441,440,58,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://ced.berkeley.edu/about-ced/people/faculty
-442,441,58,assistant,regular,1,,,workbook-2026
-443,442,58,assistant,regular,1,,,workbook-2026
-444,443,58,assistant,regular,1,,,workbook-2026
+442,441,58,assistant,regular,1,,2024-01-01,workbook-2026 | closed 2024-01-01: associate; rank verified 2026-10-01; rank review 2026-10-01 by Maddie: ORCID site
+443,442,58,assistant,regular,1,,2022-01-01,workbook-2026 | closed 2022-01-01: left the program; rank verified 2026-10-01; rank review 2026-10-01 by Maddie: program site (Now works in the black studies department at UCSB)
+444,443,58,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: personal website
 445,444,58,full,regular,1,,,workbook-2026
 446,445,58,associate,regular,1,,,workbook-2026
 447,446,58,full,regular,1,,,workbook-2026
 448,447,59,assistant,regular,1,,,workbook-2026
 449,448,59,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://uppp.soceco.uci.edu/faculty
-450,449,59,assistant,regular,1,,,workbook-2026
+450,449,59,assistant,regular,1,,2026-10-01,"workbook-2026 | closed 2026-10-01: associate; rank verified 2026-10-01; rank review 2026-10-01 by Maddie: School news (Faculty profile lists her as an assistant professor, but the ORCID site and a recent news source (from 9/21/26) lists her as an associate.)"
 451,450,59,full,regular,1,,,workbook-2026
 452,451,59,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://uppp.soceco.uci.edu/faculty
 453,452,59,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://uppp.soceco.uci.edu/faculty
-454,453,59,assistant,regular,1,,,workbook-2026
+454,453,59,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-01; rank review 2026-10-01 by Maddie: personal website
 455,454,59,assistant,regular,1,,,workbook-2026
 456,455,59,associate,regular,1,,,workbook-2026
 457,456,59,associate,regular,1,,,workbook-2026
@@ -465,15 +465,15 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 464,463,59,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://uppp.soceco.uci.edu/faculty
 465,464,59,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @uci.edu; affiliation ""Professor, University of California Irvine"""
 466,465,60,full,regular,1,,,workbook-2026
-467,466,60,assistant,regular,1,,,workbook-2026
-468,467,60,assistant,regular,1,,,workbook-2026
-469,468,60,assistant,regular,1,,,workbook-2026
+467,466,60,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: program website
+468,467,60,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: program website
+469,468,60,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: program website
 470,469,60,full,regular,1,,,workbook-2026
 471,470,60,associate,regular,1,,,workbook-2026
 472,471,60,associate,regular,1,,,workbook-2026
 473,472,60,associate,regular,1,,,workbook-2026
 474,473,60,full,regular,1,,,workbook-2026
-475,474,60,assistant,regular,1,,,workbook-2026
+475,474,60,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-01; rank review 2026-10-01 by Maddie: Program website (Can't find when she entered position - no linkedin available and personal website doesn't have CV)
 476,475,60,full,regular,1,,,workbook-2026
 477,476,60,full,regular,1,,,workbook-2026
 478,477,60,associate,regular,1,,,workbook-2026
@@ -487,8 +487,8 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 486,485,61,associate,regular,1,,,workbook-2026
 487,486,61,full,regular,1,,,workbook-2026
 488,487,61,associate,regular,1,,,workbook-2026
-489,488,61,assistant,regular,1,,,workbook-2026
-490,489,61,assistant,regular,1,,,workbook-2026
+489,488,61,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: program website
+490,489,61,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by Maddie: personal website
 491,490,61,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @ucla.edu; affiliation ""Professor of Urban Planning and Public Policy, UCLA"""
 492,491,61,full,regular,1,,,workbook-2026
 493,492,61,assistant,regular,1,,,workbook-2026
@@ -512,13 +512,13 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 511,510,62,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://planning.unc.edu/people/full-time-faculty/
 512,511,62,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @unc.edu; affiliation ""Professor of City and Regional Planning, University of North Carolina at Chapel Hill"""
 513,512,62,full,regular,1,,,workbook-2026
-514,513,62,assistant,regular,1,,,workbook-2026
+514,513,62,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-01; rank review 2026-10-01 by Maddie: linkedin
 515,514,62,full,regular,1,,,workbook-2026
 516,515,62,full,regular,1,,,workbook-2026
 517,516,62,full,regular,1,,,workbook-2026
 518,517,62,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @unc.edu; affiliation ""Associate Professor of City and Regional Planning, University of North Carolina at Chapel Hill"""
 519,518,62,full,regular,1,,,workbook-2026
-520,519,62,assistant,regular,1,,,workbook-2026
+520,519,62,assistant,regular,1,,,"workbook-2026 | rank verified 2026-10-01; rank review 2026-10-01 by Maddie: Program website, LinkedIn (Goes by Alainna/Allie)"
 521,520,62,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://planning.unc.edu/people/full-time-faculty/
 522,521,62,full,regular,1,,,workbook-2026
 523,522,65,full,regular,1,,,workbook-2026
@@ -535,12 +535,12 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 534,533,65,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion; 'Professeur titulaire' on department page https://urbanismepaysage.umontreal.ca/a-propos/corps-professoral/ (browser pass 2026-09-27; French titles)
 535,534,64,associate,regular,1,,,workbook-2026
 536,535,64,full,regular,1,,,workbook-2026
-537,536,64,assistant,regular,1,,,workbook-2026
+537,536,64,assistant,regular,1,,2022-01-01,workbook-2026 | closed 2022-01-01: full; rank verified 2026-09-30; rank review 2026-09-30 by Maddie: ULaval Website (Unclear if promoted in 2018 or 2022)
 538,537,64,associate,regular,1,,,workbook-2026
 539,538,64,associate,regular,1,,,workbook-2026
-540,539,64,assistant,regular,1,,,workbook-2026
+540,539,64,assistant,regular,1,,2022-01-01,workbook-2026 | closed 2022-01-01: associate; rank verified 2026-10-01; rank review 2026-10-01 by Maddie: ORCID site
 541,540,64,full,regular,1,,,workbook-2026
-542,541,64,assistant,regular,1,,,workbook-2026
+542,541,64,assistant,regular,1,,2026-09-30,workbook-2026 | closed 2026-09-30: associate; rank verified 2026-09-30; rank review 2026-09-30 by Maddie: Google Scholar
 543,542,64,associate,regular,1,,,workbook-2026
 544,543,64,associate,regular,1,,,workbook-2026
 545,544,64,associate,regular,1,,,workbook-2026
@@ -548,12 +548,12 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 547,546,64,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: depart; change from Scholar profile 2026-09-15: email @polymtl.ca; affiliation ""Professor, Polytechnique Montréal"""
 548,547,66,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://archplan.buffalo.edu/People/faculty/department-of-urban-and-regional-planning-faculty.html
 549,548,66,assistant,regular,1,,,workbook-2026
-550,549,66,assistant,regular,1,,,workbook-2026
-551,550,66,assistant,regular,1,,,workbook-2026
+550,549,66,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: linkedin
+551,550,66,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: personal website
 552,551,66,full,regular,1,,,workbook-2026
 553,552,66,assistant,regular,1,,,workbook-2026
 554,553,66,full,regular,1,,,workbook-2026
-555,554,66,assistant,regular,1,,,workbook-2026
+555,554,66,assistant,regular,1,,2023-01-01,"workbook-2026 | closed 2023-01-01: associate; rank verified 2026-10-01; rank review 2026-10-01 by Maddie: Program website, LinkedIn (Also the associate dean of student affairs)"
 556,555,66,assistant,regular,1,,,workbook-2026
 557,556,66,associate,regular,1,,,workbook-2026
 558,557,66,full,regular,1,,,workbook-2026
@@ -570,7 +570,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 569,568,67,full,regular,1,,,workbook-2026
 570,569,67,associate,regular,1,,,workbook-2026
 571,570,67,full,regular,1,,,workbook-2026
-572,571,67,assistant,regular,1,,,workbook-2026
+572,571,67,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: linkedin
 573,572,67,full,regular,1,,,workbook-2026
 574,573,67,full,regular,1,,,workbook-2026
 575,574,67,full,regular,1,,,workbook-2026
@@ -596,12 +596,12 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 595,594,69,associate,regular,1,,,workbook-2026
 596,595,69,assistant,regular,1,,,workbook-2026
 597,596,69,associate,regular,1,,,workbook-2026
-598,597,69,assistant,regular,1,,,workbook-2026
+598,597,69,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: program website
 599,598,69,associate,regular,1,,,workbook-2026
 600,599,69,associate,regular,1,,,workbook-2026
 601,600,69,associate,regular,1,,,workbook-2026
 602,601,70,associate,regular,1,,,workbook-2026
-603,602,70,assistant,regular,1,,,workbook-2026
+603,602,70,assistant,regular,1,,,"workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by Maddie: Personal site (There may be some confusion with the links and profile. Rebecca Pederson is a prof. at the University of Calgary in the department of anthropology. The links direct to Becky Peterson, a prof. of electrical engineering at UMich. I included the correct link for Dr. Pederson, and you can find all her info there.)"
 604,603,70,full,regular,1,,,workbook-2026
 605,604,70,associate,regular,1,,,workbook-2026
 606,605,70,full,regular,1,,,workbook-2026
@@ -613,7 +613,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 612,611,71,full,regular,1,,,workbook-2026
 613,612,71,full,regular,1,,,workbook-2026
 614,613,71,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://www.daap.uc.edu/academic-programs/graduate-programs/daap-graduate-faculty.html
-615,614,71,assistant,regular,1,,,workbook-2026
+615,614,71,assistant,regular,1,,2026-01-01,workbook-2026 | closed 2026-01-01: associate; rank verified 2026-10-01; rank review 2026-10-01 by Maddie: personal website
 616,615,71,associate,regular,1,,,workbook-2026
 617,616,71,full,regular,1,,,workbook-2026
 618,617,71,full,regular,1,,,workbook-2026
@@ -623,7 +623,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 622,621,72,full,regular,1,,,workbook-2026
 623,622,72,associate,regular,1,,,workbook-2026
 624,623,72,full,regular,1,,,workbook-2026
-625,624,72,assistant,regular,1,,,workbook-2026
+625,624,72,assistant,regular,1,,2023-01-01,workbook-2026 | closed 2023-01-01: associate; rank verified 2026-09-30; rank review 2026-09-30 by Maddie: Personal Website
 626,625,72,full,regular,1,,,workbook-2026
 627,626,73,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://www.udel.edu/academics/colleges/biden-school/people/
 628,627,73,associate,regular,1,,,workbook-2026
@@ -633,7 +633,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 632,631,74,associate,regular,1,,,workbook-2026
 633,632,74,associate,regular,1,,,workbook-2026
 634,633,74,associate,regular,1,,,workbook-2026
-635,634,74,assistant,regular,1,,,workbook-2026
+635,634,74,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: program website
 636,635,74,full,regular,1,,,workbook-2026
 637,636,74,full,regular,1,,,workbook-2026
 638,637,74,full,regular,1,,,workbook-2026
@@ -642,13 +642,13 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 641,640,74,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @ufl.edu; affiliation ""Associate Professor in the Department of Urban and Regional Planning at the University of Florida"""
 642,641,74,assistant,regular,1,,,workbook-2026
 643,642,75,full,regular,1,,,workbook-2026
-644,643,75,assistant,regular,1,,,workbook-2026
+644,643,75,assistant,regular,1,,2026-01-01,"workbook-2026 | closed 2026-01-01: left the program; rank verified 2026-10-09; rank review 2026-10-09 by Maddie: Obituary, linkedin (Passed in Jan 2026. No longer listed on program website. He was a MSCRP grad in 2000. prior rank was full time.  [AK 2026-10-09: deceased January 2026 per the reviewer; appointment closed rather than re-ranked])"
 645,644,75,full,regular,1,,,workbook-2026
 646,645,75,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://ced.uga.edu/about/people/
 647,646,75,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://ced.uga.edu/about/people/
 648,647,75,associate,regular,1,,,workbook-2026
 649,648,75,full,regular,1,,,workbook-2026
-650,649,76,assistant,regular,1,,,workbook-2026
+650,649,76,assistant,regular,1,,2022-01-01,workbook-2026 | closed 2022-01-01: associate; rank verified 2026-10-01; rank review 2026-10-01 by Maddie: program website
 651,650,76,full,regular,1,,,workbook-2026
 652,651,76,associate,regular,1,,,workbook-2026
 653,652,76,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://www.uoguelph.ca/sedrd/people/tag/173
@@ -660,8 +660,8 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 659,658,77,associate,regular,1,,,workbook-2026
 660,659,77,associate,regular,1,,,workbook-2026
 661,660,77,full,regular,1,,,workbook-2026
-662,661,77,assistant,regular,1,,,workbook-2026
-663,662,77,assistant,regular,1,,,workbook-2026
+662,661,77,assistant,regular,1,,2024-01-01,"workbook-2026 | closed 2024-01-01: associate; rank verified 2026-10-01; rank review 2026-10-01 by Maddie: Program website, LinkedIn"
+663,662,77,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-01; rank review 2026-10-01 by Maddie: Linkedin
 664,663,77,associate,regular,1,,,workbook-2026
 665,664,78,associate,regular,1,,,workbook-2026
 666,665,78,full,regular,1,,,workbook-2026
@@ -677,8 +677,8 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 676,675,78,associate,regular,1,,,workbook-2026
 677,676,78,full,regular,1,,,workbook-2026
 678,677,78,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @uic.edu; affiliation ""Professor, Department of Urban Planning and Policy, University of Illinois Chicago"""
-679,678,78,assistant,regular,1,,,workbook-2026
-680,679,79,assistant,regular,1,,,workbook-2026
+679,678,78,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-01; rank review 2026-10-01 by Maddie: Program website
+680,679,79,assistant,regular,1,,2026-10-07,workbook-2026 | closed 2026-10-07: associate; rank verified 2026-10-07; rank review 2026-10-07 by Maddie: program website (LinkedIn and website doesn't say when she promoted)
 681,680,79,assistant,regular,1,,,workbook-2026
 682,681,79,full,regular,1,,,workbook-2026
 683,682,79,associate,regular,1,,,workbook-2026
@@ -700,10 +700,10 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 699,698,81,associate,regular,1,,,workbook-2026
 700,699,81,full,regular,1,,,workbook-2026
 701,700,81,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://spaa.ku.edu/people/faculty
-702,701,81,assistant,regular,1,,,workbook-2026
-703,702,82,assistant,regular,1,,,workbook-2026
+702,701,81,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: ORCID site
+703,702,82,assistant,regular,1,,2026-09-30,workbook-2026 | closed 2026-09-30: associate; rank verified 2026-09-30; rank review 2026-09-30 by Maddie: Program website
 704,703,82,associate,regular,1,,,workbook-2026
-705,704,82,assistant,regular,1,,,workbook-2026
+705,704,82,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by Maddie: Program website
 706,705,82,full,regular,1,,,workbook-2026
 707,706,82,associate,regular,1,,,workbook-2026
 708,707,82,full,regular,1,,,workbook-2026
@@ -729,8 +729,8 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 728,727,84,full,regular,1,,,workbook-2026
 729,728,84,full,regular,1,,,workbook-2026
 730,729,84,associate,regular,1,,,workbook-2026
-731,730,84,assistant,regular,1,,,workbook-2026
-732,731,84,assistant,regular,1,,,workbook-2026
+731,730,84,assistant,regular,1,,,"workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by Maddie: Program website, LinkedIn"
+732,731,84,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by Maddie: ORCID site
 733,732,84,associate,regular,1,,,workbook-2026
 734,733,85,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion; 'Associate Professor' on the UMass Amherst LARP directory (browser pass 2026-09-27; extractor read 'Director' first)
 735,734,85,full,regular,1,,,workbook-2026
@@ -742,18 +742,18 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 741,740,86,full,regular,1,,,workbook-2026
 742,741,86,associate,regular,1,,,workbook-2026
 743,742,86,full,regular,1,,,workbook-2026
-744,743,86,assistant,regular,1,,,workbook-2026
+744,743,86,assistant,regular,1,,2023-01-01,workbook-2026 | closed 2023-01-01: associate; rank verified 2026-09-30; rank review 2026-09-30 by Maddie: LinkedIn (UMass Boston links seem to be not working or outdated)
 745,744,86,associate,regular,1,,,workbook-2026
 746,745,86,full,regular,1,,,workbook-2026
 747,746,86,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: depart; change from Scholar profile 2026-09-15: email @uniroma1.it; affiliation ""Associate Professor of Urban Planning, La Sapienza University of Rome"""
 748,747,86,full,regular,1,,,workbook-2026
 749,748,86,associate,regular,1,,,workbook-2026
-750,749,86,assistant,regular,1,,,workbook-2026
+750,749,86,assistant,regular,1,,2023-01-01,"workbook-2026 | closed 2023-01-01: full; rank verified 2026-09-30; rank review 2026-09-30 by Maddie: Program Site (Goes by Betsy. Program website link is outdated, I attached the correct link. Also used her linkedIn to find when she promoted to associate dean.)"
 751,750,86,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: move; change from Scholar profile 2026-09-15: email @ufl.edu; affiliation ""University of Florida"""
 752,751,87,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: depart; change from Scholar profile 2026-09-15: email @uw.edu; affiliation ""Assistant Professor at University of Washington, Tacoma"""
 753,752,87,full,regular,1,,,workbook-2026
-754,753,87,assistant,regular,1,,,workbook-2026
-755,754,87,assistant,regular,1,,,workbook-2026
+754,753,87,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: research gate
+755,754,87,assistant,regular,1,,2026-10-07,"workbook-2026 | closed 2026-10-07: associate; rank verified 2026-10-07; rank review 2026-10-07 by maddie: program website (I can't find his Linkedin or website, but his faculty profile says associate. most other sources say assistant but I figured the faculty page is updated.)"
 756,755,87,associate,regular,1,,,workbook-2026
 757,756,88,associate,regular,1,,,workbook-2026
 758,757,88,associate,regular,1,,,workbook-2026
@@ -772,17 +772,17 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 771,770,89,full,regular,1,,,workbook-2026
 772,771,89,full,regular,1,,,workbook-2026
 773,772,89,full,regular,1,,,workbook-2026
-774,773,89,assistant,regular,1,,,workbook-2026
+774,773,89,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-01; rank review 2026-10-01 by Maddie: Program website (Could not locate linkedin or CV to see when he entered the position)
 775,774,89,full,regular,1,,,workbook-2026
 776,775,89,full,regular,1,,,workbook-2026
 777,776,89,full,regular,1,,,workbook-2026
 778,777,89,assistant,regular,1,,,workbook-2026
-779,778,89,assistant,regular,1,,,workbook-2026
+779,778,89,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: CV from program site
 780,779,89,full,regular,1,,,workbook-2026
 781,780,89,assistant,regular,1,,,workbook-2026
 782,781,89,full,regular,1,,,workbook-2026
 783,782,89,assistant,regular,1,,,workbook-2026
-784,783,90,assistant,regular,1,,,workbook-2026
+784,783,90,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-01; rank review 2026-10-01 by Maddie: program website
 785,784,90,associate,regular,1,,,workbook-2026
 786,785,90,full,regular,1,,,workbook-2026
 787,786,90,associate,regular,1,,,workbook-2026
@@ -796,16 +796,16 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 795,794,92,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://crp.unm.edu/about/faculty.html
 796,795,92,assistant,regular,1,,,workbook-2026
 797,796,92,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://crp.unm.edu/about/faculty.html
-798,797,93,assistant,regular,1,,,workbook-2026
+798,797,93,assistant,regular,1,,,"workbook-2026 | rank verified 2026-09-30; rank review 2026-09-30 by Maddie: Program website (Program website lists rank as assistant, but linkedIn does not show when she entered the position.)"
 799,798,93,associate,regular,1,,,workbook-2026
 800,799,93,full,regular,1,,,workbook-2026
 801,800,93,full,regular,1,,,workbook-2026
 802,801,93,full,regular,1,,,workbook-2026
-803,802,108,assistant,regular,1,,,workbook-2026; move verified 2026-09-13 against Scholar profile (verified email domain) and department page
+803,802,108,assistant,regular,1,,,workbook-2026; move verified 2026-09-13 against Scholar profile (verified email domain) and department page | rank verified 2026-10-01; rank review 2026-10-01 by Maddie: faculty profile on program site
 804,802,93,assistant,regular,1,,2026-09-13,"workbook-2026; stale duplicate row, closed at migration, actual end date unknown"
 805,803,94,associate,regular,1,,,workbook-2026
-806,804,94,assistant,regular,1,,,workbook-2026
-807,805,94,assistant,regular,1,,,workbook-2026
+806,804,94,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: program website (unable to find when he entered the position)
+807,805,94,assistant,regular,1,,2026-10-01,workbook-2026 | closed 2026-10-01: associate; rank verified 2026-10-01; rank review 2026-10-01 by Maddie: Program website (Also no info on when he started the position)
 808,806,94,assistant,regular,1,,,workbook-2026
 809,807,95,associate,regular,1,,,workbook-2026
 810,808,95,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: move; change from Scholar profile 2026-09-15: email @sdsu.edu; affiliation ""San Diego State University"""
@@ -820,7 +820,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 819,817,96,associate,regular,1,,,workbook-2026
 820,818,96,full,regular,1,,,workbook-2026
 821,819,96,associate,regular,1,,,workbook-2026
-822,820,96,assistant,regular,1,,,workbook-2026
+822,820,96,assistant,regular,1,,2026-10-01,workbook-2026 | closed 2026-10-01: associate; rank verified 2026-10-01; rank review 2026-10-01 by Maddie: program website (website lists associate but no other sites to cross check from)
 823,821,96,associate,regular,1,,,workbook-2026
 824,822,96,full,regular,1,,,workbook-2026
 825,823,96,full,regular,1,,,workbook-2026
@@ -832,12 +832,12 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 831,829,97,full,regular,1,,,workbook-2026
 832,830,97,associate,regular,1,,,workbook-2026
 833,831,97,assistant,regular,1,,,workbook-2026
-834,832,97,assistant,regular,1,,,workbook-2026
+834,832,97,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-01; rank review 2026-10-01 by Maddie: Personal Website
 835,833,97,full,regular,1,,,workbook-2026
-836,834,97,assistant,regular,1,,,workbook-2026
+836,834,97,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: program website
 837,835,97,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://www.design.upenn.edu/people
 838,836,97,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @upenn.edu; affiliation ""Associate Professor of Urban Planning, University of Pennsylvania"""
-839,837,97,assistant,regular,1,,,workbook-2026
+839,837,97,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-01; rank review 2026-10-01 by Maddie: LinkedIn
 840,838,97,associate,regular,1,,,workbook-2026
 841,839,97,associate,regular,1,,,workbook-2026
 842,840,97,full,regular,1,,,workbook-2026
@@ -869,12 +869,12 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 868,866,99,full,regular,1,,,workbook-2026
 869,867,99,full,regular,1,,,workbook-2026
 870,868,100,full,regular,1,,,workbook-2026
-871,869,100,assistant,regular,1,,,workbook-2026
+871,869,100,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-01; rank review 2026-10-01 by Maddie: Program website
 872,870,100,full,regular,1,,,workbook-2026
 873,871,100,full,regular,1,,,workbook-2026
 874,872,101,associate,regular,1,,,workbook-2026
 875,873,101,full,regular,1,,,workbook-2026
-876,874,101,assistant,regular,1,,,workbook-2026
+876,874,101,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: program website
 877,875,101,associate,regular,1,,,workbook-2026
 878,876,101,associate,regular,1,,,workbook-2026
 879,877,102,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://usm.maine.edu/policy-planning-management/people/
@@ -882,7 +882,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 881,879,103,full,regular,1,,,workbook-2026
 882,880,103,full,regular,1,,,workbook-2026
 883,881,103,assistant,regular,1,,,workbook-2026
-884,882,103,assistant,regular,1,,,workbook-2026
+884,882,103,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: program site
 885,883,103,assistant,regular,1,,,workbook-2026
 886,884,103,full,regular,1,,,workbook-2026
 887,885,103,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @uta.edu; affiliation ""Associate Professor, University of Texas at Arlington"""
@@ -892,7 +892,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 891,889,104,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @utexas.edu; affiliation ""Professor of Community and Regional Planning, University of Texas at Austin"""
 892,890,104,associate,regular,1,,,workbook-2026
 893,891,104,full,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: demotion read from department page https://soa.utexas.edu/faculty
-894,892,104,assistant,regular,1,,,workbook-2026
+894,892,104,assistant,regular,1,,2022-01-01,"workbook-2026 | closed 2022-01-01: associate; rank verified 2026-09-30; rank review 2026-09-30 by Maddie: LinkedIn, program website"
 895,893,104,associate,regular,1,,,workbook-2026
 896,894,104,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://soa.utexas.edu/faculty
 897,895,104,associate,regular,1,,,workbook-2026
@@ -912,7 +912,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 911,909,107,full,regular,1,,,workbook-2026
 912,910,107,full,regular,1,,,workbook-2026
 913,911,107,full,regular,1,,,workbook-2026
-914,912,107,assistant,regular,1,,,workbook-2026
+914,912,107,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: program website
 915,913,107,assistant,regular,1,,2026-09-27,"workbook-2026 | closed 2026-09-27: other; 'Assistant Professor (Status)' on the Toronto geography & planning directory: a status-only appointment, not a regular line (browser pass 2026-09-27)"
 916,914,107,full,regular,1,,,workbook-2026
 917,915,107,assistant,regular,1,,,workbook-2026
@@ -922,7 +922,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 921,919,108,associate,regular,1,,,workbook-2026
 922,920,108,full,regular,1,,,workbook-2026
 923,921,108,full,regular,1,,,workbook-2026
-924,922,108,assistant,regular,1,,,workbook-2026
+924,922,108,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-01; rank review 2026-10-01 by Maddie: Personal Website
 925,923,108,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://plan.cap.utah.edu/directory/
 926,924,108,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://plan.cap.utah.edu/directory/
 927,925,108,associate,regular,1,,,workbook-2026
@@ -936,7 +936,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 935,933,110,associate,regular,1,,,workbook-2026
 936,934,110,full,regular,1,,,workbook-2026
 937,935,110,associate,regular,1,,,workbook-2026
-938,936,110,assistant,regular,1,,,workbook-2026
+938,936,110,assistant,regular,1,,2020-01-01,workbook-2026 | closed 2020-01-01: associate; rank verified 2026-09-30; rank review 2026-09-30 by Maddie: Program website
 939,937,110,associate,regular,1,,,workbook-2026
 940,938,110,assistant,regular,1,,,workbook-2026
 941,939,110,full,regular,1,,,workbook-2026
@@ -958,7 +958,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 957,955,111,associate,regular,1,,,workbook-2026
 958,956,111,associate,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://uwaterloo.ca/planning/contacts?title=&group%5B68%5D=68
 959,957,111,full,regular,1,,,workbook-2026
-960,958,111,assistant,regular,1,,,workbook-2026
+960,958,111,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: linkedin
 961,959,111,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://uwaterloo.ca/planning/contacts?title=&group%5B68%5D=68
 962,960,111,associate,regular,1,,,workbook-2026
 963,961,111,full,regular,1,,,workbook-2026
@@ -980,7 +980,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 979,977,113,full,regular,1,,,workbook-2026
 980,978,63,full,regular,1,,,workbook-2026
 981,979,63,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://priceschool.usc.edu/faculty/directory/
-982,980,63,assistant,regular,1,,,workbook-2026
+982,980,63,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-01; rank review 2026-10-01 by Maddie: https://www.santinacontreras.com/
 983,981,63,full,regular,1,,,workbook-2026
 984,982,63,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @usc.edu; affiliation ""Associate Professor, Sol Price School of Public Policy, University of Southern California"""
 985,983,63,full,regular,1,,,workbook-2026
@@ -1000,7 +1000,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 999,997,114,associate,regular,1,,,workbook-2026
 1000,998,114,associate,regular,1,,,workbook-2026
 1001,999,114,associate,regular,1,,,workbook-2026
-1002,1000,114,assistant,regular,1,,,workbook-2026
+1002,1000,114,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: program website
 1003,1001,114,associate,regular,1,,,workbook-2026
 1004,1002,114,full,regular,1,,,workbook-2026
 1005,1003,115,associate,regular,1,,,workbook-2026
@@ -1016,8 +1016,8 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 1015,1013,115,associate,regular,1,,,workbook-2026
 1016,1014,115,associate,regular,1,,,workbook-2026
 1017,1015,116,assistant,regular,1,,,workbook-2026
-1018,1016,116,assistant,regular,1,,,workbook-2026
-1019,1017,116,assistant,regular,1,,,workbook-2026
+1018,1016,116,assistant,regular,1,,,"workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: program website, personal website"
+1019,1017,116,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by maddie: program site
 1020,1018,116,full,regular,1,,,workbook-2026
 1021,1019,116,full,regular,1,,,workbook-2026
 1022,1020,116,full,regular,1,,,workbook-2026
@@ -1029,13 +1029,13 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 1028,1026,117,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://www.wcupa.edu/business-PublicManagement/geographyPlanning/facultyStaff.aspx
 1029,1027,117,full,regular,1,,,workbook-2026
 1030,1028,118,associate,regular,1,,,workbook-2026
-1031,1029,118,assistant,regular,1,,,workbook-2026
+1031,1029,118,assistant,regular,1,,2026-01-01,workbook-2026 | closed 2026-01-01: full; rank verified 2026-09-30; rank review 2026-09-30 by Maddie: LinkedIn (Goes by Tammi.)
 1032,1030,118,full,regular,1,,,workbook-2026
 1033,1031,118,associate,regular,1,,,workbook-2026
 1034,1032,118,full,regular,1,,,workbook-2026
 1035,1033,119,full,regular,1,,,workbook-2026
 1036,1034,119,full,regular,1,,,workbook-2026
-1037,1035,119,assistant,regular,1,,,workbook-2026
+1037,1035,119,assistant,regular,1,,2017-01-01,workbook-2026 | closed 2017-01-01: associate; rank verified 2026-10-01; rank review 2026-10-01 by Maddie: LinkedIn
 1038,1036,119,associate,regular,1,,,workbook-2026
 1039,1037,119,assistant,regular,1,,,workbook-2026
 1040,1038,119,associate,regular,1,,,workbook-2026
@@ -1255,3 +1255,29 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 1257,1094,117,associate,regular,1,2026-09-27,,rank verified 2026-09-27; new hire from department page https://www.wcupa.edu/business-PublicManagement/geographyPlanning/facultyStaff.aspx
 1258,1095,117,assistant,regular,1,2026-09-27,,rank verified 2026-09-27; new hire from department page https://www.wcupa.edu/business-PublicManagement/geographyPlanning/facultyStaff.aspx
 1259,850,98,associate,regular,1,2026-09-29,,"Scholar profile 2026-09-15: ""Associate Professor, Graduate School of Planning, University of Puerto Rico - Río Piedras""; the department page that read 'Catedrático Auxiliar' is dated 2024-10-31, older than the Feb 2026 workbook, so it cannot show a later promotion; rank verified 2026-09-29"
+1260,1029,118,full,regular,1,2026-01-01,,rank verified 2026-09-30; rank review 2026-09-30 by Maddie: LinkedIn (Goes by Tammi.)
+1261,749,86,full,regular,1,2023-01-01,,"rank verified 2026-09-30; rank review 2026-09-30 by Maddie: Program Site (Goes by Betsy. Program website link is outdated, I attached the correct link. Also used her linkedIn to find when she promoted to associate dean.)"
+1262,936,110,associate,regular,1,2020-01-01,,rank verified 2026-09-30; rank review 2026-09-30 by Maddie: Program website
+1263,536,64,full,regular,1,2022-01-01,,rank verified 2026-09-30; rank review 2026-09-30 by Maddie: ULaval Website (Unclear if promoted in 2018 or 2022)
+1264,892,104,associate,regular,1,2022-01-01,,"rank verified 2026-09-30; rank review 2026-09-30 by Maddie: LinkedIn, program website"
+1265,743,86,associate,regular,1,2023-01-01,,rank verified 2026-09-30; rank review 2026-09-30 by Maddie: LinkedIn (UMass Boston links seem to be not working or outdated)
+1266,140,21,associate,regular,1,2021-01-01,,"rank verified 2026-09-30; rank review 2026-09-30 by Maddie: Personal website (She was an associate prof until this year, now a researcher [AK 2026-10-09: GSD announced her appointment as Plimpton Associate Professor in June 2021; since-year corrected from 2026])"
+1267,541,64,associate,regular,1,2026-09-30,,rank verified 2026-09-30; rank review 2026-09-30 by Maddie: Google Scholar
+1268,243,33,associate,regular,1,2023-01-01,,rank verified 2026-09-30; rank review 2026-09-30 by Maddie: CV
+1269,91,13,associate,regular,1,2026-09-30,,rank verified 2026-09-30; rank review 2026-09-30 by Maddie: Google Scholar
+1270,702,82,associate,regular,1,2026-09-30,,rank verified 2026-09-30; rank review 2026-09-30 by Maddie: Program website
+1271,624,72,associate,regular,1,2023-01-01,,rank verified 2026-09-30; rank review 2026-09-30 by Maddie: Personal Website
+1272,373,50,associate,regular,1,2020-01-01,,rank verified 2026-10-01; rank review 2026-10-01 by Maddie: Program website (He is also the associate dean of the department.)
+1273,539,64,associate,regular,1,2022-01-01,,rank verified 2026-10-01; rank review 2026-10-01 by Maddie: ORCID site
+1274,1035,119,associate,regular,1,2017-01-01,,rank verified 2026-10-01; rank review 2026-10-01 by Maddie: LinkedIn
+1275,554,66,associate,regular,1,2023-01-01,,"rank verified 2026-10-01; rank review 2026-10-01 by Maddie: Program website, LinkedIn (Also the associate dean of student affairs)"
+1276,649,76,associate,regular,1,2022-01-01,,rank verified 2026-10-01; rank review 2026-10-01 by Maddie: program website
+1277,661,77,associate,regular,1,2024-01-01,,"rank verified 2026-10-01; rank review 2026-10-01 by Maddie: Program website, LinkedIn"
+1278,805,94,associate,regular,1,2026-10-01,,rank verified 2026-10-01; rank review 2026-10-01 by Maddie: Program website (Also no info on when he started the position)
+1279,213,27,associate,regular,1,2024-01-01,,rank verified 2026-10-01; rank review 2026-10-01 by Maddie: personal website
+1280,614,71,associate,regular,1,2026-01-01,,rank verified 2026-10-01; rank review 2026-10-01 by Maddie: personal website
+1281,449,59,associate,regular,1,2026-10-01,,"rank verified 2026-10-01; rank review 2026-10-01 by Maddie: School news (Faculty profile lists her as an assistant professor, but the ORCID site and a recent news source (from 9/21/26) lists her as an associate.)"
+1282,820,96,associate,regular,1,2026-10-01,,rank verified 2026-10-01; rank review 2026-10-01 by Maddie: program website (website lists associate but no other sites to cross check from)
+1283,441,58,associate,regular,1,2024-01-01,,rank verified 2026-10-01; rank review 2026-10-01 by Maddie: ORCID site
+1284,679,79,associate,regular,1,2026-10-07,,rank verified 2026-10-07; rank review 2026-10-07 by Maddie: program website (LinkedIn and website doesn't say when she promoted)
+1285,754,87,associate,regular,1,2026-10-07,,"rank verified 2026-10-07; rank review 2026-10-07 by maddie: program website (I can't find his Linkedin or website, but his faculty profile says associate. most other sources say assistant but I figured the faculty page is updated.)"

@@ -1380,7 +1380,7 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 599,Mark Stevens,University of British Columbia,openalex,A5012975876,Mark L. Stevens,0.588,1.0,0.0,0.25,0.152,17,338,8,,https://orcid.org/0000-0002-1813-6403,pending,,,
 600,Martino Tran,University of British Columbia,openalex,A5038912348,Martino Tran,0.937,1.0,1.0,0.58,0.723,56,2318,23,University of British Columbia,https://orcid.org/0000-0002-8947-3829,accepted,matcher,2026-09-14,
 601,Alberto de Salvatierra,University of Calgary,openalex,A5013944437,Alberto de Salvatierra,0.967,1.0,1.0,0.778,0.556,11,5,1,University of Calgary,https://orcid.org/0000-0002-3931-0132,accepted,matcher,2026-09-14,
-602,Rebecca Pedersen,University of Calgary,openalex,A5042975887,Rebecca Laycock Pedersen,0.855,1.0,1.0,0.7,0.027,13,126,5,Landscape Institute,https://orcid.org/0000-0002-5966-5141,rejected,audit_matches,2026-09-15,
+602,Rebecca Pedersen,University of Calgary,openalex,A5042975887,Rebecca Laycock Pedersen,0.855,1.0,1.0,0.7,0.027,13,126,5,Landscape Institute,https://orcid.org/0000-0002-5966-5141,accepted,AK,2026-10-09,"her full name and the ORCID the rank reviewer read off her page; the 0.027 ratio that rejected it was against a namesake's Scholar figure"
 603,Joseli Macedo,University of Calgary,openalex,A5040799704,Joseli Macedo,0.977,1.0,1.0,0.85,0.578,62,410,9,University of Calgary,https://orcid.org/0000-0003-2494-4754,accepted,matcher,2026-09-14,
 603,Joseli Macedo,University of Calgary,openalex,A5124502323,Joseli Pereira Macedo Rezende,0.6,1.0,0.0,1.0,0.0,1,0,0,,,pending,,,
 603,Joseli Macedo,University of Calgary,openalex,A5053031130,Joseli Pereira Macedo Rezende,0.585,1.0,0.0,0.9,0.003,6,2,1,Universidade Federal de Mato Grosso do Sul,https://orcid.org/0000-0003-4666-7786,pending,,,
@@ -4073,3 +4073,4 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 1087,Sean Kennedy,"University of Illinois, Urbana-Champaign",openalex,A5050275060,Sean Kennedy,0.65,1.0,0.0,1.0,,7,6,2,,,pending,,,
 1087,Sean Kennedy,"University of Illinois, Urbana-Champaign",openalex,A5103291342,Sean M. Kennedy,0.65,1.0,0.0,1.0,,5,44,1,,,pending,,,
 1083,Vivian Wong,University of Florida,google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-09-29,
+602,Rebecca Pedersen,University of Calgary,google_scholar,eytkhI0AAAAJ,Becky Peterson,,,,,,,4943,,University of Michigan,,rejected,AK,2026-10-09,"inherited id points at Becky Peterson, electrical engineering, Michigan (rank review 2026-10-07)"
