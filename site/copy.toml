@@ -26,6 +26,7 @@ beta_tag = "Beta"
 search_placeholder = "Search faculty or schools"
 nav_rankings = "Rankings"
 nav_departments = "Departments"
+nav_others = "Beyond planning"
 nav_methods = "Methods"
 title_suffix = "Planning Citation Metrics"
 footer_about = """Citation metrics for urban planning faculty in the United States and Canada, continuing the
@@ -147,6 +148,11 @@ pct_h_rank = "h-index, {rank}s"
 percentile_note = """Percentile among the
          {rank_label}s in this dataset, and among all
          faculty in it."""
+# other_note: shown instead of percentiles for someone with a planning PhD whose
+# appointment is outside a planning program. Values: name, others_href
+other_note = """{name} holds a planning PhD and works in planning, but is appointed outside a
+         planning program, so is listed <a href="{others_href}">beside the rankings</a> rather
+         than in them. No percentiles are shown: they describe planning-program faculty only."""
 spark_caption = "Total citations recorded by this project, {source}. {change}"
 spark_change = "Up {percent} over that span."
 compare_heading = "OpenAlex, for comparison"
@@ -200,6 +206,26 @@ filter_rank = "Rank"
 filter_country = "Country"
 shown = "shown"
 
+[others]
+# Planning PhDs appointed outside planning programs. Values: n, methods_href
+# (meta_description: n only)
+meta_description = "{n} scholars with planning PhDs who work in planning from departments outside planning programs."
+eyebrow = "Beyond planning programs"
+heading = "Planning scholars in other departments"
+browser_title = "Planning scholars in other departments"
+lede = """{n} people who hold a PhD from a planning program and whose research sits in planning,
+     but whose appointment is in another unit: environmental science, public policy, geography,
+     real estate, landscape architecture, engineering, public health. They are listed here beside
+     the rankings, not in them, and are not counted in any percentile, ranking or department figure.
+     The list was assembled in October 2026 and is a first pass, not a census; if you belong on it,
+     or should not be on it, <a href="{methods_href}">get in touch</a>."""
+filter_rank = "Rank"
+filter_country = "Country"
+shown = "shown"
+footnote = """Rows marked <span class="pill pill-oa">OA</span> have no Google Scholar profile we know of,
+     so their figures come from OpenAlex and are likely undercounts. We check for Scholar profiles
+     daily. See <a href="{methods_href}">Methods</a>."""
+
 [departments]
 # Values: dept_count
 meta_description = "{dept_count} urban planning programs ranked by faculty citation metrics."
@@ -247,6 +273,13 @@ inclusion_body = """Regular full-time tenured and tenure-track faculty at planni
      The school list began as the membership of the Association of Collegiate Schools of Planning
      and has a handful of programs added on request, mostly Canadian. Each program page says which
      it is."""
+inclusion_others = """Since October 2026 the site also lists <a href="{others_href}">planning scholars in
+     other departments</a>: people with a PhD from a North American planning doctoral program, a
+     tenured or tenure-track appointment in the United States or Canada outside a tracked planning
+     program, and research that sits in planning. They are shown beside the rankings, never in
+     them, and do not enter any percentile or department figure. The list came from a search of
+     planning PhD programs' alumni and of the units where planning PhDs commonly land, and it is
+     incomplete."""
 percentiles_heading = "Percentiles and per-year figures"
 percentiles_body = """Percentiles are computed across the faculty in this dataset, both overall and within academic
      rank, so a percentile means "relative to the people on this site", not to all of academia.

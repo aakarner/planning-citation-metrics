@@ -75,6 +75,7 @@ SOURCE_LABEL = {"google_scholar": "Google Scholar", "openalex": "OpenAlex",
                 "pop": "Publish or Perish", "manual": "entered by hand"}
 PILL_LABEL = {"openalex": "OpenAlex", "pop": "PoP", "manual": "manual"}     # on a fallback row
 PILL_SHORT = {"openalex": "OA", "pop": "PoP", "manual": "manual"}           # in the dense rankings table
+OTHERS_PAGE = "elsewhere.html"   # planning PhDs whose appointment is outside a planning program
 
 
 def fallback_note(source: str, **values) -> str:
@@ -130,7 +131,7 @@ def sparkline(points, width=290, height=64, pad=22) -> str:
     """points: [(iso date, value), ...] ascending. Endpoint values are labelled,
     so the drawing never needs an axis."""
     pts = [(d, v) for d, v in points if v is not None]
-    if not pts:
+    if len(pts) < 2:        # one reading is a dot, not a trend
         return ""
     vals = [v for _, v in pts]
     lo, hi = min(vals), max(vals)
@@ -187,6 +188,7 @@ def donate_block() -> str:
 def page(title, body, base, active="", description="", extra_js=()) -> str:
     nav = [(t("site", "nav_rankings"), "rankings.html"),
            (t("site", "nav_departments"), "departments.html"),
+           (t("site", "nav_others"), OTHERS_PAGE),
            (t("site", "nav_methods"), "methods.html")]
     links = "".join(
         f'<a href="{base}{href}"{" aria-current=page" if active == href else ""}>{label}</a>'
@@ -230,6 +232,21 @@ def page(title, body, base, active="", description="", extra_js=()) -> str:
 
 # --------------------------------------------------------------------- data
 
+def as_of_dates(counts: list[dict]) -> dict:
+    """source -> date of its newest collection that covered most people.
+
+    A targeted fetch (a handful of new hires, people just matched) must not
+    make the site claim every figure is as recent as that day."""
+    by_src: dict[str, list] = defaultdict(list)
+    for r in counts:
+        by_src[r["source"]].append((r["d"], r["n"]))
+    out = {}
+    for src, rows in by_src.items():
+        biggest = max(n for _, n in rows)
+        out[src] = max(d for d, n in rows if n >= biggest / 2)
+    return out
+
+
 def load(con: sqlite3.Connection) -> dict:
     con.row_factory = sqlite3.Row
     q = lambda sql, *a: [dict(r) for r in con.execute(sql, a)]
@@ -247,8 +264,8 @@ def load(con: sqlite3.Connection) -> dict:
     series = defaultdict(lambda: defaultdict(list))
     for r in q("SELECT * FROM v_person_timeseries"):
         series[r["person_id"]][r["source"]].append((r["collected_at"], r["total_citations"]))
-    asof = {r["source"]: r["d"] for r in q(
-        "SELECT source, MAX(collected_at) AS d FROM metric_snapshot GROUP BY source")}
+    asof = as_of_dates(q("SELECT source, collected_at AS d, COUNT(*) AS n FROM metric_snapshot "
+                         "GROUP BY source, collected_at"))
     bench = {r["rank"]: r for r in q("SELECT * FROM v_rank_benchmarks")}
     affs = q("SELECT a.*, d.short_name AS dept FROM affiliation a JOIN department d USING(department_id)")
     gs_dates = [r["d"] for r in q("SELECT DISTINCT collected_at AS d FROM metric_snapshot "
@@ -256,13 +273,26 @@ def load(con: sqlite3.Connection) -> dict:
     mix = {r["source"]: r["n"] for r in q("SELECT h.source, COUNT(*) AS n FROM v_headline_metrics h "
                                          "JOIN v_current_affiliation ca ON ca.person_id = h.person_id GROUP BY 1")}
     rising_rows = q("SELECT * FROM v_rising")
+    others = q("""
+      SELECT o.*, p.phd_year, p.phd_institution, p.interests, p.google_scholar_id,
+             p.openalex_author_id, p.orcid, p.researchgate_url, p.linkedin_url, p.personal_url,
+             d.country
+      FROM v_other_units o
+      JOIN person p     ON p.person_id = o.person_id
+      JOIN department d ON d.department_id = o.department_id
+      ORDER BY o.display_name
+    """)
     return {"people": people, "depts": depts, "oa": oa, "series": series, "asof": asof,
-            "bench": bench, "affs": affs, "gs_dates": gs_dates, "mix": mix, "rising": rising_rows}
+            "bench": bench, "affs": affs, "gs_dates": gs_dates, "mix": mix, "rising": rising_rows,
+            "others": others}
 
 
 # -------------------------------------------------------------------- pages
 
 def person_page(p, slugs, dslug, oa, series, base) -> str:
+    # Someone in v_other_units: a planning PhD outside a planning program. Same
+    # page, but no department page to link to and no percentiles to show.
+    other = "unit" in p
     fallback = bool(p["is_fallback"])
     src = SOURCE_LABEL.get(p["source"], p["source"])
     pill = (f'<span class="pill pill-oa">{e(src)}</span>' if fallback
@@ -323,11 +353,26 @@ def person_page(p, slugs, dslug, oa, series, base) -> str:
         facts.append((t("person", "label_interests"), e(p["interests"])))
     facts_block = "".join(f"<dt>{k}</dt><dd>{v}</dd>" for k, v in facts)
 
+    if other:
+        where = f"{e(p['unit'])}, {e(p['university'])}"
+        standing = (f'<div class="note"><p>'
+                    + t("person", "other_note", name=e(p["display_name"]), others_href=f"{base}{OTHERS_PAGE}")
+                    + '</p></div>')
+    else:
+        where = f'<a href="{base}department/{dslug}.html">{e(p["department"])}</a>'
+        standing = f"""<div class="pct">
+        {pct_row(t("person", "pct_citations_all"), p["pct_citations_all"])}
+        {pct_row(t("person", "pct_citations_rank", rank=p['rank']), p["pct_citations_rank"])}
+        {pct_row(t("person", "pct_h_all"), p["pct_h_all"])}
+        {pct_row(t("person", "pct_h_rank", rank=p['rank']), p["pct_h_rank"])}
+      </div>
+      <p class="sub" style="font-size:13px;margin-top:10px">{t("person", "percentile_note", rank_label=RANK_LABEL.get(p['rank'], p['rank']).lower())}</p>"""
+
     body = f"""<main>
   <p class="eyebrow">{t("person", "eyebrow")}</p>
   <h1>{e(p['display_name'])}</h1>
   <p class="sub">{RANK_LABEL.get(p['rank'], p['rank'])},
-     <a href="{base}department/{dslug}.html">{e(p['department'])}</a></p>
+     {where}</p>
   <div class="sheet">
     <div>
       <div class="metric">
@@ -337,13 +382,7 @@ def person_page(p, slugs, dslug, oa, series, base) -> str:
       </div>
       <p class="sub" style="font-size:13.5px">{t("person", "as_of", collected_at=e(p['collected_at']))}</p>
       {note}
-      <div class="pct">
-        {pct_row(t("person", "pct_citations_all"), p["pct_citations_all"])}
-        {pct_row(t("person", "pct_citations_rank", rank=p['rank']), p["pct_citations_rank"])}
-        {pct_row(t("person", "pct_h_all"), p["pct_h_all"])}
-        {pct_row(t("person", "pct_h_rank", rank=p['rank']), p["pct_h_rank"])}
-      </div>
-      <p class="sub" style="font-size:13px;margin-top:10px">{t("person", "percentile_note", rank_label=RANK_LABEL.get(p['rank'], p['rank']).lower())}</p>
+      {standing}
       {spark_block}
     </div>
     <div>
@@ -355,7 +394,7 @@ def person_page(p, slugs, dslug, oa, series, base) -> str:
     return page(f"{p['display_name']} — {t('site', 'title_suffix')}", body, base,
                 description=t("person", "meta_description", name=p["display_name"],
                               rank_label=RANK_LABEL.get(p["rank"], p["rank"]),
-                              department=p["department"]))
+                              department=(f"{p['unit']}, {p['university']}" if other else p["department"])))
 
 
 def department_page(d, roster, slugs, base) -> str:
@@ -749,6 +788,54 @@ def departments_page(data, dslugs, base) -> str:
                 extra_js=("table.js",))
 
 
+def others_page(data, slugs, base) -> str:
+    """Planning PhDs whose appointment is outside a planning program. Listed
+    beside the rankings, never in them: no rank number, no percentile."""
+    people = sorted(data["others"], key=lambda p: -(p["total_citations"] or 0))
+    rows = []
+    for p in people:
+        pill = f' <span class="pill pill-oa">{PILL_SHORT.get(p["source"], e(p["source"]))}</span>' if p["is_fallback"] else ""
+        phd = (f'{p["phd_institution"] or ""}{", " if p["phd_institution"] and p["phd_year"] else ""}'
+               f'{p["phd_year"] or ""}') or "&mdash;"
+        rows.append(f"""<tr data-rank="{e(p['rank'])}" data-country="{e(p['country'])}">
+  <td class="name"><a href="{base}person/{slugs[id(p)]}.html">{e(p['display_name'])}</a>{pill}</td>
+  <td>{e(p['unit'])}</td>
+  <td>{e(p['university'])}</td>
+  <td>{RANK_LABEL.get(p['rank'], p['rank'])}</td>
+  <td class="n">{num(p['total_citations'])}</td>
+  <td class="n">{num(p['h_index'])}</td>
+  <td>{e(phd) if phd != "&mdash;" else phd}</td>
+</tr>""")
+    body = f"""<main>
+  <p class="eyebrow">{t("others", "eyebrow")}</p>
+  <h1>{t("others", "heading")}</h1>
+  <p class="lede">{t("others", "lede", n=len(people), methods_href=f"{base}methods.html")}</p>
+  <div class="controls">
+    <label>{t("others", "filter_rank")}
+      <select data-filter-for="others" data-filter-key="rank">
+        <option value="">All</option><option value="full">Professor</option>
+        <option value="associate">Associate</option><option value="assistant">Assistant</option>
+      </select>
+    </label>
+    <label>{t("others", "filter_country")}
+      <select data-filter-for="others" data-filter-key="country">
+        <option value="">All</option><option value="US">United States</option><option value="CA">Canada</option>
+      </select>
+    </label>
+    <span class="count"><span id="others-count">{len(people):,}</span> {t("others", "shown")}</span>
+  </div>
+  <div class="tw"><table id="others" data-sortable>
+    <thead><tr><th data-text>Name</th><th data-text>Department or school</th><th data-text>University</th>
+      <th data-text>Rank</th><th class="n">Citations</th><th class="n">h-index</th><th data-text>PhD</th></tr></thead>
+    <tbody>{''.join(rows)}</tbody>
+  </table></div>
+  <p class="sub" style="margin-top:14px;font-size:13.5px">{t("others", "footnote", methods_href=f"{base}methods.html")}</p>
+</main>"""
+    return page(f"{t('others', 'browser_title')} — {t('site', 'title_suffix')}", body, base,
+                active=OTHERS_PAGE, description=t("others", "meta_description", n=len(people)),
+                extra_js=("table.js",))
+
+
 def methods_page(data, base, db_name) -> str:
     a = data["asof"]
     n_fb = sum(1 for p in data["people"] if p["is_fallback"])
@@ -775,6 +862,7 @@ def methods_page(data, base, db_name) -> str:
 
   <h2>{m("inclusion_heading")}</h2>
   <p>{m("inclusion_body")}</p>
+  <p>{m("inclusion_others", others_href=f"{base}{OTHERS_PAGE}")}</p>
 
   <h2>{m("percentiles_heading")}</h2>
   <p>{m("percentiles_body")}</p>
@@ -804,8 +892,8 @@ def build(db: Path, out: Path, base: str, quiet: bool = False) -> None:
     con = sqlite3.connect(db)
     data = load(con)
     con.close()
-    people, depts = data["people"], data["depts"]
-    slugs = uniq_slugs(people, lambda p: p["display_name"])
+    people, depts, others = data["people"], data["depts"], data["others"]
+    slugs = uniq_slugs(people + others, lambda p: p["display_name"])
     dslugs = uniq_slugs(depts, lambda d: d["short_name"])
     dslug_by_id = {d["department_id"]: dslugs[id(d)] for d in depts}
 
@@ -826,12 +914,16 @@ def build(db: Path, out: Path, base: str, quiet: bool = False) -> None:
     (out / "index.html").write_text(index_page(data, slugs, dslugs, ""))
     (out / "rankings.html").write_text(rankings_page(data, slugs, ""))
     (out / "departments.html").write_text(departments_page(data, dslugs, ""))
+    (out / OTHERS_PAGE).write_text(others_page(data, slugs, ""))
     shutil.copy(db, out / "citations.sqlite")
     (out / "methods.html").write_text(methods_page(data, "", "citations.sqlite"))
 
     for p in people:
         (out / "person" / f"{slugs[id(p)]}.html").write_text(
             person_page(p, slugs, dslug_by_id[p["department_id"]], data["oa"], data["series"], "../"))
+    for p in others:
+        (out / "person" / f"{slugs[id(p)]}.html").write_text(
+            person_page(p, slugs, None, data["oa"], data["series"], "../"))
     for d in depts:
         members = sorted(roster[d["department_id"]],
                          key=lambda x: -(x["total_citations"] or 0))
@@ -841,6 +933,9 @@ def build(db: Path, out: Path, base: str, quiet: bool = False) -> None:
     index = [{"t": p["display_name"], "n": norm_words(p["display_name"]),
               "w": norm_words(p["department"]), "d": p["department"],
               "u": f"person/{slugs[id(p)]}.html", "c": p["total_citations"] or 0} for p in people]
+    index += [{"t": p["display_name"], "n": norm_words(p["display_name"]),
+               "w": norm_words(f"{p['unit']} {p['university']}"), "d": f"{p['unit']}, {p['university']}",
+               "u": f"person/{slugs[id(p)]}.html", "c": p["total_citations"] or 0} for p in others]
     index += [{"t": d["short_name"], "n": norm_words(d["short_name"]),
                "w": norm_words(f"{d['university']} planning program department"),
                "d": f"{d['n_faculty']} faculty", "u": f"department/{dslugs[id(d)]}.html",
@@ -849,7 +944,8 @@ def build(db: Path, out: Path, base: str, quiet: bool = False) -> None:
 
     n = sum(1 for _ in out.rglob("*") if _.is_file())
     size = sum(f.stat().st_size for f in out.rglob("*") if f.is_file()) / 1e6
-    log(f"  {len(people):,} faculty pages, {len(depts)} department pages")
+    log(f"  {len(people):,} faculty pages, {len(depts)} department pages, "
+        f"{len(others)} planning PhDs in other units")
     log(f"  search index {(out / 'search.json').stat().st_size / 1e3:.0f} KB")
     log(f"  built {out}  ({n} files, {size:.1f} MB)")
 

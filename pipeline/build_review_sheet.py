@@ -86,7 +86,7 @@ def load(db_path: Path, scope: str):
         SELECT p.person_id, p.display_name, d.short_name AS dept, COALESCE(h.source, 'none') AS base_source,
                h.total_citations AS base_cites, p.openalex_author_id AS oa_id, p.google_scholar_id AS gs_id
         FROM person p
-        JOIN v_current_affiliation ca ON ca.person_id = p.person_id
+        JOIN v_current_appointment ca ON ca.person_id = p.person_id
         JOIN department d ON d.department_id = ca.department_id
         LEFT JOIN v_headline_metrics h ON h.person_id = p.person_id""")}
     con.close()

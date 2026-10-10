@@ -159,7 +159,11 @@ def main(argv=None) -> None:
     args = ap.parse_args(argv)
 
     people = {p["person_id"]: p for p in rows(ROSTER_DIR / "person.csv")}
-    depts = {d["department_id"]: d for d in rows(ROSTER_DIR / "department.csv")}
+    # Planning programs only. People in other units (the planning-PhD cohort)
+    # are never moved by a profile, and nobody is moved into one of those units:
+    # a profile naming "UC Berkeley" says nothing about which Berkeley unit.
+    depts = {d["department_id"]: d for d in rows(ROSTER_DIR / "department.csv")
+             if (d.get("kind") or "planning") == "planning"}
     aff_path = ROSTER_DIR / "affiliation.csv"
     with aff_path.open(newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
@@ -193,7 +197,7 @@ def main(argv=None) -> None:
     for r in gs_latest:
         pid = r["person_id"]
         a = current.get(pid)
-        if not a:
+        if not a or a["department_id"] not in depts:
             continue
         raw = json.loads(r["raw_json"] or "{}")
         text = raw.get("affiliation") or ""

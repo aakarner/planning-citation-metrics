@@ -2,12 +2,21 @@
 -- These replace the seven VBA macros and the 'Top Faculty' and 'Current Schools'
 -- sheets in the handover workbook.
 
--- Current primary regular appointment per person. Non-regular appointments
--- stay in the table but never enter rankings.
-CREATE VIEW v_current_affiliation AS
-SELECT a.*
+-- Current primary regular appointment per person, in any kind of unit.
+CREATE VIEW v_current_appointment AS
+SELECT a.*, d.kind
 FROM affiliation a
+JOIN department d ON d.department_id = a.department_id
 WHERE a.end_date IS NULL AND a.is_primary = 1 AND a.appointment_type = 'regular';
+
+-- Current primary regular appointment in a planning program: the ranked
+-- population. Non-regular appointments, and planning PhDs who sit in other
+-- units (see v_other_units), stay in the tables but never enter rankings.
+CREATE VIEW v_current_affiliation AS
+SELECT affiliation_id, person_id, department_id, rank, appointment_type, is_primary,
+       start_date, end_date, source
+FROM v_current_appointment
+WHERE kind = 'planning';
 
 -- Most recent snapshot per person per source.
 CREATE VIEW v_latest_metrics AS
@@ -95,6 +104,31 @@ SELECT p.person_id,
        END                                                                     AS citations_per_year
 FROM person p
 JOIN v_current_affiliation ca ON ca.person_id = p.person_id
+JOIN department d             ON d.department_id = ca.department_id
+JOIN v_headline_metrics m     ON m.person_id = p.person_id;
+
+-- Planning PhDs whose appointment is outside a planning program (added
+-- 2026-10-10). Same figures as v_person_percentiles but no percentiles: they
+-- are not part of the population the percentiles describe.
+CREATE VIEW v_other_units AS
+SELECT p.person_id,
+       p.display_name,
+       ca.department_id,
+       d.name AS unit,
+       d.university,
+       ca.rank,
+       m.source,
+       m.is_fallback,
+       m.collected_at,
+       m.total_citations,
+       m.h_index,
+       CAST(substr(m.collected_at, 1, 4) AS INTEGER) - p.phd_year              AS years_since_phd,
+       CASE WHEN CAST(substr(m.collected_at, 1, 4) AS INTEGER) - p.phd_year > 0
+            THEN m.total_citations * 1.0
+                 / (CAST(substr(m.collected_at, 1, 4) AS INTEGER) - p.phd_year)
+       END                                                                     AS citations_per_year
+FROM person p
+JOIN v_current_appointment ca ON ca.person_id = p.person_id AND ca.kind = 'other'
 JOIN department d             ON d.department_id = ca.department_id
 JOIN v_headline_metrics m     ON m.person_id = p.person_id;
 

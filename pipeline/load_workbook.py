@@ -83,7 +83,7 @@ PERSON_FIELDS = [
 ]
 DEPARTMENT_FIELDS = [
     "department_id", "short_name", "name", "university", "country", "url",
-    "openalex_institution_id", "ror_id", "acsp_member", "active",
+    "openalex_institution_id", "ror_id", "acsp_member", "active", "kind",
 ]
 PRIVATE_FIELDS = ["person_id", "gender"]
 AFFILIATION_FIELDS = [
@@ -175,6 +175,7 @@ def migrate(workbook: Path, dates: dict[str, str], roster_dir: Path, snapshot_di
             "ror_id": None,
             "acsp_member": None,
             "active": 1,
+            "kind": "planning",
         })
 
     # ---- people, merging duplicates ----------------------------------------

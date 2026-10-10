@@ -87,10 +87,10 @@ def build(out: Path, roster_dir: Path = ROSTER_DIR, snapshot_dir: Path = SNAPSHO
     problems = con.execute("PRAGMA foreign_key_check").fetchall()
     if problems:
         sys.exit(f"foreign key violations: {problems[:5]}")
-    n_current = con.execute("SELECT COUNT(*) FROM v_current_affiliation").fetchone()[0]
+    n_current = con.execute("SELECT COUNT(*) FROM v_current_appointment").fetchone()[0]
     n_people = con.execute("SELECT COUNT(*) FROM person").fetchone()[0]
     multi = con.execute(
-        "SELECT person_id, COUNT(*) FROM v_current_affiliation GROUP BY person_id HAVING COUNT(*) > 1"
+        "SELECT person_id, COUNT(*) FROM v_current_appointment GROUP BY person_id HAVING COUNT(*) > 1"
     ).fetchall()
     if multi:
         sys.exit(f"people with more than one current primary affiliation: {multi[:5]}")

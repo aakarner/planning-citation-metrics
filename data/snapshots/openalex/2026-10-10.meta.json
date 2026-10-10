@@ -1,0 +1,4 @@
+{
+  "trigger": "manual",
+  "notes": "OpenAlex collector (targeted); 50 ok, 0 failed, 0.3 min"
+}

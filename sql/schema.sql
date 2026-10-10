@@ -16,7 +16,11 @@ CREATE TABLE department (
   openalex_institution_id  TEXT,                   -- 'I161318765', for author matching
   ror_id                   TEXT,
   acsp_member              TEXT CHECK (acsp_member IN ('full', 'affiliate', 'none')),  -- per acsp.org/page/members, 2026-08-27 list
-  active                   INTEGER NOT NULL DEFAULT 1
+  active                   INTEGER NOT NULL DEFAULT 1,
+  -- 'planning' = a tracked planning program, the population that is ranked.
+  -- 'other' = a non-planning unit holding someone with a planning PhD (added
+  -- 2026-10-10); shown as its own cohort, never in rankings or percentiles.
+  kind                     TEXT NOT NULL DEFAULT 'planning' CHECK (kind IN ('planning', 'other'))
 );
 
 CREATE TABLE person (

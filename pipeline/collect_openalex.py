@@ -115,10 +115,14 @@ def main(argv=None) -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--date", default=date.today().isoformat())
     ap.add_argument("--limit", type=int)
+    ap.add_argument("--ids", help="comma-separated person_ids: a targeted fetch for people just matched")
     args = ap.parse_args(argv)
     sys.stdout.reconfigure(line_buffering=True)  # progress lines show up in logs as they happen
 
     people = load_people()
+    if args.ids:
+        want = set(args.ids.split(","))
+        people = [p for p in people if p["person_id"] in want]
     out = SNAPSHOT_DIR / "openalex" / f"{args.date}.csv"
     done = already_done(out)
     todo = [p for p in people if p["person_id"] not in done]
@@ -156,7 +160,8 @@ def main(argv=None) -> None:
             if i % 100 == 0 or i == len(todo):
                 print(f"  [{i}/{len(todo)}] ok {ok} failed {failed}")
 
-    meta = {"trigger": "schedule", "notes": f"OpenAlex collector; {ok} ok, {failed} failed, "
+    meta = {"trigger": "manual" if args.ids else "schedule",
+            "notes": f"OpenAlex collector{' (targeted)' if args.ids else ''}; {ok} ok, {failed} failed, "
                                             f"{(time.monotonic() - t0) / 60:.1f} min"}
     out.with_suffix(".meta.json").write_text(json.dumps(meta, indent=2) + "\n")
     print(f"\ndone: {ok} ok, {failed} failed -> {out}")

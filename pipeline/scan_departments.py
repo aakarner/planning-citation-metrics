@@ -469,6 +469,9 @@ def main(argv=None) -> None:
     sys.stdout.reconfigure(line_buffering=True)
 
     _, depts = read_csv(ROSTER_DIR / "department.csv")
+    # Planning programs only: an 'other' unit holds one or two cohort members,
+    # and its faculty page would offer every non-planner in it as a new hire.
+    depts = [d for d in depts if (d.get("kind") or "planning") == "planning"]
     _, people = read_csv(ROSTER_DIR / "person.csv")
     _, affs = read_csv(ROSTER_DIR / "affiliation.csv")
     by_pid = {p["person_id"]: p for p in people}

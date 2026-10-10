@@ -270,6 +270,7 @@ def fetch_candidates(person: dict) -> list[dict]:
 def main(argv=None) -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--limit", type=int, help="only process the first N unmatched people")
+    ap.add_argument("--ids", help="comma-separated person_ids: only these (e.g. a batch just added)")
     ap.add_argument("--rescore", action="store_true", help="re-score everyone from cached responses only")
     ap.add_argument("--dry-run", action="store_true", help="do not write person.csv or the review file")
     args = ap.parse_args(argv)
@@ -289,6 +290,9 @@ def main(argv=None) -> None:
     review_rows: list[dict] = []
     tally = {"accepted": 0, "pending": 0, "none": 0, "already": 0, "failed": 0}
     todo = [p for p in persons if not p.get("openalex_author_id")]
+    if args.ids:
+        want = set(args.ids.split(","))
+        todo = [p for p in todo if p["person_id"] in want]
     if args.limit:
         todo = todo[: args.limit]
     print(f"{len(persons)} people, {len(todo)} to match")
