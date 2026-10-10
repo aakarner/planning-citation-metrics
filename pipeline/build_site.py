@@ -255,8 +255,9 @@ def load(con: sqlite3.Connection) -> dict:
                                   "WHERE source='google_scholar' ORDER BY 1")]
     mix = {r["source"]: r["n"] for r in q("SELECT h.source, COUNT(*) AS n FROM v_headline_metrics h "
                                          "JOIN v_current_affiliation ca ON ca.person_id = h.person_id GROUP BY 1")}
+    rising_rows = q("SELECT * FROM v_rising")
     return {"people": people, "depts": depts, "oa": oa, "series": series, "asof": asof,
-            "bench": bench, "affs": affs, "gs_dates": gs_dates, "mix": mix}
+            "bench": bench, "affs": affs, "gs_dates": gs_dates, "mix": mix, "rising": rising_rows}
 
 
 # -------------------------------------------------------------------- pages
@@ -417,6 +418,31 @@ def longdate(iso: str) -> str:
     return f"{d.day} {d.strftime('%B %Y')}"
 
 
+RISING_PER_RANK = 5
+RISING_MIN_BASE = 100   # a climb from 5 to 15 citations is not a rise
+RISING_MAX_JUMP = 0.5   # more than +50% since the baseline is usually a merged or mis-matched profile
+
+
+def rising(rows: list[dict], per_rank=RISING_PER_RANK, min_base=RISING_MIN_BASE,
+           max_jump=RISING_MAX_JUMP) -> dict[str, list[dict]]:
+    """The largest citation gains since the baseline, within each rank.
+
+    Compares people with their own rank, so it was held back (2026-09-19) until
+    the ranks had been reviewed; shipped 2026-10-09 after the department scan
+    and the RA's rank review. Needs a baseline of at least `min_base`, and a
+    gain above `max_jump` of the baseline is left to the change report: at
+    that size it is almost always a profile merge or a namesake, not a career.
+    """
+    out = {}
+    for rk in ("assistant", "associate", "full"):
+        ok = [r for r in rows
+              if r["rank"] == rk and (r["base_citations"] or 0) >= min_base
+              and r["gain"] is not None and r["gain"] > 0
+              and r["gain"] / r["base_citations"] <= max_jump]
+        out[rk] = sorted(ok, key=lambda r: (-r["gain"], r["display_name"]))[:per_rank]
+    return out
+
+
 def collection_window(dates: list[str]) -> str | None:
     """First day of the latest collection run.
 
@@ -511,6 +537,23 @@ def index_page(data, slugs, dslugs, base) -> str:
                    for rk in ("assistant", "associate", "full") if (b := data["bench"].get(rk)))
     a_med = data["bench"].get("assistant", {}).get("median_citations") or 0
 
+    rise = rising([r for r in data.get("rising", []) if str(r["person_id"]) in by_pid])
+    rising_block = ""
+    if any(rise.values()):
+        base_month = date.fromisoformat(next(r for v in rise.values() for r in v)["base_date"]).strftime("%B %Y")
+        cols = "".join(
+            f'<div class="col"><h3>{rank_label[rk]}</h3><ul class="plain">'
+            + "".join(f'<li>{plink(str(r["person_id"]))}<span class="gain">+{num(r["gain"])}'
+                      f'<small>{r["gain"] / r["base_citations"]:+.0%}</small></span>'
+                      f'<span class="d">{e(r["department"])}</span></li>' for r in rise[rk])
+            + "</ul></div>"
+            for rk in ("assistant", "associate", "full") if rise[rk])
+        rising_block = f"""
+  <h2>{t("home", "rising_heading", base_month=base_month)}</h2>
+  <p class="sub" style="margin:-6px 0 14px">{t("home", "rising_lede", base_month=base_month, min_base=num(RISING_MIN_BASE))}</p>
+  <div class="cols3">{cols}</div>
+  <p class="sub" style="margin-top:12px">{t("home", "rising_note", max_jump=f"{RISING_MAX_JUMP:.0%}")}</p>"""
+
     since = collection_window(data["gs_dates"])
     ch = recent_changes(data["affs"], since)
     found = discovery_finds(since)
@@ -590,6 +633,7 @@ def index_page(data, slugs, dslugs, base) -> str:
     <tbody>{brow}</tbody>
   </table></div>
   <p class="sub" style="margin-top:10px">{t("home", "field_note", scholar_date=e(longdate(gs)) if gs else "", assistant_median=num(a_med))}</p>
+{rising_block}
 {new_block}
 
   <h2>{t("home", "boards_heading")}</h2>

@@ -83,6 +83,12 @@ th_median_h = "Median h-index"
 rank_assistant = "Assistant professors"
 rank_associate = "Associate professors"
 rank_full = "Full professors"
+rising_heading = "Rising since {base_month}"
+rising_lede = """The five people in each rank whose Google Scholar citation counts have grown most since
+     the {base_month} baseline, among those who had at least {min_base} citations then."""
+rising_note = """Absolute gains, with the change as a share of the baseline in grey. A rise of more than
+     {max_jump} over this span usually means a profile was merged or mis-matched rather than a
+     career taking off, so those are held back for review instead of shown here."""
 new_heading = "New to the record"
 new_lede = """What the {update_month} update changed. Everything here comes from a person's own public
      Scholar profile."""
