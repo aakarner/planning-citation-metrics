@@ -810,6 +810,18 @@ def others_page(data, slugs, base) -> str:
     <tbody>{''.join(rows)}</tbody>
   </table></div>
   <p class="sub" style="margin-top:14px;font-size:13.5px">{t("others", "footnote", methods_href=f"{base}methods.html")}</p>
+
+  <section id="criteria" style="margin-top:36px;max-width:720px">
+    <h2>{t("others", "criteria_heading")}</h2>
+    <p>{t("others", "criteria_intro")}</p>
+    <ol>
+      <li>{t("others", "criteria_1")}</li>
+      <li>{t("others", "criteria_2")}</li>
+      <li>{t("others", "criteria_3")}</li>
+      <li>{t("others", "criteria_4")}</li>
+    </ol>
+    <p>{t("others", "criteria_request", contact=CONTACT, contact_name=CONTACT_NAME)}</p>
+  </section>
 </main>"""
     return page(f"{t('others', 'browser_title')} — {t('site', 'title_suffix')}", body, base,
                 active=OTHERS_PAGE, description=t("others", "meta_description", n=len(people)),

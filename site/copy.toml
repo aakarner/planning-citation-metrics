@@ -208,7 +208,7 @@ filter_country = "Country"
 shown = "shown"
 
 [others]
-# Planning PhDs appointed outside planning programs. Values: n, methods_href
+# Planning PhDs appointed outside planning programs. Values: n, methods_href, contact
 # (meta_description: n only)
 meta_description = "{n} scholars with planning PhDs who work in planning from departments outside planning programs."
 eyebrow = "Beyond planning programs"
@@ -218,14 +218,33 @@ lede = """{n} people who hold a PhD from a planning program and whose research s
      but whose appointment is in another unit: environmental science, public policy, geography,
      real estate, landscape architecture, engineering, public health. They are listed here beside
      the rankings, not in them, and are not counted in any percentile, ranking or department figure.
-     The list was assembled in October 2026 and is a first pass, not a census; if you belong on it,
-     or should not be on it, <a href="{methods_href}">get in touch</a>."""
+     The list was assembled in October 2026 and is a first pass, not a census: it grows when
+     people ask. <a href="#criteria">Who belongs here</a> says how."""
 filter_rank = "Rank"
 filter_country = "Country"
 shown = "shown"
 footnote = """Rows marked <span class="pill pill-oa">OA</span> have no Google Scholar profile we know of,
      so their figures come from OpenAlex and are likely undercounts. We check for Scholar profiles
      daily. See <a href="{methods_href}">Methods</a>."""
+criteria_heading = "Who belongs here"
+criteria_intro = """This list is for planning scholars the main rankings cannot hold, because the rankings
+     are defined by where a person is appointed. Someone belongs here when all of the following are
+     true:"""
+criteria_1 = """A <b>doctorate from a planning program</b>: a PhD in urban or regional planning, city planning,
+     or a planning department's own doctoral program."""
+criteria_2 = """A <b>tenured or tenure-track appointment</b> at a university in the United States or Canada.
+     Adjunct, visiting, clinical, research-scientist and emeritus positions are out, as they are in
+     the main rankings."""
+criteria_3 = """That appointment is <b>outside a planning program we track</b>. Someone appointed in a tracked
+     planning program belongs in the main rankings, not here, and we move them."""
+criteria_4 = """<b>Research that sits in planning</b>: they publish on planning questions, in planning venues or
+     with planning scholars, and would be recognised by the planning academy as one of its own.
+     A planning PhD who has since moved entirely into another field is not listed."""
+criteria_request = """To be added, or to correct an entry, email {contact_name} at
+     <a href="mailto:{contact}?subject=Planning%20Citation%20Metrics%3A%20other%20departments">{contact}</a>
+     with your department page and, if you have one, your Google Scholar profile. People on this list
+     are shown beside the rankings, never in them: no rank number, no percentile, and no effect on
+     any program's figures."""
 
 [departments]
 # Values: dept_count
