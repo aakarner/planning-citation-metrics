@@ -212,7 +212,14 @@ def affiliation_match(candidate_affiliation: str | None, dept: dict | None) -> f
     words = set(norm(candidate_affiliation).split())
     padded = f" {norm(candidate_affiliation)} "
     labels = [dept.get("university"), dept.get("short_name"), dept.get("name")]
-    labels += ALIASES.get(dept.get("short_name"), [])
+    labels += ALIASES.get(dept.get("short_name"), []) + ALIASES.get(dept.get("university"), [])
+    # Any University of California campus: a unit recorded as "UC Davis" must
+    # match a profile reading "University of California, Davis" (Susan Handy's
+    # own profile was rejected on 2026-10-11 because it did not).
+    for l in list(labels):
+        if l and norm(l).startswith("uc ") and "(" not in l:
+            campus = l.strip()[3:]
+            labels += [f"University of California, {campus}", f"University of California {campus}"]
     # Drop only suffixes that add nothing a profile would repeat: a province, a
     # system restatement, a sub-unit. Never drop a campus name, or
     # 'University of Colorado, Denver' would match a Boulder profile.

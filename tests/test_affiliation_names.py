@@ -96,3 +96,15 @@ def test_sharing_a_city_is_not_naming_the_same_school():
     for other in ("Professor, University of Quebec in Montreal",
                   "School of Urban Planning, McGill University, Montreal"):
         assert not affiliation_names_dept(other, montreal), other
+
+
+def test_any_uc_campus_matches_its_university_of_california_form():
+    # Susan Handy's profile, "University of California, Davis", was rejected against a
+    # cohort unit recorded as "UC Davis (Department of Environmental Science and Policy)".
+    from pipeline.find_scholar_profiles import affiliation_match
+    davis = {"department_id": "141", "university": "UC Davis", "name": "Department of Environmental Science and Policy",
+             "short_name": "UC Davis (Department of Environmental Science and Policy)"}
+    assert affiliation_match("University of California, Davis", davis) == 1.0
+    assert affiliation_match("Professor, University of California Davis", davis) == 1.0
+    assert affiliation_match("University of California, Berkeley", davis) == 0.0     # another campus is another place
+    assert affiliation_match("UC Davis", davis) == 1.0
