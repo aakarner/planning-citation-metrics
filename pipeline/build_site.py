@@ -26,7 +26,6 @@ from datetime import date, timedelta
 from pathlib import Path
 
 from . import BUILD_DIR, REPO_ROOT
-from .detect_changes import run_start
 from .site_assets import SEARCH_JS, STYLE, TABLE_JS
 
 COPY_PATH = REPO_ROOT / "site" / "copy.toml"
@@ -269,9 +268,7 @@ def load(con: sqlite3.Connection) -> dict:
                          "GROUP BY source, collected_at"))
     bench = {r["rank"]: r for r in q("SELECT * FROM v_rank_benchmarks")}
     affs = q("SELECT a.*, d.short_name AS dept FROM affiliation a JOIN department d USING(department_id)")
-    gs_counts = {r["d"]: r["n"] for r in q("SELECT collected_at AS d, COUNT(*) AS n FROM metric_snapshot "
-                                           "WHERE source='google_scholar' GROUP BY 1 ORDER BY 1")}
-    gs_dates = list(gs_counts)
+    gs_oldest = q("SELECT MIN(collected_at) AS d FROM v_person_percentiles WHERE source='google_scholar'")[0]["d"]
     mix = {r["source"]: r["n"] for r in q("SELECT h.source, COUNT(*) AS n FROM v_headline_metrics h "
                                          "JOIN v_current_affiliation ca ON ca.person_id = h.person_id GROUP BY 1")}
     rising_rows = q("SELECT * FROM v_rising")
@@ -285,7 +282,7 @@ def load(con: sqlite3.Connection) -> dict:
       ORDER BY o.display_name
     """)
     return {"people": people, "depts": depts, "oa": oa, "series": series, "asof": asof,
-            "bench": bench, "affs": affs, "gs_dates": gs_dates, "gs_counts": gs_counts, "mix": mix, "rising": rising_rows,
+            "bench": bench, "affs": affs, "gs_oldest": gs_oldest, "mix": mix, "rising": rising_rows,
             "others": others}
 
 
@@ -450,7 +447,7 @@ def department_page(d, roster, slugs, base) -> str:
                 extra_js=("table.js",))
 
 
-WINDOW_DAYS = 7      # snapshot files this close together are one collection run
+RECENT_DAYS = 90     # the homepage narrates roster changes from this many days back
 RANK_ORDER = {"assistant": 0, "associate": 1, "full": 2}
 
 
@@ -484,9 +481,6 @@ def rising(rows: list[dict], per_rank=RISING_PER_RANK, min_base=RISING_MIN_BASE,
     return out
 
 
-def collection_window(dates: list[str], counts: dict[str, int] | None = None) -> str | None:
-    """First day of the latest collection run; see detect_changes.run_start."""
-    return run_start(dates, counts)
 
 
 def recent_changes(affs: list[dict], since: str | None) -> dict:
@@ -579,12 +573,12 @@ def index_page(data, slugs, dslugs, base) -> str:
   <div class="cols3">{cols}</div>
   <p class="sub" style="margin-top:12px">{t("home", "rising_note", max_jump=f"{RISING_MAX_JUMP:.0%}")}</p>"""
 
-    since = collection_window(data["gs_dates"], data.get("gs_counts"))
+    today = date.fromisoformat(data["today"]) if data.get("today") else date.today()
+    since = (today - timedelta(days=RECENT_DAYS)).isoformat()
     ch = recent_changes(data["affs"], since)
     found = discovery_finds(since)
     # Build the items first and count those, so a badge can never disagree
     # with the list under it (someone found and since departed is in neither).
-    update_month = date.fromisoformat(since).strftime("%B") if since else ""
     found_items = [f'<li>{plink(str(r["person_id"]))}<span class="d">{e(r["department"] or "")}</span>'
                    f'<span class="when">{e(longdate(r["reviewed_at"]))}</span></li>'
                    for r in found if str(r["person_id"]) in by_pid]
@@ -594,7 +588,7 @@ def index_page(data, slugs, dslugs, base) -> str:
                    for pid, d, o, n, _ in ch["promos"] if str(pid) in by_pid]
     n_web = sum(1 for pid, *_, origin in ch["promos"] if str(pid) in by_pid and origin == "website")
     n_prof = len(promo_items) - n_web
-    promo_note = (f'<p class="sub" style="margin:8px 0 6px">{t("home", "new_promos_note", n_pages=n_web, n_profiles=n_prof, update_month=update_month)}</p>'
+    promo_note = (f'<p class="sub" style="margin:8px 0 6px">{t("home", "new_promos_note", n_pages=n_web, n_profiles=n_prof)}</p>'
                   if promo_items else "")
     found_li, moves_li, promos_li = "".join(found_items), "".join(move_items), "".join(promo_items)
     pop_month = date.fromisoformat(pop_date).strftime("%B") if pop_date else ""
@@ -608,7 +602,7 @@ def index_page(data, slugs, dslugs, base) -> str:
     if found_li or moves_li or promos_li or ch["departed"]:
         new_block = f"""
   <h2>{t("home", "new_heading")}</h2>
-  <p class="sub" style="margin:-6px 0 14px">{t("home", "new_lede", update_month=update_month)}</p>
+  <p class="sub" style="margin:-6px 0 14px">{t("home", "new_lede")}</p>
   <div class="cols2">
     <div class="col"><h3>{t("home", "new_found_heading")} <span class="count">{len(found_items)}</span></h3>
       <p class="sub">{t("home", "new_found_note")}</p>
@@ -622,7 +616,7 @@ def index_page(data, slugs, dslugs, base) -> str:
     else:
         new_block = f"""
   <h2>{t("home", "new_heading")}</h2>
-  <p class="sub">{t("home", "new_empty", update_month=update_month)}</p>"""
+  <p class="sub">{t("home", "new_empty")}</p>"""
 
     body = f"""<main class="narrow">
   <section class="beta" aria-labelledby="beta-h">
@@ -637,7 +631,7 @@ def index_page(data, slugs, dslugs, base) -> str:
            autocomplete="off" spellcheck="false">
     <div class="results" hidden></div>
   </div>
-  <p class="sub" style="font-size:13.5px">{t("home", "search_hint", scholar_date=e(gs))}</p>
+  <p class="sub" style="font-size:13.5px">{t("home", "search_hint", scholar_oldest=e(longdate(data.get("gs_oldest") or gs)) if (data.get("gs_oldest") or gs) else "", scholar_date=e(longdate(gs)) if gs else "")}</p>
 
   <section class="status" aria-label="Dataset status">
     <div class="tiles">
@@ -657,7 +651,7 @@ def index_page(data, slugs, dslugs, base) -> str:
     <thead><tr><th>{t("home", "th_rank")}</th><th class="n">{t("home", "th_faculty")}</th><th class="n">{t("home", "th_median")}</th><th class="n">{t("home", "th_p75")}</th><th class="n">{t("home", "th_median_h")}</th></tr></thead>
     <tbody>{brow}</tbody>
   </table></div>
-  <p class="sub" style="margin-top:10px">{t("home", "field_note", scholar_date=e(longdate(gs)) if gs else "", assistant_median=num(a_med))}</p>
+  <p class="sub" style="margin-top:10px">{t("home", "field_note", scholar_oldest=e(longdate(data.get("gs_oldest") or gs)) if (data.get("gs_oldest") or gs) else "", scholar_date=e(longdate(gs)) if gs else "", assistant_median=num(a_med))}</p>
 {rising_block}
 {new_block}
 

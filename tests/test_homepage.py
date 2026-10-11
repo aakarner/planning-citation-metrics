@@ -4,7 +4,7 @@ last collection. Both are shown to every visitor first, so they are pinned."""
 import sqlite3
 from pathlib import Path
 
-from pipeline.build_site import collection_window, recent_changes
+from pipeline.build_site import recent_changes
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -13,32 +13,6 @@ def aff(aid, pid, dept, rank, start="", end="", dept_name=None, source=""):
     return {"affiliation_id": aid, "person_id": pid, "department_id": dept, "dept": dept_name or f"D{dept}",
             "rank": rank, "appointment_type": "regular", "is_primary": 1, "start_date": start, "end_date": end,
             "source": source}
-
-
-def test_the_collection_window_merges_a_run_spread_over_days():
-    assert collection_window(["2026-03-01", "2026-09-14", "2026-09-15", "2026-09-16"]) == "2026-09-14"
-    assert collection_window(["2026-03-01"]) == "2026-03-01"
-    assert collection_window([]) is None
-
-
-def test_targeted_fetches_a_week_later_join_the_run_instead_of_splitting_it():
-    # The homepage showed zero promotions once fetches on the 22nd and 23rd made
-    # the 14th and 15th fall more than seven days behind the newest file.
-    dates = ["2026-03-01", "2026-09-14", "2026-09-15", "2026-09-16", "2026-09-22", "2026-09-23"]
-    assert collection_window(dates) == "2026-09-14"
-    assert collection_window(["2026-03-01", "2026-06-10", "2026-09-14"]) == "2026-09-14"   # a real gap still separates runs
-
-
-def test_a_targeted_fetch_weeks_later_never_starts_a_run():
-    """2026-10-10: a 19-person fetch eleven days after the September run became
-    'the October collection' and the homepage said nothing had changed."""
-    counts = {"2026-03-01": 806, "2026-09-14": 89, "2026-09-15": 718, "2026-09-16": 3,
-              "2026-09-22": 2, "2026-09-29": 1, "2026-10-10": 19}
-    assert collection_window(list(counts), counts) == "2026-09-14"
-    counts["2026-12-15"] = 790                                   # the next quarterly run does start one
-    assert collection_window(list(counts), counts) == "2026-12-15"
-    counts["2026-12-16"] = 30                                    # and its own stragglers join it
-    assert collection_window(list(counts), counts) == "2026-12-15"
 
 
 def test_a_move_a_promotion_and_a_departure_are_told_apart():
@@ -107,7 +81,7 @@ def test_the_change_lists_render_their_rows_and_badges_agree(monkeypatch):
     data = {"people": people, "depts": depts, "asof": {"google_scholar": "2026-09-16", "openalex": "2026-09-15",
             "pop": "2026-02-20"}, "mix": {"google_scholar": 2, "openalex": 1, "pop": 0},
             "bench": {"assistant": {"n": 2, "median_citations": 100, "p75_citations": 100, "median_h_index": 5}},
-            "affs": affs, "gs_dates": ["2026-03-01", "2026-09-15", "2026-09-16"]}
+            "affs": affs, "today": "2026-09-16"}
     # discovery finds normally come from the review CSV; give the page one for Mary
     monkeypatch.setattr(build_site, "discovery_finds",
                         lambda since: [{"person_id": "3", "department": "D1", "reviewed_at": "2026-09-16"}])
@@ -122,26 +96,23 @@ def test_the_change_lists_render_their_rows_and_badges_agree(monkeypatch):
     assert "D1 &rarr; <b>D2</b>" in lists[1] and "associate &rarr; <b>full</b>" in lists[2]
 
 
-def test_snapshot_files_chain_into_one_run(tmp_path, monkeypatch):
-    """A two-person fetch eight days after a quarterly run belongs to that run.
-    Anchoring the window on the newest file split it and reported the first
-    day's 89 people as 'missing from the latest run'."""
+def test_each_person_is_compared_with_their_own_previous_reading(tmp_path, monkeypatch):
+    """Collection is rolling (about fifty profiles a week), so there is no run
+    to compare with the one before; each person's latest reading is set against
+    their own previous one, whichever files they sit in."""
     import csv as _csv
     from pipeline import detect_changes
     d = tmp_path / "google_scholar"; d.mkdir()
-    for day, pids in [("2026-03-01", ["1", "2"]), ("2026-09-14", ["1"]), ("2026-09-15", ["2"]), ("2026-09-22", ["3"]),
-                      ("2026-10-10", ["4"])]:                                     # a targeted fetch 18 days on
+    for day, readings in [("2026-03-01", {"1": 100, "2": 50}), ("2026-09-15", {"1": 120}),
+                          ("2026-10-10", {"1": 130, "3": ""})]:                       # 3's fetch failed
         with (d / f"{day}.csv").open("w", newline="") as f:
-            w = _csv.DictWriter(f, fieldnames=["person_id", "total_citations", "raw_json"]); w.writeheader()
-            for pid in pids: w.writerow({"person_id": pid, "total_citations": 10, "raw_json": "{}"})
-            if day != "2026-10-10":                                               # pad the real runs so the fetch is small
-                for k in range(20): w.writerow({"person_id": f"x{day}{k}", "total_citations": "", "raw_json": "{}"})
+            w = _csv.DictWriter(f, fieldnames=["person_id", "collected_at", "total_citations", "raw_json"]); w.writeheader()
+            for pid, c in readings.items():
+                w.writerow({"person_id": pid, "collected_at": day, "total_citations": c, "raw_json": "{}"})
     monkeypatch.setattr(detect_changes, "SNAPSHOT_DIR", tmp_path)
     latest, prev = detect_changes.latest_two("google_scholar")
-    assert {r["person_id"] for r in latest} == {"1", "2", "3", "4"}   # 14th, 15th, 22nd and the 10 Oct fetch are one run
-    assert {r["person_id"] for r in prev if r["total_citations"]} == {"1", "2"}   # March is the previous one
-
-
+    assert {r["person_id"]: r["total_citations"] for r in latest} == {"1": "130", "2": "50"}
+    assert {r["person_id"]: r["total_citations"] for r in prev} == {"1": "120"}       # 2 has only ever been read once
 def test_promotions_say_where_the_rank_was_read():
     affs = [aff(1, "a", 1, "assistant", end="2026-09-27"),
             aff(2, "a", 1, "associate", start="2026-09-27", source="rank verified 2026-09-27; department page https://x/faculty"),
@@ -208,7 +179,7 @@ def test_the_rising_block_renders_its_columns_and_says_what_it_leaves_out():
                     "base_citations": 100, "total_citations": 500, "gain": 400, "base_date": "2026-03-01"}]  # +400%: held
     data = {"people": people, "depts": depts, "asof": {"google_scholar": "2026-09-16", "openalex": "2026-09-15",
             "pop": "2026-02-20"}, "mix": {"google_scholar": 2}, "bench": {}, "affs": [aff(1, 1, 1, "assistant")],
-            "gs_dates": ["2026-03-01", "2026-09-15"], "rising": rising_rows}
+            "today": "2026-09-16", "rising": rising_rows}
     html = index_page(data, uniq_slugs(people, lambda p: p["display_name"]),
                       uniq_slugs(depts, lambda d: d["short_name"]), "")
     assert "Rising since March 2026" in html

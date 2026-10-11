@@ -87,16 +87,20 @@ instructions on the first tab). To apply the decisions:
 ## Google Scholar collector
 
 ```bash
-# SERPAPI_KEY=... in .env (serpapi.com; 250 lookups/month free, $25 for 1,000)
-.venv/bin/python -m pipeline.collect_scholar --limit 20     # test
-.venv/bin/python -m pipeline.collect_scholar                # full run, resumable within a day
+# SERPAPI_KEY=... in .env (serpapi.com; the free tier's 250 lookups a month is enough)
+.venv/bin/python -m pipeline.collect_scholar --budget 50    # the weekly rolling run: oldest readings first
+.venv/bin/python -m pipeline.collect_scholar --missing      # figures for newly found profiles
+.venv/bin/python -m pipeline.collect_scholar                # everyone at once (needs a paid month)
 ```
 
-Default backend is SerpApi's Scholar author endpoint: one JSON call per person, runs from
-GitHub Actions, paced at 18 s to stay under SerpApi's cap of 200 searches an hour (a full run
-of ~800 takes about four hours). `--via scholarly` scrapes profile pages directly and is kept
-for spot checks only; a single address gets about 45 fetches before Scholar blocks it for
-many hours.
+Collection is **rolling** (since October 2026): `collect-scholar-weekly.yml` re-reads about
+fifty current profiles every Monday, oldest reading first, so each profile comes round roughly
+every fifteen weeks and the whole thing fits SerpApi's free tier (250 searches a month, 50 an
+hour; the weekly run is paced at 75 s). The change report compares each person with their own
+previous reading, and the homepage narrates roster changes from the last 90 days. Default
+backend is SerpApi's Scholar author endpoint: one JSON call per person, runs from GitHub
+Actions. `--via scholarly` scrapes profile pages directly and is kept for spot checks only; a
+single address gets about 45 fetches before Scholar blocks it for many hours.
 
 ## Scholar profile discovery
 
@@ -273,7 +277,7 @@ strong enough to act on, OpenAlex last known institution elsewhere, a citation c
 fell more than 20% (usually a wrong or merged profile), and profiles that vanished. It edits
 nothing.
 
-The report ends with a **rank review**: everyone held as assistant or associate for seven years or more, so a promotion may have gone unrecorded. Promotions are applied only when the profile text states a rank, and many profiles never do. Tom's rows carry no rank start date, so for the inherited roster years since the PhD stands in, for assistants only; associates are judged only by a start date we recorded ourselves, so that part fills in over time. The same rows go to `build/rank_review_<date>.csv`, and both files are uploaded by the quarterly Scholar workflow.
+The report ends with a **rank review**: everyone held as assistant or associate for seven years or more, so a promotion may have gone unrecorded. Promotions are applied only when the profile text states a rank, and many profiles never do. Tom's rows carry no rank start date, so for the inherited roster years since the PhD stands in, for assistants only; associates are judged only by a start date we recorded ourselves, so that part fills in over time. The same rows go to `build/rank_review_<date>.csv`, and both files are uploaded by the Scholar workflow.
 
 ## Private attributes
 

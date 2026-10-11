@@ -32,3 +32,15 @@ def test_a_legacy_row_without_an_id_counts_for_whatever_id_is_held():
 
 def test_nothing_to_fetch_when_every_id_has_a_row():
     assert ids_missing_readings([PEOPLE[1]], [snap("2", "OLD2")]) == set()
+
+
+def test_the_weekly_budget_goes_to_the_oldest_readings_of_current_people():
+    from pipeline.collect_scholar import oldest_first
+    people = [{"person_id": str(i), "google_scholar_id": f"id{i}"} for i in range(1, 6)]
+    snaps = [{"person_id": "1", "collected_at": "2026-03-01", "total_citations": "10"},
+             {"person_id": "1", "collected_at": "2026-09-15", "total_citations": "12"},
+             {"person_id": "2", "collected_at": "2026-03-01", "total_citations": "10"},
+             {"person_id": "3", "collected_at": "2026-10-10", "total_citations": "10"},
+             {"person_id": "4", "collected_at": "2026-10-10", "total_citations": ""}]    # a failed fetch is no reading
+    picked = oldest_first(people, snaps, current={"1", "2", "3", "4"}, budget=3)
+    assert [p["person_id"] for p in picked] == ["4", "2", "1"]     # never read, then March, then September; 5 has left

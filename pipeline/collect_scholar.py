@@ -130,6 +130,29 @@ def ids_missing_readings(people: list[dict], snapshot_rows: list[dict]) -> set[s
     return out
 
 
+def current_ids() -> set[str]:
+    """person_ids with an open primary appointment (any program kind)."""
+    with (ROSTER_DIR / "affiliation.csv").open(newline="", encoding="utf-8") as f:
+        return {a["person_id"] for a in csv.DictReader(f) if not a["end_date"] and a["is_primary"] == "1"}
+
+
+def oldest_first(people: list[dict], snapshot_rows: list[dict], current: set[str], budget: int) -> list[dict]:
+    """The `budget` current people whose latest Scholar reading is oldest, never-read first.
+
+    Collection is rolling (from 2026-10): SerpApi's free tier allows 250 searches
+    a month, so about fifty profiles a week are re-read, oldest first, and every
+    profile comes round in roughly fifteen weeks. People who have left are not
+    re-read; their last figures stay in the data.
+    """
+    last: dict[str, str] = {}
+    for r in snapshot_rows:
+        if r.get("total_citations"):
+            last[r["person_id"]] = max(last.get(r["person_id"], ""), r["collected_at"])
+    pool = [p for p in people if p["person_id"] in current]
+    pool.sort(key=lambda p: (last.get(p["person_id"], ""), int(p["person_id"])))
+    return pool[:budget]
+
+
 def already_done(path: Path, window_days: int = 7) -> set[str]:
     """People collected in this file or in any Scholar snapshot within the last
     window_days. A run that spans several days (rate limits, budgets) should
@@ -205,6 +228,8 @@ def main(argv=None) -> None:
     ap.add_argument("--ids", metavar="ID,ID,...", default="",
                     help="only these Scholar ids; comma-separated, and written as --ids=... "
                          "because a Scholar id can start with '-'")
+    ap.add_argument("--budget", type=int, metavar="N",
+                    help="re-read the N current people whose latest reading is oldest (the weekly rolling run)")
     ap.add_argument("--missing", action="store_true",
                     help="only people whose roster id has never been fetched: a profile discovery "
                          "accepted, or one set by hand. Cheap, and what the daily wrapper runs")
@@ -244,6 +269,9 @@ def main(argv=None) -> None:
         missing = wanted - {p["google_scholar_id"] for p in people}
         if missing:
             print(f"  note: no roster entry holds {', '.join(sorted(missing))}", file=sys.stderr)
+    if args.budget:
+        people = oldest_first(people, all_snapshot_rows(), current_ids(), args.budget)
+        print(f"rolling run: {len(people)} people, oldest reading first")
     out = SNAPSHOT_DIR / "google_scholar" / f"{args.date}.csv"
     done = set() if wanted else already_done(out)
     todo = [p for p in people if p["person_id"] not in done]

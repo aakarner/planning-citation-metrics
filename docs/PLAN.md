@@ -182,7 +182,7 @@ Once a person has an OpenAlex id, monthly collection is a single API call per pe
 | What | When | How |
 |---|---|---|
 | OpenAlex snapshot | Monthly, 1st of month | GitHub Actions cron; about 1,051 free id lookups, a few minutes |
-| Google Scholar snapshot | Quarterly (Jan, Apr, Jul, Oct) | SerpApi from GitHub Actions, about $25 per run; results committed as a snapshot file |
+| Google Scholar snapshot | Rolling: ~50 profiles every Monday, oldest first (since Oct 2026) | SerpApi free tier from GitHub Actions; each weekly batch committed as a snapshot file |
 | Roster review | Semiannual (Jan, Jul), matching Tom's rhythm | Pipeline emails the change-detection report; a person edits the roster CSVs by pull request |
 | Scholar profile discovery | Semiannual, with roster review | One publication-search page per person without a profile, plus one profile page per plausible candidate, from a UT connection; candidates go to the review queue |
 | Site rebuild and deploy | On every push to `main` and after every collection | GitHub Actions builds SQLite from CSV and snapshots, builds the site, deploys to GitHub Pages |

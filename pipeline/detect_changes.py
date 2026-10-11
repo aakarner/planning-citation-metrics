@@ -38,7 +38,7 @@ import csv
 import json
 import re
 from collections import Counter, defaultdict
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -68,7 +68,6 @@ def registrable(host: str | None) -> str | None:
     return ".".join(parts[-2:]) if len(parts) >= 2 else host
 
 
-WINDOW_DAYS = 7
 POP_NAMESAKE_TOL = 0.10   # a rejected namesake within this of the PoP figure taints it
 
 
@@ -124,64 +123,28 @@ def rank_review(rank, start_date, phd_year, today, verified=None) -> tuple[int, 
     return None
 
 
-RUN_SHARE = 0.25     # a file with fewer rows than this share of the largest is a targeted fetch
-
-
-def run_start(dates: list[str], counts: dict[str, int] | None = None) -> str | None:
-    """First date of the latest collection run.
-
-    Files chain into a run when each is within WINDOW_DAYS of the one before
-    it -- not of the newest. A two-person fetch a week after a quarterly run
-    belongs to that run; anchoring on the newest file split it, and the
-    homepage reported zero promotions the moment a targeted fetch landed.
-
-    A targeted fetch (fewer than RUN_SHARE of the largest file's rows) never
-    starts a run at all, however long after the last one it lands: on
-    2026-10-10 a 19-person fetch eleven days after the September run became
-    "the October collection", and the homepage said nothing had changed since
-    it. Quarterly runs are ninety days apart, so a chain never bridges two.
-    """
-    if not dates:
-        return None
-    dates = sorted(dates)
-    counts = counts or {}
-    biggest = max(counts.values(), default=0)
-
-    def substantial(d: str) -> bool:
-        return not counts or counts.get(d, 0) >= RUN_SHARE * biggest
-
-    start = dates[-1]
-    anchored = substantial(start)        # walk back freely until the run holds a real collection
-    for d in reversed(dates[:-1]):
-        gap = (date.fromisoformat(start) - date.fromisoformat(d)).days
-        if not anchored or gap <= WINDOW_DAYS:
-            start = d
-            anchored = anchored or substantial(d)
-        else:
-            break
-    return start
+STALE_WEEKS = 20     # rolling collection re-reads everyone within about fifteen weeks
 
 
 def latest_two(source: str) -> tuple[list[dict], list[dict]]:
-    """The latest collection run and the one before it.
+    """Each person's latest reading, and the one before it, across every snapshot file.
 
-    A run can span several files (rate limits, budgets, targeted fetches); see
-    run_start for how files chain. The newest row per person wins within the
-    run; the previous run is the newest file older than it."""
-    files = sorted((SNAPSHOT_DIR / source).glob("*.csv"))
-    if not files:
-        return [], []
-    counts = {f.stem: sum(1 for _ in rows(f)) for f in files}
-    start = run_start([f.stem for f in files], counts)
-    latest_files = [f for f in files if f.stem >= start]
-    older = [f for f in files if f.stem < start]
-    latest: dict[str, dict] = {}
-    for f in latest_files:                      # ascending, so later files win
+    Collection is rolling (from 2026-10): about fifty Scholar profiles a week,
+    oldest first, so there is no 'latest run' to compare with the one before.
+    Each person is compared with their own previous reading instead. Rows
+    without a citation figure (failed fetches) are ignored."""
+    by: dict[str, list[dict]] = defaultdict(list)
+    for f in sorted((SNAPSHOT_DIR / source).glob("*.csv")):
         for r in rows(f):
             if r["total_citations"]:
-                latest[r["person_id"]] = r
-    prev = rows(older[-1]) if older else []
-    return list(latest.values()), prev
+                by[r["person_id"]].append(r)
+    latest, prev = [], []
+    for rs in by.values():
+        rs.sort(key=lambda r: r["collected_at"])
+        latest.append(rs[-1])
+        if len(rs) > 1:
+            prev.append(rs[-2])
+    return latest, prev
 
 
 def collect_rank_review(people, depts, current, gs_text, metrics, today) -> list[dict]:
@@ -270,14 +233,14 @@ def main(argv=None) -> None:
             if a and (a - b) / a > DROP:
                 flags[pid].append(f"Scholar citations fell {a} -> {b} ({(b - a) / a:+.0%}); check the profile")
     partial_note = ""
-    if gs_latest and gs_prev and len(gs_latest) >= 0.9 * len(gs_prev):
-        got = {r["person_id"] for r in gs_latest}
-        for pid in gs_prev_by:
-            if pid not in got and people.get(pid, {}).get("google_scholar_id"):
-                flags[pid].append("Scholar profile fetched last time but missing from the latest run")
-    elif gs_latest and gs_prev:
-        partial_note = (f"Latest Scholar snapshot has {len(gs_latest)} rows against {len(gs_prev)} previously, "
-                        "so it is treated as partial and missing profiles are not flagged.")
+    # Rolling collection should bring every current profile round within about
+    # fifteen weeks; one older than STALE_WEEKS has been failing or was skipped.
+    last_read = {r["person_id"]: r["collected_at"] for r in gs_latest}
+    stale_before = (date.today() - timedelta(weeks=STALE_WEEKS)).isoformat()
+    for pid, sid in held.items():
+        if sid and pid in current and last_read.get(pid, "") < stale_before:
+            flags[pid].append("Scholar profile not read since " + (last_read.get(pid) or "ever")
+                              + f"; the rolling run should have reached it within {STALE_WEEKS} weeks")
 
     oa_latest, oa_prev = latest_two("openalex")
     oa_prev_by = {r["person_id"]: r for r in oa_prev}

@@ -46,7 +46,7 @@ footer_corrections = """Counts come from public profile pages and change constan
 
 [home]
 # Values: people_count, dept_count, scholar_date, openalex_date, rankings_href, departments_href,
-#         methods_href, contact, repo, scholar_help, gs_n, oa_n, pop_n, pop_month, update_month,
+#         methods_href, contact, repo, scholar_help, gs_n, oa_n, pop_n, pop_month, scholar_oldest,
 #         assistant_median, n (departed count), n_pages, n_profiles (promotions by where they were read)
 meta_description = """Citation metrics for {people_count} urban planning faculty at {dept_count} programs in the US and Canada."""
 beta_title = "Beta &middot; in active development"
@@ -63,17 +63,18 @@ lede = """Total citations and h-indices for {people_count} faculty at
      {dept_count} planning programs in the United States and Canada. These are refreshed on a regular schedule
      so should always be reasonably current for those with a Google Scholar or OpenAlex profile."""
 search_placeholder = "Search a name or a school&hellip;"
-search_hint = """Press <code>/</code> to jump to search.
-     Google Scholar figures as of {scholar_date}."""
+search_hint = """Press <code>/</code> to jump to search. Google Scholar profiles are re-read on a
+     rolling schedule; the figures shown were read between {scholar_oldest} and {scholar_date}."""
 status_faculty = "faculty"
 status_programs = "programs"
-status_scholar = "Google Scholar refreshed"
+status_scholar = "Google Scholar last read"
 status_openalex = "OpenAlex refreshed"
 mix_key = """{gs_n} from Google Scholar &middot; {oa_n} from OpenAlex &middot; {pop_n} still on Publish or
      Perish figures from {pop_month}. <a href="{scholar_help}">A Scholar profile</a> moves a person
      onto the refreshed series."""
 field_heading = "Where the field sits"
-field_note = """Among faculty with a Google Scholar profile, as of {scholar_date}. Half of all assistant
+field_note = """Among faculty with a Google Scholar profile, read between {scholar_oldest} and
+     {scholar_date}. Half of all assistant
      professors here have fewer than {assistant_median} citations; a number is only meaningful next to
      its rank."""
 th_rank = "Rank"
@@ -91,20 +92,20 @@ rising_note = """Absolute gains, with the change as a share of the baseline in g
      {max_jump} over this span usually means a profile was merged or mis-matched rather than a
      career taking off, so those are held back for review instead of shown here."""
 new_heading = "New to the record"
-new_lede = """What the {update_month} update changed. Everything here comes from a person's own public
-     Scholar profile."""
+new_lede = """What changed in the last three months. Everything here comes from a person's own public
+     Scholar profile or their program's website."""
 new_found_heading = "Scholar profiles found"
 new_found_note = """People previously shown on OpenAlex or Publish or Perish figures who now have a Scholar
      profile on record. The daily search adds more as it finds them."""
 new_moves_heading = "Now at a new program"
 new_promos_heading = "Promotions recorded"
-new_promos_note = """{n_pages} of these were read from program websites during the {update_month} roster
-     review, which mostly brought records up to date rather than marking promotions this term;
-     {n_profiles} were read from changes on Google Scholar profiles. Neither tells us when a
+new_promos_note = """{n_pages} of these were read from program websites or confirmed by a reviewer during
+     roster checks, which mostly brought records up to date rather than marking promotions this
+     term; {n_profiles} were read from changes on Google Scholar profiles. Neither tells us when a
      promotion actually happened."""
 new_departed = """{n} people left the tracked programs and are no longer listed; their earlier figures
      remain in the <a href="{repo}/tree/main/data">downloadable data</a>."""
-new_empty = "Nothing has changed since the {update_month} collection."
+new_empty = "Nothing in the roster has changed in the last three months."
 boards_heading = "Leaderboards"
 boards_lede = """These barely move between updates, so they are folded away. The full, sortable versions
      are on the <a href="{rankings_href}">Rankings</a> and <a href="{departments_href}">Departments</a>
@@ -264,7 +265,9 @@ sources_invitation = """Anyone shown with an OpenAlex figure can move to the Sch
      <a href="{scholar_help}">creating a Scholar profile</a>. We re-check for new profiles each
      semester."""
 cadence_heading = "How often it updates"
-cadence_body = """OpenAlex monthly, Google Scholar quarterly, faculty rosters twice a year. Every run is
+cadence_body = """OpenAlex monthly; Google Scholar on a rolling schedule of about fifty profiles a week,
+     oldest reading first, so each profile is re-read roughly every fifteen weeks; faculty
+     rosters twice a year. Every run is
      appended, never overwritten, so the history builds up from the first snapshot in
      February and March 2026 rather than being reconstructed backwards."""
 inclusion_heading = "Who is included"
