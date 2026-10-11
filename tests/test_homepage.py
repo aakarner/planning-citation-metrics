@@ -29,6 +29,18 @@ def test_targeted_fetches_a_week_later_join_the_run_instead_of_splitting_it():
     assert collection_window(["2026-03-01", "2026-06-10", "2026-09-14"]) == "2026-09-14"   # a real gap still separates runs
 
 
+def test_a_targeted_fetch_weeks_later_never_starts_a_run():
+    """2026-10-10: a 19-person fetch eleven days after the September run became
+    'the October collection' and the homepage said nothing had changed."""
+    counts = {"2026-03-01": 806, "2026-09-14": 89, "2026-09-15": 718, "2026-09-16": 3,
+              "2026-09-22": 2, "2026-09-29": 1, "2026-10-10": 19}
+    assert collection_window(list(counts), counts) == "2026-09-14"
+    counts["2026-12-15"] = 790                                   # the next quarterly run does start one
+    assert collection_window(list(counts), counts) == "2026-12-15"
+    counts["2026-12-16"] = 30                                    # and its own stragglers join it
+    assert collection_window(list(counts), counts) == "2026-12-15"
+
+
 def test_a_move_a_promotion_and_a_departure_are_told_apart():
     affs = [
         aff(1, "a", 1, "assistant", end="2026-09-15"), aff(2, "a", 2, "assistant", start="2026-09-15"),   # move
@@ -117,14 +129,17 @@ def test_snapshot_files_chain_into_one_run(tmp_path, monkeypatch):
     import csv as _csv
     from pipeline import detect_changes
     d = tmp_path / "google_scholar"; d.mkdir()
-    for day, pids in [("2026-03-01", ["1", "2"]), ("2026-09-14", ["1"]), ("2026-09-15", ["2"]), ("2026-09-22", ["3"])]:
+    for day, pids in [("2026-03-01", ["1", "2"]), ("2026-09-14", ["1"]), ("2026-09-15", ["2"]), ("2026-09-22", ["3"]),
+                      ("2026-10-10", ["4"])]:                                     # a targeted fetch 18 days on
         with (d / f"{day}.csv").open("w", newline="") as f:
             w = _csv.DictWriter(f, fieldnames=["person_id", "total_citations", "raw_json"]); w.writeheader()
             for pid in pids: w.writerow({"person_id": pid, "total_citations": 10, "raw_json": "{}"})
+            if day != "2026-10-10":                                               # pad the real runs so the fetch is small
+                for k in range(20): w.writerow({"person_id": f"x{day}{k}", "total_citations": "", "raw_json": "{}"})
     monkeypatch.setattr(detect_changes, "SNAPSHOT_DIR", tmp_path)
     latest, prev = detect_changes.latest_two("google_scholar")
-    assert {r["person_id"] for r in latest} == {"1", "2", "3"}     # 14th, 15th and 22nd are one run
-    assert {r["person_id"] for r in prev} == {"1", "2"}             # March is the previous one
+    assert {r["person_id"] for r in latest} == {"1", "2", "3", "4"}   # 14th, 15th, 22nd and the 10 Oct fetch are one run
+    assert {r["person_id"] for r in prev if r["total_citations"]} == {"1", "2"}   # March is the previous one
 
 
 def test_promotions_say_where_the_rank_was_read():

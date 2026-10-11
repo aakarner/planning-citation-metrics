@@ -124,25 +124,57 @@ def rank_review(rank, start_date, phd_year, today, verified=None) -> tuple[int, 
     return None
 
 
+RUN_SHARE = 0.25     # a file with fewer rows than this share of the largest is a targeted fetch
+
+
+def run_start(dates: list[str], counts: dict[str, int] | None = None) -> str | None:
+    """First date of the latest collection run.
+
+    Files chain into a run when each is within WINDOW_DAYS of the one before
+    it -- not of the newest. A two-person fetch a week after a quarterly run
+    belongs to that run; anchoring on the newest file split it, and the
+    homepage reported zero promotions the moment a targeted fetch landed.
+
+    A targeted fetch (fewer than RUN_SHARE of the largest file's rows) never
+    starts a run at all, however long after the last one it lands: on
+    2026-10-10 a 19-person fetch eleven days after the September run became
+    "the October collection", and the homepage said nothing had changed since
+    it. Quarterly runs are ninety days apart, so a chain never bridges two.
+    """
+    if not dates:
+        return None
+    dates = sorted(dates)
+    counts = counts or {}
+    biggest = max(counts.values(), default=0)
+
+    def substantial(d: str) -> bool:
+        return not counts or counts.get(d, 0) >= RUN_SHARE * biggest
+
+    start = dates[-1]
+    anchored = substantial(start)        # walk back freely until the run holds a real collection
+    for d in reversed(dates[:-1]):
+        gap = (date.fromisoformat(start) - date.fromisoformat(d)).days
+        if not anchored or gap <= WINDOW_DAYS:
+            start = d
+            anchored = anchored or substantial(d)
+        else:
+            break
+    return start
+
+
 def latest_two(source: str) -> tuple[list[dict], list[dict]]:
     """The latest collection run and the one before it.
 
-    A run can span several files (rate limits, budgets), so files within
-    WINDOW_DAYS of the newest are merged into one run, keeping the newest row
-    per person; the previous run is the newest file older than that window."""
+    A run can span several files (rate limits, budgets, targeted fetches); see
+    run_start for how files chain. The newest row per person wins within the
+    run; the previous run is the newest file older than it."""
     files = sorted((SNAPSHOT_DIR / source).glob("*.csv"))
     if not files:
         return [], []
-    # Chain files whose dates are within WINDOW_DAYS of the *previous* file, not
-    # of the newest: a two-person fetch eight days after a quarterly run must
-    # join that run, not split it and report the first day's people as missing.
-    latest_files = [files[-1]]
-    for f in reversed(files[:-1]):
-        if (date.fromisoformat(latest_files[0].stem) - date.fromisoformat(f.stem)).days <= WINDOW_DAYS:
-            latest_files.insert(0, f)
-        else:
-            break
-    older = [f for f in files if f not in latest_files]
+    counts = {f.stem: sum(1 for _ in rows(f)) for f in files}
+    start = run_start([f.stem for f in files], counts)
+    latest_files = [f for f in files if f.stem >= start]
+    older = [f for f in files if f.stem < start]
     latest: dict[str, dict] = {}
     for f in latest_files:                      # ascending, so later files win
         for r in rows(f):

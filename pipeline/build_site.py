@@ -26,6 +26,7 @@ from datetime import date, timedelta
 from pathlib import Path
 
 from . import BUILD_DIR, REPO_ROOT
+from .detect_changes import run_start
 from .site_assets import SEARCH_JS, STYLE, TABLE_JS
 
 COPY_PATH = REPO_ROOT / "site" / "copy.toml"
@@ -268,8 +269,9 @@ def load(con: sqlite3.Connection) -> dict:
                          "GROUP BY source, collected_at"))
     bench = {r["rank"]: r for r in q("SELECT * FROM v_rank_benchmarks")}
     affs = q("SELECT a.*, d.short_name AS dept FROM affiliation a JOIN department d USING(department_id)")
-    gs_dates = [r["d"] for r in q("SELECT DISTINCT collected_at AS d FROM metric_snapshot "
-                                  "WHERE source='google_scholar' ORDER BY 1")]
+    gs_counts = {r["d"]: r["n"] for r in q("SELECT collected_at AS d, COUNT(*) AS n FROM metric_snapshot "
+                                           "WHERE source='google_scholar' GROUP BY 1 ORDER BY 1")}
+    gs_dates = list(gs_counts)
     mix = {r["source"]: r["n"] for r in q("SELECT h.source, COUNT(*) AS n FROM v_headline_metrics h "
                                          "JOIN v_current_affiliation ca ON ca.person_id = h.person_id GROUP BY 1")}
     rising_rows = q("SELECT * FROM v_rising")
@@ -283,7 +285,7 @@ def load(con: sqlite3.Connection) -> dict:
       ORDER BY o.display_name
     """)
     return {"people": people, "depts": depts, "oa": oa, "series": series, "asof": asof,
-            "bench": bench, "affs": affs, "gs_dates": gs_dates, "mix": mix, "rising": rising_rows,
+            "bench": bench, "affs": affs, "gs_dates": gs_dates, "gs_counts": gs_counts, "mix": mix, "rising": rising_rows,
             "others": others}
 
 
@@ -482,25 +484,9 @@ def rising(rows: list[dict], per_rank=RISING_PER_RANK, min_base=RISING_MIN_BASE,
     return out
 
 
-def collection_window(dates: list[str]) -> str | None:
-    """First day of the latest collection run.
-
-    Files chain into a run when each is within WINDOW_DAYS of the one before
-    it -- not of the newest. A two-person fetch a week after a quarterly run
-    belongs to that run; anchoring on the newest file split it, and the
-    homepage reported zero promotions the moment a targeted fetch landed.
-    Quarterly runs are ninety days apart, so a chain never bridges two.
-    """
-    if not dates:
-        return None
-    dates = sorted(dates)
-    start = dates[-1]
-    for d in reversed(dates[:-1]):
-        if (date.fromisoformat(start) - date.fromisoformat(d)).days <= WINDOW_DAYS:
-            start = d
-        else:
-            break
-    return start
+def collection_window(dates: list[str], counts: dict[str, int] | None = None) -> str | None:
+    """First day of the latest collection run; see detect_changes.run_start."""
+    return run_start(dates, counts)
 
 
 def recent_changes(affs: list[dict], since: str | None) -> dict:
@@ -593,7 +579,7 @@ def index_page(data, slugs, dslugs, base) -> str:
   <div class="cols3">{cols}</div>
   <p class="sub" style="margin-top:12px">{t("home", "rising_note", max_jump=f"{RISING_MAX_JUMP:.0%}")}</p>"""
 
-    since = collection_window(data["gs_dates"])
+    since = collection_window(data["gs_dates"], data.get("gs_counts"))
     ch = recent_changes(data["affs"], since)
     found = discovery_finds(since)
     # Build the items first and count those, so a badge can never disagree
