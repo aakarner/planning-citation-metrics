@@ -258,16 +258,28 @@ def page(title, body, base, active="", description="", extra_js=()) -> str:
 
 # --------------------------------------------------------------------- data
 
-def as_of_dates(counts: list[dict]) -> dict:
-    """source -> date of its newest collection that covered most people.
+ROLLING_SOURCES = ("google_scholar",)   # collected a few dozen profiles at a time, so the newest reading is the date
 
-    A targeted fetch (a handful of new hires, people just matched) must not
-    make the site claim every figure is as recent as that day."""
+
+def as_of_dates(counts: list[dict]) -> dict:
+    """source -> the date the site quotes for that source.
+
+    For a source collected in full runs (OpenAlex monthly), the newest run that
+    covered most people: a targeted fetch of a handful must not make the site
+    claim every figure is as recent as that day. Google Scholar has been
+    collected on a rolling schedule since 2026-10-11 (about fifty profiles a
+    week), so no run covers most people; its date is simply the newest reading,
+    and the homepage labels it "last read" and shows the oldest reading beside it.
+    The old rule froze the Scholar date at 15 September after the first weekly
+    run (2026-10-12)."""
     by_src: dict[str, list] = defaultdict(list)
     for r in counts:
         by_src[r["source"]].append((r["d"], r["n"]))
     out = {}
     for src, rows in by_src.items():
+        if src in ROLLING_SOURCES:
+            out[src] = max(d for d, _ in rows)
+            continue
         biggest = max(n for _, n in rows)
         out[src] = max(d for d, n in rows if n >= biggest / 2)
     return out

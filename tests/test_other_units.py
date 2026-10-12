@@ -112,5 +112,7 @@ def test_a_targeted_fetch_does_not_move_the_as_of_date():
     counts = [{"source": "openalex", "d": "2026-10-09", "n": 959},
               {"source": "openalex", "d": "2026-10-10", "n": 50},
               {"source": "google_scholar", "d": "2026-09-15", "n": 718},
-              {"source": "google_scholar", "d": "2026-09-29", "n": 1}]
-    assert as_of_dates(counts) == {"openalex": "2026-10-09", "google_scholar": "2026-09-15"}
+              {"source": "google_scholar", "d": "2026-10-12", "n": 50}]     # a weekly rolling batch
+    # OpenAlex is collected in full runs, so the 50-row fetch does not move its date;
+    # Scholar is rolling, so its date is the newest reading (the page says "last read")
+    assert as_of_dates(counts) == {"openalex": "2026-10-09", "google_scholar": "2026-10-12"}
