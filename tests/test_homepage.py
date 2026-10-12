@@ -85,6 +85,7 @@ def test_the_change_lists_render_their_rows_and_badges_agree(monkeypatch):
     # discovery finds normally come from the review CSV; give the page one for Mary
     monkeypatch.setattr(build_site, "discovery_finds",
                         lambda since: [{"person_id": "3", "department": "D1", "reviewed_at": "2026-09-16"}])
+    monkeypatch.setattr(build_site, "SHOW_PROMOTIONS", True)
     html = index_page(data, uniq_slugs(people, lambda p: p["display_name"]),
                       uniq_slugs(depts, lambda d: d["short_name"]), "")
 
@@ -191,3 +192,24 @@ def test_a_namesakes_readings_leave_the_series_once_the_profile_is_replaced():
     assert reading_is_theirs("google_scholar", json.dumps({"citedby": 5}), "VOpvlkkAAAAJ")   # no id stored: shown
     assert reading_is_theirs("google_scholar", read, None)                       # no profile held: history still shown
     assert reading_is_theirs("openalex", json.dumps({"records": []}), "VOpvlkkAAAAJ")
+
+
+def test_the_promotions_fold_is_hidden_while_the_record_catches_up(monkeypatch):
+    """2026-10-12: 136 'promotions' in the window, nearly all ranks Tom's sheet had
+    missed; Alex: hide it for now. The flag keeps the code and the data."""
+    from pipeline import build_site
+    from pipeline.build_site import index_page, uniq_slugs
+    people = [{"person_id": 2, "display_name": "Grace Hopper", "department": "D1", "department_id": 1,
+               "rank": "full", "total_citations": 100, "h_index": 5}]
+    depts = [{"department_id": 1, "short_name": "D1", "n_faculty": 3, "median_citations": 100, "mean_citations": 100,
+              "university": "D1", "total_citations": 300}]
+    affs = [aff(3, 2, 1, "associate", end="2026-09-15"), aff(4, 2, 1, "full", start="2026-09-15")]
+    data = {"people": people, "depts": depts, "asof": {"google_scholar": "2026-09-16", "openalex": "2026-09-15",
+            "pop": "2026-02-20"}, "mix": {"google_scholar": 1}, "bench": {}, "affs": affs, "today": "2026-09-16"}
+    monkeypatch.setattr(build_site, "discovery_finds", lambda since: [])
+    monkeypatch.setattr(build_site, "SHOW_PROMOTIONS", False)
+    html = index_page(data, uniq_slugs(people, lambda p: p["display_name"]), uniq_slugs(depts, lambda d: d["short_name"]), "")
+    assert "Promotions recorded" not in html and "Grace Hopper" not in html.split("New to the record", 1)[1].split("<h2>", 1)[0]
+    monkeypatch.setattr(build_site, "SHOW_PROMOTIONS", True)
+    html = index_page(data, uniq_slugs(people, lambda p: p["display_name"]), uniq_slugs(depts, lambda d: d["short_name"]), "")
+    assert "Promotions recorded" in html and "associate &rarr; <b>full</b>" in html

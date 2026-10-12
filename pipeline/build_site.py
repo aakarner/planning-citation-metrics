@@ -483,6 +483,10 @@ def department_page(d, roster, slugs, base) -> str:
 
 
 RECENT_DAYS = 90     # the homepage narrates roster changes from this many days back
+# The "Promotions recorded" fold is hidden (Alex, 2026-10-12): 136 entries, nearly all
+# our record catching up with ranks Tom's sheet had missed, not promotions this term.
+# Flip to True once the record has settled and the entries are read in near real time.
+SHOW_PROMOTIONS = False
 RANK_ORDER = {"assistant": 0, "associate": 1, "full": 2}
 
 
@@ -642,6 +646,9 @@ def index_page(data, slugs, dslugs, base) -> str:
     promo_note = (f'<p class="sub" style="margin:8px 0 6px">{t("home", "new_promos_note", n_pages=n_web, n_profiles=n_prof)}</p>'
                   if promo_items else "")
     found_li, moves_li, promos_li = "".join(found_items), "".join(move_items), "".join(promo_items)
+    promo_fold = (f"""
+  <details class="fold" style="margin-top:14px"><summary>{t("home", "new_promos_heading")} <span class="count">{len(promo_items)}</span></summary>
+    {promo_note}<ul class="plain two">{promos_li}</ul></details>""" if SHOW_PROMOTIONS and promo_items else "")
     pop_month = date.fromisoformat(pop_date).strftime("%B") if pop_date else ""
     # one swatch per source, in the order the sentence names them
     mix_key = t("home", "mix_key", gs_n=mix.get("google_scholar", 0), oa_n=mix.get("openalex", 0),
@@ -650,7 +657,7 @@ def index_page(data, slugs, dslugs, base) -> str:
     head, sep, tail = mix_key.partition(' &middot; <i class="k oa"></i>')
     tail = tail.replace(" &middot; ", ' &middot; <i class="k pop"></i>', 1)
     mix_key = head + sep + tail
-    if found_li or moves_li or promos_li or ch["departed"]:
+    if found_li or moves_li or promo_fold or ch["departed"]:
         new_block = f"""
   <h2>{t("home", "new_heading")}</h2>
   <p class="sub" style="margin:-6px 0 14px">{t("home", "new_lede")}</p>
@@ -661,8 +668,7 @@ def index_page(data, slugs, dslugs, base) -> str:
     <div class="col"><h3>{t("home", "new_moves_heading")} <span class="count">{len(move_items)}</span></h3>
       <ul class="plain">{moves_li}</ul></div>
   </div>
-  <details class="fold" style="margin-top:14px"><summary>{t("home", "new_promos_heading")} <span class="count">{len(promo_items)}</span></summary>
-    {promo_note}<ul class="plain two">{promos_li}</ul></details>
+{promo_fold}
   <p class="sub" style="margin-top:12px">{t("home", "new_departed", n=ch["departed"], repo=REPO)}</p>"""
     else:
         new_block = f"""
