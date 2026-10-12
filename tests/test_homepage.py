@@ -125,29 +125,29 @@ def test_promotions_say_where_the_rank_was_read():
 # --- Rising: citation gains since the baseline, within rank -------------------
 
 
-def test_rising_counts_citations_from_the_profile_since_last_january():
+def test_rising_estimates_the_twelve_months_before_each_reading():
     import json
     from pipeline.build_site import rising_from_readings, rising
 
     def reading(pid, rank, total, cpy, when="2026-09-15"):
         return {"person_id": pid, "display_name": f"p{pid}", "rank": rank, "department": "D",
                 "total_citations": total, "collected_at": when, "raw_json": json.dumps({"cites_per_year": cpy})}
-    # Yan Song's shape: Tom's 'March' figure was two years old, but her own graph is unambiguous.
+    # 15 September: 257 of 365 days gone, so 2026 to date plus 29.6% of 2025 (Yan Song's real profile)
     rows = rising_from_readings([
-        reading(1, "full", 23933, {"2023": 2236, "2024": 2537, "2025": 2768, "2026": 1855}),
-        reading(2, "full", 900, {"2024": 100, "2025": 400, "2026": 300}),
-        reading(3, "assistant", 80, {"2025": 40, "2026": 30}),             # too small a profile
-        reading(4, "assistant", 500, {}),                                  # no per-year graph: left out
-        reading(5, "assistant", 500, {"2026": 120, "2027": 10}, when="2027-01-20"),   # read next year: window moves
+        reading(1, "full", 13175, {"2024": 1321, "2025": 1381, "2026": 1029}),
+        reading(2, "full", 900, {"2025": 400, "2026": 300}),
+        reading(3, "assistant", 80, {"2025": 40, "2026": 30}),              # too small a profile
+        reading(4, "assistant", 500, {}),                                   # no per-year graph: left out
+        reading(5, "assistant", 500, {"2026": 120, "2027": 10}, when="2027-01-10"),   # early January: mostly last year
     ])
     by = {r["person_id"]: r for r in rows}
-    assert by[1]["gain"] == 2768 + 1855 and by[1]["since_year"] == 2025
-    assert by[2]["gain"] == 700
+    assert by[1]["gain"] == 1029 + round(1381 * (1 - 257 / 365)) == 1438
+    assert by[2]["gain"] == 300 + round(400 * (1 - 257 / 365))
     assert 4 not in by
-    assert by[5]["gain"] == 130 and by[5]["since_year"] == 2026
+    assert by[5]["gain"] == 10 + round(120 * (1 - 9 / 365)) == 127
     out = rising(rows)
     assert [r["person_id"] for r in out["full"]] == [1, 2]
-    assert [r["person_id"] for r in out["assistant"]] == [5]              # 3 is under the 100-citation floor
+    assert [r["person_id"] for r in out["assistant"]] == [5]               # 3 is under the 100-citation floor
 
 
 def test_the_rising_block_renders_its_columns():
@@ -161,21 +161,21 @@ def test_the_rising_block_renders_its_columns():
     depts = [{"department_id": 1, "short_name": "D1", "n_faculty": 3, "median_citations": 100, "mean_citations": 100,
               "university": "D1", "total_citations": 300}]
     rising_rows = [{"person_id": 1, "display_name": "Ada Lovelace", "rank": "assistant", "department": "D1",
-                    "total_citations": 400, "gain": 100, "since_year": 2025},
+                    "total_citations": 400, "gain": 100, "window_end": "2026-09-15"},
                    {"person_id": 2, "display_name": "Grace Hopper", "rank": "full", "department": "D1",
-                    "total_citations": 50, "gain": 40, "since_year": 2025}]          # under the floor
+                    "total_citations": 50, "gain": 40, "window_end": "2026-09-15"}]          # under the floor
     data = {"people": people, "depts": depts, "asof": {"google_scholar": "2026-09-16", "openalex": "2026-09-15",
             "pop": "2026-02-20"}, "mix": {"google_scholar": 2}, "bench": {}, "affs": [aff(1, 1, 1, "assistant")],
             "today": "2026-09-16", "rising": rising_rows}
     html = index_page(data, uniq_slugs(people, lambda p: p["display_name"]),
                       uniq_slugs(depts, lambda d: d["short_name"]), "")
-    assert "Most cited since January 2025" in html
-    block = html.split("Most cited since January 2025", 1)[1].split("<h2>", 1)[0]
+    assert "Most cited in the past year" in html
+    block = html.split("Most cited in the past year", 1)[1].split("<h2>", 1)[0]
     assert "Ada Lovelace" in block and "+100" in block and "25%" in block
     assert "Grace Hopper" not in block and "Full professors" not in block
 
     data["rising"] = []
-    assert "Most cited since" not in index_page(data, uniq_slugs(people, lambda p: p["display_name"]),
+    assert "Most cited in the past year" not in index_page(data, uniq_slugs(people, lambda p: p["display_name"]),
                                                 uniq_slugs(depts, lambda d: d["short_name"]), "")
 
 

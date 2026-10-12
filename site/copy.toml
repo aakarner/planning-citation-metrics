@@ -46,7 +46,7 @@ footer_corrections = """Counts come from public profile pages and change constan
 
 [home]
 # Values: people_count, dept_count, scholar_date, openalex_date, rankings_href, departments_href,
-#         methods_href, contact, repo, scholar_help, gs_n, oa_n, pop_n, pop_month, scholar_oldest, since_year, min_total,
+#         methods_href, contact, repo, scholar_help, gs_n, oa_n, pop_n, pop_month, scholar_oldest, min_total,
 #         assistant_median, n (departed count), n_pages, n_profiles (promotions by where they were read)
 meta_description = """Citation metrics for {people_count} urban planning faculty at {dept_count} programs in the US and Canada."""
 beta_title = "Beta &middot; in active development"
@@ -85,13 +85,13 @@ th_median_h = "Median h-index"
 rank_assistant = "Assistant professors"
 rank_associate = "Associate professors"
 rank_full = "Full professors"
-rising_heading = "Most cited since January {since_year}"
-rising_lede = """The five people in each rank who have received the most citations since the start of
-     {since_year}, by the per-year counts on their own Google Scholar profile. The grey figure
-     is the share of their total citations that arrived in that time."""
-rising_note = """Counts are as of each profile's latest reading, so a profile read late in the year
-     includes more of it than one read in January. Profiles with fewer than 100 citations in
-     all are left out."""
+rising_heading = "Most cited in the past year"
+rising_lede = """The five people in each rank who received the most citations in the twelve months before
+     their Google Scholar profile was last read, estimated from the profile's own per-year
+     counts. The grey figure is the share of their total citations that arrived in that year."""
+rising_note = """Scholar reports whole calendar years, so the past year is this year's count so far plus
+     the matching share of last year's. Profiles with fewer than {min_total} citations in all are
+     left out."""
 new_heading = "New to the record"
 new_lede = """What changed in the last three months. Everything here comes from a person's own public
      Scholar profile or their program's website."""

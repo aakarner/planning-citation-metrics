@@ -496,34 +496,36 @@ RISING_MIN_TOTAL = 100   # a profile this small is noise, whichever way it moves
 
 
 def rising_from_readings(rows: list[dict]) -> list[dict]:
-    """Citations each person received since 1 January of last year, from the
-    per-year counts on their own Scholar profile as last read.
+    """Citations each person received in the twelve months before their profile
+    was last read, estimated from the per-year counts on the profile.
 
+    Scholar gives whole calendar years, so the estimate is this year's count so
+    far plus the share of last year's that falls inside the window: a profile
+    read on 15 September takes all of 2026 to date and the last 29% of 2025.
     The first version (2026-10-09) measured gains against Tom's March 2026
-    figures, but those were not all read in March: Yan Song's was about two
-    years old, so she showed +5,271 in six months. A profile's own per-year
-    graph is the same measure for everyone and matches what a visitor sees
-    when they click through. `since_year` is last year relative to the
-    reading, so a profile read in 2026 counts 2025 plus 2026 so far.
+    figures, which were not all read in March (Yan Song's was two years old);
+    the second (2026-10-12) summed last year and this, a window of up to two
+    years that Alex found too loose. A profile's own graph is the same measure
+    for everyone and matches what a visitor sees when they click through.
     """
     out = []
     for r in rows:
         try:
-            cpy = json.loads(r.get("raw_json") or "{}").get("cites_per_year") or {}
-        except ValueError:
+            cpy = {int(k): int(v or 0) for k, v in (json.loads(r.get("raw_json") or "{}").get("cites_per_year") or {}).items()}
+        except (ValueError, TypeError):
             cpy = {}
         if not cpy or not r.get("collected_at"):
             continue
-        year = int(r["collected_at"][:4])
-        since = year - 1
-        gain = sum(int(v or 0) for k, v in cpy.items() if int(k) >= since)
-        out.append({**r, "gain": gain, "since_year": since})
+        read = date.fromisoformat(r["collected_at"][:10])
+        elapsed = (read.timetuple().tm_yday - 1) / 365          # share of the reading year already gone
+        gain = cpy.get(read.year, 0) + round(cpy.get(read.year - 1, 0) * (1 - elapsed))
+        out.append({**r, "gain": gain, "window_end": r["collected_at"][:10]})
     return out
 
 
 def rising(rows: list[dict], per_rank=RISING_PER_RANK, min_total=RISING_MIN_TOTAL) -> dict[str, list[dict]]:
     """The most-cited-recently people within each rank: top `per_rank` by
-    citations received since 1 January of last year (see rising_from_readings).
+    citations received in the past twelve months (see rising_from_readings).
     Compares people with their own rank, so it was held back (2026-09-19)
     until the ranks had been reviewed; shipped 2026-10-09."""
     out = {}
@@ -609,7 +611,6 @@ def index_page(data, slugs, dslugs, base) -> str:
     rise = rising([r for r in data.get("rising", []) if str(r["person_id"]) in by_pid])
     rising_block = ""
     if any(rise.values()):
-        since_year = next(r for v in rise.values() for r in v)["since_year"]
         cols = "".join(
             f'<div class="col"><h3>{rank_label[rk]}</h3><ul class="plain">'
             + "".join(f'<li>{plink(str(r["person_id"]))}<span class="gain">+{num(r["gain"])}'
@@ -618,10 +619,10 @@ def index_page(data, slugs, dslugs, base) -> str:
             + "</ul></div>"
             for rk in ("assistant", "associate", "full") if rise[rk])
         rising_block = f"""
-  <h2>{t("home", "rising_heading", since_year=since_year)}</h2>
-  <p class="sub" style="margin:-6px 0 14px">{t("home", "rising_lede", since_year=since_year, min_total=num(RISING_MIN_TOTAL))}</p>
+  <h2>{t("home", "rising_heading")}</h2>
+  <p class="sub" style="margin:-6px 0 14px">{t("home", "rising_lede", min_total=num(RISING_MIN_TOTAL))}</p>
   <div class="cols3">{cols}</div>
-  <p class="sub" style="margin-top:12px">{t("home", "rising_note")}</p>"""
+  <p class="sub" style="margin-top:12px">{t("home", "rising_note", min_total=num(RISING_MIN_TOTAL))}</p>"""
 
     today = date.fromisoformat(data["today"]) if data.get("today") else date.today()
     since = (today - timedelta(days=RECENT_DAYS)).isoformat()
