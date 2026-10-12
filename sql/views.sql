@@ -207,24 +207,3 @@ SELECT rank, n,
        MAX(CASE WHEN rh = (n + 1) / 2     THEN h END) AS median_h_index
 FROM s
 GROUP BY rank, n;
-
--- Citation gains since the first Scholar collection (Tom Sanchez's March 2026
--- baseline), for the homepage's "Rising" block: Scholar-headline people with a
--- current regular appointment and a reading on the baseline date. People found
--- later have no baseline and are left out rather than measured over a shorter span.
-CREATE VIEW v_rising AS
-SELECT p.person_id, p.display_name, ca.rank, d.short_name AS department,
-       b.total_citations                    AS base_citations,
-       m.total_citations                    AS total_citations,
-       m.total_citations - b.total_citations AS gain,
-       b.collected_at                       AS base_date,
-       m.collected_at
-FROM v_scholar_metrics m
-JOIN person p                 ON p.person_id = m.person_id
-JOIN v_current_affiliation ca ON ca.person_id = p.person_id
-JOIN department d             ON d.department_id = ca.department_id
-JOIN metric_snapshot b        ON b.person_id = p.person_id AND b.source = 'google_scholar'
-                             AND b.collected_at = (SELECT MIN(collected_at) FROM metric_snapshot
-                                                   WHERE source = 'google_scholar')
-WHERE m.collected_at > b.collected_at
-  AND b.total_citations IS NOT NULL AND m.total_citations IS NOT NULL;
