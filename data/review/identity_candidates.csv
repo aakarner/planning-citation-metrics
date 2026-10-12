@@ -3891,6 +3891,21 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 1149,William Riggs,University of San Francisco (School of Management),google_scholar,szpDThIAAAAJ,William Riggs,0.925,1.0,1.0,,,,3115,,"Professor and Program Director, University of San Francisco",,accepted,matcher,2026-10-11,
 1150,Xiang Yan,University of Florida (Department of Civil and Coastal Engineering),google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-10-11,
 1151,Yan Kestens,Université de Montréal (École de santé publique),google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-10-11,
+1120,Jia-Ching Chen,UC Santa Barbara (Department of Global Studies),openalex,A5088333205,Jia-Ching Chen,0.898,1.0,1.0,0.654,,16,254,7,Tzu Chi University,https://orcid.org/0000-0003-1265-3343,accepted,matcher,2026-10-12,
+1120,Jia-Ching Chen,UC Santa Barbara (Department of Global Studies),openalex,A5038213209,Jia‐Ching Chen,0.65,1.0,0.0,1.0,,5,29,3,"University of California, Berkeley",,pending,,,
+1120,Jia-Ching Chen,UC Santa Barbara (Department of Global Studies),openalex,A5110575174,Jia Ching Chen,0.65,1.0,0.0,1.0,,3,1,1,,,pending,,,
+1120,Jia-Ching Chen,UC Santa Barbara (Department of Global Studies),openalex,A5146613864,Jia-Ching Chen,0.65,1.0,0.0,1.0,,1,0,0,,,pending,,,
+1120,Jia-Ching Chen,UC Santa Barbara (Department of Global Studies),openalex,A5110085488,Jia-Ching Chen,0.55,1.0,0.0,0.333,,2,104,2,Tzu Chi College of Technology,,pending,,,
+1142,Sicheng Wang,University of South Carolina (Department of Geography),openalex,A5100769225,Sicheng Wang,0.95,1.0,1.0,1.0,,69,1107,17,Tongji University,https://orcid.org/0000-0001-6395-6235,accepted,matcher,2026-10-12,
+1142,Sicheng Wang,University of South Carolina (Department of Geography),openalex,A5105516911,Sicheng Wang,0.65,1.0,0.0,1.0,,294,4733,36,"University of California, Santa Barbara",https://orcid.org/0000-0001-7887-1728,pending,,,
+1142,Sicheng Wang,University of South Carolina (Department of Geography),openalex,A5107942352,Sicheng Wang,0.65,1.0,0.0,1.0,,33,603,15,Nankai University,https://orcid.org/0000-0001-7887-1728,pending,,,
+1142,Sicheng Wang,University of South Carolina (Department of Geography),openalex,A5151851896,Sicheng Wang,0.65,1.0,0.0,1.0,,278,114,5,Shanghai Jiao Tong University,https://orcid.org/0000-0001-7887-1728,pending,,,
+1142,Sicheng Wang,University of South Carolina (Department of Geography),openalex,A5104388493,Sicheng Wang,0.65,1.0,0.0,1.0,,17,47,4,PetroChina Southwest Oil and Gas Field Company (China),https://orcid.org/0000-0001-7887-1728,pending,,,
+516,Yan Song,UNC,google_scholar,VOpvlkkAAAAJ,Yan Song,,1.0,1.0,,,,13175,,"Professor, City and Regional Planning, UNC at Chapel Hill",,accepted,AK,2026-10-12,found by Alex 2026-10-12; email.unc.edu; the planning professor
+516,Yan Song,UNC,google_scholar,ky5sX-0AAAAJ,Yan Song,,1.0,1.0,,,,23933,,University of North Carolina at Chapel Hill,,rejected,AK,2026-10-12,"a different Yan Song at UNC (same name and email domain; 23,933 cites, no department named); inherited from the workbook, profile now 404"
+156,Sudeshna Ghosh,,google_scholar,kzHi8cQAAAAJ,Sudeshna Ghosh,,1.0,,,,,624,,IIT Kanpur,,rejected,AK,2026-10-12,"namesake: profile interests are chemistry, protein crystallography; inherited from the workbook"
+450,Douglas Houston,,google_scholar,zISdnLwAAAAJ,Douglas R Houston,,1.0,,,,,3482,,"Senior Lecturer in Computational Biochemistry, University of Edinburgh",,rejected,AK,2026-10-12,"namesake: profile interests are virtual screening, drug discovery; inherited from the workbook"
+938,Karen Chen,,google_scholar,ALTsdGwAAAAJ,Yu-chen Karen Chen-Wiegart,,1.0,,,,,5105,,"Associate Professor, Department of Materials Science and Chemical Engineering at Stony Brook",,rejected,AK,2026-10-12,"namesake: profile interests are functional materials, energy storage; inherited from the workbook"
 1,Florina Dutt,Alabama A&M University,openalex,A5091437041,Florina Dutt,0.7,1.0,0.0,1.0,0.625,17,100,4,Georgia Institute of Technology,https://orcid.org/0000-0002-2484-6831,pending,,,
 1,Florina Dutt,Alabama A&M University,openalex,A5120149276,Dutt Florina,0.675,0.611,1.0,0.667,0.0,1,0,0,Alabama Agricultural and Mechanical University,,pending,,,
 6,Jordan Yin,Alabama A&M University,openalex,A5023127763,Jordan S. Yin,0.85,1.0,0.5,1.0,0.434,7,147,3,Cleveland State University,,pending,,,
@@ -4210,7 +4225,7 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 930,Jennifer Roe,University of Virginia,openalex,A5045654236,Jennifer Roe,0.5,1.0,0.0,0.0,0.087,27,1029,13,Saint Louis University,,pending,,,
 930,Jennifer Roe,University of Virginia,openalex,A5049451522,Roe Jennifer,0.5,1.0,0.0,0.333,0.0,1,5,1,Children's Hospital of Wisconsin,,pending,,,
 930,Jennifer Roe,University of Virginia,openalex,A5121206891,Jennifer Roe,0.5,1.0,0.0,0.333,0.0,1,0,0,London Chest Hospital,,pending,,,
-938,Karen Chen,University of Washington,openalex,A5012655879,Tzu‐Hsin Karen Chen,0.787,0.576,1.0,0.852,0.135,25,688,11,University of Washington,https://orcid.org/0000-0002-0343-6147,pending,,,
+938,Karen Chen,University of Washington,openalex,A5012655879,Tzu‐Hsin Karen Chen,0.787,0.576,1.0,0.852,0.135,25,688,11,University of Washington,https://orcid.org/0000-0002-0343-6147,accepted,AK,2026-10-12,
 938,Karen Chen,University of Washington,openalex,A5037227044,Karen Caiyun Chen,0.644,1.0,0.0,0.625,0.103,8,525,7,,,pending,,,
 938,Karen Chen,University of Washington,openalex,A5084653699,Karen Chen,0.589,1.0,0.0,0.258,0.375,137,1915,21,North Carolina State University,https://orcid.org/0000-0003-2904-1394,pending,,,
 938,Karen Chen,University of Washington,openalex,A5080002019,Karen Hui-Jung Chen,0.589,1.0,0.0,0.929,0.02,9,100,5,National Taipei University of Education,,pending,,,
@@ -4272,11 +4287,6 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 1086,Scott Nesbit,University of Georgia,openalex,A5054613081,Scott Nesbit,0.61,1.0,0.0,0.733,,16,160,4,,,pending,,,
 1086,Scott Nesbit,University of Georgia,openalex,A5017970412,C. Scott Nesbit,0.597,0.883,0.0,1.0,,1,0,0,University of Richmond,,pending,,,
 1098,Annie Seong Lee,University of North Texas (Department of Public Administration),openalex,,,0,,,,,,,,,,none,matcher,2026-10-12,
-1120,Jia-Ching Chen,UC Santa Barbara (Department of Global Studies),openalex,A5088333205,Jia-Ching Chen,0.898,1.0,1.0,0.654,,16,254,7,Tzu Chi University,https://orcid.org/0000-0003-1265-3343,accepted,matcher,2026-10-12,
-1120,Jia-Ching Chen,UC Santa Barbara (Department of Global Studies),openalex,A5038213209,Jia‐Ching Chen,0.65,1.0,0.0,1.0,,5,29,3,"University of California, Berkeley",,pending,,,
-1120,Jia-Ching Chen,UC Santa Barbara (Department of Global Studies),openalex,A5110575174,Jia Ching Chen,0.65,1.0,0.0,1.0,,3,1,1,,,pending,,,
-1120,Jia-Ching Chen,UC Santa Barbara (Department of Global Studies),openalex,A5146613864,Jia-Ching Chen,0.65,1.0,0.0,1.0,,1,0,0,,,pending,,,
-1120,Jia-Ching Chen,UC Santa Barbara (Department of Global Studies),openalex,A5110085488,Jia-Ching Chen,0.55,1.0,0.0,0.333,,2,104,2,Tzu Chi College of Technology,,pending,,,
 1128,L. Enrique Ramos-Santiago,Clemson University (Nieri Department of Construction and Real Estate Development),openalex,,,0,,,,,,,,,,none,matcher,2026-10-12,
 1135,Ming-Chun Lee,UNC Charlotte (School of Architecture),openalex,A5087910220,Ming‐Chun Lee,0.8,1.0,1.0,0.0,,131,1561,21,National Yang Ming Chiao Tung University,https://orcid.org/0000-0002-3493-3998,pending,,,
 1135,Ming-Chun Lee,UNC Charlotte (School of Architecture),openalex,A5111982580,Chun Ming Lee,0.674,0.897,0.5,0.467,,7,338,5,University of Hong Kong,,pending,,,
@@ -4285,15 +4295,5 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 1135,Ming-Chun Lee,UNC Charlotte (School of Architecture),openalex,A5057153068,Chun‐Ming Lee,0.514,0.897,0.0,0.4,,2,38,2,Tri-Service General Hospital,,pending,,,
 1139,Robert J. Stokes,"California State University, San Bernardino (Department of Public Administration)",openalex,A5011000200,ROBERT J STOKES,0.6,1.0,0.0,1.0,0.0,2,0,0,,,pending,,,
 1139,Robert J. Stokes,"California State University, San Bernardino (Department of Public Administration)",openalex,A5097167670,Robert J. Stokes,0.55,1.0,0.0,0.667,0.002,1,3,1,,,pending,,,
-1142,Sicheng Wang,University of South Carolina (Department of Geography),openalex,A5100769225,Sicheng Wang,0.95,1.0,1.0,1.0,,69,1107,17,Tongji University,https://orcid.org/0000-0001-6395-6235,accepted,matcher,2026-10-12,
-1142,Sicheng Wang,University of South Carolina (Department of Geography),openalex,A5105516911,Sicheng Wang,0.65,1.0,0.0,1.0,,294,4733,36,"University of California, Santa Barbara",https://orcid.org/0000-0001-7887-1728,pending,,,
-1142,Sicheng Wang,University of South Carolina (Department of Geography),openalex,A5107942352,Sicheng Wang,0.65,1.0,0.0,1.0,,33,603,15,Nankai University,https://orcid.org/0000-0001-7887-1728,pending,,,
-1142,Sicheng Wang,University of South Carolina (Department of Geography),openalex,A5151851896,Sicheng Wang,0.65,1.0,0.0,1.0,,278,114,5,Shanghai Jiao Tong University,https://orcid.org/0000-0001-7887-1728,pending,,,
-1142,Sicheng Wang,University of South Carolina (Department of Geography),openalex,A5104388493,Sicheng Wang,0.65,1.0,0.0,1.0,,17,47,4,PetroChina Southwest Oil and Gas Field Company (China),https://orcid.org/0000-0001-7887-1728,pending,,,
 1148,Taylor Davey,Binghamton University (Department of Public Administration and Policy),openalex,A5052681265,Taylor Davey,0.8,1.0,0.5,1.0,,8,9,2,Colgate University,https://orcid.org/0000-0002-2458-4333,pending,,,
 1148,Taylor Davey,Binghamton University (Department of Public Administration and Policy),openalex,A5028681348,Taylor C. Davey,0.55,1.0,0.0,0.333,,1,3,1,University of Minnesota,,pending,,,
-516,Yan Song,UNC,google_scholar,VOpvlkkAAAAJ,Yan Song,,1.0,1.0,,,,13175,,"Professor, City and Regional Planning, UNC at Chapel Hill",,accepted,AK,2026-10-12,"found by Alex 2026-10-12; email.unc.edu; the planning professor"
-516,Yan Song,UNC,google_scholar,ky5sX-0AAAAJ,Yan Song,,1.0,1.0,,,,23933,,"University of North Carolina at Chapel Hill",,rejected,AK,2026-10-12,"a different Yan Song at UNC (same name and email domain; 23,933 cites, no department named); inherited from the workbook, profile now 404"
-156,Sudeshna Ghosh,,google_scholar,kzHi8cQAAAAJ,Sudeshna Ghosh,,1.0,,,,,624,,"IIT Kanpur",,rejected,AK,2026-10-12,"namesake: profile interests are chemistry, protein crystallography; inherited from the workbook"
-450,Douglas Houston,,google_scholar,zISdnLwAAAAJ,Douglas R Houston,,1.0,,,,,3482,,"Senior Lecturer in Computational Biochemistry, University of Edinburgh",,rejected,AK,2026-10-12,"namesake: profile interests are virtual screening, drug discovery; inherited from the workbook"
-938,Karen Chen,,google_scholar,ALTsdGwAAAAJ,Yu-chen Karen Chen-Wiegart,,1.0,,,,,5105,,"Associate Professor, Department of Materials Science and Chemical Engineering at Stony Brook",,rejected,AK,2026-10-12,"namesake: profile interests are functional materials, energy storage; inherited from the workbook"
