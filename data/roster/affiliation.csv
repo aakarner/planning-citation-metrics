@@ -1,6 +1,6 @@
 affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_date,end_date,source
 1,1,1,assistant,regular,1,,,workbook-2026
-2,2,1,associate,regular,1,,,workbook-2026
+2,2,1,associate,regular,1,,2026-10-12,"workbook-2026 | closed 2026-10-12: depart; change from Scholar profile 2026-10-12: email @aus.edu; affiliation ""American University of Sharjah"""
 3,3,1,full,regular,1,,,workbook-2026
 4,4,1,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: depart; change from Scholar profile 2026-09-15: email @urbanedge.net; affiliation ""professor of urban design, cairo university"""
 5,5,1,assistant,regular,1,,2023-01-01,"workbook-2026 | closed 2023-01-01: left the program; rank verified 2026-09-30; rank review 2026-09-30 by Maddie: Joyce Pressley LinkedIn (She was an assitant professor in planning for 11 years until 2023, when she retired)"
