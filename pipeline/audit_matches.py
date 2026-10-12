@@ -47,6 +47,7 @@ from datetime import date
 from pathlib import Path
 
 from . import BUILD_DIR, ROSTER_DIR
+from .find_scholar_profiles import affiliation_match
 from .match_openalex import REVIEW_DIR, REVIEW_FIELDS, read_csv, write_csv
 
 MAX_RATIO = 3.0     # OpenAlex claiming >3x Scholar is a bigger namesake
@@ -54,6 +55,8 @@ SETTLE_NAME = 0.95      # a pending candidate this close on name, at the right i
 SETTLE_RATIO = 1.5      # ...and at most this many times our own figure, is the person
 SIBLING_SUM_RATIO = 1.2 # a further record for someone already matched may not push the OpenAlex sum past this
 FRAGMENT_WORKS = 3      # a record this small settles on name and institution alone
+SIBLING_TOPIC = 0.5     # an extra record at another institution needs this share of planning topics
+MEDICAL = ("hospital", "medical", "clinic", "health", "medicine", "cancer")
 MIN_RATIO = 0.05    # kept for implausible()'s two-sided mode; policy no longer un-accepts on the low side
 MIN_BASE = 25       # below this the ratio is noise, so don't judge
 
@@ -73,7 +76,8 @@ def implausible(oa_cites, base_cites, *, high_only: bool = False) -> float | Non
     return None
 
 
-def settles(name_sim, inst_match, oa_cites, works, base_cites, accepted_cites=0, has_record=False) -> bool:
+def settles(name_sim, inst_match, oa_cites, works, base_cites, accepted_cites=0, has_record=False,
+            last_inst_ok=None, topic_share=None) -> bool:
     """Accept a pending candidate without a reviewer?
 
     Name and institution decide identity. Size can disprove it in one direction
@@ -97,8 +101,40 @@ def settles(name_sim, inst_match, oa_cites, works, base_cites, accepted_cites=0,
     if not base_cites or base_cites < MIN_BASE or oa_cites is None:
         return False
     if has_record:
+        if not sibling_agrees(last_inst_ok, topic_share):
+            return False
         return (accepted_cites + oa_cites) / base_cites <= SIBLING_SUM_RATIO
     return oa_cites / base_cites <= SETTLE_RATIO
+
+
+def sibling_agrees(last_inst_ok, topic_share) -> bool:
+    """May an extra, non-fragment record join someone already matched?
+
+    inst_match says the department's institution appears somewhere in the
+    record's affiliation history, which for a common name is weak: OpenAlex
+    conflates authors, and on 2026-09-25 the sum rule let five 'Yan Song'
+    records through, three at Chinese universities, because together they
+    stayed under 1.2x her Scholar total. An extra record must therefore also
+    sit at the person's institution now (`last_inst_ok`: True, or None when
+    the record names none) or carry a planning share of topics; a record at a
+    hospital or company with no planning topics is left to a reviewer.
+    """
+    if last_inst_ok is False and (topic_share is None or topic_share < SIBLING_TOPIC):
+        return False
+    return True
+
+
+def last_institution_ok(text, dept, primary_text=None):
+    """None when the record names no institution; else whether it is the
+    person's department (by name or alias) or the same place as their primary record."""
+    text = (text or "").strip()
+    if not text:
+        return None
+    if any(w in text.lower() for w in MEDICAL):
+        return False
+    if primary_text and text == primary_text.strip():
+        return True
+    return bool(dept) and affiliation_match(text, dept) > 0
 
 
 def base_counts(con) -> dict[str, tuple[str, int]]:
@@ -182,9 +218,43 @@ def main(argv=None) -> None:
     # OpenAlex splits authors, so several such rows for one person are all theirs.
     accepted_now: dict[int, str] = {}
     newly_matched: dict[str, list[dict]] = {}
-    have: dict[str, float] = {}                     # OpenAlex citations already accepted per person
+    _, depts_rows = read_csv(ROSTER_DIR / "department.csv")
+    depts = {d["department_id"]: d for d in depts_rows}
+    _, affs = read_csv(ROSTER_DIR / "affiliation.csv")
+    dept_of = {a["person_id"]: depts.get(a["department_id"]) for a in affs
+               if not a["end_date"] and a["is_primary"] == "1"}
+    accepted_by: dict[str, list[dict]] = {}
     for r in review:
         if r["source"] == "openalex" and r["status"] == "accepted" and r["external_id"]:
+            accepted_by.setdefault(str(r["person_id"]), []).append(r)
+    primary_text = {pid: (max(rs, key=lambda r: float(r["works_count"] or 0))["last_known_institution"] or "")
+                    for pid, rs in accepted_by.items()}
+
+    # ---- extra records the audit itself accepted that no longer pass --------
+    # Back to pending, not rejected: a reviewer decides. Only rows this audit
+    # accepted; a person's decision stands.
+    unsettled: dict[int, str] = {}
+    for pid, rs in accepted_by.items():
+        if len(rs) < 2:
+            continue
+        primary = max(rs, key=lambda r: float(r["works_count"] or 0))
+        for r in rs:
+            if r is primary or r.get("reviewed_by") != "audit_matches" or float(r["works_count"] or 0) <= FRAGMENT_WORKS:
+                continue
+            ok = last_institution_ok(r["last_known_institution"], dept_of.get(str(pid)), primary["last_known_institution"])
+            ts = float(r["topic_share"]) if r["topic_share"] not in (None, "") else None
+            if not sibling_agrees(ok, ts):
+                shown = "no" if not ts else f"{ts:.0%}"
+                unsettled[id(r)] = (f"unsettled {today}: extra record at {r['last_known_institution'] or '?'} with "
+                                    f"{shown} planning topics; a reviewer decides")
+                print(f"  {r['display_name'][:26]:26} extra record {(r['last_known_institution'] or '?')[:34]:34} "
+                      f"{int(float(r['cited_by_count'] or 0)):>7,} cites  topics {ts if ts is not None else '-'}")
+    if unsettled:
+        print(f"\n{len(unsettled)} extra records sent back to review")
+
+    have: dict[str, float] = {}                     # OpenAlex citations already accepted per person
+    for r in review:
+        if r["source"] == "openalex" and r["status"] == "accepted" and r["external_id"] and id(r) not in unsettled:
             have[str(r["person_id"])] = have.get(str(r["person_id"]), 0.0) + float(r["cited_by_count"] or 0)
     for r in review:
         if r["source"] != "openalex" or r["status"] != "pending" or not r["external_id"] or id(r) in flagged:
@@ -196,8 +266,11 @@ def main(argv=None) -> None:
             ns, im = float(r["name_sim"] or 0), float(r["inst_match"] or 0)
         except (TypeError, ValueError):
             continue
-        if settles(ns, im, oa, works, b[1] if b else None, have.get(str(r["person_id"]), 0.0),
-                   has_record=str(r["person_id"]) in have):
+        pid_s = str(r["person_id"])
+        ts = float(r["topic_share"]) if r["topic_share"] not in (None, "") else None
+        ok = last_institution_ok(r["last_known_institution"], dept_of.get(pid_s), primary_text.get(pid_s))
+        if settles(ns, im, oa, works, b[1] if b else None, have.get(pid_s, 0.0),
+                   has_record=pid_s in have, last_inst_ok=ok, topic_share=ts):
             if oa is not None:
                 have[str(r["person_id"])] = have.get(str(r["person_id"]), 0.0) + oa   # later siblings see the running sum
             accepted_now[id(r)] = (f"accepted {today}: name and institution match, "
@@ -217,7 +290,7 @@ def main(argv=None) -> None:
     if args.dry_run:
         print("\n(dry run, nothing written)")
         return
-    if not bad and not flagged and not accepted_now:
+    if not bad and not flagged and not accepted_now and not unsettled:
         return
 
     if bad:
@@ -250,6 +323,10 @@ def main(argv=None) -> None:
             r["status"], r["reviewed_by"], r["reviewed_at"] = "accepted", "audit_matches", today
             r["notes"] = " ".join(filter(None, [r.get("notes"), accepted_now[id(r)]]))
             continue
+        if id(r) in unsettled:
+            r["status"], r["reviewed_by"], r["reviewed_at"] = "pending", "", ""
+            r["notes"] = " ".join(filter(None, [r.get("notes"), unsettled[id(r)]]))
+            continue
         if r["person_id"] in bad and r["status"] == "accepted":
             r["status"], r["reviewed_by"], r["reviewed_at"] = "rejected", "audit_matches", today
             r["notes"] = " ".join(filter(None, [r.get("notes"), bad[r["person_id"]]]))
@@ -257,7 +334,7 @@ def main(argv=None) -> None:
             r["status"], r["reviewed_by"], r["reviewed_at"] = "rejected", "audit_matches", today
             r["notes"] = " ".join(filter(None, [r.get("notes"), flagged[id(r)]]))
     write_csv(rpath, REVIEW_FIELDS, review)
-    print(f"rejected {len(bad) + len(flagged)} and accepted {len(accepted_now)} review rows in {rpath}")
+    print(f"rejected {len(bad) + len(flagged)}, accepted {len(accepted_now)} and sent back {len(unsettled)} review rows in {rpath}")
 
 
 if __name__ == "__main__":

@@ -183,6 +183,8 @@ ALIASES = {
     "UC Irvine": ["University of California, Irvine", "University of California Irvine", "UCI"],
     "UC Berkeley": ["University of California, Berkeley", "University of California Berkeley"],
     "UC San Diego": ["UCSD"],
+    "Rutgers University": ["Rutgers, The State University of New Jersey", "Rutgers"],
+    "Rutgers University, School of Environmental & Biological Sciences": ["Rutgers, The State University of New Jersey", "Rutgers"],
     "UCLA": ["University of California, Los Angeles", "University of California Los Angeles"],
     "Cal Poly, Pomona": ["California State Polytechnic University, Pomona",
                          "California State Polytechnic University Pomona"],

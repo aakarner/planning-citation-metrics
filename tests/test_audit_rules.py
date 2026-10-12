@@ -114,3 +114,26 @@ def test_a_sibling_fragment_settles_and_a_large_sibling_is_judged_on_the_sum():
     assert settles(1.0, 1.0, 0, 1, 736, accepted_cites=700, has_record=True)
     assert not settles(1.0, 1.0, 16190, 932, 11093, accepted_cites=9517, has_record=True)   # Robert Brown's namesake
     assert settles(1.0, 1.0, 900, 40, 11093, accepted_cites=9517, has_record=True)
+
+
+def test_an_extra_record_at_a_hospital_with_no_planning_topics_waits_for_a_reviewer():
+    """Yan Song, 2026-09-25: five same-name records settled as hers because their sum
+    stayed under 1.2x her Scholar total; three sat at Chinese universities with no
+    planning topics. The sum rule alone cannot tell one prolific person from several."""
+    from pipeline.audit_matches import settles, sibling_agrees, last_institution_ok
+    dept = {"department_id": "1", "university": "UNC", "short_name": "UNC", "name": "City and Regional Planning"}
+    # the extra record: 100 works, 3,949 citations at Xidian, topics 0.0, beside an accepted 10,766 record
+    assert not settles(1.0, 1.0, 3949, 100, 23933, accepted_cites=10766, has_record=True,
+                       last_inst_ok=last_institution_ok("Xidian University", dept), topic_share=0.0)
+    # the same numbers for a record that still sits at UNC are fine
+    assert settles(1.0, 1.0, 3949, 100, 23933, accepted_cites=10766, has_record=True,
+                   last_inst_ok=last_institution_ok("University of North Carolina at Chapel Hill", dept), topic_share=0.0)
+    # or one elsewhere whose topics are planning (a previous post)
+    assert settles(1.0, 1.0, 3949, 100, 23933, accepted_cites=10766, has_record=True,
+                   last_inst_ok=False, topic_share=0.9)
+    # a record naming no institution is judged on topics alone, and unknown topics do not block it
+    assert last_institution_ok("", dept) is None and sibling_agrees(None, None)
+    # hospitals never pass the institution test, whatever the alias table says
+    assert last_institution_ok("UNC Hospitals", dept) is False
+    # a fragment still settles on name and institution alone
+    assert settles(1.0, 1.0, 12, 2, 23933, accepted_cites=10766, has_record=True, last_inst_ok=False, topic_share=0.0)
