@@ -156,3 +156,16 @@ def test_a_recent_department_page_reading_outranks_the_profile():
     assert not recently_verified("", "2026-09-29") and not recently_verified(None, "2026-09-29")
     # a reviewer's check counts the same way; the latest note wins
     assert recently_verified("rank verified 2025-01-10 | rank verified 2026-09-20; rank review sheet", "2026-09-29")
+
+
+
+def test_a_profile_in_a_foreign_field_away_from_the_department_is_a_namesake():
+    from pipeline.apply_changes import namesake_field
+    uw = dept("7", "University of Washington", "uw.edu")
+    assert namesake_field({"interests": ["Functional materials", "Energy storage"],
+                           "affiliation": "Associate Professor, Department of Materials Science and Chemical Engineering at Stony Brook"}, uw) == "chemical engineering"
+    assert namesake_field({"interests": [], "affiliation": "IIT Kanpur"}, uw) is None          # nothing foreign named: left to the other rules
+    # naming the department keeps the profile whatever the interests say
+    rutgers = dept("8", "Rutgers University", "rutgers.edu")
+    assert namesake_field({"interests": ["geodesign", "GIS", "global surgery"], "affiliation": "Rutgers University"}, rutgers) is None
+    assert namesake_field({"interests": ["Land use", "Urban form"], "affiliation": "Professor, City and Regional Planning, UNC"}, uw) is None

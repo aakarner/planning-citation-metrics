@@ -177,3 +177,17 @@ def test_the_rising_block_renders_its_columns():
     data["rising"] = []
     assert "Most cited since" not in index_page(data, uniq_slugs(people, lambda p: p["display_name"]),
                                                 uniq_slugs(depts, lambda d: d["short_name"]), "")
+
+
+
+def test_a_namesakes_readings_leave_the_series_once_the_profile_is_replaced():
+    import json
+    from pipeline.build_site import reading_is_theirs
+    workbook = json.dumps({"workbook_row": {"GoogleScholar": "https://scholar.google.com/citations?hl=en&user=ky5sX-0AAAAJ"}})
+    read = json.dumps({"scholar_id": "ky5sX-0AAAAJ", "citedby": 23933})
+    assert not reading_is_theirs("google_scholar", workbook, "VOpvlkkAAAAJ")     # Tom's row came from the namesake
+    assert not reading_is_theirs("google_scholar", read, "VOpvlkkAAAAJ")
+    assert reading_is_theirs("google_scholar", read, "ky5sX-0AAAAJ")             # while that profile was the one held
+    assert reading_is_theirs("google_scholar", json.dumps({"citedby": 5}), "VOpvlkkAAAAJ")   # no id stored: shown
+    assert reading_is_theirs("google_scholar", read, None)                       # no profile held: history still shown
+    assert reading_is_theirs("openalex", json.dumps({"records": []}), "VOpvlkkAAAAJ")

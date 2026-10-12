@@ -48,7 +48,8 @@ from pathlib import Path
 from . import ROSTER_DIR
 from datetime import date
 
-from .detect_changes import latest_two, registrable, rows, verified_on
+from .detect_changes import foreign_field, latest_two, registrable, rows, verified_on
+from .match_openalex import REVIEW_DIR, REVIEW_FIELDS, read_csv, write_csv
 from .find_scholar_profiles import affiliation_match, affiliation_names_dept
 from .match_openalex import norm
 
@@ -103,6 +104,25 @@ def rank_from_text(text: str, default: str) -> str:
     if re.search(r"\bprofessor\b", t) and "assistant" not in t and "associate" not in t:
         return "full"
     return default
+
+
+def namesake_field(raw: dict, cur: dict) -> str | None:
+    """A field no planning scholar works in, named by a profile that does not
+    place itself at the person's department -- i.e. somebody else's profile.
+
+    Three ids inherited from the workbook (materials chemistry at Stony Brook,
+    computational biochemistry at Edinburgh, biochemistry at IIT Kanpur) sat
+    under planning faculty for weeks, two of them printing as 'WRONG?' and one
+    never printing at all because 'IIT Kanpur' has no institution word. The
+    rules now act on this: the id is cleared and the profile vetoed, and the
+    person falls back to OpenAlex until the daily search finds the right one.
+    A profile that names the department keeps its interests whatever they say
+    (David Tulloch lists 'global surgery' beside geodesign at Rutgers).
+    """
+    text = raw.get("affiliation") or ""
+    if text and affiliation_names_dept(text, cur):
+        return None
+    return foreign_field(raw)
 
 
 def decide(text, email, rank, cur, depts, home, domain_owner, cites=None, years_since_phd=None):
@@ -194,12 +214,21 @@ def main(argv=None) -> None:
             domain_owner.setdefault(dom, did)   # first wins; shared domains (uw.edu) stay ambiguous
 
     actions = []
+    namesakes: dict[str, tuple[str, str]] = {}      # person_id -> (scholar id, field)
     for r in gs_latest:
         pid = r["person_id"]
         a = current.get(pid)
         if not a or a["department_id"] not in depts:
             continue
         raw = json.loads(r["raw_json"] or "{}")
+        held_id = (people.get(pid, {}).get("google_scholar_id") or "").strip()
+        if not held_id or (raw.get("scholar_id") and raw["scholar_id"] != held_id):
+            continue                                   # a reading from a profile we no longer hold
+        field = namesake_field(raw, depts[a["department_id"]])
+        if field:
+            namesakes[pid] = (held_id, field)
+            actions.append(("namesake", pid, a, None, raw.get("affiliation") or "", registrable(raw.get("email_domain")), r["collected_at"]))
+            continue
         text = raw.get("affiliation") or ""
         email = registrable(raw.get("email_domain"))
         phd = people.get(pid, {}).get("phd_year")
@@ -224,13 +253,16 @@ def main(argv=None) -> None:
         elif kind == "held":
             print(f"HELD    {p['display_name']:<28} {cur['short_name'][:28]:<28} rank verified {verified_on(a.get('source'))}; "
                   f"profile not applied [{email or '-'}; \"{text[:60]}\"]")
+        elif kind == "namesake":
+            print(f"NAMESAKE {p['display_name']:<27} {cur['short_name'][:28]:<28} profile is in {namesakes[pid][1]}; "
+                  f"id {namesakes[pid][0]} cleared [{email or '-'}; \"{text[:60]}\"]")
         elif kind == "wrong":
             print(f"WRONG?  {p['display_name']:<28} {cur['short_name'][:28]:<28} profile looks like a namesake; not applied "
                   f"[{email or '-'}; \"{text[:60]}\"]")
         else:
             print(f"DEPART  {p['display_name']:<28} {cur['short_name'][:28]:<28} -> (untracked) "
                   f"[{email or '-'}; \"{text[:70]}\"]")
-        if args.dry_run or kind in ("wrong", "held"):
+        if args.dry_run or kind in ("wrong", "held", "namesake"):
             continue
         evidence = f"change from Scholar profile {when}: email @{email or '?'}; affiliation \"{text[:120]}\""
         a["end_date"] = when
@@ -242,9 +274,33 @@ def main(argv=None) -> None:
             next_id += 1
 
     c = Counter(x[0] for x in actions)
-    print(f"\n{c['move']} moves, {c['promote']} promotions, {c['depart']} departures, {c['wrong']} suspected wrong profiles (not applied)"
+    print(f"\n{c['move']} moves, {c['promote']} promotions, {c['depart']} departures, {c['namesake']} namesake profiles cleared, "
+          f"{c['wrong']} suspected wrong profiles (not applied)"
           + (f", {c['held']} held by a recent rank verification" if c['held'] else "")
           + (" (dry run, nothing written)" if args.dry_run else ""))
+    if not args.dry_run and namesakes:
+        ppath = ROSTER_DIR / "person.csv"
+        pfields, prow = read_csv(ppath)
+        for p in prow:
+            if p["person_id"] in namesakes:
+                sid, field = namesakes[p["person_id"]]
+                p["google_scholar_id"] = None
+                p["notes"] = " | ".join(filter(None, [p.get("notes"), f"Scholar id {sid} removed {date.today().isoformat()}: profile is in {field}, a namesake"]))
+        write_csv(ppath, pfields, prow)
+        rpath = REVIEW_DIR / "identity_candidates.csv"
+        rfields, review = read_csv(rpath)
+        have = {(r["person_id"], r["external_id"]) for r in review}
+        for kind, pid, a, target, text, email, when in actions:
+            if kind != "namesake" or (pid, namesakes[pid][0]) in have:
+                continue
+            review.append({**{k: None for k in REVIEW_FIELDS}, "person_id": pid, "display_name": people[pid]["display_name"],
+                           "department": depts[a["department_id"]]["short_name"], "source": "google_scholar",
+                           "external_id": namesakes[pid][0], "candidate_name": people[pid]["display_name"],
+                           "last_known_institution": text[:120], "status": "rejected", "reviewed_by": "apply_changes",
+                           "reviewed_at": date.today().isoformat(),
+                           "notes": f"namesake: profile is in {namesakes[pid][1]} and does not name the department"})
+        write_csv(rpath, REVIEW_FIELDS, review)
+        print(f"cleared {len(namesakes)} namesake Scholar ids; vetoed in {rpath.name}")
     if not args.dry_run and actions:
         with aff_path.open("w", newline="", encoding="utf-8") as f:
             w = csv.DictWriter(f, fieldnames=aff_fields)

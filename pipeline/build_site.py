@@ -176,6 +176,32 @@ def pct_row(label, value) -> str:
 
 # ----------------------------------------------------------------- template
 
+def reading_is_theirs(source: str, raw_json: str | None, held_scholar_id: str | None) -> bool:
+    """Should a stored reading appear in the person's series on the site?
+
+    Snapshots are never deleted, so a Scholar reading taken from a profile we
+    later found to be a namesake stays in the data with the person's id on it.
+    Yan Song's series (2026-10-12) ran 18,662 -> 23,933 -> 13,175: the first two
+    were another Yan Song at UNC, inherited from the workbook. A Scholar reading
+    is shown only if the profile it came from is the one the roster holds now;
+    the workbook rows name theirs in the GoogleScholar URL. OpenAlex readings
+    are sums over accepted records and are not tied to one id, so they stay.
+    """
+    if source != "google_scholar":
+        return True
+    try:
+        raw = json.loads(raw_json or "{}")
+    except ValueError:
+        return True
+    sid = raw.get("scholar_id")
+    if not sid:
+        m = re.search(r"user=([\w-]+)", ((raw.get("workbook_row") or {}).get("GoogleScholar") or ""))
+        sid = m.group(1) if m else None
+    if not sid or not held_scholar_id:
+        return True                     # nothing to compare; show it
+    return sid == held_scholar_id
+
+
 def donate_block() -> str:
     """The footer's donate line, or nothing at all while no destination is set."""
     url = (COPY["site"].get("donate_url") or "").strip()
@@ -262,8 +288,11 @@ def load(con: sqlite3.Connection) -> dict:
     depts = q("SELECT * FROM v_department_summary ORDER BY short_name")
     oa = {r["person_id"]: r for r in q("SELECT * FROM v_openalex_metrics")}
     series = defaultdict(lambda: defaultdict(list))
-    for r in q("SELECT * FROM v_person_timeseries"):
-        series[r["person_id"]][r["source"]].append((r["collected_at"], r["total_citations"]))
+    for r in q("""SELECT m.person_id, m.source, m.collected_at, m.total_citations, m.raw_json, p.google_scholar_id
+                  FROM metric_snapshot m JOIN person p ON p.person_id = m.person_id
+                  ORDER BY m.person_id, m.source, m.collected_at"""):
+        if reading_is_theirs(r["source"], r["raw_json"], r["google_scholar_id"]):
+            series[r["person_id"]][r["source"]].append((r["collected_at"], r["total_citations"]))
     asof = as_of_dates(q("SELECT source, collected_at AS d, COUNT(*) AS n FROM metric_snapshot "
                          "GROUP BY source, collected_at"))
     bench = {r["rank"]: r for r in q("SELECT * FROM v_rank_benchmarks")}

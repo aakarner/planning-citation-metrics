@@ -72,3 +72,16 @@ def test_a_pop_figure_matching_a_rejected_namesake_is_flagged():
     assert pop_tainted_by(370, [371]) == 371                # would flag -- which is why an accepted match is not passed in
     assert pop_tainted_by(13, [256]) is None                # tiny base: not judged
     assert pop_tainted_by(None, [100]) is None
+
+
+
+def test_a_profile_in_a_foreign_field_is_flagged_whatever_its_institution_says():
+    from pipeline.detect_changes import foreign_field
+    # the three inherited namesakes found on 2026-10-12, as their profiles read
+    assert foreign_field({"interests": ["Functional materials", "Energy storage"],
+                          "affiliation": "Associate Professor, Department of Materials Science and Chemical Engineering at Stony Brook"}) == "chemical engineering"
+    assert foreign_field({"interests": ["virtual screening", "drug discovery"],
+                          "affiliation": "Senior Lecturer in Computational Biochemistry, University of Edinburgh"}) == "biochem"
+    assert foreign_field({"interests": ["protein purification", "biochemistry"], "affiliation": "Indiana University of Pennsylvania"}) == "biochem"
+    assert foreign_field({"interests": ["Land use", "Urban form"], "affiliation": "Professor, City and Regional Planning, UNC"}) is None
+    assert foreign_field({"interests": [], "affiliation": "Associate Professor of Electrical Engineering, Michigan"}) == "electrical engineering"

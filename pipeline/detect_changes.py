@@ -43,7 +43,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 from . import BUILD_DIR, REPO_ROOT, ROSTER_DIR, SNAPSHOT_DIR
-from .find_scholar_profiles import affiliation_match
+from .find_scholar_profiles import FOREIGN_FIELDS, affiliation_match
 from .openalex import short_id
 
 DROP = 0.20
@@ -124,6 +124,19 @@ def rank_review(rank, start_date, phd_year, today, verified=None) -> tuple[int, 
 
 
 STALE_WEEKS = 20     # rolling collection re-reads everyone within about fifteen weeks
+
+
+def foreign_field(raw: dict) -> str | None:
+    """The first field named in a Scholar profile's interests or affiliation
+    that no planning scholar works in, else None.
+
+    Name and institution can both agree and the profile still be somebody
+    else's: the 'Yan Song' we held for UNC's planning professor was another
+    Yan Song at UNC (2026-10-12), and three profiles inherited from the
+    workbook listed materials chemistry, drug discovery and protein
+    crystallography. The interests line is the cheapest tell there is."""
+    text = (" ".join(raw.get("interests") or []) + " | " + (raw.get("affiliation") or "")).lower()
+    return next((w for w in FOREIGN_FIELDS if w in text), None)
 
 
 def latest_two(source: str) -> tuple[list[dict], list[dict]]:
@@ -223,6 +236,8 @@ def main(argv=None) -> None:
         text_ok = bool(raw.get("affiliation")) and dept is not None and affiliation_match(raw["affiliation"], dept)
         if email_domain and homes and not email_ok and not text_ok:   # a stale email alone is not a signal
             flags[pid].append(f"Scholar verified email is @{email_domain}; department uses {', '.join(sorted(homes))}")
+        if (field := foreign_field(raw)):
+            flags[pid].append(f"Scholar profile lists '{field}' among its interests or affiliation; probably a namesake")
         # Affiliation text is only evidence when the email does not already settle it.
         if (email_ok is not True and raw.get("affiliation") and dept
                 and not affiliation_match(raw["affiliation"], dept)):
