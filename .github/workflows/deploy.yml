@@ -7,6 +7,10 @@ on:
     # it out meant a copy edit pushed but never published.
     paths: ["data/**", "sql/**", "pipeline/**", "site/**", ".github/workflows/deploy.yml"]
   workflow_dispatch:
+  # Called by the collector workflows after they commit: a push made with the
+  # workflow token does not trigger other workflows, so the weekly Scholar run
+  # on 2026-10-12 committed 47 readings and the site never rebuilt.
+  workflow_call:
 
 # One deploy at a time; a newer push supersedes a queued one but never
 # interrupts a running deploy.
@@ -24,6 +28,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main          # the branch tip, not the commit a calling run started on
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"

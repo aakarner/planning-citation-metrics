@@ -66,3 +66,12 @@ jobs:
           path: |
             build/change_report_*.md
             build/rank_review_*.csv
+
+  deploy:
+    needs: collect
+    if: needs.collect.result == 'success'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/deploy.yml

@@ -37,6 +37,7 @@ import argparse
 import csv
 import random
 import json
+import re
 import os
 import sys
 import time
@@ -109,18 +110,26 @@ def all_snapshot_rows() -> list[dict]:
 def ids_missing_readings(people: list[dict], snapshot_rows: list[dict]) -> set[str]:
     """Roster Scholar ids with no snapshot row behind them.
 
-    A row counts for an id if its raw_json names that id, or names none: the
-    migrated 2026 rows and one early collection day stored no id, and those
-    people are not missing anything. A person whose id changed -- a namesake's
-    cleared, the real profile found -- has rows for the old id only, so the new
-    one is fetched. This is what turns a discovery find into a figure.
+    A row counts for an id if its raw_json names that id, or names none: one
+    early collection day stored no id, and those people are not missing
+    anything. The migrated workbook rows name theirs in the GoogleScholar URL,
+    and that counts too: on 2026-10-12 Yan Song's replacement profile, and
+    three profiles found after their ids died, were skipped as "already read"
+    because the workbook row for the old id had no scholar_id key. A person
+    whose id changed -- a namesake's cleared, the real profile found -- has
+    rows for the old id only, so the new one is fetched. This is what turns a
+    discovery find into a figure.
     """
     seen: dict[str, set] = {}
     for r in snapshot_rows:
         try:
-            sid = json.loads(r.get("raw_json") or "{}").get("scholar_id")
+            raw = json.loads(r.get("raw_json") or "{}")
         except ValueError:
-            sid = None
+            raw = {}
+        sid = raw.get("scholar_id")
+        if not sid:
+            m = re.search(r"user=([\w-]+)", ((raw.get("workbook_row") or {}).get("GoogleScholar") or ""))
+            sid = m.group(1) if m else None
         seen.setdefault(r["person_id"], set()).add(sid)
     out = set()
     for p in people:

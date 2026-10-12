@@ -35,3 +35,12 @@ jobs:
           git diff --cached --quiet && echo "nothing new" && exit 0
           git commit -m "OpenAlex snapshot $(date -u +%Y-%m-%d)"
           git push
+
+  deploy:
+    needs: collect
+    if: needs.collect.result == 'success'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/deploy.yml

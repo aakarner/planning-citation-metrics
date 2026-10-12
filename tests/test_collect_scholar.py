@@ -44,3 +44,15 @@ def test_the_weekly_budget_goes_to_the_oldest_readings_of_current_people():
              {"person_id": "4", "collected_at": "2026-10-10", "total_citations": ""}]    # a failed fetch is no reading
     picked = oldest_first(people, snaps, current={"1", "2", "3", "4"}, budget=3)
     assert [p["person_id"] for p in picked] == ["4", "2", "1"]     # never read, then March, then September; 5 has left
+
+
+
+def test_a_workbook_row_counts_only_for_the_profile_its_url_names():
+    # Yan Song, 2026-10-12: the workbook row pointed at a namesake's id; once the roster held
+    # her real profile, that row must not count as a reading of it.
+    import json
+    person = {"person_id": "516", "google_scholar_id": "VOpvlkkAAAAJ"}
+    workbook = {"person_id": "516", "raw_json": json.dumps({"workbook_row": {"GoogleScholar": "https://scholar.google.com/citations?hl=en&user=ky5sX-0AAAAJ"}})}
+    assert ids_missing_readings([person], [workbook]) == {"VOpvlkkAAAAJ"}
+    read = {"person_id": "516", "raw_json": json.dumps({"scholar_id": "VOpvlkkAAAAJ"})}
+    assert ids_missing_readings([person], [workbook, read]) == set()
