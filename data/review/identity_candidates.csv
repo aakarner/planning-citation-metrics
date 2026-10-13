@@ -4408,3 +4408,4 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 1148,Taylor Davey,Binghamton University (Department of Public Administration and Policy),openalex,A5028681348,Taylor C. Davey,0.55,1.0,0.0,0.333,,1,3,1,University of Minnesota,,pending,,,
 1153,Lidia Cano Pecharroman,"University of Texas, Austin",openalex,A5079171800,Lidia Cano Pecharroman,1.0,1.0,1.0,1.0,0.507,17,267,6,The University of Texas at Austin,https://orcid.org/0000-0001-9018-0241,accepted,matcher,2026-10-12,
 1152,Bi'Anncha Andrews,"University of Texas, Austin",openalex,,,0,,,,,,,,,,none,matcher,2026-10-12,
+1152,Bi'Anncha Andrews,"University of Texas, Austin",google_scholar,,,0,,,,,,,,,,rejected,matcher,2026-10-13,
