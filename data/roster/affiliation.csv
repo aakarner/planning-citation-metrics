@@ -886,7 +886,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 885,883,103,assistant,regular,1,,,workbook-2026
 886,884,103,full,regular,1,,,workbook-2026
 887,885,103,assistant,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @uta.edu; affiliation ""Associate Professor, University of Texas at Arlington"""
-888,886,104,associate,regular,1,,,workbook-2026
+888,886,104,associate,regular,1,,2026-10-12,"workbook-2026 | closed 2026-10-12: depart; now at Singapore Management University (Alex Karner, 2026-10-12)"
 889,887,104,associate,regular,1,,,workbook-2026
 890,888,104,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://soa.utexas.edu/faculty
 891,889,104,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @utexas.edu; affiliation ""Professor of Community and Regional Planning, University of Texas at Austin"""
