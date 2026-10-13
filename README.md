@@ -172,6 +172,8 @@ anyone with an ORCID, the record's education section usually names the doctorate
 
 People without an ORCID, or whose record lists no doctorate, are printed so a person can
 fill them in by hand (the announcement that added a new hire usually states the degree).
+The monthly OpenAlex workflow runs this after its audit, so the back-fill keeps up as people
+add ORCIDs and as new hires are matched.
 
 ## Applying roster changes
 
