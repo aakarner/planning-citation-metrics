@@ -160,6 +160,19 @@ launchctl bootout gui/$(id -u)/com.aakarner.planning-citations.discovery
 rm ~/Library/LaunchAgents/com.aakarner.planning-citations.discovery.plist
 ```
 
+## PhD year and institution
+
+Tom's workbook carried both; nothing since adds them, so new hires arrive without. For
+anyone with an ORCID, the record's education section usually names the doctorate:
+
+```bash
+.venv/bin/python -m pipeline.fill_phd_from_orcid --dry-run   # who would be filled, from what
+.venv/bin/python -m pipeline.fill_phd_from_orcid             # write blanks only, with a note saying the source
+```
+
+People without an ORCID, or whose record lists no doctorate, are printed so a person can
+fill them in by hand (the announcement that added a new hire usually states the degree).
+
 ## Applying roster changes
 
 ```bash
