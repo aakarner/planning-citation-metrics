@@ -2,8 +2,9 @@
 
 > **Status, 12 October 2026:** both sheets below have been returned and imported (rank review
 > on 9 October, OpenAlex review on 12 October). What remains is
-> `openalex_review_followup.xlsx`: 21 rows for 20 people that were left undecided and whose
-> OpenAlex record still exists, plus one overturned accept. Same conventions; its own
+> `openalex_review_followup.xlsx`: 84 rows for 32 people — the rows left undecided whose
+> OpenAlex record still exists, one overturned accept, and candidates the matcher found in
+> October for people still without a figure or on Publish or Perish. Same conventions; its own
 > "How to use this" tab says what was missing each time.
 
 
