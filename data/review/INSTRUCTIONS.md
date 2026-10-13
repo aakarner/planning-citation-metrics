@@ -1,5 +1,12 @@
 # Reviewing the two spreadsheets
 
+> **Status, 12 October 2026:** both sheets below have been returned and imported (rank review
+> on 9 October, OpenAlex review on 12 October). What remains is
+> `openalex_review_followup.xlsx`: 21 rows for 20 people that were left undecided and whose
+> OpenAlex record still exists, plus one overturned accept. Same conventions; its own
+> "How to use this" tab says what was missing each time.
+
+
 Two Excel files need a person to work through them. Both follow the same
 conventions, and each has a **"How to use this"** tab with the full detail —
 read that tab before starting each one.

@@ -31,7 +31,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 30,Rebecca,,Retzlaff,Rebecca Retzlaff,2006,"University of Illinois, Chicago","Environmental Planning and Policy, Historic Preservation, Land Use Planning and Regulation, Growth Management",oSoTwbYAAAAJ,A5076954275,0000-0001-7619-7549,,,https://linkedin.com/in/rebecca-retzlaff-4529a6a,,
 31,Michael,A.,Burayidi,Michael Burayidi,1993,University of Louisville,"Land Use Planning, Economic Development, Comparative Planning Systems, Housing and Real Estate Development.",,A5012528527,,,,https://linkedin.com/in/michael-burayidi-a382b210,,
 32,Lohren,,Deeg,Lohren Deeg,2004,Ball State University,"Urban and Town Design, Design Comm Media, Theory, History, Graphic layout",RFYdIqQAAAAJ,A5061871632,,,https://researchgate.net/profile/Lohren_Deeg,https://linkedin.com/in/lohren-deeg-30054b12,,
-33,Scott,I.,Truex,Scott Truex,1982,Ball State University,"Urban Design, Community Design & Sustainable Development Practices",,,,,,https://linkedin.com/in/scott-truex-0298a72,,
+33,Scott,I.,Truex,Scott Truex,1982,Ball State University,"Urban Design, Community Design & Sustainable Development Practices",,A5051805471,,,,https://linkedin.com/in/scott-truex-0298a72,,
 34,John,,West,John West,2015,Columbia University,,,A5019937678,0000-0001-9846-6068,,,,,
 35,Sanglim,,Yoo,Sanglim Yoo,2012,SUNY College of Environmental Science and Forestry,,,A5004228941,0000-0003-3747-6670,,https://researchgate.net/profile/Sanglim_Yoo,https://linkedin.com/in/sanglim-yoo-19946626,,
 36,Dina,,Adbulkarim,Dina Adbulkarim,2012,Ohio State University,,,,,,,,,
@@ -47,7 +47,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 46,Amir,,Hajrasouliha,Amir Hajrasouliha,2015,University of Utah,,Z1qu-3MAAAAJ,A5031009232,0000-0002-3084-0145,,,,,
 47,Kelly,,Main,Kelly Main,2007,UCLA,"Community Planning, Land Use Planning, Public Realm, Cultural Aspects of Planning, Place Attachment",,A5004534525,,,,https://linkedin.com/in/kelly-main-a545a341,,
 48,Cornelius,,Nuworsoo,Cornelius Nuworsoo,2004,UC Berkeley,"Transportation Engineering, Transportation and Land Use Planning, Quantitative Methods in Planning",,A5080562239,,,https://researchgate.net/profile/Cornelius_Nuworsoo,,,
-49,Ryan,,Sandwick,Ryan Sandwick,2013,University of Glasgow,,,,,,,,,
+49,Ryan,,Sandwick,Ryan Sandwick,2013,University of Glasgow,,,A5048642685,,,,,,
 50,Anahita,,Shadkam,Anahita Shadkam,2024,University of Waterloo,,11m1T1cAAAAJ,A5006018870,,,,,,
 51,Miriam,,Giottonini-Badilla,Miriam Giottonini-Badilla,2018,UCLA,,,,,,,,,
 52,Henrik,P.,Minassians,Henrik Minassians,2002,SUNY Albany,"Public Administration, Urban Policy Design and Management, Urban Governance, Contract Design and Management, Policy Implementation Theory.",NWlpZX4AAAAJ,A5008402850,,,https://researchgate.net/profile/Henrik_Minassians,https://linkedin.com/in/henrik-minassians-3bb82751,,
@@ -96,7 +96,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 95,Anuradha,,Mukherji,Anuradha Mukherji,2008,UC Berkeley,"Housing, Hazard Mitigation and Recovery, Disaster Planning and Management, International Development",88FnzbsAAAAJ,A5058366952,0000-0003-2315-7062,,https://researchgate.net/profile/Anuradha_Mukherji,https://linkedin.com/in/anuradhamukherji,,
 96,Steven,,Richter,Steven Richter,2021,"University of Texas, Austin",,fRQbhxoAAAAJ,A5028593551,0000-0002-5135-9676,,,,,
 97,Heather,,Khan-Welsh,Heather Khan-Welsh,2008,Florida State University,,,A5074843401,,,,,,
-98,RJ,,Koscielniak,RJ Koscielniak,2020,University of Michigan,,,,,,,,,
+98,RJ,,Koscielniak,RJ Koscielniak,2020,University of Michigan,,,A5047256402,,,,,,
 99,Matthew,,Anderson,Matthew Anderson,2012,"University of Illinois, Urbana-Champaign",,wHzEVFkAAAAJ,A5050876260,0000-0002-9092-2580,,,,,
 100,Margo,,Hill,Margo Hill,1998,Gonzaga University,"Tribal Law, Tribal Planning and Management, Planning Law, Tribal Economic Development.",,A5048163774,,,,https://linkedin.com/in/margo-hill-6880bb48,,
 101,Jason,,Scully,Jason Scully,2015,University of Washington,,,A5010939611,0000-0003-0693-7454,,,,,
@@ -120,7 +120,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 119,Uwe,,Brandes,Uwe Brandes,1995,Harvard University,,,A5116664731,,,,,,
 120,Gulsah,,Akar,Gulsah Akar,2009,University of Maryland,"Transportation, Energy, Public Health",hAkNdIYAAAAJ,A5017756587,0000-0003-4764-0913,,https://researchgate.net/profile/Gulsah_Akar,,,
 121,Clio,,Andris,Clio Andris,2011,MIT,,D9jCEIkAAAAJ,A5078526118,0000-0002-8559-5079,,,,,
-122,Emily,,Barrett,Emily Barrett,2025,Vanderbilt University,,,,,,,,,
+122,Emily,,Barrett,Emily Barrett,2025,Vanderbilt University,,,A5025248819,,,,,,
 123,Ellen,M.,Bassett,Ellen Bassett,2001,"University of Wisconsin, Madison","Land Use/ Growth Management, International Development",_fEEqz8AAAAJ,,,,https://researchgate.net/profile/Ellen_Bassett,https://linkedin.com/in/ellen-bassett-a722287a,,
 124,Rounaq,,Basu,Rounaq Basu,2022,MIT,,Zx4Sk7YAAAAJ,A5019289414,0000-0001-5077-2613,,,,,
 125,Paige,,Clayton,Paige Clayton,2020,UNC,,PoDA8vUAAAAJ,A5048483935,0000-0001-6005-8691,,,,,
@@ -177,7 +177,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 176,Shakil,,Kashem,Shakil Kashem,2020,"University of Illinois, Urbana-Champaign",,duB_ExwAAAAJ,A5033480918,0000-0001-7333-4093,,,,,
 177,Clemens,,Pilgram,Clemens Pilgram,2024,USC,,y_6AbfcAAAAJ,,,,,,,
 178,Susmita,,Rishi,Susmita Rishi,2019,University of Washington,,JnJ0ewoAAAAJ,,,,,,,
-179,LaBarbara,,Wigfall,La Barbara Wigfall,1977,Harvard University,Community Development and Historic Preservation,,,,,https://researchgate.net/profile/La_Barbara_Wigfall,https://linkedin.com/in/labarbara-wigfall-2a30358,,
+179,LaBarbara,,Wigfall,La Barbara Wigfall,1977,Harvard University,Community Development and Historic Preservation,,A5058785006,,,https://researchgate.net/profile/La_Barbara_Wigfall,https://linkedin.com/in/labarbara-wigfall-2a30358,,
 180,Madhav,,Badami,Madhav Badami,2001,University of British Columbia,"Environmental Policy and Planning, Sustainable Urban Transport, International Planning, Environment and Development",Y4LlGqYAAAAJ,A5086475159,0000-0001-9322-4844,,https://researchgate.net/profile/Madhav_Badami,https://linkedin.com/in/madhav-badami-78592526,,
 181,Lisa,,Bornstein,Lisa Bornstein,2002,UC Berkeley,"International Planning, Economic Development, Environmental Policy and Planning, Institutions and Governance",,A5036709890,,,,https://linkedin.com/in/lisa-bornstein-83194b3,,
 182,Ahmed,,El-Geneidy,Ahmed El-Geneidy,2005,Portland State University,"Land Use and Transportation Planning, Public Transit Planning and Operations, Travel Behaviour, GIS Applications",xyV9lRMAAAAJ,A5077884116,0000-0002-0942-4016,,https://researchgate.net/profile/Ahmed_El-Geneidy,https://linkedin.com/in/ahmed-el-geneidy-0a135841,,
@@ -465,7 +465,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 464,Nicola,,Ulibarri,Nicola Ulibarri,2015,Stanford University,,kVoSdycAAAAJ,A5042344499,0000-0001-6238-9056,,,,,
 465,Abigail,,Andrews,Abigail Andrews,2014,UC Berkeley,,haBJXXsAAAAJ,A5081313168,0000-0001-5946-2187,,,,,
 466,John,,Arroyo,John Arroyo,2018,MIT,,,A5054671512,,,,,,
-467,Deepti,,Chatti,Deepti Chatti,2019,Yale,,,,0000-0002-6950-0682,,,,,"ORCID from faculty page, rank review 2026-10-07 by maddie: program website"
+467,Deepti,,Chatti,Deepti Chatti,2019,Yale,,,A5079666837,0000-0002-6950-0682,,,,,"ORCID from faculty page, rank review 2026-10-07 by maddie: program website"
 468,Caroline,,Collins,Caroline Collins,2019,UC San Diego,,,A5109502482,0000-0001-6675-900X,,,,,"ORCID from faculty page, rank review 2026-10-07 by maddie: program website"
 469,Lawrence,,Frank,Lawrence Frank,1993,University of Washington,,sF_AKKQAAAAJ,A5029816714,,,,,,
 470,Guadalupe,,Garcia,Guadalupe Garcia,2016,UNC,,,,,,,,,
@@ -523,7 +523,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 522,Gérard,,Beaudet,Gérard Beaudet,1980,University of Montreal,,,A5032296625,,,,,,
 523,Raphaël,,Fischler,Raphaël Fischler,1990,UC Berkeley,,8zmqW9AAAAAJ,A5057899065,,,,,,
 524,Jacques,,Fisette,Jacques Fisette,1982,Universite de Montreal,,,A5001452232,,,,,,
-525,Michel,,Guenette,Michel Guenet,1990,Universite Laval,,,,,,,,,
+525,Michel,,Guenette,Michel Guenet,1990,Universite Laval,,,A5028096392,,,,,,
 526,Danielle,,Labbé,Danielle Labbé,2011,University of British Columbia,,HbdpCYsAAAAJ,A5038298307,0000-0001-8182-114X,,,,,
 527,Sébastien,,Lord,Sébastien Lord,2009,Université Laval,,mgAKQw0AAAAJ,A5040834101,0000-0002-2017-3254,,,,,
 528,Jean-Philippe,,Meloche,Jean-Philippe Meloche,2009,Universite de Montreal,,XRYodhsAAAAJ,A5109051332,,,,,,
@@ -581,7 +581,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 580,Ladd,,Keith,Ladd Keith,2019,University of Arizona,,49AGz28AAAAJ,A5037464674,0000-0002-5549-0372,,,,,
 581,Daniel,,Kuhlmann,Daniel Kuhlmann,2018,Cornell University,,Rqx3ZF0AAAAJ,A5067476607,0000-0002-6007-1228,,,,,
 582,Shujuan,,Li,Shujuan Li,2009,Texas A&M,,GwW4TtYAAAAJ,A5100631612,,,,,,
-583,Lauri,,Macmillan,Lauri Macmillan,1977,"University of Illinois, Urbana-Champaign",,,,,,,,,
+583,Lauri,,Macmillan,Lauri Macmillan,1977,"University of Illinois, Urbana-Champaign",,,A5026465352,,,,,,
 584,Philip,,Stoker,Philip Stoker,2015,University of Utah,,hJyPX4cAAAAJ,A5021551961,0000-0003-1960-3015,,,,,
 585,Leonora,,Angeles,Leonora Angeles,1995,Queen's University,International and Community Development,wVaPW3wAAAAJ,A5032378447,0000-0002-6166-3751,,https://researchgate.net/profile/Leonora_Angeles,https://linkedin.com/in/leonora-angeles-98a4162b,,
 586,Jessica,,Barudin,Jessica Barudin,2024,Concordia University,,,A5074989743,,,,,,
@@ -632,7 +632,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 631,Abhinav,,Alakshendra,Abhinav Alakshendra,2012,Kansas State University,"Economics, Development Economics, Housing Policy, Transportation, Urban and Regional Economics.",isF20ugAAAAJ,A5083476149,0000-0003-0153-0233,,https://researchgate.net/profile/Abhinav_Alakshendra,,,
 632,Ilir,,Bejleri,Ilir Bejleri,1994,"Polytechnic University, Tirana, Albania","Urban Design, Urban Simulation, Information Technology for Planning",,A5071777797,,,,https://linkedin.com/in/ilir-bejleri-06a61010,,
 633,Kathryn,,Frank,Kathryn Frank,2009,Georgia Tech,"Ecosystem management, regional sustainability, Collaborative planning and policy making, alternative dispute resolution, water resources and aquatic/coastal ecosystems, children and youth participation in planning",2Jao6ucAAAAJ,A5011556077,,,,https://linkedin.com/in/kathryn-frank-61773477,,
-634,Cleary,,Larkin,Cleary Larkin,2019,University of Florida,,,,0000-0002-8152-7220,,,,,"ORCID from faculty page, rank review 2026-10-07 by maddie: program website"
+634,Cleary,,Larkin,Cleary Larkin,2019,University of Florida,,,A5092771240,0000-0002-8152-7220,,,,,"ORCID from faculty page, rank review 2026-10-07 by maddie: program website"
 635,Kristin,,Larsen,Kristin Larsen,2001,Cornell University,"Planning History, Housing, Historic Preservation",D7jbFnoAAAAJ,,,,,https://linkedin.com/in/kristin-larsen-57423646,,"un-accepted 2026-09-15: OpenAlex 4,531 citations against 331 from google_scholar (13.7x); probable namesake ORCID 0000-0002-4014-2543 cleared 2026-09-20: it came from an OpenAlex record later rejected as a namesake."
 636,Zhong-Ren,,Peng,Zhong-Ren Peng,1994,Portland State University,"Transportation Planning, Transportation and Land Use Integration, Information Technology for Planning",ngiXpvgAAAAJ,A5069439577,,,https://researchgate.net/profile/Zhong-Ren_Peng,,,
 637,Ruth,L.,Steiner,Ruth Steiner,1996,UC Berkeley,,zbew56MAAAAJ,A5022609719,,,https://researchgate.net/profile/Ruth_Steiner,https://linkedin.com/in/ruth-steiner-9293218,,
@@ -640,7 +640,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 639,Emre,,Tepe,Emre Tepe,2016,Ohio State University,,B7XoIx8AAAAJ,A5083381729,0000-0001-8575-2401,,,,,
 640,Yan,,Wang,Yan Wang,2018,Virginia Tech,,znl9EkUAAAAJ,,,,,,,
 641,Shenhao,,Wang,Shenhao Wang,2020,MIT,,01AmQ8wAAAAJ,A5101998459,0000-0003-4374-8193,,,,,
-642,Jack,,Crowley,Jack Crowley,1977,University of Oklahoma,,,,,,,,,
+642,Jack,,Crowley,Jack Crowley,1977,University of Oklahoma,,,A5004094115,,,,,,
 643,Stephen,J.,Ramos,Stephen Ramos,2009,Harvard University,,gj7DGI4AAAAJ,A5039872829,0000-0001-6640-6984,,https://researchgate.net/profile/Stephen_Ramos,https://linkedin.com/in/stephen-ramos-0324303,,"ORCID from faculty page, rank review 2026-10-09 by Maddie: Obituary, linkedin"
 644,Mark,,Reinberger,Mark Reinberger,1988,Cornell University,,,A5083066270,,,,,,
 645,Rosanna,G.,Rivero,Rosanna Rivero,2006,University of Florida,,pHlUNNUAAAAJ,A5061824969,0000-0002-9896-3678,,https://researchgate.net/profile/Rosanna_Rivero,https://linkedin.com/in/rosannarivero,,
@@ -676,7 +676,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 675,Stacey,,Sutton,Stacey Sutton,2006,Rutgers University,"Local Economic Development, Neighborhood Change, Entrepreneurship and Neighborhood Economies, and race as a feature of socio-spatial vision and structure",IFB4ZDoAAAAJ,A5004914918,,,,https://linkedin.com/in/stacey-sutton-0013a85a,,
 676,Nik,,Theodore,Nik Theodore,2000,"University of Illinois, Chicago","Economic Development, Labor Markets",Pj3lRPEAAAAJ,A5047602207,0000-0001-6629-779X,,https://researchgate.net/profile/Nik_Theodore,https://linkedin.com/in/nik-theodore-35072b8,,
 677,Nebiyou,,Tilahun,Nebiyou Tilahun,2010,University of Minnesota,"Transportation Planning, Travel Behavior, Social Aspects of Transportation",6tlzorcAAAAJ,A5020348090,0000-0001-9127-4581,,https://researchgate.net/profile/Nebiyou_Tilahu,https://linkedin.com/in/nebiyou-tilahun-1865985,,
-678,Sevin,,Yildiz,Sevin Yildiz,2014,Rutgers University,,,,0000-0002-2082-714X,,,,,"ORCID from faculty page, rank review 2026-10-01 by Maddie: Program website"
+678,Sevin,,Yildiz,Sevin Yildiz,2014,Rutgers University,,,A5030696367,0000-0002-2082-714X,,,,,"ORCID from faculty page, rank review 2026-10-01 by Maddie: Program website"
 679,Lindsay,,Braun,Lindsay Braun,2017,UNC,,Tu2FfV8AAAAJ,A5027062366,0000-0003-3398-0204,,,,,"ORCID from faculty page, rank review 2026-10-07 by Maddie: program website (confirms the one on record)"
 680,Colleen,,Chiu-Shee,Colleen Chiu-Shee,2021,MIT,,kVtV0KgAAAAJ,A5005239719,,,,,,
 681,Marc,,Doussard,Marc Doussard,2008,"University of Illinois, Chicago","Economic Development, Regional Development Theory, Research Design.",4Evqn2wAAAAJ,A5035113729,0000-0001-9355-9361,,,,,
@@ -807,7 +807,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 806,Theresa,,Healy,Theresa Healy,1999,Simon Fraser University,,,A5034642608,0000-0003-0529-1970,,,,,"ORCID from faculty page, rank review 2026-09-30 by Maddie: Program website, LinkedIn"
 807,John,C.,Harris,John Harris,2012,Florida State University,"Community Development, International Planning, and Urban Economics.",sQhmYNwAAAAJ,A5102363622,,,,,,
 808,Bryce,,Lowery,Bryce Lowery,2014,USC,"Environmental Planning, Geo-Design, Public Health, Spatial Inequality",qDjmiRoAAAAJ,A5022352676,0000-0001-8359-9773,,https://researchgate.net/profile/Bryce_Lowery,https://linkedin.com/in/bryce-lowery-09b26814,,
-809,Charles,,Warnken,Charles Warnken,2003,Florida State University,"Economic Development, Land Use Planning",,,,,,,,
+809,Charles,,Warnken,Charles Warnken,2003,Florida State University,"Economic Development, Land Use Planning",,A5034073709,,,,,,
 810,Anne,,Brown,Anne Brown,2018,UCLA,,X4Hp8ykAAAAJ,A5027174209,0000-0001-5009-8331,,,,,
 811,Ben,,Clark,Ben Clark,2009,University of Georgia,,y-101_oAAAAJ,,,,,,,
 812,Jordy,,Coutin,Jordy Coutin,2025,USC,,uM3f0eAAAAAJ,,,,,,,
@@ -844,8 +844,8 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 843,Lisa,,Servon,Lisa Servon,1995,UC Berkeley,,eVinatUAAAAJ,A5008885855,,,,,,
 844,Domenic,,Vitiello,Domenic Vitiello,2004,University of Pennsylvania,"Community and Economic Development, Immigration, Urban Agriculture",Fyr_MT0AAAAJ,A5042764674,0000-0001-9679-8544,,https://researchgate.net/profile/D_Vitiello,,,
 845,Angeliz,Encarnación,Burgos,Angeliz Encarnacion Burgos,2016,"University of Texas, Austin",,CncYjd8AAAAJ,A5114529651,,,,,,
-846,Rafael,L.,Irizarry,Rafael Odlum,1981,Harvard University,,,,,,,,,
-847,Criseida,,Navarro-Diaz,Criseida Navarro-Diaz,2005,MIT,,,,,,https://researchgate.net/profile/Criseida_Navarro-Diaz,https://linkedin.com/in/criseida-navarro-diaz-phd-01a7a946,,
+846,Rafael,L.,Irizarry,Rafael Odlum,1981,Harvard University,,,A5003708205,,,,,,
+847,Criseida,,Navarro-Diaz,Criseida Navarro-Diaz,2005,MIT,,,A5050496605,,,https://researchgate.net/profile/Criseida_Navarro-Diaz,https://linkedin.com/in/criseida-navarro-diaz-phd-01a7a946,,
 848,Maritza,Barreto,Orta,Maritza Orta,1997,University of Puerto Rico,,,A5041193745,,,,,,
 849,Norma,I.,Peña-Rivera,Norma Peña-Rivera,2006,"University of Illinois, Chicago",,GhNpICQAAAAJ,,,,,,,
 850,Raul,,Santiago-Bartolomei,Raul Santiago-Bartolomei,2019,USC,,gQsk-F0AAAAJ,A5045842354,0000-0002-5257-0959,,,,,
@@ -971,8 +971,8 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 970,Alfonso,,Morales,Alfonso Morales,1993,Northwestern University,"Markets and Food Systems, Community Development, Social, Political and Economic Contexts of Planning Processes, Qualitative Methods",_m9LetFspOUC,A5107991235,,,,https://linkedin.com/in/alfonso-morales-53aa289,,
 971,Kurt,G.,Paulsen,Kurt Paulsen,2004,Rutgers University,"Land Use and Comprehensive Planning, Quantitative Methods, Spatial Analysis, Public Finance, Housing",,A5053375377,,,,https://linkedin.com/in/kurt-paulsen-a0437923,,
 972,Revel,,Sims,Revel Sims,2014,UCLA,,PVPzSb8AAAAJ,,,,,,,
-973,Gaylan,,Williams,Gaylan Williams,2022,Southern University and A&M College,,,,,,,https://www.linkedin.com/in/gaylan-williams-90095627/,,
-974,Carolyn,,Esswein,Carolyn Esswein,1994,"University of Wisconsin, Milwaukee",,,,,,,,,
+973,Gaylan,,Williams,Gaylan Williams,2022,Southern University and A&M College,,,A5034610960,,,,https://www.linkedin.com/in/gaylan-williams-90095627/,,
+974,Carolyn,,Esswein,Carolyn Esswein,1994,"University of Wisconsin, Milwaukee",,,A5084368332,,,,,,
 975,Kirk,E.,Harris,Kirk Harris,1992,Cornell University,,,A5087544477,,,https://researchgate.net/profile/Kirk_Harris,https://linkedin.com/in/dr-kirk-e-harris-06410912,,
 976,Lauren,,Nolan,Lauren Nolan,2025,Rutgers University,,WQ_yR-YAAAAJ,,,,,,,
 977,Robert,,Schneider,Robert Schneider,2011,UC Berkeley,,IDOfbMYAAAAJ,A5012023237,,,https://researchgate.net/profile/Robert_Schneider22/,https://linkedin.com/in/robertjschneider,,
@@ -1074,15 +1074,15 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 1075,K.,Wayne,Yang,K. Wayne Yang,,,,,A5069617532,0000-0001-7884-560X,,,,,"added 2026-09-27 from the department page https://usp.ucsd.edu/about/faculty/index.html (""full"")"
 1076,Elana,,Zilberg,Elana Zilberg,,,,p97_4fgAAAAJ,A5041764506,,,,,,"added 2026-09-27 from the department page https://usp.ucsd.edu/about/faculty/index.html (""associate"")"
 1077,Tab,,Combs,Tab Combs,,,,,,,,,,,"added 2026-09-27 from the department page https://planning.unc.edu/people/full-time-faculty/ (""assistant"")"
-1078,Kate,,Harwood,Kate Harwood,,,,,,,,,,,"added 2026-09-27 from the department page https://planning.unc.edu/people/full-time-faculty/ (""assistant"")"
+1078,Kate,,Harwood,Kate Harwood,,,,,A5133087154,,,,,,"added 2026-09-27 from the department page https://planning.unc.edu/people/full-time-faculty/ (""assistant"")"
 1079,Noah,,Kittner,Noah Kittner,,,,,A5033331725,0000-0002-3449-7823,,,,,"added 2026-09-27 from the department page https://planning.unc.edu/people/full-time-faculty/ (""associate"")"
 1080,Jin,Young,Song,Jin Song,,,,,,,,,,,"added 2026-09-27 from the department page https://archplan.buffalo.edu/People.html (""associate"")"
 1081,Joseph,,Trainor,Joseph Trainor,,,,,A5067964355,0000-0002-1676-1985,,,,,"added 2026-09-27 from the department page https://www.udel.edu/academics/colleges/biden-school/people/ (""full"")"
 1082,Michael,A.N.,Montilla,Michael Montilla,,,,Il6J_W4AAAAJ,,,,,,,"added 2026-09-27 from the department page https://dcp.ufl.edu/urp/people/ (""assistant"")"
-1083,Vivian,,Wong,Vivian Wong,,,,,,,,,,,"added 2026-09-27 from the department page https://dcp.ufl.edu/urp/people/ (""assistant"")"
+1083,Vivian,,Wong,Vivian Wong,,,,,A5027976586,0000-0001-9723-8741,,,,,"added 2026-09-27 from the department page https://dcp.ufl.edu/urp/people/ (""assistant"")"
 1084,Zhaoxi,,Zhang,Zhaoxi Zhang,,,,,A5001053846,0000-0002-6694-6670,,,,,"added 2026-09-27 from the department page https://dcp.ufl.edu/urp/people/ (""assistant"")"
 1085,Jessica,,Fernandez,Jessica Fernandez,,,,SR0YdrEAAAAJ,A5068495722,0000-0002-9214-0646,,,,,"added 2026-09-27 from the department page https://ced.uga.edu/about/people/ (""associate"")"
-1086,Scott,,Nesbit,Scott Nesbit,,,,,,,,,,,"added 2026-09-27 from the department page https://ced.uga.edu/about/people/ (""associate"")"
+1086,Scott,,Nesbit,Scott Nesbit,,,,,A5054613081,,,,,,"added 2026-09-27 from the department page https://ced.uga.edu/about/people/ (""associate"")"
 1087,Sean,,Kennedy,Sean Kennedy,,,,,A5029537412,,,,,,"added 2026-09-27 from the department page https://urban.illinois.edu/ (""assistant"")"
 1088,Brian,,Deal,Brian Deal,,,,,A5084334581,0000-0002-9981-5474,,,,,"added 2026-09-27 from the department page https://urban.illinois.edu/people/meet-our-faculty/ (""full"")"
 1089,Irene,,Farah,Irene Farah,2024,University of California Berkeley,,a_nZ89EAAAAJ,A5028301916,0000-0003-0227-9896,,,,,"added 2026-09-27 from the department page https://urban.illinois.edu/people/meet-our-faculty/ (""assistant"") | PhD 2024 University of California Berkeley from ORCID 0000-0003-0227-9896 (2026-10-12)"
@@ -1148,5 +1148,5 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 1149,William,,Riggs,William Riggs,2011,UC Berkeley,,szpDThIAAAAJ,A5066734960,0000-0001-8562-5998,,,,,added 2026-10-10: planning PhD appointed outside a planning program appointment https://www.usfca.edu/faculty/william-riggs; PhD https://www.usfca.edu/faculty/william-riggs
 1150,Xiang,,Yan,Xiang Yan,2019,University of Michigan,,,A5020824659,0000-0002-8619-0065,,,,,added 2026-10-10: planning PhD appointed outside a planning program appointment https://essie.ufl.edu/people/name/xiang-jacob-yan/; PhD https://essie.ufl.edu/people/name/xiang-jacob-yan/
 1151,Yan,,Kestens,Yan Kestens,2004,Université Laval,,,A5033217373,0000-0003-2619-5750,,,,,added 2026-10-10: planning PhD appointed outside a planning program appointment https://espum.umontreal.ca/recherche-et-reseaux/chercheurs-et-chercheuses/; PhD https://hdl.handle.net/20.500.11794/17889
-1153,Lidia,,Cano Pecharroman,Lidia Cano Pecharroman,2025,MIT,,BCxrYUEAAAAJ,,,,,,,added 2026-10-12: new UT Austin CRP faculty (Alex Karner); Scholar profile still reads MIT | PhD MIT 2025 (Alex Karner; MIT 2026 commencement name book)
+1153,Lidia,,Cano Pecharroman,Lidia Cano Pecharroman,2025,MIT,,BCxrYUEAAAAJ,A5079171800,0000-0001-9018-0241,,,,,added 2026-10-12: new UT Austin CRP faculty (Alex Karner); Scholar profile still reads MIT | PhD MIT 2025 (Alex Karner; MIT 2026 commencement name book)
 1152,Bi'Anncha,,Andrews,Bi'Anncha Andrews,,"University of Maryland, College Park",,,,,,,,,added 2026-10-12: new UT Austin CRP assistant professor per https://soa.utexas.edu/news/welcoming-new-faculty-members-0 (Alex Karner)
