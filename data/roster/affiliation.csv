@@ -890,7 +890,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 889,887,104,associate,regular,1,,,workbook-2026
 890,888,104,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://soa.utexas.edu/faculty
 891,889,104,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @utexas.edu; affiliation ""Professor of Community and Regional Planning, University of Texas at Austin"""
-892,890,104,associate,regular,1,,,workbook-2026
+892,890,104,associate,regular,1,,2026-10-12,"workbook-2026 | closed 2026-10-12: retired (Alex Karner, 2026-10-12)"
 893,891,104,full,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: demotion read from department page https://soa.utexas.edu/faculty
 894,892,104,assistant,regular,1,,2022-01-01,"workbook-2026 | closed 2022-01-01: associate; rank verified 2026-09-30; rank review 2026-09-30 by Maddie: LinkedIn, program website"
 895,893,104,associate,regular,1,,,workbook-2026
@@ -1095,7 +1095,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 1095,844,97,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @upenn.edu; affiliation ""Professor of City Planning and Urban Studies, University of Pennsylvania"""
 1096,850,98,associate,regular,1,2026-09-15,2026-09-27,"change from Scholar profile 2026-09-15: email @upr.edu; affiliation ""Associate Professor, Graduate School of Planning, University of Puerto Rico - Río Piedras"" | closed 2026-09-27: demotion; 'Catedrático Auxiliar' on department page https://planificacion.uprrp.edu/facultad/ (browser pass 2026-09-27; Spanish titles, page dated 2024-10-31)"
 1097,885,103,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @uta.edu; affiliation ""Associate Professor, University of Texas at Arlington"""
-1098,889,104,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @utexas.edu; affiliation ""Professor of Community and Regional Planning, University of Texas at Austin"""
+1098,889,104,full,regular,1,2026-09-15,2026-10-12,"change from Scholar profile 2026-09-15: email @utexas.edu; affiliation ""Professor of Community and Regional Planning, University of Texas at Austin"" | closed 2026-10-12: retired (Alex Karner, 2026-10-12)"
 1099,943,110,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @uw.edu; affiliation ""Professor of Urban Design and Planning, University of Washington"""
 1100,962,111,full,regular,1,2026-09-15,2026-09-27,"change from Scholar profile 2026-09-15: email @uwaterloo.ca; affiliation ""Professor, School of Planning, University of Waterloo"" | closed 2026-09-27: demotion read from department page https://uwaterloo.ca/planning/contacts?title=&group%5B68%5D=68"
 1101,967,112,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @wisc.edu; affiliation ""Associate Professor, University of Wisconsin-Madison"""
@@ -1337,3 +1337,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 1339,1149,165,full,regular,1,,,planning-PhD cohort 2026-10-10: https://www.usfca.edu/faculty/william-riggs
 1340,1150,166,assistant,regular,1,,,planning-PhD cohort 2026-10-10: https://essie.ufl.edu/people/name/xiang-jacob-yan/
 1341,1151,167,full,regular,1,,,planning-PhD cohort 2026-10-10: https://espum.umontreal.ca/recherche-et-reseaux/chercheurs-et-chercheuses/
+1342,890,104,associate,emeritus,1,2026-10-12,,"retired 2026-10-12 (Alex Karner); emeritus, not listed"
+1343,889,104,full,emeritus,1,2026-10-12,,"retired 2026-10-12 (Alex Karner); emeritus, not listed"
+1344,1153,104,assistant,regular,1,2026-10-12,,rank verified 2026-10-12; new hire per Alex Karner 2026-10-12; rank assumed assistant for a new faculty member
+1345,1152,104,assistant,regular,1,2026-10-12,,rank verified 2026-10-12; new hire from https://soa.utexas.edu/news/welcoming-new-faculty-members-0 ('Assistant Professor')
