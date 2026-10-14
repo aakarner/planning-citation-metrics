@@ -1,278 +1,286 @@
-# Planning Citation Metrics: Automation Plan
+# Planning Citation Metrics: how the pipeline and site work
 
-Drafted 2026-09-13 after profiling `data/UPDATED_Cites2026.xlsm`, the workbook Tom Sanchez handed over.
+This document describes the system as it runs. It continues the dataset Tom Sanchez
+maintained by hand from 2017 to 2026 and publishes it at
+[scholarmetrics.com](https://scholarmetrics.com). For the commands, see the README; for
+why individual records look the way they do, the `source` and `notes` columns in the
+roster files carry the evidence.
 
-## 1. What we are starting from
+## 1. Scope
 
-The workbook is a single **snapshot**, not a time series. Four sheets:
+**Who is tracked.** Regular full-time tenured and tenure-track faculty at planning
+programs in the United States and Canada: ACSP member schools, plus a handful of programs
+added on request, mostly Canadian. Adjunct, visiting, clinical and emeritus appointments
+are recorded but not listed. Each program page says which category it is in.
 
-| Sheet | Rows | Role in the new system |
-|---|---|---|
-| `Cites` | 1,051 faculty | Becomes `person`, `affiliation`, and one `metric_snapshot` per person |
-| `Current Schools` | 120 schools | Becomes `department` plus a derived summary view |
-| `Top Faculty` | 1,051 | Derived view (sorted by citations, then by h-index) |
-| `Sorting` | notes | Documents the seven VBA macros; replaced by SQL |
+**A second, unranked list.** Planning scholars appointed outside planning programs,
+people with a planning doctorate, a tenure-line post at a US or Canadian university, and
+research that sits in planning, are listed on a separate page beside the rankings. They
+never enter a ranking, a percentile or a program figure. Their units are recorded like
+programs but with `kind = 'other'`.
 
-Coverage and quality facts that shape the design:
+**What is measured.** Total citations and h-index per person, from Google Scholar where
+the person has a profile and from OpenAlex otherwise, with every figure carrying its
+source. Percentiles, medians and per-year rates are computed from these, never stored.
 
-- **808 of 1,051 faculty (77%) have a Google Scholar profile URL.** All 808 parse to a valid 12-character Scholar user id, 806 distinct. The other 243 were looked up by hand in Publish or Perish.
-- **Three ranks only**: Professor 406, Associate 364, Assistant 281. `RegFaculty` and `NonPhD` are empty in every row; Tom says they were meant to restrict the list to regular full-time tenure-track faculty and to flag faculty without PhDs, such as landscape architects. The schema keeps the first idea as `affiliation.appointment_type`. `Academia.edu`, `Twitter`, `Personal` are empty or nearly so.
-- **120 schools across the US and Canada**, from 32 faculty (MIT) down to 1.
-- **Metrics stored are total citations and h-index only.** The column is still named `Cites2017`, but it holds current totals. `CY2017` (citations per year since PhD) is `#REF!` in 805 rows.
-- **Percentiles are computed by macros with hard-coded row ranges** (rows 2 to 1052 overall; rank boundaries at rows 282 and 647). The sheet has 1,051 data rows, so the ranges are already slightly off, and any roster change silently breaks them.
-- **Identity problems the spreadsheet cannot express**: Guang Tian (Utah to New Orleans) and Lisa Berglund (Dalhousie to Morgan State, with a promotion) each appear twice because they moved and the old row was never removed. 15 rows have no `Years` value, mostly 2025 PhDs where years since PhD is zero.
-- **Gender** is recorded (M/F/T). It is useful for aggregate analysis but should not be shown on individual public pages.
+## 2. Principles
 
-**No history survives in this file.** Tom updated in place each summer and winter, and the site he published only ever showed the current snapshot. We will not try to reconstruct the past. The time series starts with the workbook: Tom refreshed the Scholar numbers on 2026-03-01 and ran the Publish or Perish lookups between 2026-02-15 and 2026-02-20, so the first snapshot carries those dates. Every collection run after it adds a point. Within a year the site has a real trend to show; within three it has more history than the spreadsheet ever held.
+1. **Person, appointment and measurement are separate records.** A person has many
+   appointments over time and many readings over time. Moves and promotions close one
+   appointment row and open another; nothing is edited in place.
+2. **Append, never overwrite.** Every collection writes new snapshot rows. Any past state
+   can be rebuilt.
+3. **Identify once, then run on ids.** A person's Scholar id, OpenAlex record set and
+   ORCID are resolved with evidence and, where needed, a reviewer; collection then runs
+   unattended on those ids.
+4. **The curated data is plain text in git.** People, programs, appointments and the
+   review queue are CSV files. The database and the site are build products.
+5. **Compute derived numbers in SQL views.** Percentiles, years since PhD, citations per
+   year, program medians, rank benchmarks.
+6. **Policy lives in code with the reason beside it.** Thresholds and rules carry a
+   comment naming the case that set them, so a future change is made knowingly.
 
-## 2. Design principles
+## 3. Data model
 
-1. **Separate the person from the appointment from the measurement.** Faculty move and get promoted. A person has many affiliations over time and many metric snapshots over time. This is what the spreadsheet fundamentally cannot model and why duplicates crept in.
-2. **Append, never overwrite.** Every collection run writes new snapshot rows. Nothing is edited in place, so any past ranking can be reproduced.
-3. **Key on stable identifiers, disambiguate once.** Google Scholar id, OpenAlex author id, and ORCID are resolved one time per person with human review, then the pipeline runs unattended on ids.
-4. **Curated data lives as plain text in git.** The roster (people, departments, appointments) is CSV, edited via pull request, with full history. The database is built from these files plus the snapshot log.
-5. **Compute, don't store, derived numbers.** Percentiles, years since PhD, citations per year, department medians, and ranks are SQL views, recomputed on every build.
+SQLite, built from the CSV files on every run. Standard SQL throughout.
 
-## 3. Database schema
+**Curated tables** (`data/roster/`):
 
-SQLite for the built database (single file, zero ops, queryable with DuckDB or Python, small enough to ship to the browser). The schema is standard SQL and moves to Postgres unchanged if the project ever needs a server.
+- `department`: a program or other unit. Name, university, country, website, OpenAlex
+  institution id, ROR id, ACSP membership (`full`, `affiliate`, `none`), and `kind`
+  (`planning` or `other`).
+- `person`: names, PhD year and institution, interests, and the identifiers: Scholar id,
+  OpenAlex author id, ORCID, plus optional profile links. A `notes` column records the
+  provenance of anything entered or changed by hand. Gender is loaded from a private,
+  uncommitted file for aggregate use only and never appears on the site.
+- `person_alias`: name variants used in matching.
+- `affiliation`: one row per appointment: person, unit, rank (`assistant`, `associate`,
+  `full`, `other`), appointment type (`regular`, `adjunct`, `visiting`, `clinical`,
+  `emeritus`, `other`), start and end dates, and a `source` string saying where the fact
+  was read. A current appointment has no end date. A `rank verified <date>` note in the
+  source marks a rank confirmed from a program page or by a reviewer.
 
-```sql
--- Curated tables (maintained as CSV in data/roster/, loaded on build)
+**Append-only tables** (`data/snapshots/<source>/<date>.csv`, plus a `.meta.json` per
+run):
 
-CREATE TABLE department (
-  department_id   INTEGER PRIMARY KEY,
-  name            TEXT NOT NULL,         -- 'Luskin School of Public Affairs'
-  university      TEXT NOT NULL,         -- 'UCLA'
-  short_name      TEXT NOT NULL UNIQUE,  -- 'UCLA' as used in the workbook
-  country         TEXT NOT NULL,         -- 'US' | 'CA'
-  url             TEXT,
-  openalex_institution_id TEXT,          -- 'I161318765', for author matching
-  ror_id          TEXT,
-  acsp_member     INTEGER,               -- 1/0, if inclusion follows ACSP
-  active          INTEGER NOT NULL DEFAULT 1
-);
+- `collection_run`: one row per run, with counts and notes.
+- `metric_snapshot`: one reading per person per source per date: total citations,
+  h-index, i10, five-year figures, works count, and the full payload as JSON. For Scholar
+  that payload includes the profile's affiliation line, verified email domain, interests
+  and per-year citation counts, which several rules below depend on.
 
-CREATE TABLE person (
-  person_id       INTEGER PRIMARY KEY,
-  first_name      TEXT NOT NULL,
-  middle_name     TEXT,
-  last_name       TEXT NOT NULL,
-  display_name    TEXT NOT NULL,
-  gender          TEXT,                  -- internal / aggregate use only
-  phd_year        INTEGER,
-  phd_institution TEXT,
-  interests       TEXT,
-  google_scholar_id TEXT UNIQUE,         -- 12-char user id, not the URL
-  openalex_author_id TEXT UNIQUE,        -- 'A5023456789'
-  orcid           TEXT UNIQUE,
-  semantic_scholar_id TEXT,
-  researchgate_url TEXT,
-  linkedin_url    TEXT,
-  personal_url    TEXT,
-  notes           TEXT
-);
+**Review queue** (`data/review/identity_candidates.csv`):
 
-CREATE TABLE person_alias (               -- name variants for matching
-  person_id       INTEGER REFERENCES person,
-  alias           TEXT NOT NULL,
-  PRIMARY KEY (person_id, alias)
-);
+- `identity_candidate`: one row per candidate record per person: source, external id,
+  match scores (name similarity, institution match, topic share, citation ratio), the
+  record's own figures, and a status: `pending`, `accepted`, `rejected`, or `none` for a
+  search that found nothing. Every decision carries who made it and why.
 
-CREATE TABLE affiliation (                -- one row per appointment
-  affiliation_id  INTEGER PRIMARY KEY,
-  person_id       INTEGER NOT NULL REFERENCES person,
-  department_id   INTEGER NOT NULL REFERENCES department,
-  rank            TEXT NOT NULL CHECK (rank IN
-                    ('assistant','associate','full','other')),
-  is_primary      INTEGER NOT NULL DEFAULT 1,
-  start_date      DATE,                  -- NULL = unknown (inherited from workbook)
-  end_date        DATE,                  -- NULL = current
-  source          TEXT                   -- 'workbook-2026', 'dept website', 'GS profile'
-);
+**Views** recomputed on every build: current appointments (planning programs only, and a
+second view covering other units), latest reading per person and source, the headline
+metric per person, Scholar and OpenAlex series restricted to ids the roster still holds,
+percentiles overall and within rank, per-year rates, program summaries, rank benchmarks,
+the ranked faculty list, the time series for sparklines, and the other-units list.
 
--- Append-only tables (written by the collector)
-
-CREATE TABLE collection_run (
-  run_id          INTEGER PRIMARY KEY,
-  started_at      TIMESTAMP NOT NULL,
-  finished_at     TIMESTAMP,
-  trigger         TEXT,                  -- 'schedule' | 'manual'
-  source          TEXT NOT NULL,         -- 'google_scholar' | 'openalex' | 'manual'
-  n_attempted     INTEGER, n_succeeded INTEGER, n_failed INTEGER,
-  notes           TEXT
-);
-
-CREATE TABLE metric_snapshot (
-  snapshot_id     INTEGER PRIMARY KEY,
-  run_id          INTEGER NOT NULL REFERENCES collection_run,
-  person_id       INTEGER NOT NULL REFERENCES person,
-  source          TEXT NOT NULL,         -- 'google_scholar' | 'openalex' | 'pop' | 'manual'
-  collected_at    TIMESTAMP NOT NULL,
-  total_citations INTEGER,
-  h_index         INTEGER,
-  i10_index       INTEGER,
-  citations_5yr   INTEGER,               -- GS "since 20XX" column
-  h_index_5yr     INTEGER,
-  works_count     INTEGER,
-  raw_json        TEXT,                  -- full API/scrape payload for audit
-  UNIQUE (person_id, source, collected_at)
-);
-
-CREATE TABLE identity_candidate (         -- disambiguation review queue
-  candidate_id    INTEGER PRIMARY KEY,
-  person_id       INTEGER NOT NULL REFERENCES person,
-  source          TEXT NOT NULL,         -- 'openalex' | 'google_scholar' | 'orcid'
-  external_id     TEXT NOT NULL,
-  score           REAL,                  -- 0..1 from matcher
-  evidence        TEXT,                  -- JSON: name sim, inst match, topic overlap
-  status          TEXT NOT NULL DEFAULT 'pending'
-                  CHECK (status IN ('pending','accepted','rejected','none')),
-  reviewed_by     TEXT, reviewed_at TIMESTAMP
-);
-```
-
-Derived views, recomputed on every build:
-
-- `v_current_affiliation`: primary appointment with `end_date IS NULL`.
-- `v_latest_metrics`: most recent snapshot per person per source.
-- `v_person_percentiles`: `PERCENT_RANK() OVER (ORDER BY total_citations)` overall and `PARTITION BY rank`, for both citations and h-index. This reproduces Excel's `PERCENTRANK` and replaces the seven macros. Also `years_since_phd` and `citations_per_year`, fixing the broken `CY2017` column.
-- `v_department_summary`: faculty count, total, median, mean, per-capita citations, median h-index, share with Scholar profiles. Reproduces `Current Schools`.
-- `v_top_faculty`: ranked list, reproduces `Top Faculty`.
-- `v_person_timeseries`: one row per person per collection date, for sparklines.
-
-Acceptance test for phase 1: load the workbook, run the views, and match Tom's percentile and department columns to within rounding.
-
-## 4. Data sources and the disambiguation problem
-
-Google Scholar has no API and blocks datacenter IPs, so automation has to be pragmatic. Use two sources with different jobs:
+## 4. Sources and the headline figure
 
 | | Google Scholar | OpenAlex |
 |---|---|---|
-| Access | Scrape profile pages (`scholarly` library, throttled) or a paid Scholar API such as SerpApi | Metered REST API. A free account's key gives about $1 of usage a day; lookups by author id are free, name searches cost about a tenth of a cent each. Our one-time matching costs a dollar or two; monthly collection costs nothing |
-| Covers | 808 faculty with profiles, plus any the discovery pass turns up | Everyone, once matched |
-| Numbers | Higher; includes books, reports, gray literature that matter in planning | Lower and systematically different; journal-centric |
-| Role | **Headline metric** for everyone with a profile. Continuity with Tom's series and with what the field expects | **Fallback headline** for faculty without a Scholar profile, flagged as OpenAlex and a likely undercount. Also collected for everyone as a comparison series |
+| Access | SerpApi's Scholar author endpoint, one call per profile; direct scraping only for spot checks | Open REST API, free by-id lookups |
+| Covers | Everyone with a profile, about three quarters of the roster | Everyone matched to a record |
+| Counts | Higher; includes books, reports and grey literature | Lower and journal-centric, typically half to three quarters of Scholar |
+| Role | Headline figure wherever a profile exists | Headline figure for the rest, marked as OpenAlex with a note; comparison figure on everyone's page |
 
-**Source policy (decided 2026-09-14).** Scholar is the default. For faculty without a Scholar profile the headline number comes from OpenAlex, and every place it appears carries the source and a note that OpenAlex counts fewer citations than Scholar. Rankings include everyone, with fallback rows marked. This is deliberate: it keeps the list complete while giving faculty a clear reason to set up a Scholar profile. Sources stay separate in storage; the `source` column travels with every number so the mixing is visible, never silent.
+**Precedence.** Scholar, then OpenAlex, then the Publish or Perish figures inherited from
+the workbook, which are frozen and shown only until an OpenAlex record is found. A source
+publishes only while the roster holds its identifier: clear a Scholar id and the person
+falls back to OpenAlex at once, with the old readings kept for audit but hidden from the
+person's series.
 
-**Where the Scholar collector runs.** GitHub Actions runners are blocked by Scholar. Two options, decide in phase 2 after a test:
+**Small records count.** An accepted OpenAlex record is the person's figure however small.
+A citation count can prove a record is somebody else's when it is far larger than the
+figure we already hold; it never disproves identity by being small. A Scholar profile is
+the route to a fuller number, and the site says so wherever a fallback figure appears.
 
-**Decided 2026-09-15, by test.** Direct scraping from a single address is not viable for full runs. On 2026-09-14 Scholar allowed about 45 profile fetches from a UT address and then from a home address before redirecting to its CAPTCHA page, and the home-address block was still in force more than eight hours later; 89 profiles were collected in a day. Slow pacing and cooldowns did not help. The collector keeps the scraping backend for spot checks only.
+**Split records are summed.** OpenAlex often holds one author as several records. All of a
+person's accepted records are collected together: citations, works and i10 are summed, the
+h-index is the largest, and the record with the most works is the primary id.
 
-Full runs use **SerpApi's `google_scholar_author` endpoint**: parsed JSON with the citation table, the per-year graph, affiliation, and verified-email domain, one call per person, from anywhere including GitHub Actions. Pricing at the time of writing: 250 lookups a month free, $25 for 1,000, capped at 200 searches an hour, so a full run takes about four hours. One paid month per quarter covers a full run of 806, so the annual cost is about $100, or nothing if a run is spread over the free tier across a quarter.
+## 5. Identity
 
-**Disambiguation, done once.** The 808 people with a Scholar id need no disambiguation on the Scholar side. The real work Tom described is matching everyone to OpenAlex, and checking whether any of the 243 without a recorded profile actually have one.
+**Scholar profiles.** Most Scholar ids came from the workbook. For people without one, a
+daily search runs from a residential address (Scholar blocks datacentre addresses): a
+publication search by name, the linked author profiles fetched and scored on name,
+affiliation text and plausibility against the figure already held. A profile whose
+affiliation names the person's institution is accepted; one naming an institution we do
+not track, a student stage, or a field no planning scholar works in is rejected with the
+reason; the undecidable go to the queue. Rejected profiles are never proposed again. A
+profile whose id stops resolving is cleared, and the person is searched again.
 
-1. Query OpenAlex `/authors?search=<name>` and filter by the department's `openalex_institution_id`.
-2. Score each candidate: name similarity (Jaro-Winkler on full name and on last name plus first initial), current or past institution match, topic overlap with planning concepts, first publication year consistent with PhD year, coauthor overlap with already-matched faculty in the same department.
-3. Auto-accept when one candidate scores above threshold and the runner-up is far below. A search that returns nothing is recorded as `none`, not `pending`, so the queue holds only rows with something to decide. Everything else lands in `identity_candidate` as `pending`.
-4. Before review, `audit_matches` rejects pending candidates whose citation count contradicts the Scholar or Publish or Perish figure already held, on the high side only: a candidate claiming many times our number is a namesake, while one claiming far fewer is usually OpenAlex holding a fragment of the right person. This is what stops a reviewer accepting a hepatologist's 52,281 citations for a planning academic on a name-and-institution match. 5. Review what is left in a simple table (a CSV in the repo or a small review page) and mark accepted or rejected. Expect a few hours of review for the initial pass, then a handful of new hires per semester.
+**Namesakes.** Name, institution and even a verified email domain can all agree and the
+profile still belong to someone else at the same university. The one cheap tell is the
+profile's interests line. Any held profile whose interests or affiliation name a field no
+planning scholar works in, and which does not place itself at the person's department, is
+cleared and vetoed automatically; the person falls back to OpenAlex until the daily search
+finds the right profile.
 
-Once a person has an OpenAlex id, monthly collection is a single API call per person with no ambiguity.
+**OpenAlex records.** The matcher searches by name, filters by the program's institution,
+and scores each candidate on name similarity, institution match (any affiliation in the
+record's history), planning topic share, and citation plausibility against the Scholar or
+inherited figure. Candidates settle without a reviewer when name and institution match
+and the numbers do not object: a fragment of a few works settles on the match alone; a
+larger record must stay within a bound of the figure held; an extra record for someone
+already matched must also sit at the person's institution now, or carry a planning share
+of topics, since the institution-history match is weak for common names. Everything else
+waits for a reviewer. An audit after every collection un-accepts records whose citation
+count has grown far beyond the person's Scholar figure, and retires ids that OpenAlex has
+deleted or merged.
 
-**Scholar profile discovery.** For each person without a Scholar id, a Scholar publication search restricted to their name, fetched from a home or campus address, links author names to profiles where they exist; linked names that match ours are fetched for affiliation text and citation totals. This is the only route left: Scholar's own author search demands a Google sign-in, and SerpApi has discontinued its author-search endpoint and strips profile links from its regular search results (checked 2026-09-15). Because an address gets about 45 requests before Scholar blocks it, the pass runs in batches of about 30 people a day and is resumable. Yield is low: the first 20 of the 243 turned up no missing profiles. People whose recorded Scholar id stops resolving, which happens when Google renumbers a profile, are re-found by a direct fetch that follows the redirect. They are scored the same way (name, affiliation, plausibility against the number we already hold) and land in the same review queue. Run once over the 243, then each semester for new hires.
+**Review sheets.** Pending candidates for people without a Scholar headline are written to
+an Excel workbook with the evidence, dropdowns and a how-to tab, banded by how much
+judgement each needs. A reviewer marks each row accepted or rejected; the import writes
+the decisions and reasons back to the queue and the roster takes the accepted ids. The
+builders refuse to overwrite a workbook that already holds reviewer entries.
 
-**Publish or Perish is retired.** It is a desktop program that runs the same Scholar name search and relies on a person unticking the wrong papers. Automating the fetch without that judgment produces confident wrong numbers; automating the judgment is the unsolved problem. Policy (2026-09-14): we do not reconstruct counts for people without a profile. They get the flagged OpenAlex number, and the fix is in their hands. The migrated Publish or Perish figures stay in the database as the first data point for those 243 and are superseded by the first OpenAlex snapshot.
+**ORCID.** Copied from an accepted OpenAlex record, or read off a faculty page by a
+reviewer; a disagreement between the two is flagged, since it usually means the OpenAlex
+match is wrong. ORCID's education section fills a missing PhD year and institution where
+the record names a doctorate.
 
-**Roster changes are applied automatically (decided 2026-09-15).** Rather than a review list a person works through each semester, the collector's Scholar profile data drives the roster directly: affiliation text naming another tracked department is a move; text naming an untracked institution, with the verified email agreeing, is a departure with the destination noted; text naming the current department at a higher rank is a promotion. A stale email alone changes nothing, profiles still describing a student or postdoc stage are ignored, and profiles in foreign fields are reported as probable namesakes. The residual report lists only what those rules could not settle. Errors are accepted as the cost of no manual pass; faculty can request corrections through the site. First run, September 2026: 11 moves, 43 promotions, 19 departures, 3 suspected wrong profiles.
+## 6. Collection and automation
 
-## 5. Update cadence and scheduling
-
-| What | When | How |
+| What | When | Where |
 |---|---|---|
-| OpenAlex snapshot | Monthly, 1st of month | GitHub Actions cron; about 1,051 free id lookups, a few minutes |
-| Google Scholar snapshot | Rolling: ~50 profiles every Monday, oldest first (since Oct 2026) | SerpApi free tier from GitHub Actions; each weekly batch committed as a snapshot file |
-| Roster review | Semiannual (Jan, Jul), matching Tom's rhythm | Pipeline emails the change-detection report; a person edits the roster CSVs by pull request |
-| Scholar profile discovery | Semiannual, with roster review | One publication-search page per person without a profile, plus one profile page per plausible candidate, from a UT connection; candidates go to the review queue |
-| Site rebuild and deploy | On every push to `main` and after every collection | GitHub Actions builds SQLite from CSV and snapshots, builds the site, deploys to GitHub Pages |
+| Google Scholar readings | Rolling: about fifty profiles every Monday, oldest reading first, so every profile is re-read roughly every fifteen weeks | GitHub Actions, SerpApi free tier (250 searches a month, paced to its hourly cap) |
+| OpenAlex readings | Monthly, 1st of the month, everyone matched | GitHub Actions, free by-id lookups; followed by the match audit and the ORCID PhD fill |
+| Scholar profile discovery | Daily, one batch; fetches figures for anything it finds | A launchd agent on the maintainer's Mac, with a retry slot if the machine was asleep |
+| Roster rules | After every Scholar run | Same job as the readings |
+| Site build and deploy | On every push to `main`, and after every collector commits | GitHub Actions to GitHub Pages at scholarmetrics.com |
 
-Each run appends a snapshot file under `data/snapshots/<source>/<YYYY-MM-DD>.csv` and commits it. The CSVs are the canonical, diffable record; the SQLite file is a build product that is also published for download. Failures open a GitHub issue automatically so a silent stall cannot go unnoticed for a semester.
+A push made by a workflow does not trigger other workflows, so each collector calls the
+deploy workflow itself after committing. Each run appends a snapshot file and commits it;
+the CSV files are the canonical, diffable record and the SQLite file is a build product,
+also published for download.
 
-## 6. Website
+Because Scholar collection is rolling, there is no "latest run" to compare with: the
+change report sets each person against their own previous reading, flags any held profile
+not re-read within twenty weeks, and the homepage quotes the oldest and newest reading
+dates rather than one refresh date.
 
-A **static site** is the right shape: about 1,200 entities, read-only for visitors, updated a few times a month. No server, no database to keep alive, free hosting on GitHub Pages. Decided 2026-09-15: launch at the default address, `scholarmetrics.com`, and revisit a custom or UT domain once the site exists. Moved to `scholarmetrics.com` on 2026-09-28; the old address redirects.
+## 7. Keeping the roster right
 
-**Built 2026-09-15 as plain Python instead (`pipeline/build_site.py`).** The pages are read-only
-and the charts are two-point sparklines, so a JavaScript framework would have added a Node
-toolchain and a build step without changing anything a reader sees; there is no Node on the
-maintainer's machine either. The generator reads the SQLite file and writes 1,150 pages in a few
-seconds, search is a linear scan over a 170 KB JSON index, and the CI workflow stays
-single-language. Live at `scholarmetrics.com`.
+**Program websites are the better source.** A scan of every program's faculty listing
+reads ranks for people we hold and adds tenure-line new hires, who go straight onto the
+roster. Ranks apply in both directions. Names on a school-wide page that cannot be tied to
+the program, and names with no rank shown, are held in a side file rather than added.
+Pages that need a browser, or are in French or Spanish, are read by hand and saved as
+text for the scanner to merge. Dead program links are fixed as they are found.
 
-The original recommendation, for the record, was **Observable Framework**. Its Python data loaders query the SQLite file at build time, it supports parameterized routes for one page per person and per department, and Observable Plot handles sparklines and distributions well. Astro is a fine alternative if the team prefers a general-purpose site builder. Search is client-side over a prebuilt JSON index (roughly 200 KB for all people and departments) using MiniSearch, so typing a name or school returns instantly.
+**Scholar profiles drive routine changes.** After each Scholar reading, the roster rules
+read the profile's affiliation text and verified email: text naming another tracked
+program is a move; text naming an institution we do not track, with the email agreeing,
+is a departure with the destination noted; a stated higher rank at the current program is
+a promotion. A stale email alone changes nothing. A profile too thin to be the person
+years past their PhD is reported, not acted on. Any move, promotion or departure against
+an appointment whose rank was verified from a program page or by a reviewer within the
+last six months is held, since the page is the fresher source and a profile often lags a
+move by months.
 
-Pages:
+**Rank review.** Anyone held as assistant or associate for seven years or more, or whose
+PhD year implies that for an assistant, is listed for a reviewer with their profile, their
+program's page and their percentile within rank, which is a second hint when a rank is
+stale. A reviewer's decision confirms the rank, changes it from a stated year, retires the
+person to emeritus, or closes the appointment.
 
-- **Home**: search box front and center; current top faculty and top departments; "data as of" date.
-- **Person page**: current appointment and rank, PhD year and school, the headline metric with a source badge (a visible note when it is OpenAlex, with a link to how to create a Scholar profile), the OpenAlex comparison series where available, sparklines, percentile within rank and overall, links to Scholar and OpenAlex profiles. No gender shown.
-- **Department page**: roster with rank, latest metrics and within-rank percentiles per faculty member, summary tiles (count, median, mean, per-capita), department trend line, link to the program.
-- **Rankings**: faculty and department tables, filterable by rank, source, and country, with column sort.
-- **Methods and caveats**: sources, cadence, how percentiles are computed, why Scholar and OpenAlex differ, inclusion criteria for schools, known limitations.
-- **Corrections**: a GitHub issue template so faculty can request a fix or opt out of the individual page.
-- **Download**: the SQLite file and CSVs, with a citation and license.
+**Write-ins.** Faculty and colleagues report moves, retirements and new hires by email.
+These are applied directly with the reporter and date in the row's source note, and are
+the fastest signal the system has.
 
-Optional companion: publish the SQLite file with Datasette for people who want arbitrary queries and a JSON API without us building it.
+## 8. The site
 
-## 7. Repository layout
+Static HTML generated by Python from the SQLite file: about 1,250 pages, a client-side
+search over a small JSON index, no server. Deployed on GitHub Pages under a custom domain.
+All copy lives in one TOML file so wording can change without touching code.
+
+**Home.** Search; counts of faculty and programs; the dates of the oldest and newest
+Scholar readings and the latest OpenAlex refresh; a bar showing how many headline figures
+come from each source. Medians and 75th percentiles by rank. "Most cited in the past
+year": the five people in each rank who received the most citations in the twelve months
+before their profile was last read, estimated from the profile's own per-year counts.
+"New to the record": Scholar profiles found and moves between programs in the last ninety
+days, and how many people left the tracked programs. A fold listing rank changes exists
+but is switched off while the record catches up with ranks the workbook had missed.
+Collapsed leaderboards of most-cited faculty and programs.
+
+**Person.** Current appointment and rank, PhD, the headline figure with its source badge
+and, for a fallback figure, a note on how to set up a Scholar profile. Sparkline of the
+person's own readings, with readings from any profile other than the one now held left
+out. OpenAlex comparison where the headline is Scholar. Percentiles overall and within
+rank. Links to the profiles on record.
+
+**Program.** Roster with rank, figures and within-rank percentiles; summary tiles; link to
+the program's site. People with no figure from any source are on the roster but not yet on
+the page.
+
+**Rankings and Programs.** Sortable tables, filterable by rank, country and source.
+
+**Beyond planning.** The unranked list of planning scholars in other departments, with the
+four criteria for inclusion and how to ask to be added.
+
+**Methods.** Sources and their precedence, cadence, inclusion, how percentiles are computed,
+known ways the numbers are wrong, and the download of the database and CSV files.
+
+**Footer.** A contact address for corrections and a donate link to GitHub Sponsors; the site
+is paid for out of pocket and its one fixed cost is the domain.
+
+## 9. Repository layout
 
 ```
-planning-citation-metrics/
-  data/
-    roster/            department.csv, person.csv, affiliation.csv, person_alias.csv
-    snapshots/
-      google_scholar/  2026-01-15.csv, ...
-      openalex/        2026-10-01.csv, ...
-    review/            identity_candidates.csv
-    legacy/            UPDATED_Cites2026.xlsm, the handover workbook
-  pipeline/            Python package
-    load_workbook.py   one-time migration of the xlsm into roster CSVs
-    build_db.py        CSV + snapshots -> citations.sqlite, runs views and tests
-    collect_openalex.py
-    collect_scholar.py
-    match_identities.py
-    detect_changes.py  semiannual roster diff report
-  sql/                 schema.sql, views.sql
-  site/                Observable Framework project
-  tests/               regression test against Tom's percentile columns
-  .github/workflows/   monthly.yml, quarterly.yml, deploy.yml
-  docs/PLAN.md         this document
+data/
+  roster/            department.csv, person.csv, affiliation.csv, person_alias.csv,
+                     new_hire_hold.csv
+  snapshots/         google_scholar/, openalex/, pop/  (<date>.csv + <date>.meta.json)
+  review/            identity_candidates.csv, the review workbooks, INSTRUCTIONS.md
+  legacy/            the handover workbook (not committed)
+  private/           gender (not committed)
+pipeline/
+  load_workbook.py          one-time migration
+  build_db.py, build_site.py, site_assets.py
+  collect_scholar.py, collect_openalex.py, clear_dead_ids.py
+  find_scholar_profiles.py  daily discovery
+  match_openalex.py, resolve_institutions.py, audit_matches.py
+  apply_changes.py          roster rules from profiles
+  detect_changes.py         change report and rank review
+  scan_departments.py       program-page scan
+  build_review_sheet.py, build_rank_sheet.py, import_review.py, import_rank_review.py
+  fill_phd_from_orcid.py
+scripts/             daily_discovery.sh, install_discovery_agent.sh
+sql/                 schema.sql, views.sql
+site/                copy.toml
+tests/               rules, views, homepage blocks, regression against the workbook
+.github/workflows/   collect-scholar-weekly.yml, collect-openalex.yml, deploy.yml, build.yml
+docs/                this document; the program-scan hand-off brief
 ```
 
-## 8. Phased delivery
+## 10. What still needs a person
 
-**Phase 0. Settle scope** (this month)
-- Done 2026-09-14: inclusion rule per Tom is ACSP member schools plus a handful added on request, mostly Canadian. `department.acsp_member` filled 2026-09-15 from the ACSP list dated 2026-08-27: 104 full members, 3 affiliates (McGill, The New School, Tulane), 13 non-members added on request (six Canadian). Five ACSP full members are not yet tracked and are candidates for the next roster review: Boston University, George Washington University, University of Central Florida, University of Washington Tacoma, Utah State University.
-- Done 2026-09-13: the two moves (Guang Tian to Utah, Lisa Berglund to Morgan State) were verified against Scholar profiles and department pages, and the stale rows are closed as ended affiliations.
+- Reviewing the candidate workbooks when they come back, a few hours a semester.
+- Acting on write-ins and on the change report's flags: suspected namesakes, profiles not
+  re-read in twenty weeks, stale ranks.
+- A program-page scan twice a year, with a browser pass for the pages the crawler cannot
+  read, and entering PhD details for new hires whose ORCID does not carry them.
+- Deciding who belongs on the unranked list when someone asks.
 
-**Phase 1. Schema and migration** (2 to 3 weeks)
-- Write `schema.sql` and `views.sql`. Migrate the workbook into roster CSVs and one 2026 snapshot per person (source `google_scholar` or `pop`).
-- Regression test: views reproduce Tom's percentiles and department summaries.
-- Done: the migrated snapshot is dated 2026-03-01 (Scholar) and 2026-02-20 (Publish or Perish), per Tom.
+## 11. Known limitations
 
-**Phase 2. Collectors and identity matching** (3 to 4 weeks)
-- OpenAlex collector and matcher; run the initial match, review the pending queue.
-- Scholar collector; tested `scholarly` from UT and home addresses (blocked after ~45 fetches, 8+ hours); SerpApi chosen.
-- Scholar profile discovery pass over the 243 people without a recorded profile.
-- `collection_run` logging, retries, and the drop-detection check.
-
-**Phase 3. Scheduling** (1 week)
-- GitHub Actions workflows for monthly OpenAlex, quarterly Scholar, and deploy. Failure alerts as issues.
-
-**Phase 4. Website** — done 2026-09-15
-- Person, department, rankings, methods, and download pages. Client-side search. Deploy to GitHub Pages.
-
-**Phase 5. Roster maintenance workflow** (1 week, then ongoing)
-- Change-detection report, semiannual review checklist, correction issue template.
-
-Rough total: about three months of part-time effort, front-loaded in phases 1 and 2. After that the recurring cost is a few hours twice a year for roster review plus responding to correction requests.
-
-## 9. Questions for Tom, answered 2026-09-14
-
-1. **Last refresh:** Scholar totals and h-indices on 2026-03-01. Publish or Perish lookups 2026-02-15 to 2026-02-20. The first snapshot is dated accordingly.
-2. **Inclusion rule:** ACSP member schools originally, plus several added on request, mostly Canadian. Recorded per department in `acsp_member`.
-3. **Publish or Perish queries:** not retained. Those 243 faculty move to OpenAlex going forward, labelled as such.
-4. **`RegFaculty` / `NonPhD`:** meant to keep the list to regular full-time tenure-track appointments and to flag non-PhD faculty. Kept as `affiliation.appointment_type`; rankings include only `regular`.
-5. **Duplicates:** confirmed as moves he forgot to clean up. Closed as ended affiliations.
-
-Decided by Alex, 2026-09-14, rather than left to Tom: Scholar by default, OpenAlex as the flagged fallback. See the source policy in section 4.
+- Scholar readings are up to a quarter old for any given person, by design of the rolling
+  schedule; the homepage shows the range.
+- A namesake at the same university in a neighbouring field passes every automatic check.
+  The interests test catches foreign fields only; the rest depends on someone noticing.
+- The inherited figures were not all read on one date, so no comparison treats the first
+  snapshot as a single baseline.
+- OpenAlex merges and deletes author ids without notice; the audit retires dead ids after
+  the fact, so a person can lose a figure for a month.
+- People with no figure from any source have a roster entry but no page.
+- Promotions can only be dated when a page or reviewer states the year; most rank changes
+  record when we learned of them, not when they happened.
