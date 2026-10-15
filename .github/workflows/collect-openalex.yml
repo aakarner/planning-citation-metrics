@@ -36,7 +36,11 @@ jobs:
           git add data/snapshots/openalex data/roster/person.csv data/review/identity_candidates.csv
           git diff --cached --quiet && echo "nothing new" && exit 0
           git commit -m "OpenAlex snapshot $(date -u +%Y-%m-%d)"
-          git push
+          # main moves while a long run collects; rebase the commit onto it rather than lose the run
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push && break
+            echo "push rejected, retrying ($i)"; sleep 15
+          done
 
   deploy:
     needs: collect
