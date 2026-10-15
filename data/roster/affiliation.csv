@@ -490,7 +490,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 490,489,61,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-07; rank review 2026-10-07 by Maddie: personal website
 491,490,61,associate,regular,1,,2026-09-15,"workbook-2026 | closed 2026-09-15: promote; change from Scholar profile 2026-09-15: email @ucla.edu; affiliation ""Professor of Urban Planning and Public Policy, UCLA"""
 492,491,61,full,regular,1,,,workbook-2026
-493,492,61,assistant,regular,1,,,workbook-2026
+493,492,61,assistant,regular,1,,2026-10-15,"workbook-2026 | closed 2026-10-15: promote; change from Scholar profile 2026-10-15: email @ucla.edu; affiliation ""Associate Professor of Urban Planning, UCLA"""
 494,493,61,full,regular,1,,,workbook-2026
 495,494,61,full,regular,1,,,workbook-2026
 496,495,61,full,regular,1,,,workbook-2026
@@ -768,7 +768,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 768,767,88,full,regular,1,,,workbook-2026
 769,768,88,associate,regular,1,,,workbook-2026
 770,769,88,associate,regular,1,,,workbook-2026
-771,770,89,full,regular,1,,,workbook-2026
+771,770,89,full,regular,1,,2026-10-15,"workbook-2026 | closed 2026-10-15: move; change from Scholar profile 2026-10-15: email @virginia.edu; affiliation ""H. Louis Salomonsky Professor in Real Estate, School of Architecture, University of Virginia"""
 772,771,89,full,regular,1,,,workbook-2026
 773,772,89,full,regular,1,,,workbook-2026
 774,773,89,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-01; rank review 2026-10-01 by Maddie: Program website (Could not locate linkedin or CV to see when he entered the position)
@@ -1341,3 +1341,5 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 1344,1153,104,assistant,regular,1,2026-10-12,,rank verified 2026-10-12; new hire per Alex Karner 2026-10-12; rank assumed assistant for a new faculty member
 1345,1152,104,assistant,regular,1,2026-10-12,,rank verified 2026-10-12; new hire from https://soa.utexas.edu/news/welcoming-new-faculty-members-0 ('Assistant Professor')
 1346,145,21,full,regular,1,2026-10-15,,"rank verified 2026-10-15; Harvard GSD page https://www.gsd.harvard.edu/person/rachel-weber/ ('Chair of the Department of Urban Planning and Design, Emma Bloomberg Professor of Urban Planning'); correction written in 2026-10-15; Scholar profile still reads UIC"
+1347,492,61,associate,regular,1,2026-10-15,,"change from Scholar profile 2026-10-15: email @ucla.edu; affiliation ""Associate Professor of Urban Planning, UCLA"""
+1348,770,109,full,regular,1,2026-10-15,,"change from Scholar profile 2026-10-15: email @virginia.edu; affiliation ""H. Louis Salomonsky Professor in Real Estate, School of Architecture, University of Virginia"""
