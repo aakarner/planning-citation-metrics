@@ -160,6 +160,8 @@ spark_change = "Up {percent} over that span."
 compare_heading = "OpenAlex, for comparison"
 compare_note = """OpenAlex is journal-centric and normally
      counts fewer citations than Scholar. Shown for context, not used in rankings."""
+compare_context = """Here OpenAlex counts {own} of the Scholar total; across the {n} faculty on this site with
+     both figures, the typical share is {typical}."""
 details_heading = "Details"
 label_rank = "Rank"
 label_phd = "PhD"

@@ -312,6 +312,12 @@ def load(con: sqlite3.Connection) -> dict:
     gs_oldest = q("SELECT MIN(collected_at) AS d FROM v_person_percentiles WHERE source='google_scholar'")[0]["d"]
     mix = {r["source"]: r["n"] for r in q("SELECT h.source, COUNT(*) AS n FROM v_headline_metrics h "
                                          "JOIN v_current_affiliation ca ON ca.person_id = h.person_id GROUP BY 1")}
+    shares = sorted(r["k"] for r in q("""
+      SELECT o.total_citations * 1.0 / s.total_citations AS k
+      FROM v_scholar_metrics s JOIN v_openalex_metrics o USING (person_id)
+      JOIN v_current_appointment ca USING (person_id)
+      WHERE s.total_citations >= 100 AND o.total_citations IS NOT NULL"""))
+    oa_share_typical = {"n": len(shares), "typical": shares[len(shares) // 2]} if shares else {"n": 0, "typical": None}
     rising_rows = rising_from_readings(q("""
       SELECT p.person_id, p.display_name, ca.rank, d.short_name AS department,
              m.total_citations, m.collected_at, m.raw_json
@@ -329,13 +335,23 @@ def load(con: sqlite3.Connection) -> dict:
       ORDER BY o.display_name
     """)
     return {"people": people, "depts": depts, "oa": oa, "series": series, "asof": asof,
-            "bench": bench, "affs": affs, "gs_oldest": gs_oldest, "mix": mix, "rising": rising_rows,
+            "bench": bench, "affs": affs, "gs_oldest": gs_oldest, "mix": mix, "rising": rising_rows, "oa_share": oa_share_typical,
             "others": others}
 
 
 # -------------------------------------------------------------------- pages
 
-def person_page(p, slugs, dslug, oa, series, base) -> str:
+def oa_share(oa_total, gs_total) -> float | None:
+    """OpenAlex citations as a share of the person's Scholar total, or None when
+    there is nothing to compare. Shown beside the site-wide typical share so a
+    low OpenAlex figure reads as the norm it is, not as an error (a 2026-10
+    request to remove the card from a page whose share was a fifth)."""
+    if not oa_total or not gs_total:
+        return None
+    return oa_total / gs_total
+
+
+def person_page(p, slugs, dslug, oa, series, base, share=None) -> str:
     # Someone in v_other_units: a planning PhD outside a planning program. Same
     # page, but no department page to link to and no percentiles to show.
     other = "unit" in p
@@ -362,6 +378,9 @@ def person_page(p, slugs, dslug, oa, series, base) -> str:
     o = oa.get(p["person_id"])
     compare = ""
     if o and not fallback and o["total_citations"] is not None:
+        own = oa_share(o["total_citations"], p["total_citations"])
+        context = (" " + t("person", "compare_context", own=f"{own:.0%}", typical=f"{share['typical']:.0%}", n=num(share["n"]))
+                   if own is not None and share and share.get("n") else "")
         compare = f"""<div class="card" style="margin-top:18px">
   <h3>{t("person", "compare_heading")}</h3>
   <dl class="facts">
@@ -369,7 +388,7 @@ def person_page(p, slugs, dslug, oa, series, base) -> str:
     <dt>h-index</dt><dd class="nums">{num(o['h_index'])}</dd>
     <dt>Works</dt><dd class="nums">{num(o['works_count'])}</dd>
   </dl>
-  <p class="sub" style="margin:10px 0 0;font-size:13px">{t("person", "compare_note")}</p>
+  <p class="sub" style="margin:10px 0 0;font-size:13px">{t("person", "compare_note")}{context}</p>
 </div>"""
 
     links = []
@@ -981,10 +1000,10 @@ def build(db: Path, out: Path, base: str, quiet: bool = False) -> None:
 
     for p in people:
         (out / "person" / f"{slugs[id(p)]}.html").write_text(
-            person_page(p, slugs, dslug_by_id[p["department_id"]], data["oa"], data["series"], "../"))
+            person_page(p, slugs, dslug_by_id[p["department_id"]], data["oa"], data["series"], "../", data.get("oa_share")))
     for p in others:
         (out / "person" / f"{slugs[id(p)]}.html").write_text(
-            person_page(p, slugs, None, data["oa"], data["series"], "../"))
+            person_page(p, slugs, None, data["oa"], data["series"], "../", data.get("oa_share")))
     for d in depts:
         members = sorted(roster[d["department_id"]],
                          key=lambda x: -(x["total_citations"] or 0))

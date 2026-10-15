@@ -213,3 +213,20 @@ def test_the_promotions_fold_is_hidden_while_the_record_catches_up(monkeypatch):
     monkeypatch.setattr(build_site, "SHOW_PROMOTIONS", True)
     html = index_page(data, uniq_slugs(people, lambda p: p["display_name"]), uniq_slugs(depts, lambda d: d["short_name"]), "")
     assert "Promotions recorded" in html and "associate &rarr; <b>full</b>" in html
+
+
+
+def test_the_openalex_card_puts_a_persons_share_beside_the_typical_one():
+    from pipeline.build_site import oa_share, person_page, uniq_slugs
+    assert oa_share(136, 640) == 136 / 640 and oa_share(0, 640) is None and oa_share(50, None) is None
+    p = {"person_id": 1, "display_name": "AJ Kim", "department": "D1", "department_id": 1, "rank": "associate",
+         "total_citations": 640, "h_index": 14, "source": "google_scholar", "is_fallback": 0, "collected_at": "2026-09-15",
+         "google_scholar_id": "x", "openalex_author_id": "A1", "orcid": None, "phd_year": None, "phd_institution": None,
+         "interests": None, "researchgate_url": None, "linkedin_url": None, "personal_url": None, "university": "SDSU",
+         "country": "US", "dept_url": None, "acsp_member": "full", "pct_citations_all": 0.5, "pct_citations_rank": 0.5,
+         "pct_h_all": 0.5, "pct_h_rank": 0.5, "years_since_phd": None, "citations_per_year": None}
+    oa = {1: {"total_citations": 136, "h_index": 3, "works_count": 14}}
+    html = person_page(p, uniq_slugs([p], lambda x: x["display_name"]), "d1", oa, {}, "../", {"n": 729, "typical": 0.587})
+    assert "Here OpenAlex counts 21% of the Scholar total" in html and "typical share is 59%" in html and "729 faculty" in html
+    html = person_page(p, uniq_slugs([p], lambda x: x["display_name"]), "d1", oa, {}, "../")      # no site-wide figure: no sentence
+    assert "typical share" not in html

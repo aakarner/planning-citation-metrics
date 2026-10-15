@@ -215,7 +215,8 @@ Collapsed leaderboards of most-cited faculty and programs.
 **Person.** Current appointment and rank, PhD, the headline figure with its source badge
 and, for a fallback figure, a note on how to set up a Scholar profile. Sparkline of the
 person's own readings, with readings from any profile other than the one now held left
-out. OpenAlex comparison where the headline is Scholar. Percentiles overall and within
+out. OpenAlex comparison where the headline is Scholar, with the person's OpenAlex share of
+their Scholar total beside the typical share across the site. Percentiles overall and within
 rank. Links to the profiles on record.
 
 **Program.** Roster with rank, figures and within-rank percentiles; summary tiles; link to
