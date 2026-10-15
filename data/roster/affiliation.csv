@@ -1056,7 +1056,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 1057,92,13,associate,regular,1,2026-09-14,,"change from Scholar profile 2026-09-14: email @dal.ca; affiliation ""Associate Professor, Dalhousie University"""
 1058,121,20,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @gatech.edu; affiliation ""Associate Professor @ Georgia Tech"""
 1059,144,21,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @harvard.edu; affiliation ""Associate Professor, Urban Planning and Design, Harvard University"""
-1060,145,78,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @uic.edu; affiliation ""Department of Urban Planning and Policy, University of Illinois at Chicago"""
+1060,145,78,full,regular,1,2026-09-15,2026-10-15,"change from Scholar profile 2026-09-15: email @uic.edu; affiliation ""Department of Urban Planning and Policy, University of Illinois at Chicago"" | closed 2026-10-15: the September move to UIC was read from a stale profile; she is at Harvard"
 1061,167,24,full,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @iastate.edu; affiliation ""Professor of Urban and Regional Planning, Iowa State University"""
 1062,176,26,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @ksu.edu; affiliation ""Associate Professor, Kansas State University"""
 1063,178,26,associate,regular,1,2026-09-15,,"change from Scholar profile 2026-09-15: email @ksu.edu; affiliation ""Associate Professor of Regional and Community Planning, Kansas State University"""
@@ -1340,3 +1340,4 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 1343,889,104,full,emeritus,1,2026-10-12,,"retired 2026-10-12 (Alex Karner); emeritus, not listed"
 1344,1153,104,assistant,regular,1,2026-10-12,,rank verified 2026-10-12; new hire per Alex Karner 2026-10-12; rank assumed assistant for a new faculty member
 1345,1152,104,assistant,regular,1,2026-10-12,,rank verified 2026-10-12; new hire from https://soa.utexas.edu/news/welcoming-new-faculty-members-0 ('Assistant Professor')
+1346,145,21,full,regular,1,2026-10-15,,"rank verified 2026-10-15; Harvard GSD page https://www.gsd.harvard.edu/person/rachel-weber/ ('Chair of the Department of Urban Planning and Design, Emma Bloomberg Professor of Urban Planning'); correction written in 2026-10-15; Scholar profile still reads UIC"
