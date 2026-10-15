@@ -276,16 +276,22 @@ sources_scholar = """<strong>Google Scholar</strong> is the headline source. It 
      Last refreshed {scholar_date}."""
 sources_openalex = """<strong>OpenAlex</strong> covers the remaining {fallback_count} people, who have no Scholar profile we
      could find. Those figures are marked <span class="pill pill-oa">OpenAlex</span> everywhere they
-     appear. OpenAlex is journal-centric and normally reports fewer citations than Scholar for the
-     same person, so those numbers are very likely undercounts and are not comparable to the Scholar
-     ones. We do not adjust or scale them; we label them. Where OpenAlex has split one person
-     across several author records, we add the records together. An OpenAlex record is used
-     however small it is: a person whose record holds four citations is shown with four, and a
-     Scholar profile is the way to a fuller figure.
+     appear. OpenAlex normally reports fewer citations than Scholar for the same person, and the
+     main reason is not which papers it indexes but which <em>citing</em> documents it does: a
+     citation counts only when the citing work is itself indexed and its reference list has been
+     parsed. Citations from reports, theses, books and working papers, which carry much of
+     planning's influence, are largely invisible to it, while Scholar counts whatever it can crawl.
+     Across the faculty here with both figures, OpenAlex typically counts about three fifths of the
+     Scholar total, and each person's page shows their own share beside that. Those numbers are
+     undercounts and are not comparable to the Scholar ones. We do not adjust or scale them; we
+     label them. Where OpenAlex has split one person across several author records, we add the
+     records together, and where its summary for a record falls behind the works it files under
+     that record, we recompute the figures from the works. An OpenAlex record is used however
+     small it is: a person whose record holds four citations is shown with four, and a Scholar
+     profile is the way to a fuller figure.
      Last refreshed {openalex_date}."""
 sources_invitation = """Anyone shown with an OpenAlex figure can move to the Scholar series by
-     <a href="{scholar_help}">creating a Scholar profile</a>. We re-check for new profiles each
-     semester."""
+     <a href="{scholar_help}">creating a Scholar profile</a>. We search for new profiles daily."""
 cadence_heading = "How often it updates"
 cadence_body = """OpenAlex monthly; Google Scholar on a rolling schedule of about fifty profiles a week,
      oldest reading first, so each profile is re-read roughly every fifteen weeks; faculty
@@ -314,10 +320,20 @@ percentiles_body = """Percentiles are computed across the faculty in this datase
 limitations_heading = "Known ways this is wrong"
 limitation_lag = """<strong>Profiles lag reality.</strong> Appointments are updated from what a Scholar profile
         says, so someone who moved but has not updated their profile stays put here."""
-limitation_names = """<strong>Name collisions.</strong> A common name can pick up another researcher's record,
-        particularly on the OpenAlex side. Matches were reviewed, but not all of them."""
+limitation_names = """<strong>Name collisions, in both directions.</strong> A common name can pick up another
+        researcher's record, particularly on the OpenAlex side; matches are reviewed and we remove
+        the ones we find. The reverse error is harder to see and harder to fix: OpenAlex can fail to
+        attach a person's own work to their record, splitting it into fragments or leaving it
+        unassigned, and this falls hardest on very common surnames, East Asian surnames among them.
+        Our review catches strangers added to a record; it cannot restore work OpenAlex never
+        attached. An ORCID on the person's publications is the one lever that reliably helps."""
 limitation_scholar = """<strong>Scholar counts are generous.</strong> They include citations from preprints, theses
         and self-citations, and they change from week to week."""
+limitation_fields = """<strong>Subfields do not publish alike.</strong> A transportation modeller and a qualitative
+        community-development scholar write into different streams with different citation habits,
+        and tenure committees in planning compare people within their subfield for that reason.
+        The site compares within academic rank only, so a figure here says less about a person's
+        standing in their own subfield than the precision of the number suggests."""
 limitation_missing = """<strong>Missing people.</strong> New hires appear only after the next roster review, and
         anyone recorded as having left a tracked program drops out of the site entirely, so a
         search for them returns nothing even though their earlier figures remain in the

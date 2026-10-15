@@ -952,6 +952,7 @@ def methods_page(data, base, db_name) -> str:
     <li>{m("limitation_lag")}</li>
     <li>{m("limitation_names")}</li>
     <li>{m("limitation_scholar")}</li>
+    <li>{m("limitation_fields")}</li>
     <li>{m("limitation_missing")}</li>
   </ul>
   <p>{m("corrections_body", **vals)}</p>
