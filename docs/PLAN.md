@@ -194,7 +194,9 @@ person to emeritus, or closes the appointment.
 
 **Write-ins.** Faculty and colleagues report moves, retirements and new hires by email.
 These are applied directly with the reporter and date in the row's source note, and are
-the fastest signal the system has.
+the fastest signal the system has. A request to be left off the site is honoured in full:
+the person's rows are removed from the roster, the queue and the snapshots, and a private
+list, kept out of the repository, stops the program-page scan from adding them again.
 
 ## 8. The site
 

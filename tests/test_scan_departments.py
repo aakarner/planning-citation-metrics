@@ -187,3 +187,14 @@ def test_page_furniture_is_not_a_name():
 def test_of_instruction_is_not_tenure_line():
     # Iowa: "Assistant Professor of Instruction" was about to be added as a new hire
     assert classify_title("Assistant Professor of Instruction")[0] is None
+
+
+
+def test_people_who_opted_out_are_never_re_added_as_new_hires(tmp_path, monkeypatch):
+    from pipeline import scan_departments
+    f = tmp_path / "opt_out.csv"
+    f.write_text("name,google_scholar_id,department_id,opted_out_on,note\nSam Example,,46,2026-10-15,asked to be left off\n")
+    monkeypatch.setattr(scan_departments, "OPT_OUT_FILE", f)
+    assert scan_departments.norm("Sam Example") in scan_departments.load_opt_outs()
+    monkeypatch.setattr(scan_departments, "OPT_OUT_FILE", tmp_path / "missing.csv")
+    assert scan_departments.load_opt_outs() == set()

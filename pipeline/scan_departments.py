@@ -42,7 +42,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import date
 from pathlib import Path
 
-from . import BUILD_DIR, ROSTER_DIR
+from . import BUILD_DIR, PRIVATE_DIR, ROSTER_DIR
 from .match_openalex import jaro_winkler, read_csv, write_csv
 
 UA = {"User-Agent": ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) "
@@ -436,6 +436,19 @@ FIELDS = ["department_id", "department", "status", "url", "person_id", "name", "
 HOLD_FILE = ROSTER_DIR / "new_hire_hold.csv"
 
 
+OPT_OUT_FILE = PRIVATE_DIR / "opt_out.csv"   # gitignored: people who asked to be left off the site
+
+
+def load_opt_outs() -> set[str]:
+    """Normalised names of people who asked not to be listed. Kept out of the
+    public repository, read here so a program page cannot re-add them as a new
+    hire. Matching is by name alone, so it holds wherever the person moves."""
+    if not OPT_OUT_FILE.exists():
+        return set()
+    _, rows = read_csv(OPT_OUT_FILE)
+    return {norm(r["name"]) for r in rows if r.get("name")}
+
+
 def load_hold() -> set[tuple[str, str]]:
     """(department_id, normalised name) of new_hire rows --apply all must skip:
     names from a school- or department-wide page that are not the planning
@@ -514,6 +527,7 @@ def main(argv=None) -> None:
     next_aff = max(int(a["affiliation_id"]) for a in affs) + 1
     next_pid = max(int(p["person_id"]) for p in people) + 1
     hold = load_hold()
+    opt_outs = load_opt_outs()
     promoted = added = held = 0
     for r in rows:
         if r["kind"] in ("promotion", "demotion"):
@@ -527,7 +541,7 @@ def main(argv=None) -> None:
                     next_aff += 1; promoted += 1
                     break
         elif r["kind"] == "new_hire" and r["status"] == "ok" and args.apply == "all":
-            if (r["department_id"], norm(r["name"])) in hold:
+            if (r["department_id"], norm(r["name"])) in hold or norm(r["name"]) in opt_outs:
                 held += 1
                 continue
             parts = r["name"].split()

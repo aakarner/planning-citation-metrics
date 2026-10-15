@@ -348,7 +348,6 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 347,346,45,full,regular,1,,,workbook-2026
 348,347,46,full,regular,1,,,workbook-2026
 349,348,46,assistant,regular,1,,,workbook-2026
-350,349,46,associate,regular,1,,,workbook-2026
 351,350,46,assistant,regular,1,,,workbook-2026
 352,351,46,associate,regular,1,,,workbook-2026
 353,352,47,full,regular,1,,,workbook-2026
