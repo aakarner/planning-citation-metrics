@@ -30,6 +30,7 @@ from pathlib import Path
 
 from . import ROSTER_DIR, SNAPSHOT_DIR
 from .match_openalex import REVIEW_DIR
+from .openalex import get as oa_get
 from .openalex import get_author
 
 FIELDS = [
@@ -53,6 +54,65 @@ def accepted_ids(people: list[dict], review_rows: list[dict]) -> dict[str, list[
     return out
 
 
+STALE_WORKS_RATIO = 1.25   # the works index holding this many more works than the author record says
+STALE_WORKS_MIN = 5        # ...and at least this many more, before the record's totals are distrusted
+
+
+def works_index_count(author_id: str) -> int:
+    """How many works the works index files under this author right now."""
+    return (oa_get("/works", {"filter": f"author.id:{author_id}", "per-page": 1, "select": "id"},
+                   use_cache=False).get("meta") or {}).get("count") or 0
+
+
+def fetch_works(author_id: str) -> list[dict]:
+    out, cursor = [], "*"
+    while cursor:
+        page = oa_get("/works", {"filter": f"author.id:{author_id}", "per-page": 200,
+                                 "select": "id,cited_by_count,publication_year,counts_by_year", "cursor": cursor}, use_cache=False)
+        out.extend(page.get("results") or [])
+        cursor = (page.get("meta") or {}).get("next_cursor") if page.get("results") else None
+    return out
+
+
+def figures_from_works(works: list[dict]) -> dict:
+    """cited_by_count, works_count, summary_stats and counts_by_year recomputed from the works themselves."""
+    cites = sorted((w.get("cited_by_count") or 0 for w in works), reverse=True)
+    h = sum(1 for i, c in enumerate(cites, 1) if c >= i)
+    by_year: dict[int, int] = {}
+    for w in works:
+        for y in w.get("counts_by_year") or []:
+            by_year[y["year"]] = by_year.get(y["year"], 0) + (y.get("cited_by_count") or 0)
+    return {"cited_by_count": sum(cites), "works_count": len(works),
+            "summary_stats": {"h_index": h, "i10_index": sum(1 for c in cites if c >= 10)},
+            "counts_by_year": [{"year": y, "cited_by_count": c} for y, c in sorted(by_year.items(), reverse=True)]}
+
+
+def reconcile_with_works(record: dict, index_count: int | None = None, works: list[dict] | None = None) -> dict:
+    """Replace an author record's totals with figures summed from its works when
+    the works index disagrees with the record.
+
+    OpenAlex's author-level statistics can lag its works index: one record
+    reported 12 works and 51 citations while 31 works, with 660 citations
+    between them, were filed under it (2026-10-15). In a sample of 30 of our
+    authors the two agreed for 29, so this costs one extra call per record and
+    the second lookup only when it is needed. The record is marked so the
+    stored payload says where the figures came from.
+    """
+    aid = record.get("_id") or (record.get("id") or "").rsplit("/", 1)[-1]
+    if index_count is None:
+        index_count = works_index_count(aid)
+    said = record.get("works_count") or 0
+    if index_count < STALE_WORKS_MIN or index_count < max(said * STALE_WORKS_RATIO, said + STALE_WORKS_MIN):
+        return record
+    if works is None:
+        works = fetch_works(aid)
+    fixed = dict(record)
+    fixed.update(figures_from_works(works))
+    fixed["_reconciled"] = {"author_record_said": {"works_count": said, "cited_by_count": record.get("cited_by_count")},
+                            "works_index": index_count}
+    return fixed
+
+
 def aggregate(records: list[dict], year: int) -> dict:
     """One person's figures from one or more OpenAlex author records.
 
@@ -72,6 +132,8 @@ def aggregate(records: list[dict], year: int) -> dict:
                                        "summary_stats", "last_known_institutions", "counts_by_year")}
     raw["openalex_author_id"] = primary.get("_id")
     raw["openalex_author_ids"] = [a.get("_id") for a in records]
+    if any(a.get("_reconciled") for a in records):
+        raw["reconciled_from_works"] = {a.get("_id"): a["_reconciled"] for a in records if a.get("_reconciled")}
     if len(records) > 1:
         raw["records"] = [{"id": a.get("_id"), "cited_by_count": a.get("cited_by_count"),
                            "works_count": a.get("works_count"),
@@ -144,6 +206,7 @@ def main(argv=None) -> None:
                 try:
                     a = get_author(aid)
                     a["_id"] = aid
+                    a = reconcile_with_works(a)      # author totals can lag the works index
                     records.append(a)
                 except Exception as e:
                     print(f"  [{i}/{len(todo)}] {p['display_name']}: record {aid} FAILED ({e})", file=sys.stderr)

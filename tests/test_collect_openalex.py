@@ -50,3 +50,23 @@ def test_accepted_ids_puts_the_roster_id_first_and_adds_accepted_rows_once():
             {"person_id": "2", "source": "openalex", "status": "accepted", "external_id": "Q"},
             {"person_id": "3", "source": "google_scholar", "status": "accepted", "external_id": "S"}]
     assert accepted_ids(people, rows) == {"1": ["P", "F1"], "2": ["Q"]}
+
+
+
+def test_a_record_whose_totals_lag_its_works_is_recomputed_from_the_works():
+    from pipeline.collect_openalex import reconcile_with_works, figures_from_works, aggregate
+    record = {"_id": "A1", "works_count": 12, "cited_by_count": 51, "summary_stats": {"h_index": 3, "i10_index": 2},
+              "counts_by_year": [{"year": 2026, "cited_by_count": 5}]}
+    works = [{"cited_by_count": c, "publication_year": 2019, "counts_by_year": [{"year": 2026, "cited_by_count": c // 10}]}
+             for c in (238, 107, 63, 35, 31) + (12,) * 10 + (1,) * 16]       # 31 works, 610 citations
+    fixed = reconcile_with_works(record, index_count=31, works=works)
+    assert fixed["cited_by_count"] == 610 and fixed["works_count"] == 31
+    assert fixed["summary_stats"]["h_index"] == 12 and fixed["summary_stats"]["i10_index"] == 15
+    assert fixed["_reconciled"]["author_record_said"] == {"works_count": 12, "cited_by_count": 51}
+    assert fixed["counts_by_year"][0] == {"year": 2026, "cited_by_count": sum(c // 10 for c in (238, 107, 63, 35, 31) + (12,) * 10)}
+    row = aggregate([fixed], 2026)
+    assert row["total_citations"] == 610 and "reconciled_from_works" in row["raw_json"]
+    # a record the index agrees with is left alone, as is one off by only a little
+    assert reconcile_with_works(record, index_count=12) is record
+    assert reconcile_with_works(record, index_count=14) is record
+    assert figures_from_works([]) == {"cited_by_count": 0, "works_count": 0, "summary_stats": {"h_index": 0, "i10_index": 0}, "counts_by_year": []}
