@@ -143,9 +143,12 @@ the decisions and reasons back to the queue and the roster takes the accepted id
 builders refuse to overwrite a workbook that already holds reviewer entries.
 
 **ORCID.** Copied from an accepted OpenAlex record, or read off a faculty page by a
-reviewer; a disagreement between the two is flagged, since it usually means the OpenAlex
-match is wrong. ORCID's education section fills a missing PhD year and institution where
-the record names a doctorate.
+reviewer or supplied by the person; a disagreement between the two is flagged, since it
+usually means the OpenAlex match is wrong. An independently sourced ORCID, one that did not
+come from OpenAlex itself, settles the OpenAlex side directly: the matcher asks OpenAlex for
+the record linked to that ORCID and accepts it, which reaches a person's own record however
+many others share the name. ORCID's education section fills a missing PhD year and
+institution where the record names a doctorate.
 
 ## 6. Collection and automation
 

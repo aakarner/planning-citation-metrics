@@ -52,3 +52,39 @@ def test_the_primary_id_is_the_accepted_record_with_the_most_works():
            {"external_id": "mid", "works_count": 40, "cited_by_count": 50}]
     assert primary_id(acc) == "big"                       # most works; ties broken by citations
     assert primary_id([{"external_id": "only", "works_count": None, "cited_by_count": None}]) == "only"
+
+
+
+def test_the_record_linked_to_a_persons_orcid_is_accepted_unless_a_person_rejected_it():
+    from pipeline.match_openalex import apply_orcid_matches
+    person = {"person_id": "9", "display_name": "AJ Kim"}
+    cand = {"external_id": "A1", "candidate_name": "A. J. Kim", "score": 0.6, "name_sim": 0.8, "inst_match": 1.0,
+            "topic_share": 0.9, "cites_ratio": None, "works_count": 31, "cited_by_count": 660, "h_index": 12,
+            "last_known_institution": "San Diego State University", "orcid": "https://orcid.org/0000-0002-0000-0000", "_department": "SDSU"}
+    rows = [{"person_id": "9", "external_id": "A1", "source": "openalex", "status": "pending", "reviewed_by": None, "notes": ""}]
+    assert apply_orcid_matches(rows, [(person, dict(cand))], "2026-10-15") == 1
+    assert rows[0]["status"] == "accepted" and rows[0]["reviewed_by"] == "orcid" and "ORCID" in rows[0]["notes"]
+    # a record the matcher had rejected by rule is overruled; one a reviewer rejected is not
+    rows = [{"person_id": "9", "external_id": "A1", "source": "openalex", "status": "rejected", "reviewed_by": "matcher", "notes": "x"}]
+    assert apply_orcid_matches(rows, [(person, dict(cand))], "2026-10-15") == 1 and rows[0]["status"] == "accepted"
+    rows = [{"person_id": "9", "external_id": "A1", "source": "openalex", "status": "rejected", "reviewed_by": "Maddie", "notes": "not them"}]
+    assert apply_orcid_matches(rows, [(person, dict(cand))], "2026-10-15") == 0 and rows[0]["status"] == "rejected"
+    # a record not yet in the queue is added, accepted, with the department filled in
+    rows = []
+    assert apply_orcid_matches(rows, [(person, dict(cand))], "2026-10-15") == 1
+    assert rows[0]["status"] == "accepted" and rows[0]["department"] == "SDSU" and "_department" not in rows[0]
+    # an already-accepted row is left alone
+    assert apply_orcid_matches(rows, [(person, dict(cand))], "2026-10-15") == 0
+
+
+
+def test_only_an_independently_sourced_orcid_drives_a_lookup():
+    from pipeline.match_openalex import orcid_is_independent
+    rows = [{"person_id": "1", "source": "openalex", "status": "accepted", "orcid": "https://orcid.org/0000-0002-3201-7339"}]
+    copied = {"person_id": "1", "orcid": "0000-0002-3201-7339", "notes": ""}
+    assert not orcid_is_independent(copied, rows)                       # came off the accepted record itself
+    from_page = {"person_id": "2", "orcid": "0000-0001-6584-3066", "notes": "ORCID from faculty page, rank review 2026-10-01 by Maddie"}
+    assert orcid_is_independent(from_page, rows)
+    from_person = {"person_id": "3", "orcid": "0000-0002-9306-2141", "notes": "ORCID sent by the scholar 2026-10-15"}
+    assert orcid_is_independent(from_person, rows)
+    assert not orcid_is_independent({"person_id": "4", "orcid": "", "notes": "ORCID from faculty page"}, rows)

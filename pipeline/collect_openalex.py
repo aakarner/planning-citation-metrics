@@ -106,6 +106,8 @@ def reconcile_with_works(record: dict, index_count: int | None = None, works: li
         return record
     if works is None:
         works = fetch_works(aid)
+    if len(works) < 0.9 * index_count:
+        return record                                 # the fetch came back short; keep the record's own figures
     fixed = dict(record)
     fixed.update(figures_from_works(works))
     fixed["_reconciled"] = {"author_record_said": {"works_count": said, "cited_by_count": record.get("cited_by_count")},

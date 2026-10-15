@@ -81,7 +81,7 @@ instructions on the first tab). To apply the decisions:
 
 ```bash
 .venv/bin/python -m pipeline.import_review data/review/openalex_review.xlsx
-.venv/bin/python -m pipeline.match_openalex --rescore
+.venv/bin/python -m pipeline.match_openalex --rescore   # also accepts the record linked to any independently sourced ORCID
 ```
 
 ## Google Scholar collector

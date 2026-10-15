@@ -198,7 +198,8 @@ def is_stub(c: dict) -> bool:
 
 def primary_id(accepted: list[dict]) -> str:
     """Of a person's accepted records, the one with the most works (ties: most cited)."""
-    best = max(accepted, key=lambda c: ((c.get("works_count") or 0), (c.get("cited_by_count") or 0)))
+    num = lambda v: float(v) if v not in (None, "") else 0.0      # review rows read from CSV carry strings
+    best = max(accepted, key=lambda c: (num(c.get("works_count")), num(c.get("cited_by_count"))))
     return best["external_id"]
 
 
@@ -265,6 +266,71 @@ def fetch_candidates(person: dict) -> list[dict]:
     if not results and person.get("middle_name"):
         results = filter_authors(f"{person['first_name']} {person['last_name']}")
     return results
+
+
+def orcid_record(orcid: str) -> dict | None:
+    """The OpenAlex author record linked to an ORCID, or None if there is none."""
+    from .openalex import get as oa_get
+    try:
+        return oa_get(f"/authors/orcid:{orcid}")
+    except Exception as e:
+        if "404" in str(e):
+            return None                         # no record carries this ORCID
+        raise
+
+
+INDEPENDENT_ORCID = ("ORCID from faculty page", "read off", "sent by", "supplied by", "given by")
+
+
+def orcid_is_independent(person: dict, rows: list[dict]) -> bool:
+    """Is this person's roster ORCID evidence about OpenAlex, or merely copied from it?
+
+    Most roster ORCIDs were copied off an accepted OpenAlex record, so looking
+    that ORCID up again proves nothing and, when OpenAlex has since moved the
+    ORCID, points at a stranger (Peng Chen's led to a Kunming record, Martin
+    Murray's to a one-work record named 'Taru'). An ORCID counts as independent
+    when a reviewer read it off the person's page or the person supplied it,
+    which the roster note records, and no accepted record already carries it.
+    """
+    orcid = (person.get("orcid") or "").strip()
+    if not orcid:
+        return False
+    for r in rows:
+        if r["person_id"] == person["person_id"] and r["source"] == "openalex" and r["status"] == "accepted" \
+                and (r.get("orcid") or "").rsplit("/", 1)[-1] == orcid:
+            return False                                # already settled through this ORCID
+    note = person.get("notes") or ""
+    return any(k in note for k in INDEPENDENT_ORCID)
+
+
+def apply_orcid_matches(rows: list[dict], found: list[tuple[dict, dict]], today: str) -> int:
+    """Accept, in place, the record OpenAlex links to each person's ORCID.
+
+    `found` pairs a person with the scored candidate dict for that record. An
+    ORCID is the strongest identity signal there is, so the row is accepted
+    unless a person has rejected that very record. Returns how many rows
+    changed. Name searches keep only the five best-scoring same-name records,
+    which for a common surname can miss the person's own fragments; the ORCID
+    lookup reaches the right record regardless of how many share the name.
+    """
+    by_key = {(r["person_id"], r.get("external_id") or ""): r for r in rows}
+    changed = 0
+    for person, cand in found:
+        key = (person["person_id"], cand["external_id"])
+        row = by_key.get(key)
+        if row is None:
+            row = {"person_id": person["person_id"], "display_name": person["display_name"],
+                   "department": cand.pop("_department", None), "source": "openalex",
+                   "status": "pending", "reviewed_by": None, "reviewed_at": None, "notes": "", **cand}
+            rows.append(row); by_key[key] = row
+        if row["status"] == "accepted":
+            continue
+        if row["status"] == "rejected" and (row.get("reviewed_by") or "") not in ("matcher", "audit_matches", "audit", ""):
+            continue                                    # a person said no; an ORCID does not overrule them
+        row["status"], row["reviewed_by"], row["reviewed_at"] = "accepted", "orcid", today
+        row["notes"] = " ".join(filter(None, [row.get("notes"), f"accepted {today}: OpenAlex links this record to the person's ORCID"]))
+        changed += 1
+    return changed
 
 
 def main(argv=None) -> None:
@@ -355,6 +421,31 @@ def main(argv=None) -> None:
                if r["person_id"] not in processed or r["source"] != "openalex"
                or r["status"] == "rejected"]
     all_rows = carried + review_rows
+
+    # ---- ORCID: the record OpenAlex links to a person's own ORCID is theirs ----
+    found: list[tuple[dict, dict]] = []
+    for person in persons:
+        orcid = (person.get("orcid") or "").strip()
+        if not orcid or person["person_id"] not in current or not orcid_is_independent(person, all_rows):
+            continue
+        rec = orcid_record(orcid)
+        if not rec or (rec.get("works_count") or 0) < 2:
+            continue                                    # a one-work record is as likely a misfiled ORCID as a person
+        aff = current.get(person["person_id"])
+        dept = dept_by_id.get(aff["department_id"]) if aff else None
+        cand = score_candidate(person, rec, dept["openalex_institution_id"] if dept else None, gs_total.get(person["person_id"]))
+        cand["_department"] = dept["short_name"] if dept else None
+        found.append((person, cand))
+    n_orcid = apply_orcid_matches(all_rows, found, date.today().isoformat())
+    accepted_by: dict[str, list[dict]] = {}
+    for r in all_rows:
+        if r["source"] == "openalex" and r["status"] == "accepted" and r.get("external_id"):
+            accepted_by.setdefault(r["person_id"], []).append(r)
+    for person in persons:
+        rs = accepted_by.get(person["person_id"])
+        if rs:
+            person["openalex_author_id"] = primary_id(rs)
+    print(f"ORCID lookups: {len(found)} people have a record linked to their ORCID; {n_orcid} newly accepted")
 
     print("\nsummary:", json.dumps(tally))
     if args.dry_run:

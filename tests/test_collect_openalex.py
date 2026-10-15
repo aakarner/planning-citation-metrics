@@ -66,6 +66,8 @@ def test_a_record_whose_totals_lag_its_works_is_recomputed_from_the_works():
     assert fixed["counts_by_year"][0] == {"year": 2026, "cited_by_count": sum(c // 10 for c in (238, 107, 63, 35, 31) + (12,) * 10)}
     row = aggregate([fixed], 2026)
     assert row["total_citations"] == 610 and "reconciled_from_works" in row["raw_json"]
+    # a short fetch (paging failed, index moved) must not replace the figures with a partial sum
+    assert reconcile_with_works(record, index_count=31, works=works[:20]) is record
     # a record the index agrees with is left alone, as is one off by only a little
     assert reconcile_with_works(record, index_count=12) is record
     assert reconcile_with_works(record, index_count=14) is record
