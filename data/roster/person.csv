@@ -49,7 +49,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 48,Cornelius,,Nuworsoo,Cornelius Nuworsoo,2004,UC Berkeley,"Transportation Engineering, Transportation and Land Use Planning, Quantitative Methods in Planning",,A5080562239,,,https://researchgate.net/profile/Cornelius_Nuworsoo,,,
 49,Ryan,,Sandwick,Ryan Sandwick,2013,University of Glasgow,,,A5048642685,,,,,,
 50,Anahita,,Shadkam,Anahita Shadkam,2024,University of Waterloo,,11m1T1cAAAAJ,A5006018870,,,,,,
-51,Miriam,,Giottonini-Badilla,Miriam Giottonini-Badilla,2018,UCLA,,,,,,,,,
+51,Miriam,,Giottonini-Badilla,Miriam Giottonini-Badilla,2018,UCLA,,,A5064478914,0000-0003-4013-7290,,,,,ORCID found by registry search (2026-10-17); publishes as Paloma Giottonini
 52,Henrik,P.,Minassians,Henrik Minassians,2002,SUNY Albany,"Public Administration, Urban Policy Design and Management, Urban Governance, Contract Design and Management, Policy Implementation Theory.",NWlpZX4AAAAJ,A5008402850,,,https://researchgate.net/profile/Henrik_Minassians,https://linkedin.com/in/henrik-minassians-3bb82751,,
 53,Craig,,Olwert,Craig Olwert,2010,Ohio State University,"Urban Economics, Sustainability, Environmental Planning, City Form, GIS, Quantitative Methods",,A5035373175,0000-0003-4803-9863,,,https://linkedin.com/in/craig-olwert-84357b6,,
 54,Ward,,Thomas,Ward Thomas,1997,UCLA,"Economic Development, Public Policy Analysis, Environmental Planning",,A5056647659,,,,,,
@@ -189,7 +189,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 188,Marcia,,England,Marcia England,2006,University of Kentucky,,Dx43lFkAAAAJ,A5039843435,,,,,,
 189,David,,Prytherch,David Prytherch,2003,University of Arizona,,Uc4F40cAAAAJ,A5050632312,,,,,,
 190,Damon,,Scott,Damon Scott,2008,"University of Texas, Austin",,q48wRmAAAAAJ,A5074745646,0000-0002-2701-343X,,,,,
-191,Si,,Chen,Si Chen,2021,"University of Illinois, Urbana-Champaign",,,,,,,,,
+191,Si,,Chen,Si Chen,2021,"University of Illinois, Urbana-Champaign",,,A5068542903,0000-0003-0641-4020,,,,,ORCID and OpenAlex record found by registry search (2026-10-17)
 192,Noah,,Durst,Noah Durst,2017,"University of Texas, Austin",,1E6fpHgAAAAJ,A5079251670,0000-0002-2724-1707,,,,,
 193,Zenia,Z.,Kotval,Zenia Kotval,1994,"University of Massachusetts, Amherst","Local Economic Development, Industrial Development/Redevelopment Policy",P508SQkAAAAJ,A5050198979,,,https://researchgate.net/profile/Zenia_Kotval,,,
 194,Zeenat,,Kotval-Karamchandani,Zeenat Kotval-Karamchandani,2013,"University of Massachusetts, Amherst",,,A5002694048,,,,https://linkedin.com/in/zeenat-kotval-k-ba7b8913,,
@@ -448,9 +448,9 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 448,Ajay,M.,Garde,Ajay Garde,2003,USC,"Urban Design, Urban Form, Sustainable Growth, Physical Planning",6M-FNBEAAAAJ,A5016750586,0000-0001-5558-059X,,,,,
 449,Jessica,,Garrison,Jessica Garrison,2016,MIT,,,A5075993456,0000-0001-9601-4375,,,,,"ORCID from faculty page, rank review 2026-10-01 by Maddie: School news (confirms the one on record)"
 450,Douglas,,Houston,Douglas Houston,2005,UCLA,"Transportation, Air Quality, Urban Inequality, Environmental Equity, Spatial Analysis",,A5002295904,0000-0002-3901-6072,,,,,"Scholar id zISdnLwAAAAJ removed 2026-10-12: a namesake (virtual screening, drug discovery)"
-451,Hun,,Kim,Hun Kim,2015,UC Berkeley,,,,,,,,,
+451,Hun,,Kim,Hun Kim,2015,UC Berkeley,,,A5107194504,0009-0007-7024-4771,,,,,ORCID and OpenAlex record found by registry search (2026-10-17)
 452,Jae,Hong,Kim,Jae Hong Kim,2010,University of Illinois,"Land Development, Local & Regional Economies, Transportation, Business Location Decisions",DH8FiDAAAAAJ,A5023008694,0000-0001-9365-4326,,,https://linkedin.com/in/jae-hong-kim-902b4578,,
-453,Eli,,Knaap,Eli Knaap,2016,University of Maryland,,,,,,,,,"ORCID from faculty page, rank review 2026-10-01 by Maddie: personal website un-accepted 2026-10-17: OpenAlex 594 citations against 68 from pop (8.7x); probable namesake"
+453,Eli,,Knaap,Eli Knaap,2016,University of Maryland,,,A5072323207,0000-0001-7520-2238,,,,,"ORCID from faculty page, rank review 2026-10-01 by Maddie: personal website un-accepted 2026-10-17: OpenAlex 594 citations against 68 from pop (8.7x); probable namesake | ORCID and OpenAlex record found by registry search (2026-10-17); publishes as Elijah Knaap"
 454,Mukul,,Kumar,Mukul Kumar,2021,UC Berkeley,,LGBwO3oAAAAJ,A5046183995,0000-0001-8905-8927,,,,,
 455,William,,Lester,William Lester,2009,UC Berkeley,"Economic Development, Labor Economics, Urban Politics",Ewp2vKYAAAAJ,,,,https://researchgate.net/profile/T_Lester,https://linkedin.com/in/bill-lester-0564735?authType=NAME_SEARCH&authToken=htSm&locale=en_US&srchid=3569073011462609180161&srchindex=1&srchtotal=1&trk=vsrp_people_res_name&trkInfo=VSRPsearchId%3A3569073011462609180161%2CVSRPtargetId%3A16075650%2CVSRPcmpt%3Aprimary%2CVSRPnm%3Atrue%2CauthType%3ANAME_SEARCH,,
 456,Nicholas,J.,Marantz,Nicholas Marantz,2014,MIT,,krBpDDUAAAAJ,A5067895618,0000-0003-2565-6885,,,,,
@@ -1011,7 +1011,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 1011,Paroma,,Wagle,Paroma Wagle,2020,UC Irvine,,Qfm-WKEAAAAJ,A5023639491,0000-0001-5010-4420,,,,,
 1012,Dara,,Wald,Dara Wald,2012,University of Florida,,ZCofoaAAAAAJ,A5002318671,0000-0001-5576-2836,,,,,
 1013,Diane,L.,Zahm,Diane Zahm,1986,Syracuse University,"Crime & Terrorism Prevention/Homeland Security, Environmental Design, Neighborhood Planning, Land Use Planning",,A5046564957,,,,https://linkedin.com/in/diane-zahm-9a834a18,,
-1014,Yang,,Zhang,Yang Zhang,2006,Texas A&M,"Urban Land Use Planning, natural Hazards Mitigation, Post Disaster Re-development, and Sustainable Urban Form, Geographic Information Systems",,,,,,https://linkedin.com/in/yang-zhang-40232a35,,
+1014,Yang,,Zhang,Yang Zhang,2006,Texas A&M,"Urban Land Use Planning, natural Hazards Mitigation, Post Disaster Re-development, and Sustainable Urban Form, Geographic Information Systems",,A5148442607,0000-0001-6044-3549,,,https://linkedin.com/in/yang-zhang-40232a35,,ORCID and OpenAlex record found by registry search (2026-10-17)
 1015,Eric,,Bettis,Eric Bettis,2023,University of Michigan,,,A5147317534,,,,,,
 1016,Patrick,,Cooper-McCann,Patrick Cooper-McCann,2019,University of Michigan,,5Wm29jgAAAAJ,A5056143991,0000-0003-4626-141X,,,,,"ORCID from faculty page, rank review 2026-10-07 by maddie: program website, personal website (confirms the one on record)"
 1017,Andrew,,Guinn,Andrew Guinn,2019,UNC,,-jw3EdQAAAAJ,A5072957334,0009-0009-2692-941X,,,,,"ORCID from faculty page, rank review 2026-10-07 by maddie: program site"
