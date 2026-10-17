@@ -2196,7 +2196,7 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 944,Martine August,"University of Waterloo, Ontario",openalex,A5127580475,Martine Jade August,0.6,1.0,0.0,1.0,0.0,1,0,0,,,pending,,,
 945,Janice Barry,"University of Waterloo, Ontario",openalex,A5035156700,Janice Barry,1.0,1.0,1.0,1.0,0.611,31,662,13,University of Waterloo,https://orcid.org/0000-0003-4251-2015,accepted,matcher,2026-09-14,
 945,Janice Barry,"University of Waterloo, Ontario",openalex,A5072205176,Raewyn Janice Barry,0.476,0.724,0.0,1.0,0.0,1,0,0,,,pending,,,
-946,Jeff Casello,"University of Waterloo, Ontario",openalex,A5001943787,Jeffrey M. Casello,0.9,1.0,1.0,1.0,5.39,55,663,13,,https://orcid.org/0000-0002-9246-9759,rejected,audit_matches,2026-09-15,
+946,Jeff Casello,"University of Waterloo, Ontario",openalex,A5001943787,Jeffrey M. Casello,0.9,1.0,1.0,1.0,5.39,55,663,13,,https://orcid.org/0000-0002-9246-9759,accepted,AK,2026-10-17,alias pass: published as Jeffrey M. Casello; Waterloo and Penn; transportation planning
 947,Jennifer Dean,"University of Waterloo, Ontario",openalex,A5003309377,Jennifer Dean,1.0,1.0,1.0,1.0,1.195,80,2669,25,University of Waterloo,https://orcid.org/0000-0003-2642-7638,accepted,matcher,2026-09-14,
 947,Jennifer Dean,"University of Waterloo, Ontario",openalex,A5090967912,Jennifer Dean,0.672,1.0,0.0,0.812,0.208,6,464,3,Jupiter Medical Center,https://orcid.org/0000-0003-4093-9744,pending,,,
 947,Jennifer Dean,"University of Waterloo, Ontario",openalex,A5037540734,Jennifer Dean Durning,0.65,1.0,0.0,1.0,0.054,10,121,5,MGH Institute of Health Professions,https://orcid.org/0000-0002-3210-4395,pending,,,
@@ -3923,7 +3923,7 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 191,Si Chen,Michigan State University,openalex,A5101756587,Si Chen,0.6,1.0,0.5,0.0,178.2,136,2673,29,Shanghai Jiao Tong University,https://orcid.org/0000-0002-3228-2837,rejected,reviewer,2026-10-12,
 191,Si Chen,Michigan State University,openalex,A5073464445,Si Chen,0.6,1.0,0.5,0.0,151.867,151,2278,25,Jiangsu Normal University,https://orcid.org/0000-0002-5631-7942,rejected,reviewer,2026-10-12,
 205,Miriam Porter,"Minnesota State University, Mankato",openalex,A5056624115,Miriam Porter,0.657,1.0,0.0,0.714,0.814,11,114,4,Novartis (Switzerland),,rejected,maddie,2026-10-10,
-225,Ceasar McDowell,MIT,openalex,A5054022895,Ceasar L. McDowell,0.812,1.0,0.5,0.75,0.59,14,124,5,,,rejected,maddie,2026-10-10,McDowell is still at MIT and not harvard.
+225,Ceasar McDowell,MIT,openalex,A5054022895,Ceasar L. McDowell,0.812,1.0,0.5,0.75,0.59,14,124,5,,,accepted,AK,2026-10-17,McDowell is still at MIT and not harvard. | alias pass: published as Ceasar L. McDowell; community topics; Harvard is his earlier post
 294,Matthew Gebhardt,Portland State University,openalex,A5017215412,Matthew Gebhardt,0.8,1.0,1.0,0.0,2.585,17,168,6,University of Connecticut,https://orcid.org/0009-0003-0953-8931,rejected,AK,2026-10-12,"Astrophysics at UConn | overturned on the OpenAlex record: record is an astrophysicist (galaxies, cosmology; Penn State, UConn); reviewer's own note said so"
 294,Matthew Gebhardt,Portland State University,openalex,A5008243000,Matthew C. Gebhardt,0.7,1.0,0.0,1.0,1.108,1,72,1,Loyola University Chicago,,rejected,reviewer,2026-10-12,
 294,Matthew Gebhardt,Portland State University,openalex,A5021440756,Matthew Gebhardt,0.55,1.0,0.0,0.0,0.708,2,46,1,Nova Southeastern University,,rejected,reviewer,2026-10-12,
@@ -4457,3 +4457,6 @@ person_id,display_name,department,source,external_id,candidate_name,score,name_s
 1148,Taylor Davey,Binghamton University (Department of Public Administration and Policy),openalex,A5052681265,Taylor Davey,0.8,1.0,0.5,1.0,,8,9,2,Colgate University,https://orcid.org/0000-0002-2458-4333,pending,,,
 1148,Taylor Davey,Binghamton University (Department of Public Administration and Policy),openalex,A5028681348,Taylor C. Davey,0.55,1.0,0.0,0.333,,1,3,1,University of Minnesota,,pending,,,
 1152,Bi'Anncha Andrews,"University of Texas, Austin",openalex,,,0,,,,,,,,,,none,matcher,2026-10-17,
+174,Joan Wesley,Jackson State University,openalex,A5108486734,Joan Marshall Wesley,,1.0,1.0,,,66,476,13,Jackson State University,,accepted,AK,2026-10-17,"alias pass: Jackson State record, 66 works; land use and disaster topics"
+797,Monica Teets Farris,University of New Orleans,openalex,A5009293076,Monica Teets Farris,,1.0,1.0,,,25,28,3,,,accepted,AK,2026-10-17,alias pass: New Orleans record (OpenAlex files UNO under LSU New Orleans); disaster and flood-risk topics
+960,Joe Qian,"University of Waterloo, Ontario",openalex,A5041364018,Zhu Qian,,1.0,1.0,,,70,1205,21,University of Waterloo,https://orcid.org/0000-0002-3412-7822,accepted,AK,2026-10-17,alias pass: publishes as Zhu Qian; Waterloo and Texas A&M; urban planning in China
