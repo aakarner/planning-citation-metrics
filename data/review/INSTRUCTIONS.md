@@ -1,11 +1,9 @@
 # Reviewing the two spreadsheets
 
-> **Status, 12 October 2026:** both sheets below have been returned and imported (rank review
-> on 9 October, OpenAlex review on 12 October). What remains is
-> `openalex_review_followup.xlsx`: 84 rows for 32 people — the rows left undecided whose
-> OpenAlex record still exists, one overturned accept, and candidates the matcher found in
-> October for people still without a figure or on Publish or Perish. Same conventions; its own
-> "How to use this" tab says what was missing each time.
+> **Status, 17 October 2026:** all three workbooks have been returned and imported (rank
+> review 9 October, OpenAlex review 12 October, OpenAlex follow-up 17 October). Nothing is
+> outstanding. The next sheets will be built when the queue has enough new candidates to be
+> worth a sitting; the conventions below will not change.
 
 
 Two Excel files need a person to work through them. Both follow the same

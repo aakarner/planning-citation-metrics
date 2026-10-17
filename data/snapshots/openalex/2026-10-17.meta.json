@@ -1,0 +1,4 @@
+{
+  "trigger": "schedule",
+  "notes": "OpenAlex collector; 1036 ok, 0 failed, 10.1 min"
+}
