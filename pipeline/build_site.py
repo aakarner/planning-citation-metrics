@@ -570,6 +570,16 @@ def rising(rows: list[dict], per_rank=RISING_PER_RANK, min_total=RISING_MIN_TOTA
     return out
 
 
+def reversal(old: dict, new: dict, closed_on: dict) -> bool:
+    """A closed row whose replacement returns the person to the department they
+    were in just before it is a correction being undone, not a move: the stint
+    in `old` was read from a stale profile and the roster has been put back.
+    Narrating it as a move would show the mistake a second time (Rachel Weber,
+    2026-10). The row `old` replaced is the one closed on the day `old` opened."""
+    before = closed_on.get((old["person_id"], old["start_date"]))
+    return before is not None and before["department_id"] == new["department_id"]
+
+
 def recent_changes(affs: list[dict], since: str | None) -> dict:
     """Moves, promotions and departures dated on or after `since`.
 
@@ -581,9 +591,11 @@ def recent_changes(affs: list[dict], since: str | None) -> dict:
     out = {"moves": [], "promos": [], "departed": 0}
     if not since:
         return out
-    open_by = {a["person_id"]: a for a in affs if not a["end_date"] and str(a["is_primary"]) == "1"}
-    for old in affs:
-        if not old["end_date"] or old["end_date"] < since or str(old["is_primary"]) != "1":
+    primary = [a for a in affs if str(a["is_primary"]) == "1"]
+    open_by = {a["person_id"]: a for a in primary if not a["end_date"]}
+    closed_on = {(a["person_id"], a["end_date"]): a for a in primary if a["end_date"]}
+    for old in primary:
+        if not old["end_date"] or old["end_date"] < since:
             continue
         new = open_by.get(old["person_id"])
         if new is None:
@@ -591,6 +603,8 @@ def recent_changes(affs: list[dict], since: str | None) -> dict:
         elif new["start_date"] != old["end_date"]:
             continue                       # closed for some other reason; not a change we narrate
         elif new["department_id"] != old["department_id"]:
+            if reversal(old, new, closed_on):
+                continue
             out["moves"].append((old["person_id"], old["dept"], new["dept"]))
         elif RANK_ORDER.get(new["rank"], -1) > RANK_ORDER.get(old["rank"], -1):
             # where the new rank was read: a program website during a roster

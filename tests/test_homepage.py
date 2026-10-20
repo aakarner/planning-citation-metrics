@@ -41,6 +41,20 @@ def test_a_corrected_row_is_not_double_counted():
     assert ch == {"moves": [], "promos": [], "departed": 0}
 
 
+def test_undoing_a_mistaken_move_is_not_narrated_as_a_move():
+    # Moved to D2 on a stale profile, put back in D1 a month later: the second
+    # closing is a correction, not a move D2 -> D1. The departure count and a
+    # genuine onward move are untouched.
+    affs = [aff(1, "a", 1, "full", end="2026-09-15"),
+            aff(2, "a", 2, "full", start="2026-09-15", end="2026-10-15"),
+            aff(3, "a", 1, "full", start="2026-10-15"),
+            aff(4, "b", 1, "full", end="2026-09-15"),
+            aff(5, "b", 2, "full", start="2026-09-15", end="2026-10-15"),
+            aff(6, "b", 3, "full", start="2026-10-15")]
+    ch = recent_changes(affs, "2026-10-01")
+    assert ch == {"moves": [("b", "D2", "D3")], "promos": [], "departed": 0}
+
+
 def test_rank_benchmarks_view_reports_median_and_75th_percentile():
     con = sqlite3.connect(":memory:")
     con.executescript((ROOT / "sql" / "schema.sql").read_text())
