@@ -387,7 +387,7 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 387,386,52,full,regular,1,,,workbook-2026
 388,387,52,assistant,regular,1,,,workbook-2026 | rank verified 2026-10-01; rank review 2026-10-01 by Maddie: program website
 389,388,52,full,regular,1,,,workbook-2026
-390,389,52,full,regular,1,,,workbook-2026
+390,389,52,full,regular,1,,2026-10-19,"workbook-2026 | closed 2026-10-19: retired (Alex Karner, 2026-10-19)"
 391,390,52,assistant,regular,1,,,workbook-2026
 392,391,52,assistant,regular,1,,2026-09-27,workbook-2026 | closed 2026-09-27: promotion read from department page https://www.arch.tamu.edu/directory/?filter%5Bteam%5D=landscape-architecture-and-urban-planning&filter%5Brole%5D=faculty&s=
 393,392,52,full,regular,1,,,workbook-2026
@@ -1343,3 +1343,4 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 1346,145,21,full,regular,1,2026-10-15,,"rank verified 2026-10-15; Harvard GSD page https://www.gsd.harvard.edu/person/rachel-weber/ ('Chair of the Department of Urban Planning and Design, Emma Bloomberg Professor of Urban Planning'); correction written in 2026-10-15; Scholar profile still reads UIC"
 1347,492,61,associate,regular,1,2026-10-15,,"change from Scholar profile 2026-10-15: email @ucla.edu; affiliation ""Associate Professor of Urban Planning, UCLA"""
 1348,770,109,full,regular,1,2026-10-15,,"change from Scholar profile 2026-10-15: email @virginia.edu; affiliation ""H. Louis Salomonsky Professor in Real Estate, School of Architecture, University of Virginia"""
+1349,389,52,full,emeritus,1,2026-10-19,,"retired 2026-10-19 (Alex Karner); emeritus, not listed"
