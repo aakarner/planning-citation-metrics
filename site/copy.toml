@@ -263,7 +263,7 @@ shown = "shown"
 [methods]
 meta_description = "Sources, update cadence, inclusion criteria, and known limitations."
 # Values: people_count, scholar_count, fallback_count, scholar_date, openalex_date,
-#         scholar_help, repo, db_href, year, contact
+#         scholar_help, repo, db_href, year, contact, openalex_count, pop_count, pop_month
 eyebrow = "Methods"
 heading = "Where these numbers come from"
 lede = """This project continues a dataset Tom Sanchez maintained by hand from 2017 to 2026.
@@ -274,7 +274,7 @@ sources_scholar = """<strong>Google Scholar</strong> is the headline source. It 
      non-journal work that matters in planning, and it is what the field is used to seeing. Of the
      {people_count} faculty here, {scholar_count} have a Scholar profile.
      Last refreshed {scholar_date}."""
-sources_openalex = """<strong>OpenAlex</strong> covers the remaining {fallback_count} people, who have no Scholar profile we
+sources_openalex = """<strong>OpenAlex</strong> covers {openalex_count} people who have no Scholar profile we
      could find. Those figures are marked <span class="pill pill-oa">OpenAlex</span> everywhere they
      appear. OpenAlex normally reports fewer citations than Scholar for the same person, and the
      main reason is not which papers it indexes but which <em>citing</em> documents it does: a
@@ -290,7 +290,14 @@ sources_openalex = """<strong>OpenAlex</strong> covers the remaining {fallback_c
      small it is: a person whose record holds four citations is shown with four, and a Scholar
      profile is the way to a fuller figure.
      Last refreshed {openalex_date}."""
-sources_invitation = """Anyone shown with an OpenAlex figure can move to the Scholar series by
+sources_pop = """<strong>Publish or Perish</strong> is the source of last resort. {pop_count} people have neither a
+     Scholar profile nor an OpenAlex record we could match, so they keep the figure from Tom's
+     final lookup in {pop_month}, marked <span class="pill pill-oa">PoP</span>. Publish or Perish
+     reads Google Scholar's search results rather than a profile, so those figures are of the same
+     kind as the Scholar ones, but they were assembled by hand and are frozen: they will not change
+     until the person gains a Scholar profile or an OpenAlex record, and nobody is added on a
+     Publish or Perish figure now."""
+sources_invitation = """Anyone shown with an OpenAlex or Publish or Perish figure can move to the Scholar series by
      <a href="{scholar_help}">creating a Scholar profile</a>. We search for new profiles daily."""
 cadence_heading = "How often it updates"
 cadence_body = """OpenAlex monthly; Google Scholar on a rolling schedule of about fifty profiles a week,

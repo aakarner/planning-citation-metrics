@@ -933,10 +933,15 @@ def others_page(data, slugs, base) -> str:
 def methods_page(data, base, db_name) -> str:
     a = data["asof"]
     n_fb = sum(1 for p in data["people"] if p["is_fallback"])
+    n_pop = sum(1 for p in data["people"] if p["source"] == "pop")
+    pop_date = a.get("pop", "")
     m = lambda key, **kw: t("methods", key, **kw)
     vals = dict(people_count=f"{len(data['people']):,}",
                 scholar_count=f"{len(data['people']) - n_fb:,}",
                 fallback_count=n_fb,
+                openalex_count=n_fb - n_pop,
+                pop_count=n_pop,
+                pop_month=date.fromisoformat(pop_date).strftime("%B %Y") if pop_date else "early 2026",
                 scholar_date=e(a.get("google_scholar", "n/a")),
                 openalex_date=e(a.get("openalex", "n/a")),
                 scholar_help=SCHOLAR_HELP, repo=REPO, contact=CONTACT,
@@ -949,6 +954,7 @@ def methods_page(data, base, db_name) -> str:
   <h2>{m("sources_heading")}</h2>
   <p>{m("sources_scholar", **vals)}</p>
   <p>{m("sources_openalex", **vals)}</p>
+  <p>{m("sources_pop", **vals)}</p>
   <p>{m("sources_invitation", **vals)}</p>
 
   <h2>{m("cadence_heading")}</h2>
