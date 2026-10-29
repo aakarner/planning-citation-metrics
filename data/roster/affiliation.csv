@@ -1344,3 +1344,4 @@ affiliation_id,person_id,department_id,rank,appointment_type,is_primary,start_da
 1347,492,61,associate,regular,1,2026-10-15,,"change from Scholar profile 2026-10-15: email @ucla.edu; affiliation ""Associate Professor of Urban Planning, UCLA"""
 1348,770,109,full,regular,1,2026-10-15,,"change from Scholar profile 2026-10-15: email @virginia.edu; affiliation ""H. Louis Salomonsky Professor in Real Estate, School of Architecture, University of Virginia"""
 1349,389,52,full,emeritus,1,2026-10-19,,"retired 2026-10-19 (Alex Karner); emeritus, not listed"
+1350,1154,168,associate,regular,1,2026-10-29,,rank verified 2026-10-29; program added at the director's request; UCF directory https://ccie.ucf.edu/public-administration/contact/ ('Associate Professor and Graduate Urban and Regional Planning Program Director')

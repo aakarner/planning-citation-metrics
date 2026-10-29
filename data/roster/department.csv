@@ -166,3 +166,4 @@ department_id,short_name,name,university,country,url,openalex_institution_id,ror
 165,University of San Francisco (School of Management),School of Management,University of San Francisco,US,,I76766440,https://ror.org/029m7xn54,,1,other
 166,University of Florida (Department of Civil and Coastal Engineering),Department of Civil and Coastal Engineering,University of Florida,US,,I33213144,https://ror.org/02y3ad647,,1,other
 167,Université de Montréal (École de santé publique),École de santé publique,Université de Montréal,CA,,I70931966,https://ror.org/0161xgx34,,1,other
+168,University of Central Florida,University of Central Florida,University of Central Florida,US,https://ccie.ucf.edu/public-administration/urban-regional-planning/,I106165777,https://ror.org/036nfer12,full,1,planning
