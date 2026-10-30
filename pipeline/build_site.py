@@ -100,7 +100,11 @@ def num(x) -> str:
 
 
 def pct(x) -> str:
-    return f"{round(x * 100)}th" if x is not None else "&mdash;"
+    if x is None:
+        return "&mdash;"
+    n = round(x * 100)
+    suffix = "th" if 10 <= n % 100 <= 20 else {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
+    return f"{n}{suffix}"
 
 
 def slugify(s: str) -> str:

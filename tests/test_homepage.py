@@ -244,3 +244,10 @@ def test_the_openalex_card_puts_a_persons_share_beside_the_typical_one():
     assert "Here OpenAlex counts 21% of the Scholar total" in html and "typical share is 59%" in html and "729 faculty" in html
     html = person_page(p, uniq_slugs([p], lambda x: x["display_name"]), "d1", oa, {}, "../")      # no site-wide figure: no sentence
     assert "typical share" not in html
+
+
+def test_percentile_ordinals_take_the_right_suffix():
+    from pipeline.build_site import pct
+    assert [pct(v) for v in (0.01, 0.02, 0.03, 0.04, 0.11, 0.12, 0.13, 0.21, 0.42, 0.43, 0.81, 1.0)] == [
+        "1st", "2nd", "3rd", "4th", "11th", "12th", "13th", "21st", "42nd", "43rd", "81st", "100th"]
+    assert pct(None) == "&mdash;"
