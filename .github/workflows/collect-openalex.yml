@@ -19,7 +19,7 @@ jobs:
       - run: pip install -e .
       - name: Fetch one record per matched person (free by-id lookups)
         env:
-          OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}   # optional; raises the anonymous limit
+          OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}   # needed: the works-index checks are metered, and the anonymous budget ran out at 706 of 1,050 people on 2026-11-01
         run: python -m pipeline.collect_openalex
       - name: Rebuild database
         run: python -m pipeline.build_db

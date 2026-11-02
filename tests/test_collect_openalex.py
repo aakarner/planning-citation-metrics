@@ -5,6 +5,8 @@ records never share a work: citations, works and i10 add. The h-index does
 not, so the largest record's stands.
 """
 
+import json
+
 from pipeline.collect_openalex import accepted_ids, aggregate
 
 
@@ -72,3 +74,31 @@ def test_a_record_whose_totals_lag_its_works_is_recomputed_from_the_works():
     assert reconcile_with_works(record, index_count=12) is record
     assert reconcile_with_works(record, index_count=14) is record
     assert figures_from_works([]) == {"cited_by_count": 0, "works_count": 0, "summary_stats": {"h_index": 0, "i10_index": 0}, "counts_by_year": []}
+
+
+def test_ids_openalex_has_merged_are_counted_once():
+    """2026-11-01: OpenAlex had folded Ahmed El-Geneidy's four fragments into his
+    main record, so all five accepted ids returned that record and the snapshot
+    summed it five times: 74,820 citations for 14,964. 136 people were affected."""
+    from pipeline.collect_openalex import canonical_id, dedupe_merged
+    main = dict(rec("A1", 14964, 347, 65), id="https://openalex.org/A1")
+    old = dict(main, _id="A2")                                  # fetched under a merged-away id
+    old2 = dict(main, _id="A3")
+    other = dict(rec("A4", 2, 1, 1), id="https://openalex.org/A4")   # a genuine second record
+    distinct, merged = dedupe_merged([main, old, other, old2])
+    assert [a["_id"] for a in distinct] == ["A1", "A4"]
+    assert merged == {"A2": "A1", "A3": "A1"}
+    out = aggregate(distinct, 2026, merged)
+    assert out["total_citations"] == 14966 and out["works_count"] == 348
+    assert json.loads(out["raw_json"])["merged_ids"] == {"A2": "A1", "A3": "A1"}
+    assert canonical_id({"id": None}, "A9") == "A9"             # a record without an id is its own
+
+
+def test_the_roster_id_itself_may_have_been_merged_away():
+    """The roster id is requested first, so when it now resolves to a sibling's
+    id the person still keeps the roster id as the one shown."""
+    from pipeline.collect_openalex import dedupe_merged
+    roster = dict(rec("A1", 500, 20, 9), id="https://openalex.org/A2")
+    sibling = dict(rec("A2", 500, 20, 9), id="https://openalex.org/A2")
+    distinct, merged = dedupe_merged([roster, sibling])
+    assert [a["_id"] for a in distinct] == ["A1"] and merged == {"A2": "A1"}

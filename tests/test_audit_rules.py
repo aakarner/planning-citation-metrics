@@ -137,3 +137,45 @@ def test_an_extra_record_at_a_hospital_with_no_planning_topics_waits_for_a_revie
     assert last_institution_ok("UNC Hospitals", dept) is False
     # a fragment still settles on name and institution alone
     assert settles(1.0, 1.0, 12, 2, 23933, accepted_cites=10766, has_record=True, last_inst_ok=False, topic_share=0.0)
+
+
+def test_a_match_a_person_accepted_or_a_sourced_orcid_settled_stands_whatever_the_ratio():
+    """2026-11-01: a snapshot bug inflated seven people's OpenAlex sums past 3x and
+    the audit un-accepted them all, among them Jeff Casello (accepted by AK with
+    his ORCID) and Hassaan Furqan Khan (ORCID from his faculty page, carried by
+    the record), clearing their ORCIDs too. The ratio is weak evidence next to
+    either; the matcher's own copies of an ORCID are not."""
+    from pipeline.audit_matches import decided_by_a_person, independently_sourced_orcid, settled_matches
+    people = [
+        {"person_id": "1", "orcid": "0000-0001-9059-8779", "notes": "ORCID from faculty page, rank review 2026-10-07"},
+        {"person_id": "2", "orcid": "0000-0002-0942-4016", "notes": None},          # copied by the matcher
+        {"person_id": "3", "orcid": None, "notes": None},
+        {"person_id": "4", "orcid": None, "notes": None},
+    ]
+    def row(pid, ext, status, by, orcid=None):
+        return {"person_id": pid, "source": "openalex", "status": status, "external_id": ext,
+                "orcid": orcid, "reviewed_by": by, "reviewed_at": "2026-10-01"}
+    review = [
+        row("1", "A1", "accepted", "matcher", "https://orcid.org/0000-0001-9059-8779"),
+        row("2", "A2", "accepted", "matcher", "https://orcid.org/0000-0002-0942-4016"),
+        row("3", "A3", "accepted", "AK"),
+        row("4", "A4", "accepted", "audit_matches"),
+        row("4", "A5", "pending", "reviewer"),                  # a pending row settles nothing
+    ]
+    stands = settled_matches(people, review)
+    assert set(stands) == {"1", "3"}
+    assert "ORCID" in stands["1"] and "AK" in stands["3"]
+    assert decided_by_a_person("AK") and decided_by_a_person("maddie") and decided_by_a_person("reviewer")
+    assert not (decided_by_a_person("matcher") or decided_by_a_person("audit_matches") or decided_by_a_person(None))
+    assert independently_sourced_orcid(people[0]) and not independently_sourced_orcid(people[1])
+
+
+def test_un_accepting_keeps_an_orcid_sourced_from_the_person_and_the_ratio_defers_to_people():
+    src = (ROOT / "pipeline" / "audit_matches.py").read_text()
+    clearing = src[src.index('if p["person_id"] in bad:'):src.index("write_csv(ppath")]
+    assert "if not independently_sourced_orcid(p):" in clearing
+    judging = src[src.index("bad = {}"):src.index("accepted matches contradicted")]
+    assert "in stands" in judging
+    # Yang Zhang, 2026-11-01: a two-work fragment Alex had held back as pending was auto-accepted
+    settling = src[src.index("pending candidates the evidence already settles"):src.index("if accepted_now:")]
+    assert 'decided_by_a_person(r.get("reviewed_by"))' in settling

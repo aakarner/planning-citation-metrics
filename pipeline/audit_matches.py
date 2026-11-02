@@ -59,6 +59,41 @@ SIBLING_TOPIC = 0.5     # an extra record at another institution needs this shar
 MEDICAL = ("hospital", "medical", "clinic", "health", "medicine", "cancer")
 MIN_RATIO = 0.05    # kept for implausible()'s two-sided mode; policy no longer un-accepts on the low side
 MIN_BASE = 25       # below this the ratio is noise, so don't judge
+AUTOMATED = {"matcher", "audit_matches", "audit"}   # reviewers that are programs, not people
+
+
+def decided_by_a_person(reviewed_by) -> bool:
+    """A review row someone settled by name, as against the matcher or this audit."""
+    return bool(reviewed_by) and reviewed_by not in AUTOMATED
+
+
+def independently_sourced_orcid(person: dict) -> bool:
+    """The roster ORCID came from the person's own page or an ORCID search, not
+    copied off an OpenAlex record by the matcher (whose copies carry no note)."""
+    notes = person.get("notes") or ""
+    return bool((person.get("orcid") or "").strip()) and ("ORCID from" in notes or "ORCID search" in notes)
+
+
+def settled_matches(people: list[dict], review: list[dict]) -> dict[str, str]:
+    """person_id -> why their accepted OpenAlex match stands whatever the numbers say.
+
+    A ratio against our own figure is this audit's only evidence, and against a
+    stale Publish or Perish base it is weak: Jeff Casello's record, accepted by
+    a person with his ORCID, read 5.4x a 123-citation PoP figure on 2026-11-01
+    and was un-accepted, with his ORCID cleared. The numbers never outweigh a
+    person's decision, nor an independently sourced ORCID that the record carries.
+    """
+    out: dict[str, str] = {}
+    orcids = {p["person_id"]: p["orcid"].strip() for p in people if independently_sourced_orcid(p)}
+    for r in review:
+        if r["source"] != "openalex" or r["status"] != "accepted" or not r.get("external_id"):
+            continue
+        pid = str(r["person_id"])
+        if decided_by_a_person(r.get("reviewed_by")):
+            out.setdefault(pid, f"accepted by {r['reviewed_by']} on {r.get('reviewed_at') or '?'}")
+        elif orcids.get(pid) and (r.get("orcid") or "").rstrip("/").endswith(orcids[pid]):
+            out.setdefault(pid, "the record carries the ORCID sourced for the person")
+    return out
 
 
 def implausible(oa_cites, base_cites, *, high_only: bool = False) -> float | None:
@@ -171,6 +206,12 @@ def main(argv=None) -> None:
     """).fetchall()
     con.close()
 
+    rpath = REVIEW_DIR / "identity_candidates.csv"
+    _, review = read_csv(rpath)
+    ppath = ROSTER_DIR / "person.csv"
+    pfields, people = read_csv(ppath)
+    stands = settled_matches(people, review)
+
     bad = {}
     for r in rows:
         b = base.get(str(r["person_id"]))
@@ -179,6 +220,10 @@ def main(argv=None) -> None:
         base_source, base_cites = b
         oa = r["oa_cites"]
         ratio = implausible(oa, base_cites, high_only=True)   # too few citations never proves a wrong record
+        if ratio is not None and str(r["person_id"]) in stands:
+            print(f"  {r['display_name']:<28} {base_source:<15} ours {base_cites:>7,}  openalex {oa:>7,}  "
+                  f"{ratio:>6.1f}x, but the match stands: {stands[str(r['person_id'])]}")
+            continue
         if ratio is not None:
             bad[str(r["person_id"])] = (
                 f"un-accepted {date.today().isoformat()}: OpenAlex {oa:,} citations against "
@@ -189,8 +234,6 @@ def main(argv=None) -> None:
     print(f"\n{len(bad)} of {len(rows)} accepted matches contradicted by the numbers")
 
     # ---- candidates still awaiting review -----------------------------------
-    rpath = REVIEW_DIR / "identity_candidates.csv"
-    _, review = read_csv(rpath)
     today = date.today().isoformat()
     flagged: dict[int, str] = {}                  # id(row) -> note
     per_person: dict[str, list] = {}
@@ -259,6 +302,8 @@ def main(argv=None) -> None:
     for r in review:
         if r["source"] != "openalex" or r["status"] != "pending" or not r["external_id"] or id(r) in flagged:
             continue
+        if decided_by_a_person(r.get("reviewed_by")):
+            continue        # a person looked and held it back (Yang Zhang's two-work fragment); they decide
         b = base.get(str(r["person_id"]))
         try:
             oa = float(r["cited_by_count"]) if r["cited_by_count"] not in (None, "") else None
@@ -294,22 +339,20 @@ def main(argv=None) -> None:
         return
 
     if bad:
-        ppath = ROSTER_DIR / "person.csv"
-        pfields, people = read_csv(ppath)
         for p in people:
             if p["person_id"] in bad:
                 p["notes"] = " ".join(filter(None, [p.get("notes"), bad[p["person_id"]]]))
                 p["openalex_author_id"] = None
                 # The matcher copied the record's ORCID onto the roster on acceptance;
-                # it is the namesake's too, and renders as a public link.
-                p["orcid"] = None
+                # it is the namesake's too, and renders as a public link. One sourced
+                # from the person's own page is theirs whatever the record was.
+                if not independently_sourced_orcid(p):
+                    p["orcid"] = None
         write_csv(ppath, pfields, people)
         print(f"cleared {len(bad)} ids from {ppath}")
 
     if accepted_now:
         # a newly matched person with no roster id gets the accepted record with the most works
-        ppath = ROSTER_DIR / "person.csv"
-        pfields, people = read_csv(ppath)
         for p in people:
             rs = newly_matched.get(p["person_id"])
             if rs and not (p.get("openalex_author_id") or "").strip():

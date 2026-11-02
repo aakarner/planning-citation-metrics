@@ -1,4 +1,4 @@
 {
   "trigger": "schedule",
-  "notes": "OpenAlex collector; 706 ok, 344 failed, 20.5 min"
+  "notes": "OpenAlex collector; 706 ok, 344 failed on the runner (anonymous budget exhausted, 20.5 min). 136 of those rows summed one merged record once per id; dropped and refetched with the 344 the same day (480 ok, 0 failed, 9.6 min). 1,050 people in all."
 }

@@ -3,8 +3,11 @@
     python -m pipeline.collect_openalex                # -> data/snapshots/openalex/<today>.csv
     python -m pipeline.collect_openalex --date 2026-10-01
 
-One free by-id lookup per author record (OpenAlex does not meter singleton
-GETs), so the monthly run costs nothing. Resumable within a day. Intended to
+One by-id lookup per author record (free: OpenAlex does not meter singleton
+GETs) plus one works-index count per distinct record, which is a list call and
+is metered. The anonymous budget covers roughly 700 people a day, so the
+workflow needs OPENALEX_API_KEY set; when the budget runs out the collector
+stops and the next run picks up the rest. Resumable within a day. Intended to
 run from GitHub Actions on a cron; see .github/workflows/.
 
 OpenAlex often splits one author across several records. A person's records
@@ -16,6 +19,12 @@ bound that is exact whenever the extra records are the one- and two-work
 fragments they usually are. The record with the most works is the primary:
 its fields go in raw_json for the change report, and its id is the one the
 roster row and the site link to.
+
+OpenAlex also merges an author's fragments into one record over time. The old
+ids keep resolving, all to the merged record, so a person's ids are deduplicated
+by the id OpenAlex now returns before anything is summed (2026-11-01: five ids
+for Ahmed El-Geneidy all returned his one 14,964-citation record, and the sum
+published 74,820).
 """
 
 from __future__ import annotations
@@ -30,6 +39,7 @@ from pathlib import Path
 
 from . import ROSTER_DIR, SNAPSHOT_DIR
 from .match_openalex import REVIEW_DIR
+from .openalex import BudgetExhausted
 from .openalex import get as oa_get
 from .openalex import get_author
 
@@ -115,7 +125,29 @@ def reconcile_with_works(record: dict, index_count: int | None = None, works: li
     return fixed
 
 
-def aggregate(records: list[dict], year: int) -> dict:
+def canonical_id(record: dict, requested: str) -> str:
+    """The id OpenAlex files a record under now; an id merged away redirects to it."""
+    return (record.get("id") or "").rsplit("/", 1)[-1] or requested
+
+
+def dedupe_merged(records: list[dict]) -> tuple[list[dict], dict[str, str]]:
+    """Drop records that are one OpenAlex author fetched under several ids.
+
+    Returns the distinct records, in the order first seen, and
+    {dropped id: the id among ours it now resolves to}.
+    """
+    seen: dict[str, dict] = {}
+    merged: dict[str, str] = {}
+    for a in records:
+        canon = canonical_id(a, a["_id"])
+        if canon in seen:
+            merged[a["_id"]] = seen[canon]["_id"]
+            continue
+        seen[canon] = a
+    return list(seen.values()), merged
+
+
+def aggregate(records: list[dict], year: int, merged: dict[str, str] | None = None) -> dict:
     """One person's figures from one or more OpenAlex author records.
 
     Sums are safe because a work sits under exactly one author id; the h-index
@@ -134,6 +166,8 @@ def aggregate(records: list[dict], year: int) -> dict:
                                        "summary_stats", "last_known_institutions", "counts_by_year")}
     raw["openalex_author_id"] = primary.get("_id")
     raw["openalex_author_ids"] = [a.get("_id") for a in records]
+    if merged:
+        raw["merged_ids"] = merged
     if any(a.get("_reconciled") for a in records):
         raw["reconciled_from_works"] = {a.get("_id"): a["_reconciled"] for a in records if a.get("_reconciled")}
     if len(records) > 1:
@@ -202,23 +236,44 @@ def main(argv=None) -> None:
         w = csv.DictWriter(f, fieldnames=FIELDS)
         if new_file:
             w.writeheader()
+        stopped = ""
         for i, p in enumerate(todo, 1):
-            records = []
-            for aid in p["ids"]:
-                try:
-                    a = get_author(aid)
+            fetched, records, merged = [], [], {}
+            try:
+                for aid in p["ids"]:
+                    try:
+                        a = get_author(aid, use_cache=False)      # a reading, not a cached match-time record
+                    except BudgetExhausted:
+                        raise
+                    except Exception as e:
+                        print(f"  [{i}/{len(todo)}] {p['display_name']}: record {aid} FAILED ({e})", file=sys.stderr)
+                        continue
                     a["_id"] = aid
-                    a = reconcile_with_works(a)      # author totals can lag the works index
-                    records.append(a)
-                except Exception as e:
-                    print(f"  [{i}/{len(todo)}] {p['display_name']}: record {aid} FAILED ({e})", file=sys.stderr)
+                    fetched.append(a)
+                distinct, merged = dedupe_merged(fetched)
+                for old, into in merged.items():
+                    print(f"  [{i}/{len(todo)}] {p['display_name']}: record {old} now resolves to {into}; counted once",
+                          file=sys.stderr)
+                for a in distinct:
+                    try:
+                        records.append(reconcile_with_works(a))      # author totals can lag the works index
+                    except BudgetExhausted:
+                        raise
+                    except Exception as e:
+                        print(f"  [{i}/{len(todo)}] {p['display_name']}: record {a['_id']} FAILED ({e})", file=sys.stderr)
+            except BudgetExhausted as e:
+                # Nothing for this person is written: the next run fetches them whole.
+                stopped = f"stopped at {i - 1}/{len(todo)}: {e}"
+                print(f"  [{i}/{len(todo)}] {p['display_name']}: {e}; stopping here, the next run picks up the rest",
+                      file=sys.stderr)
+                break
             if not records:
                 failed += 1
                 continue
-            if len(records) < len(p["ids"]):
-                print(f"  [{i}/{len(todo)}] {p['display_name']}: {len(records)} of {len(p['ids'])} records; "
+            if len(records) + len(merged) < len(p["ids"]):
+                print(f"  [{i}/{len(todo)}] {p['display_name']}: {len(records)} of {len(p['ids']) - len(merged)} records; "
                       "figures are partial this run", file=sys.stderr)
-            row = aggregate(records, date.fromisoformat(args.date).year)
+            row = aggregate(records, date.fromisoformat(args.date).year, merged)
             w.writerow({"person_id": p["person_id"], "source": "openalex", "collected_at": args.date, **row})
             f.flush()
             ok += 1
@@ -227,9 +282,9 @@ def main(argv=None) -> None:
 
     meta = {"trigger": "manual" if args.ids else "schedule",
             "notes": f"OpenAlex collector{' (targeted)' if args.ids else ''}; {ok} ok, {failed} failed, "
-                                            f"{(time.monotonic() - t0) / 60:.1f} min"}
+                     f"{(time.monotonic() - t0) / 60:.1f} min" + (f"; {stopped}" if stopped else "")}
     out.with_suffix(".meta.json").write_text(json.dumps(meta, indent=2) + "\n")
-    print(f"\ndone: {ok} ok, {failed} failed -> {out}")
+    print(f"\ndone: {ok} ok, {failed} failed{'; ' + stopped if stopped else ''} -> {out}")
     if failed and not ok:
         sys.exit(1)
 

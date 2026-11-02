@@ -114,8 +114,8 @@ def filter_authors(name: str, per_page: int = 25, extra_filter: str | None = Non
     return get("/authors", {"filter": flt, "per-page": per_page}).get("results", [])
 
 
-def get_author(author_id: str) -> dict:
-    return get(f"/authors/{author_id}")
+def get_author(author_id: str, use_cache: bool = True) -> dict:
+    return get(f"/authors/{author_id}", use_cache=use_cache)
 
 
 def short_id(openalex_url: str | None) -> str | None:
