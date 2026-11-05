@@ -29,6 +29,12 @@ Beyond totals and h-index, each profile yields citations received per
 calendar year (cites_per_year), the verified email domain, and the
 affiliation string; all are kept in raw_json for trend charts and
 move detection.
+
+A Scholar id that stops resolving (the profile was deleted or re-created under
+a new id; Yiyi He's was, 2026-11-05) is reported and written into the run's
+.meta.json as stale_ids. The person keeps their last reading; the discovery
+pass (find_scholar_profiles, run daily by the Mac agent) reads those metas and
+looks for the new profile on its own. Nothing here clears the id.
 """
 
 from __future__ import annotations
@@ -84,6 +90,16 @@ def id_is_dead(scholar_id: str) -> bool:
         return e.code == 404
     except Exception:
         return False        # cannot tell, so treat it as transient
+
+
+def run_meta(via: str, ok: int, failed: int, minutes: float, stale: list[tuple]) -> dict:
+    """The run's record. Dead ids go in by name so the discovery pass can find
+    them without anyone reading the log: on GitHub the stderr listing is gone
+    once the run page scrolls away."""
+    meta = {"trigger": "manual", "notes": f"{via} collector; {ok} ok, {failed} failed, {minutes:.1f} min"}
+    if stale:
+        meta["stale_ids"] = [{"person_id": pid, "name": name, "scholar_id": sid} for pid, name, sid in stale]
+    return meta
 
 
 def load_people() -> tuple[list[str], list[dict]]:
@@ -377,8 +393,7 @@ def main(argv=None) -> None:
         out.unlink(missing_ok=True)
         print("no profiles collected; removed the empty snapshot file", file=sys.stderr)
     else:
-        meta = {"trigger": "manual", "notes": f"{args.via} collector; {ok} ok, {failed} failed, "
-                                              f"{(time.monotonic() - t0) / 60:.1f} min"}
+        meta = run_meta(args.via, ok, failed, (time.monotonic() - t0) / 60, stale)
         out.with_suffix(".meta.json").write_text(json.dumps(meta, indent=2) + "\n")
     if redirected:
         # Re-read the roster now: another process (the matcher) may have written
@@ -395,9 +410,9 @@ def main(argv=None) -> None:
                 print(f"  roster: {q['display_name']} redirects to {new}, which another person already holds; left unchanged", file=sys.stderr)
         save_people(fields, everyone)
     if stale:
-        print(f"\n{len(stale)} Scholar ids no longer resolve. Clear them so these people fall back "
-              f"to OpenAlex, and look for a new profile later:\n"
-              f"  python -m pipeline.clear_dead_ids --ids={','.join(s[2] for s in stale)}",
+        print(f"\n{len(stale)} Scholar ids no longer resolve; recorded in {out.with_suffix('.meta.json').name}. "
+              f"The daily discovery pass will look for the new profiles; to search now:\n"
+              f"  python -m pipeline.find_scholar_profiles --stale={','.join(s[2] for s in stale)}",
               file=sys.stderr)
         for _, name, sid in stale:
             print(f"    {name}  {sid}", file=sys.stderr)

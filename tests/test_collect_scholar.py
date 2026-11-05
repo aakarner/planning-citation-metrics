@@ -56,3 +56,13 @@ def test_a_workbook_row_counts_only_for_the_profile_its_url_names():
     assert ids_missing_readings([person], [workbook]) == {"VOpvlkkAAAAJ"}
     read = {"person_id": "516", "raw_json": json.dumps({"scholar_id": "VOpvlkkAAAAJ"})}
     assert ids_missing_readings([person], [workbook, read]) == set()
+
+
+def test_the_run_record_names_the_ids_that_stopped_resolving():
+    """The stderr listing of dead ids is gone once the Actions log scrolls away;
+    the meta file is what the discovery pass reads."""
+    from pipeline.collect_scholar import run_meta
+    meta = run_meta("serpapi", 49, 1, 67.04, [("130", "Yiyi He", "xoUOI-wAAAAJ")])
+    assert meta["notes"] == "serpapi collector; 49 ok, 1 failed, 67.0 min"
+    assert meta["stale_ids"] == [{"person_id": "130", "name": "Yiyi He", "scholar_id": "xoUOI-wAAAAJ"}]
+    assert "stale_ids" not in run_meta("serpapi", 50, 0, 60.0, [])

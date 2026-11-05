@@ -162,3 +162,26 @@ def test_an_existing_row_is_never_duplicated():
     rows = [{"person_id": "1", "source": "google_scholar", "status": "rejected", "external_id": "AAA"},
             {"person_id": "1", "source": "google_scholar", "status": "rejected", "external_id": ""}]
     assert listed_pairs(rows) == {("1", "AAA")}
+
+
+def test_a_dead_id_the_collector_recorded_is_searched_again_until_it_is_replaced():
+    """Yiyi He's profile vanished between two readings (2026-11-02). The collector
+    writes such ids into the run's meta; a person still holding one is searched
+    whether or not discovery found them in the first place, and drops off the
+    list as soon as the id is replaced or cleared."""
+    from pipeline.find_scholar_profiles import people_to_search, stale_ids_on_file
+    metas = [{"trigger": "manual", "notes": "49 ok, 1 failed"},                       # before the field existed
+             {"stale_ids": [{"person_id": "1", "name": "A", "scholar_id": "DEAD1"},
+                            {"person_id": "2", "name": "B", "scholar_id": "DEAD2"}]},
+             {"stale_ids": None}]
+    persons = [{"person_id": "1", "google_scholar_id": "DEAD1"},     # still holds the dead id
+               {"person_id": "2", "google_scholar_id": "NEW2"},      # already replaced
+               {"person_id": "3", "google_scholar_id": ""},          # never had one, never searched
+               {"person_id": "4", "google_scholar_id": ""},          # never had one, searched already
+               {"person_id": "5", "google_scholar_id": "LIVE5"}]
+    stale = stale_ids_on_file(persons, metas)
+    assert stale == {"DEAD1"}
+    searched = {"1", "4"}      # person 1 was found by discovery in the first place
+    assert [p["person_id"] for p in people_to_search(persons, searched, stale)] == ["1", "3"]
+    # a hand-given id joins the set the same way
+    assert [p["person_id"] for p in people_to_search(persons, searched, stale | {"LIVE5"})] == ["1", "3", "5"]

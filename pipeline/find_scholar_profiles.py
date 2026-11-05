@@ -24,9 +24,14 @@ missing profiles, only namesakes.
   --via scrape    the working route (default).
   --via serpapi   kept for the record; exits with an explanation.
 
-    --stale        also re-check people whose recorded Scholar id no longer resolves
-                   (the collector reports these as 'empty profile'), to find the
-                   renumbered profile.
+Stale ids (2026-11-05): when a recorded Scholar id stops resolving (profile
+deleted, or re-created under a new id) the collector writes it into that
+run's .meta.json as stale_ids. Every run here reads those metas and searches
+each person still holding such an id, whether or not they were searched
+before, so a dead id is followed up by the next daily batch with nobody
+noticing it. The dead id can never be re-accepted; if nothing is found it is
+cleared and the person falls back to OpenAlex. --stale=ID,ID adds ids by hand
+(say, before the meta is committed).
 
 Candidates are scored like OpenAlex candidates (name, affiliation text,
 citation plausibility) and land in data/review/identity_candidates.csv with
@@ -47,7 +52,7 @@ import urllib.parse
 import urllib.request
 from datetime import date
 
-from . import ROSTER_DIR
+from . import ROSTER_DIR, SNAPSHOT_DIR
 from .openalex import _load_dotenv
 from .match_openalex import (REVIEW_DIR, REVIEW_FIELDS, jaro_winkler, load_context,
                              name_similarity, norm, read_csv, write_csv)
@@ -89,6 +94,35 @@ def listed_pairs(rows: list[dict]) -> set[tuple[str, str]]:
     one row, so a re-run must not write a second one beside it."""
     return {(r["person_id"], r["external_id"]) for r in rows
             if r["source"] == "google_scholar" and (r.get("external_id") or "").strip()}
+
+
+def stale_ids_on_file(persons: list[dict], metas: list[dict]) -> set[str]:
+    """Scholar ids the collector has reported dead that the roster still holds.
+    An id since replaced (found again) or cleared is finished business, so the
+    set empties itself as the follow-up lands; metas from before the field
+    existed contribute nothing."""
+    reported = {e["scholar_id"] for m in metas for e in (m.get("stale_ids") or []) if e.get("scholar_id")}
+    return {p["google_scholar_id"] for p in persons if p.get("google_scholar_id") in reported}
+
+
+def load_run_metas() -> list[dict]:
+    out = []
+    for f in sorted((SNAPSHOT_DIR / "google_scholar").glob("*.meta.json")):
+        try:
+            out.append(json.loads(f.read_text()))
+        except (OSError, ValueError):
+            continue
+    return out
+
+
+def people_to_search(persons: list[dict], searched: set[str], stale: set[str]) -> list[dict]:
+    """Everyone without a Scholar id who has not been searched, plus everyone
+    whose id is stale. A stale person may well have been searched before (that
+    is how many ids were found); the dead id is new information, so they are
+    searched again."""
+    return [p for p in persons
+            if p.get("google_scholar_id") in stale
+            or (not p.get("google_scholar_id") and p["person_id"] not in searched)]
 
 
 def search_profile_links(name: str) -> dict[str, str]:
@@ -445,7 +479,8 @@ def main(argv=None) -> None:
                          "from their stored evidence; makes no network calls")
     ap.add_argument("--via", choices=["serpapi", "scrape"], default="scrape")
     ap.add_argument("--stale", metavar="ID,ID,...", default="",
-                    help="also re-check the people holding these Scholar ids (no longer resolving); "
+                    help="also re-check the people holding these Scholar ids (no longer resolving), on top "
+                         "of those the collector has recorded in the snapshot metas; "
                          "comma-separated, written as --stale=... because ids can start with '-'")
     args = ap.parse_args(argv)
     sys.stdout.reconfigure(line_buffering=True)  # progress lines show up in logs as they happen
@@ -470,20 +505,18 @@ def main(argv=None) -> None:
     print(f"backend: {args.via}")
 
     pfields, persons, dept_by_id, current, totals = load_context()
-    stale = {x.strip() for x in args.stale.split(",") if x.strip()}
+    stale = stale_ids_on_file(persons, load_run_metas()) | {x.strip() for x in args.stale.split(",") if x.strip()}
     review_path = REVIEW_DIR / "identity_candidates.csv"
     existing = read_csv(review_path)[1] if review_path.exists() else []
     searched = searched_ids(existing)
     vetoed = vetoed_ids(existing)
     listed = listed_pairs(existing)
 
-    todo = [p for p in persons
-            if (not p.get("google_scholar_id") or p.get("google_scholar_id") in stale)
-            and p["person_id"] not in searched]
+    todo = people_to_search(persons, searched, stale)
     if args.limit:
         todo = todo[: args.limit]
     print(f"{sum(1 for p in persons if not p.get('google_scholar_id'))} people without a Scholar id, "
-          f"{len(searched)} already searched, {len(todo)} to search")
+          f"{len(searched)} already searched, {len(stale)} stale ids, {len(todo)} to search")
 
     rows, tally, consecutive = [], {"accepted": 0, "pending": 0, "rejected": 0, "none": 0, "failed": 0}, 0
     for i, person in enumerate(todo, 1):
@@ -520,11 +553,16 @@ def main(argv=None) -> None:
                         key=lambda s: -s["score"])[:5]
         status, statuses = decide(scored, dept_by_id)
         tally[status] = tally.get(status, 0) + 1
+        dead = person.get("google_scholar_id") if person.get("google_scholar_id") in stale else None
         if status == "accepted":
             person["google_scholar_id"] = scored[0]["external_id"]
-        elif person.get("google_scholar_id") in stale and not args.dry_run:
+        elif dead:
             person["google_scholar_id"] = None      # the old id is dead either way
-            person["notes"] = ((person.get("notes") or "") + f" Scholar id {list(stale & {person['google_scholar_id']}) or ''} stopped resolving {date.today().isoformat()}.").strip()
+        if dead:
+            person["notes"] = ((person.get("notes") or "") +
+                               f" Scholar id {dead} stopped resolving; "
+                               + (f"replaced by {person['google_scholar_id']} (profile discovery {date.today().isoformat()})."
+                                  if person["google_scholar_id"] else f"cleared {date.today().isoformat()}, none found.")).strip()
         for rank, s in enumerate(scored):
             if (person["person_id"], s["external_id"]) in listed:
                 continue                                   # already has a row, and a decision, in the queue

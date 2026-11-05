@@ -8,7 +8,10 @@
 # stamp and exit. A slot that got nothing done (Scholar blocked, network down)
 # does not stamp, so the next slot tries again. Each run appends to the log,
 # commits anything it found, and pushes. When there is nobody left to search
-# it says so and does nothing further, so the agent can be removed:
+# it says so and does nothing further. It stays installed even then: a Scholar
+# id that stops resolving (recorded by the weekly collection in the snapshot's
+# .meta.json) puts that person back on the list, and this is what looks for
+# the replacement profile. See also:
 #
 #   launchctl bootout gui/$(id -u)/com.aakarner.planning-citations.discovery
 #   rm ~/Library/LaunchAgents/com.aakarner.planning-citations.discovery.plist
@@ -54,9 +57,9 @@ remaining() {
   "$PY" - <<'PYEOF'
 import csv
 people = list(csv.DictReader(open("data/roster/person.csv")))
-from pipeline.find_scholar_profiles import searched_ids
+from pipeline.find_scholar_profiles import searched_ids, stale_ids_on_file, load_run_metas, people_to_search
 searched = searched_ids(list(csv.DictReader(open("data/review/identity_candidates.csv"))))
-print(sum(1 for p in people if not p["google_scholar_id"] and p["person_id"] not in searched))
+print(len(people_to_search(people, searched, stale_ids_on_file(people, load_run_metas()))))
 PYEOF
 }
 
@@ -68,8 +71,7 @@ fi
 
 LEFT="$(remaining 2>/dev/null || echo unknown)"
 if [ "$LEFT" = "0" ]; then
-  say "nothing left to search: every person without a Scholar id has been checked."
-  say "the agent has no more work and can be removed (see the header of this script)."
+  say "nothing to search: every person without a Scholar id has been checked and no recorded id is stale."
   exit 0
 fi
 

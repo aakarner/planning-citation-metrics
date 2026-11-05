@@ -1,4 +1,11 @@
 {
   "trigger": "manual",
-  "notes": "serpapi collector; 49 ok, 1 failed, 67.0 min"
+  "notes": "serpapi collector; 49 ok, 1 failed, 67.0 min",
+  "stale_ids": [
+    {
+      "person_id": "130",
+      "name": "Yiyi He",
+      "scholar_id": "xoUOI-wAAAAJ"
+    }
+  ]
 }
