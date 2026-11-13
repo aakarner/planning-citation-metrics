@@ -67,6 +67,23 @@ class ScholarBlocked(RuntimeError):
     pass
 
 
+RESULTS_MARKERS = ('id="gs_res_ccl', 'class="gs_ri"', "did not match any articles")
+
+
+def is_results_page(final_url: str, page: str) -> bool:
+    """Did Scholar answer the search, or hand us something else?
+
+    Only a results page can say 'nobody by this name has a profile'. On
+    2026-09-16 and 2026-09-17 Scholar answered two whole batches with a
+    'Verifying your request' interstitial (a redirect to google.com/sgsync):
+    HTTP 200, no /sorry/, no profile links. All 60 people were recorded as
+    searched with nothing found and never looked at again; Behram Wali, whose
+    profile is the first hit for his name, wrote in two months later."""
+    u = urllib.parse.urlsplit(final_url)
+    return (u.netloc == "scholar.google.com" and u.path == "/scholar"
+            and any(m in page for m in RESULTS_MARKERS))
+
+
 def searched_ids(rows: list[dict]) -> set[str]:
     """People discovery has actually searched: those with a google_scholar row
     the matcher wrote (reviewed_by 'matcher', or still pending). A row a person
@@ -134,6 +151,8 @@ def search_profile_links(name: str) -> dict[str, str]:
         page = resp.read().decode("utf-8", "replace")
     if "accounts.google.com" in final or "/sorry/" in final or "unusual traffic" in page:
         raise ScholarBlocked(f"redirected/blocked: {final[:80]}")
+    if not is_results_page(final, page):
+        raise ScholarBlocked(f"not a results page: {final[:80]}")
     links: dict[str, str] = {}
     for sid, text in PROFILE_LINK.findall(page):
         links.setdefault(sid, html.unescape(text).strip())
@@ -580,7 +599,9 @@ def main(argv=None) -> None:
                          "department": dept["short_name"] if dept else None, "source": "google_scholar",
                          "external_id": None, "candidate_name": None, "score": 0,
                          "status": "rejected", "reviewed_by": "matcher",
-                         "reviewed_at": date.today().isoformat()})
+                         "reviewed_at": date.today().isoformat(),
+                         # what the search saw, so a 'nothing found' can be audited later
+                         "notes": f"{len(links)} linked authors on the results page, {len(found)} plausible"})
         print(f"  [{i}/{len(todo)}] {person['display_name']}: {len(links)} linked authors, "
               f"{len(found)} plausible -> {status}"
               + (f" ({scored[0]['candidate_name']}, {scored[0]['last_known_institution']})" if scored else ""))

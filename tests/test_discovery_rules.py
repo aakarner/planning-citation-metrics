@@ -185,3 +185,19 @@ def test_a_dead_id_the_collector_recorded_is_searched_again_until_it_is_replaced
     assert [p["person_id"] for p in people_to_search(persons, searched, stale)] == ["1", "3"]
     # a hand-given id joins the set the same way
     assert [p["person_id"] for p in people_to_search(persons, searched, stale | {"LIVE5"})] == ["1", "3", "5"]
+
+
+def test_only_a_results_page_counts_as_a_search():
+    """Two batches in September 2026 got Scholar's 'Verifying your request'
+    interstitial: 200 OK, no links. Sixty people were written down as having no
+    profile. A page that is not a results page is a block, not an answer."""
+    from pipeline.find_scholar_profiles import is_results_page
+    search = "https://scholar.google.com/scholar?hl=en&q=author%3A%22Behram+Wali%22"
+    sync = "https://www.google.com/sgsync?url=https%3A%2F%2Fscholar.google.com%2Fscholar%3Fhl%3Den"
+    interstitial = "<html><title>Verifying...</title>Please wait while we verify your session.</html>"
+    assert not is_results_page(sync, interstitial)
+    assert not is_results_page(search, interstitial)            # the same page served in place
+    assert not is_results_page(search, "")
+    assert is_results_page(search, '<div id="gs_res_ccl_mid"><div class="gs_ri">a paper</div></div>')
+    assert is_results_page(search, "Your search did not match any articles")   # a real 'nobody'
+    assert not is_results_page("https://accounts.google.com/v3/signin", '<div class="gs_ri">')
