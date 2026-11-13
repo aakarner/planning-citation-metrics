@@ -51,6 +51,7 @@ import time
 import urllib.parse
 import urllib.request
 from datetime import date
+from pathlib import Path
 
 from . import ROSTER_DIR, SNAPSHOT_DIR
 from .openalex import _load_dotenv
@@ -140,6 +141,16 @@ def people_to_search(persons: list[dict], searched: set[str], stale: set[str]) -
     return [p for p in persons
             if p.get("google_scholar_id") in stale
             or (not p.get("google_scholar_id") and p["person_id"] not in searched)]
+
+
+def batch_report(tally: dict, no_links: int, consecutive_failures: int) -> dict:
+    """What a batch saw, for the health check. `searched` counts the people
+    whose search came back as a real results page; `no_links` those whose page
+    linked no author at all. A batch that is nearly all `no_links` was not
+    reading results (2026-09-16: 30 of 30)."""
+    return {"searched": sum(n for k, n in tally.items() if k != "failed"), "no_links": int(no_links),
+            "failed": tally.get("failed", 0), "found": tally.get("accepted", 0) + tally.get("pending", 0),
+            "blocked": consecutive_failures >= MAX_CONSECUTIVE_FAILURES}
 
 
 def search_profile_links(name: str) -> dict[str, str]:
@@ -497,6 +508,9 @@ def main(argv=None) -> None:
                     help="re-apply the accept/reject rules to rows already in the review queue, "
                          "from their stored evidence; makes no network calls")
     ap.add_argument("--via", choices=["serpapi", "scrape"], default="scrape")
+    ap.add_argument("--report", metavar="FILE",
+                    help="write what this batch saw (searched, no linked authors, failed, found, blocked) "
+                         "as JSON, for scripts/daily_discovery.sh to publish")
     ap.add_argument("--stale", metavar="ID,ID,...", default="",
                     help="also re-check the people holding these Scholar ids (no longer resolving), on top "
                          "of those the collector has recorded in the snapshot metas; "
@@ -538,6 +552,7 @@ def main(argv=None) -> None:
           f"{len(searched)} already searched, {len(stale)} stale ids, {len(todo)} to search")
 
     rows, tally, consecutive = [], {"accepted": 0, "pending": 0, "rejected": 0, "none": 0, "failed": 0}, 0
+    no_links = 0        # searches whose results page linked no author profile at all
     for i, person in enumerate(todo, 1):
         aff = current.get(person["person_id"])
         dept = dept_by_id.get(aff["department_id"]) if aff else None
@@ -568,6 +583,7 @@ def main(argv=None) -> None:
                 print("Scholar appears to be blocking; stopping. Partial results are kept.", file=sys.stderr)
                 break
             continue
+        no_links += not links
         scored = sorted((score(person, c, dept, totals.get(person["person_id"])) for c in found),
                         key=lambda s: -s["score"])[:5]
         status, statuses = decide(scored, dept_by_id)
@@ -609,6 +625,8 @@ def main(argv=None) -> None:
             time.sleep(args.sleep)
 
     print("\nsummary:", tally)
+    if args.report:
+        Path(args.report).write_text(json.dumps(batch_report(tally, no_links, consecutive)) + "\n")
     if args.dry_run:
         return
     write_csv(review_path, REVIEW_FIELDS, existing + rows)

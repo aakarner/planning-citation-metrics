@@ -1,0 +1,52 @@
+name: Health check
+
+# Reads what the scheduled jobs left behind and raises a GitHub issue for
+# anything that failed quietly: a collection that did not run or came up short,
+# OpenAlex figures that count a record twice, matches the audit withdrew, a
+# discovery agent that is blocked or silent, a site that was not rebuilt.
+# Rules and thresholds are in pipeline/health_check.py. Issues carry the label
+# `health-check`, are assigned to the repository owner, and close themselves
+# when the check passes again. The run fails only when it raises something new.
+on:
+  schedule:
+    - cron: "7 21 * * *"          # daily, 21:07 UTC: after both of the discovery agent's slots
+  workflow_dispatch:
+    inputs:
+      self_test:
+        description: "Raise a harmless test alarm, to see that the notification arrives"
+        type: boolean
+        default: false
+  workflow_call:                  # by the collectors, straight after a run
+    inputs:
+      expect:
+        description: "The collection that should just have finished: scholar or openalex"
+        type: string
+        required: false
+        default: ""
+    secrets:
+      SERPAPI_KEY:
+        required: false
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main          # the branch tip, which includes what a calling run just committed
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e .
+      - name: Check, and open or close issues to match
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}   # only to ask SerpApi how many searches are left; that lookup is free
+        run: |
+          python -m pipeline.health_check --sync-issues --expect "${{ inputs.expect }}" \
+            ${{ inputs.self_test == true && '--self-test' || '' }}

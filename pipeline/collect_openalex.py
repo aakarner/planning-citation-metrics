@@ -282,7 +282,11 @@ def main(argv=None) -> None:
 
     meta = {"trigger": "manual" if args.ids else "schedule",
             "notes": f"OpenAlex collector{' (targeted)' if args.ids else ''}; {ok} ok, {failed} failed, "
-                     f"{(time.monotonic() - t0) / 60:.1f} min" + (f"; {stopped}" if stopped else "")}
+                     f"{(time.monotonic() - t0) / 60:.1f} min" + (f"; {stopped}" if stopped else ""),
+            # Read by pipeline/health_check.py. `collected` counts everyone with a row for
+            # this date, so a same-day run that picks up the people missed clears the alarm.
+            "ok": ok, "failed": failed, "attempted": len(todo), "matched": len(people),
+            "collected": len(done) + ok, "stopped": bool(stopped), "targeted": bool(args.ids)}
     out.with_suffix(".meta.json").write_text(json.dumps(meta, indent=2) + "\n")
     print(f"\ndone: {ok} ok, {failed} failed{'; ' + stopped if stopped else ''} -> {out}")
     if failed and not ok:

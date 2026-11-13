@@ -141,6 +141,51 @@ re-found by a direct fetch that follows Google's redirect, from an unblocked add
 We do not reconstruct citation counts for people without a profile (that was Publish or
 Perish, by hand); they get the flagged OpenAlex number instead.
 
+## Health check
+
+Every scheduled job here has at some point failed while its run stayed green: an OpenAlex
+collection that lost a third of the roster to an exhausted budget, a discovery batch that
+read thirty verification pages as thirty people without profiles, a weekly Scholar run whose
+readings were committed and never deployed. `pipeline/health_check.py` reads the records
+those jobs leave behind and raises what it finds as GitHub issues labelled `health-check`,
+assigned to the repository owner. It runs daily at 21:07 UTC and straight after each
+collection (`.github/workflows/health-check.yml`).
+
+| Rule | Raised when |
+| --- | --- |
+| `scholar-overdue` | no rolling Scholar snapshot for the most recent Monday |
+| `scholar-short-run` | the run read under 90% of its budget, or 3+ profiles failed for reasons other than a dead id |
+| `scholar-dead-ids` (notice) | a roster id no longer resolves; the discovery agent looks for the new one |
+| `serpapi-quota` | on Sunday or Monday before the run, SerpApi has fewer searches left than the run needs |
+| `openalex-overdue` | no full OpenAlex snapshot this month |
+| `openalex-incomplete` | the run stopped early, or missed 5+ people (0.5% of the roster if larger) |
+| `openalex-repeated-records` | one record counted twice: identical figures on two of a person's records, or one record under two people |
+| `openalex-audit-withdrawals` | the audit withdrew an accepted match in the last 14 days |
+| `discovery-silent` | people are waiting and the Mac agent has not reported for 3 days |
+| `discovery-stalled` | people are waiting and no slot has searched anyone for 3 days (Scholar blocking) |
+| `discovery-empty-batch` | a batch of 10+ in which 80% of searches showed no linked author |
+| `site-stale` | the live site was built without a snapshot the repository has held for a day |
+| `site-unreachable` | the site's `status.json` cannot be read |
+
+One issue per problem. The same problem on later days only refreshes the issue text; a new
+occurrence while it is open is a comment; the issue closes itself when the check passes.
+Closing an issue by hand silences that occurrence. The workflow run fails only when it
+raises something new, so a red run always means there is a new issue to read.
+
+    python -m pipeline.health_check                # what is wrong right now; touches nothing
+
+To see what an alarm looks like and confirm the notification reaches you, run the *Health
+check* workflow by hand with "Raise a harmless test alarm" ticked; the next run closes it.
+
+The discovery agent cannot fail a workflow, so after every slot it pushes a small status
+record (counts and dates, `pipeline/discovery_status.py`) to the ref
+`refs/agent/discovery-status`, which the check reads:
+
+    git fetch origin refs/agent/discovery-status && git show FETCH_HEAD:discovery.json
+
+None of this can see a plausible wrong answer, such as a namesake's profile accepted for
+the right person. That still takes someone writing in.
+
 ## Scheduled discovery (local, macOS)
 
 Discovery has to run from a residential or campus address, so it cannot live in GitHub

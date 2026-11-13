@@ -231,6 +231,9 @@ build/site/
 # lock held by the scheduled discovery run, and the date it last did work
 .discovery.lock/
 .discovery.last-run
+# the agent's status record (published to refs/agent/discovery-status, not to main)
+.discovery.status.json
+.discovery.batch.json
 
 # local dev-server config for the desktop app preview pane
 .claude/launch.json

@@ -73,3 +73,17 @@ jobs:
       pages: write
       id-token: write
     uses: ./.github/workflows/deploy.yml
+
+  # Runs whether or not the collection succeeded: a run that failed, came up
+  # short or never started is exactly what this is here to report.
+  health:
+    needs: collect
+    if: always()
+    permissions:
+      contents: read
+      issues: write
+    uses: ./.github/workflows/health-check.yml
+    with:
+      expect: scholar
+    secrets:
+      SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}

@@ -92,14 +92,38 @@ def id_is_dead(scholar_id: str) -> bool:
         return False        # cannot tell, so treat it as transient
 
 
-def run_meta(via: str, ok: int, failed: int, minutes: float, stale: list[tuple]) -> dict:
+def run_meta(via: str, ok: int, failed: int, minutes: float, stale: list[tuple],
+             attempted: int | None = None, rolling: int | None = None) -> dict:
     """The run's record. Dead ids go in by name so the discovery pass can find
     them without anyone reading the log: on GitHub the stderr listing is gone
-    once the run page scrolls away."""
-    meta = {"trigger": "manual", "notes": f"{via} collector; {ok} ok, {failed} failed, {minutes:.1f} min"}
+    once the run page scrolls away. The counts are fields, not just prose, and
+    a rolling run carries its budget: pipeline/health_check.py reads them to
+    tell a short run from a full one."""
+    meta = {"trigger": "schedule" if rolling else "manual",
+            "notes": f"{via} collector; {ok} ok, {failed} failed, {minutes:.1f} min",
+            "ok": ok, "failed": failed, "attempted": ok + failed if attempted is None else attempted}
+    if rolling:
+        meta["rolling"] = rolling
     if stale:
         meta["stale_ids"] = [{"person_id": pid, "name": name, "scholar_id": sid} for pid, name, sid in stale]
     return meta
+
+
+def merged_meta(old: dict | None, new: dict) -> dict:
+    """Two runs can land on one date: the Monday collection, then a one-profile
+    fetch for someone the discovery agent found that afternoon. The second used
+    to replace the first's record (2026-10-12 reads "1 ok" for a day that
+    collected 47), taking its dead ids with it. A rolling run's record is kept
+    unless another rolling run replaces it, and dead ids accumulate."""
+    if not old:
+        return new
+    keep = dict(old) if old.get("rolling") and not new.get("rolling") else dict(new)
+    if keep is not new and keep.get("notes") != new.get("notes"):
+        keep["notes"] = f"{old.get('notes', '')}; later the same day: {new.get('notes', '')}"
+    dead = {e["scholar_id"]: e for e in (old.get("stale_ids") or []) + (new.get("stale_ids") or [])}
+    if dead:
+        keep["stale_ids"] = list(dead.values())
+    return keep
 
 
 def load_people() -> tuple[list[str], list[dict]]:
@@ -393,8 +417,14 @@ def main(argv=None) -> None:
         out.unlink(missing_ok=True)
         print("no profiles collected; removed the empty snapshot file", file=sys.stderr)
     else:
-        meta = run_meta(args.via, ok, failed, (time.monotonic() - t0) / 60, stale)
-        out.with_suffix(".meta.json").write_text(json.dumps(meta, indent=2) + "\n")
+        meta = run_meta(args.via, ok, failed, (time.monotonic() - t0) / 60, stale,
+                        attempted=len(todo), rolling=args.budget)
+        meta_path = out.with_suffix(".meta.json")
+        try:
+            earlier = json.loads(meta_path.read_text())
+        except (OSError, ValueError):
+            earlier = None
+        meta_path.write_text(json.dumps(merged_meta(earlier, meta), indent=2) + "\n")
     if redirected:
         # Re-read the roster now: another process (the matcher) may have written
         # to it during this long run. Only the Scholar id column is ours to change.
@@ -417,6 +447,9 @@ def main(argv=None) -> None:
         for _, name, sid in stale:
             print(f"    {name}  {sid}", file=sys.stderr)
     print(f"\ndone: {ok} ok, {failed} failed, {len(stale)} stale ids -> {out}")
+    if args.budget and todo and ok == 0:
+        # A collection run that read nobody leaves no snapshot to judge it by, so say so here.
+        sys.exit(f"the rolling run read none of {len(todo)} profiles")
 
 
 if __name__ == "__main__":

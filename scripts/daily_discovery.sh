@@ -11,7 +11,10 @@
 # it says so and does nothing further. It stays installed even then: a Scholar
 # id that stops resolving (recorded by the weekly collection in the snapshot's
 # .meta.json) puts that person back on the list, and this is what looks for
-# the replacement profile. See also:
+# the replacement profile. Every slot ends by publishing a small status record
+# (pipeline/discovery_status.py) to refs/agent/discovery-status on GitHub, so
+# the daily health check can tell when this has gone quiet, has been blocked
+# for days, or has read a batch of pages that were not results. See also:
 #
 #   launchctl bootout gui/$(id -u)/com.aakarner.planning-citations.discovery
 #   rm ~/Library/LaunchAgents/com.aakarner.planning-citations.discovery.plist
@@ -26,6 +29,9 @@ LOG="$HOME/Library/Logs/planning-citations-discovery.log"
 LOCK="$REPO/.discovery.lock"
 STAMP="$REPO/.discovery.last-run"   # holds the date of the last slot that did work
 BATCH="${DISCOVERY_BATCH:-30}"   # overridable so the plumbing can be tested cheaply
+STATE="$REPO/.discovery.status.json"    # this agent's status record, as last published
+BATCHREC="$REPO/.discovery.batch.json"  # what the finder saw this slot
+STATUS_REF="refs/agent/discovery-status"
 
 export PATH="/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/homebrew/bin"
 mkdir -p "$(dirname "$LOG")"
@@ -63,15 +69,36 @@ print(len(people_to_search(people, searched, stale_ids_on_file(people, load_run_
 PYEOF
 }
 
+# Fold this slot into the status record and publish it: one file in one
+# parentless commit, pushed over whatever the last one was. It never touches
+# main, so it starts no build. A failure here is logged and nothing more; the
+# health check treats an agent with work and no recent report as a problem.
+#   report OUTCOME [QUEUED] [BATCH-REPORT]
+report() {
+  local queued="${2:-}" blob tree commit
+  [ "$queued" = "unknown" ] && queued=""
+  "$PY" -m pipeline.discovery_status --state "$STATE" --outcome "$1" \
+      ${queued:+--queued "$queued"} ${3:+--batch "$3"} >> "$LOG" 2>&1 \
+    || { say "could not write the status record"; return 0; }
+  blob="$(git hash-object -w "$STATE")" \
+    && tree="$(printf '100644 blob %s\tdiscovery.json\n' "$blob" | git mktree)" \
+    && commit="$(git commit-tree "$tree" -m "discovery agent status")" \
+    && git push --quiet --force origin "$commit:$STATUS_REF" >> "$LOG" 2>&1 \
+    || say "could not publish the status record"
+  return 0
+}
+
 TODAY="$(date '+%Y-%m-%d')"
 if [ -f "$STAMP" ] && [ "$(cat "$STAMP" 2>/dev/null)" = "$TODAY" ]; then
   say "already searched a batch today; this slot has nothing to do"
+  report rested
   exit 0
 fi
 
 LEFT="$(remaining 2>/dev/null || echo unknown)"
 if [ "$LEFT" = "0" ]; then
   say "nothing to search: every person without a Scholar id has been checked and no recorded id is stale."
+  report idle 0
   exit 0
 fi
 
@@ -86,6 +113,7 @@ until online; do
   tries=$((tries + 1))
   if [ "$tries" -ge 8 ]; then
     say "no network after two minutes; leaving the day open for the next slot"
+    report offline "$LEFT"    # recorded locally; it goes up with the next slot that has a network
     exit 0
   fi
   sleep 15
@@ -94,7 +122,8 @@ done
 
 git pull --rebase --autostash --quiet origin main >> "$LOG" 2>&1 || say "pull failed; continuing on the local copy"
 
-OUT="$("$PY" -m pipeline.find_scholar_profiles --limit "$BATCH" 2>&1)"
+rm -f "$BATCHREC"
+OUT="$("$PY" -m pipeline.find_scholar_profiles --limit "$BATCH" --report "$BATCHREC" 2>&1)"
 printf '%s\n' "$OUT" >> "$LOG"
 
 SUMMARY="$(printf '%s' "$OUT" | grep -E "^summary:" | head -1)"
@@ -137,3 +166,4 @@ if [ "$LEFT" != "unknown" ] && [ "$AFTER" != "unknown" ] && [ "$AFTER" -lt "$LEF
 else
   say "no one was searched this slot; a later slot today will try again"
 fi
+report ran "$AFTER" "$BATCHREC"

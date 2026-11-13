@@ -1046,6 +1046,10 @@ def build(db: Path, out: Path, base: str, quiet: bool = False) -> None:
                "d": f"{d['n_faculty']} faculty", "u": f"department/{dslugs[id(d)]}.html",
                "c": d["total_citations"] or 0} for d in depts]
     (out / "search.json").write_text(json.dumps(index, separators=(",", ":"), ensure_ascii=False))
+    # Which snapshots this build was made from. pipeline/health_check.py compares
+    # it with the repository to notice data that was committed and never deployed.
+    from .health_check import repo_snapshot_dates
+    (out / "status.json").write_text(json.dumps({"snapshots": repo_snapshot_dates()}) + "\n")
 
     n = sum(1 for _ in out.rglob("*") if _.is_file())
     size = sum(f.stat().st_size for f in out.rglob("*") if f.is_file()) / 1e6
