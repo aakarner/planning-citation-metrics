@@ -1,0 +1,8 @@
+{
+  "trigger": "schedule",
+  "notes": "serpapi collector; 3 ok, 0 failed, 2.7 min",
+  "ok": 3,
+  "failed": 0,
+  "attempted": 3,
+  "rolling": 3
+}
