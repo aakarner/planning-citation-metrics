@@ -23,6 +23,11 @@ on:
         type: string
         required: false
         default: ""
+      job_result:
+        description: "How that collection job ended: success, failure or cancelled"
+        type: string
+        required: false
+        default: ""
     secrets:
       SERPAPI_KEY:
         required: false
@@ -49,4 +54,5 @@ jobs:
           SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}   # only to ask SerpApi how many searches are left; that lookup is free
         run: |
           python -m pipeline.health_check --sync-issues --expect "${{ inputs.expect }}" \
+            --job-result "${{ inputs.job_result }}" \
             ${{ inputs.self_test == true && '--self-test' || '' }}

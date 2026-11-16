@@ -161,6 +161,7 @@ collection (`.github/workflows/health-check.yml`).
 | `scholar-overdue` | no rolling Scholar snapshot for the most recent Monday |
 | `scholar-short-run` | the run read under 90% of its budget, or 3+ profiles failed for reasons other than a dead id |
 | `scholar-dead-ids` (notice) | a roster id no longer resolves; the next discovery run looks for the new one |
+| `scholar-job`, `openalex-job` | the collection job failed, timed out or was cancelled, and no other rule explains it |
 | `serpapi-quota` | on Sunday or Monday before the run, SerpApi has fewer searches left than the run needs |
 | `openalex-overdue` | no full OpenAlex snapshot this month |
 | `openalex-incomplete` | the run stopped early, or missed 5+ people (0.5% of the roster if larger) |

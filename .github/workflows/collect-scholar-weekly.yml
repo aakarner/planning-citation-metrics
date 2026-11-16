@@ -68,17 +68,22 @@ jobs:
           SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
         run: |
           # A profile discovery just accepted has no reading yet, so it comes first here.
-          python -m pipeline.collect_scholar --via serpapi --sleep 75 --jitter 10 --budget "$reread"
+          # The collector stops at once when the account has no searches left, and gives up
+          # after half an hour of refusals: well inside the job's time limit either way.
+          python -m pipeline.collect_scholar --via serpapi --sleep 75 --jitter 10 --max-wait 0.5 --budget "$reread"
+      # The remaining steps run even when the re-read failed or the job was cancelled at
+      # its time limit: what discovery found and what was read before the stop is kept.
+      # (On 2026-11-16 a cancelled run threw away an accepted profile and eight readings.)
       - name: Apply roster changes the profiles imply
-        if: env.skip != 'yes'
+        if: always() && env.skip != 'yes'
         run: python -m pipeline.apply_changes
       - name: Rebuild and report what is left unsettled
-        if: env.skip != 'yes'
+        if: always() && env.skip != 'yes'
         run: |
           python -m pipeline.build_db
           python -m pipeline.detect_changes
       - name: Commit
-        if: env.skip != 'yes'
+        if: always() && env.skip != 'yes'
         run: |
           git config user.name "citation-metrics-bot"
           git config user.email "actions@users.noreply.github.com"
@@ -111,5 +116,6 @@ jobs:
     uses: ./.github/workflows/health-check.yml
     with:
       expect: scholar
+      job_result: ${{ needs.collect.result }}
     secrets:
       SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}

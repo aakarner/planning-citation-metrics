@@ -60,6 +60,7 @@ from datetime import date
 from pathlib import Path
 
 from . import ROSTER_DIR, SNAPSHOT_DIR
+from . import collect_scholar
 from .openalex import _load_dotenv
 from .match_openalex import (REVIEW_DIR, REVIEW_FIELDS, jaro_winkler, load_context,
                              name_similarity, norm, read_csv, write_csv)
@@ -627,6 +628,9 @@ def main(argv=None) -> None:
             tally["failed"] += 1
             consecutive += 1
             print(f"  [{i}/{len(todo)}] {person['display_name']}: FAILED ({type(e).__name__}: {e})", file=sys.stderr)
+            if args.via == "serpapi" and collect_scholar.searches_left(key) == 0:
+                print("SerpApi has no searches left this period; stopping. Partial results are kept.", file=sys.stderr)
+                break
             if consecutive >= MAX_CONSECUTIVE_FAILURES:
                 print(("SerpApi is failing every search" if args.via == "serpapi" else "Scholar appears to be blocking")
                       + "; stopping. Partial results are kept.", file=sys.stderr)

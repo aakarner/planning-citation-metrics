@@ -9,7 +9,7 @@ from datetime import date, datetime, timezone
 from pipeline.collect_scholar import merged_meta, run_meta
 from pipeline.discovery_status import next_status
 from pipeline.find_scholar_profiles import batch_report, linked_authors, serpapi_candidates
-from pipeline.health_check import (Finding, check_audit, check_dead_ids, check_discovery, check_openalex,
+from pipeline.health_check import (Finding, check_audit, check_job, check_dead_ids, check_discovery, check_openalex,
                                    check_openalex_figures, check_scholar, check_serpapi, check_site,
                                    issue_body, issue_title, plan_issue_actions, rolling_runs, run_counts)
 
@@ -303,6 +303,58 @@ def test_readings_committed_and_never_deployed_are_raised():
     assert f.key == "site-stale" and f.episode == "2026-10-12" and "google_scholar" in f.title
     assert check_site(repo, repo, date(2026, 10, 13)) == []
     assert keys(check_site({}, repo, date(2026, 10, 13))) == ["site-stale"]   # a site with no status file at all
+
+
+# ------------------------------------------- the weekly run of 2026-11-16
+
+def test_a_job_that_was_cancelled_is_raised_when_the_records_look_complete():
+    # The scheduled run was cancelled at its time limit and saved nothing. The
+    # only record for the day was a three-profile trial that had gone well, so
+    # every other rule passed.
+    metas = {**LEGACY, "2026-11-16": run_meta("serpapi", 3, 0, 4.1, [], attempted=3, rolling=3)}
+    today = date(2026, 11, 16)
+    explained = bool(check_scholar(metas, today, expect=True))
+    [f] = check_job("scholar", "cancelled", today, explained)
+    assert f.key == "scholar-job" and f.episode == "2026-11-16" and "'cancelled'" in f.title
+    assert check_job("scholar", "success", today, explained) == []
+    assert check_job("", "cancelled", today, explained) == []        # the daily check ran no job
+    assert check_job("scholar", "failure", today, explained=True) == []   # the short-run issue already says it
+
+
+def test_the_collector_stops_when_the_account_is_out_of_searches(tmp_path, monkeypatch):
+    # That run read eight profiles, then SerpApi answered 429 because the month's
+    # searches were gone. It took that for the hourly limit and sat in cooldowns
+    # for two hours, until the job was cancelled.
+    from pipeline import collect_scholar as cs
+    people = [{"person_id": str(n), "display_name": f"Person {n}", "google_scholar_id": f"id{n:02d}AAAAJ"}
+              for n in range(1, 38)]
+    calls, naps = [], []
+
+    def fetch(sid, key):
+        calls.append(sid)
+        if len(calls) > 8:
+            raise RuntimeError("HTTP Error 429: Too Many Requests")
+        return {"scholar_id": sid, "name": "x", "citedby": 100, "hindex": 5}
+
+    monkeypatch.setenv("SERPAPI_KEY", "not-a-key")
+    monkeypatch.setattr(cs, "SNAPSHOT_DIR", tmp_path)
+    monkeypatch.setattr(cs, "load_people", lambda: (list(people[0]), people))
+    monkeypatch.setattr(cs, "current_ids", lambda: {p["person_id"] for p in people})
+    monkeypatch.setattr(cs, "fetch_serpapi", fetch)
+    monkeypatch.setattr(cs, "searches_left", lambda key: 0)
+    monkeypatch.setattr(cs, "id_is_dead", lambda sid: False)
+    monkeypatch.setattr(cs.time, "sleep", naps.append)
+    cs.main(["--via", "serpapi", "--budget", "37", "--date", "2026-11-16"])
+
+    assert len(calls) == 9                           # one refusal, not eighteen
+    assert max(naps) < 600                           # and no cooldown
+    meta = json.loads((tmp_path / "google_scholar" / "2026-11-16.meta.json").read_text())
+    assert (meta["ok"], meta["attempted"], meta["rolling"]) == (8, 37, 37)
+    assert meta["stopped"] == "SerpApi has no searches left this period"
+    rows = (tmp_path / "google_scholar" / "2026-11-16.csv").read_text().splitlines()
+    assert len(rows) == 9                            # the eight readings are on file
+    [f] = check_scholar({**LEGACY, "2026-11-16": meta}, date(2026, 11, 16), expect=True)
+    assert f.key == "scholar-short-run" and "read 8 of 37" in f.title and "no searches left" in f.detail
 
 
 # -------------------------------------------------------------------- issues

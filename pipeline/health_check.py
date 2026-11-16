@@ -152,7 +152,8 @@ def check_scholar(metas: dict[str, dict], today: date, expect: bool = False) -> 
                 "scholar-short-run", d,
                 f"The Scholar collection of {d} read {ok} of {attempted} profiles",
                 f"{ok} read, {errors} failed for reasons other than a dead profile id"
-                + (f", {dead} dead ids" if dead else "") + f". Run note: \"{m.get('notes', '')}\".\n\n"
+                + (f", {dead} dead ids" if dead else "") + f". Run note: \"{m.get('notes', '')}\"."
+                + (f" The run stopped early: {m['stopped']}." if m.get("stopped") else "") + "\n\n"
                 "Usual causes: the SerpApi monthly quota ran out part-way, or SerpApi was rate-limiting. "
                 "The people missed keep their previous reading and come round again as the oldest."))
     return out
@@ -176,6 +177,30 @@ def check_dead_ids(persons: list[dict], metas: dict[str, dict]) -> list[Finding]
         f"{lines}\n\nThe next weekly discovery run searches for the replacement profile first; this closes "
         "when the roster holds a new id or the old one is cleared. Nothing to do unless it lingers.",
         alarm=False)]
+
+
+JOB_NAMES = {"scholar": "Collect Google Scholar metrics (weekly, rolling)",
+             "openalex": "Collect OpenAlex metrics"}
+
+
+def check_job(expect: str, result: str, today: date, explained: bool) -> list[Finding]:
+    """How the collection job itself ended, which only the workflow that ran
+    it knows. On 2026-11-16 the weekly Scholar job was cancelled at its time
+    limit with nothing saved, and the records on file (a small run earlier the
+    same day) looked complete. Left to the more specific rule when one of
+    those already fires for this collection."""
+    if not expect or result in ("", "success") or explained:
+        return []
+    return [Finding(
+        f"{expect}-job", today.isoformat(),
+        f"The {'Scholar' if expect == 'scholar' else 'OpenAlex'} collection job of {today.isoformat()} "
+        f"ended as '{result}'",
+        f"The job did not finish, and the records it left behind show nothing else wrong, so whatever it "
+        f"collected may not have been saved. See the latest run of *{JOB_NAMES.get(expect, expect)}* under "
+        "Actions for the step that stopped it.\n\n"
+        "Usual causes: the job reached its time limit (a collector waiting on a service that was never going "
+        "to answer), a step after the collection crashed, or the run was cancelled by hand. This closes after "
+        "the next run that finishes.")]
 
 
 OPENALEX_KEYS = {"openalex-overdue", "openalex-incomplete"}
@@ -519,7 +544,7 @@ def discovery_queue(persons: list[dict], review: list[dict]) -> int:
 
 
 def gather(today: date, expect: str = "", status_file: str | None = None, offline: bool = False,
-           self_test: bool = False) -> tuple[list[Finding], set[str], list[str]]:
+           self_test: bool = False, job_result: str = "") -> tuple[list[Finding], set[str], list[str]]:
     """Run every check that can be run. Returns the findings, the keys of the
     rules that were evaluated, and a line for each check that was skipped."""
     findings, evaluated, skipped = [], set(), []
@@ -543,6 +568,11 @@ def gather(today: date, expect: str = "", status_file: str | None = None, offlin
         by_key[f.key] = f
     findings = list(by_key.values())
     evaluated |= FIGURE_KEYS
+
+    if expect:
+        own = {"scholar": {"scholar-overdue", "scholar-short-run"}, "openalex": OPENALEX_KEYS}[expect]
+        findings += check_job(expect, job_result, today, any(f.key in own for f in findings))
+        evaluated.add(f"{expect}-job")
 
     findings += check_audit(persons, review, today)
     evaluated |= AUDIT_KEYS
@@ -595,6 +625,8 @@ def main(argv=None) -> None:
                     help="open, refresh and close GitHub issues to match; exit 1 only when something new was raised")
     ap.add_argument("--expect", default="", choices=["", "scholar", "openalex"],
                     help="a scheduled run of this collection should just have finished")
+    ap.add_argument("--job-result", default="", metavar="RESULT",
+                    help="how the collection job ended (success, failure, cancelled), from the workflow that ran it")
     ap.add_argument("--discovery-status", metavar="FILE",
                     help="a discovery status record other than data/review/discovery_status.json")
     ap.add_argument("--offline", action="store_true", help="only the checks that need no network")
@@ -604,7 +636,8 @@ def main(argv=None) -> None:
     args = ap.parse_args(argv)
     today = date.fromisoformat(args.today)
 
-    findings, evaluated, skipped = gather(today, args.expect, args.discovery_status, args.offline, args.self_test)
+    findings, evaluated, skipped = gather(today, args.expect, args.discovery_status, args.offline, args.self_test,
+                                          args.job_result)
     for f in findings:
         print(f"{'ALARM ' if f.alarm else 'notice'}  {f.key}  [{f.episode}]\n        {f.title}")
     for s in skipped:

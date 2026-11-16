@@ -93,7 +93,7 @@ def id_is_dead(scholar_id: str) -> bool:
 
 
 def run_meta(via: str, ok: int, failed: int, minutes: float, stale: list[tuple],
-             attempted: int | None = None, rolling: int | None = None) -> dict:
+             attempted: int | None = None, rolling: int | None = None, stopped: str | None = None) -> dict:
     """The run's record. Dead ids go in by name so the discovery run can find
     them without anyone reading the log: on GitHub the stderr listing is gone
     once the run page scrolls away. The counts are fields, not just prose, and
@@ -104,6 +104,8 @@ def run_meta(via: str, ok: int, failed: int, minutes: float, stale: list[tuple],
             "ok": ok, "failed": failed, "attempted": ok + failed if attempted is None else attempted}
     if rolling:
         meta["rolling"] = rolling
+    if stopped:
+        meta["stopped"] = stopped       # why the run ended before its list did
     if stale:
         meta["stale_ids"] = [{"person_id": pid, "name": name, "scholar_id": sid} for pid, name, sid in stale]
     return meta
@@ -226,6 +228,18 @@ def fetch_scholarly(scholarly, scholar_id: str) -> dict:
     return author
 
 
+def searches_left(key: str) -> int | None:
+    """How many searches the SerpApi account has left, or None if it will not
+    say. The lookup is free. Errors carry no URL: the key is in it."""
+    try:
+        url = "https://serpapi.com/account.json?" + urllib.parse.urlencode({"api_key": key})
+        with urllib.request.urlopen(url, timeout=30) as resp:
+            left = json.loads(resp.read().decode("utf-8")).get("total_searches_left")
+        return None if left is None else int(left)
+    except Exception:
+        return None
+
+
 def fetch_serpapi(scholar_id: str, key: str) -> dict:
     """Return the same dict shape scholarly produces, from SerpApi's JSON."""
     url = "https://serpapi.com/search.json?" + urllib.parse.urlencode(
@@ -292,6 +306,7 @@ def main(argv=None) -> None:
         if not key:
             sys.exit("SERPAPI_KEY is not set (put it in .env)")
         fetch = lambda sid: fetch_serpapi(sid, key)
+        left = lambda: searches_left(key)
         if args.sleep == 20.0 and args.jitter == 20.0:
             # SerpApi's paid plans cap searches at 200 per hour (429 beyond that);
             # 18 s spacing keeps a run just under the cap with no failures.
@@ -302,6 +317,7 @@ def main(argv=None) -> None:
         except ImportError as e:
             sys.exit(f'cannot import scholarly ({e}); run  pip install -e ".[scholar]"')
         fetch = lambda sid: fetch_scholarly(scholarly, sid)
+        left = lambda: None
     print(f"backend: {args.via}")
 
     fields, everyone = load_people()
@@ -339,6 +355,7 @@ def main(argv=None) -> None:
     redirected: dict[str, str] = {}   # person_id -> new Scholar id
     retry: list[dict] = []            # people skipped during a cooldown; retried once at the end
     stale: list[tuple] = []           # (person_id, name, id) whose Scholar id no longer resolves
+    stopped = None                    # set when the run ends before its list does
     t0 = time.monotonic()
     last_success = t0
     with out.open("a", newline="", encoding="utf-8") as f:
@@ -395,12 +412,20 @@ def main(argv=None) -> None:
                     continue
                 consecutive += 1
                 print(f"  [{i}/{len(queue)}] {p['display_name']}: FAILED ({type(e).__name__}: {e})", file=sys.stderr)
+                if left() == 0:
+                    # An empty account answers 429 just as the hourly limit does, and no
+                    # cooldown brings searches back: on 2026-11-16 a run waited out its
+                    # whole time limit this way and its eight readings were never saved.
+                    stopped = "SerpApi has no searches left this period"
+                    print(f"{stopped}; stopping with {len(todo) - ok} of {len(todo)} profiles unread. "
+                          "They keep their previous reading and come round again as the oldest.", file=sys.stderr)
+                    break
                 if consecutive >= FAILURES_BEFORE_COOLDOWN and args.cooldown > 0:
                     waited = (time.monotonic() - last_success) / 3600
                     if waited > args.max_wait:
                         print(f"no successful fetch for {waited:.1f} h; giving up. Re-run to resume.", file=sys.stderr)
                         break
-                    who = ("SerpApi rate limit (200 searches/hour)" if args.via == "serpapi"
+                    who = ("SerpApi is refusing requests (its hourly limit, most likely)" if args.via == "serpapi"
                            else "Scholar is blocking this address")
                     print(f"  {consecutive} failures in a row; {who}. "
                           f"Cooling down {args.cooldown:.0f} min ({waited:.1f} h since last success).", file=sys.stderr)
@@ -418,7 +443,7 @@ def main(argv=None) -> None:
         print("no profiles collected; removed the empty snapshot file", file=sys.stderr)
     else:
         meta = run_meta(args.via, ok, failed, (time.monotonic() - t0) / 60, stale,
-                        attempted=len(todo), rolling=args.budget)
+                        attempted=len(todo), rolling=args.budget, stopped=stopped)
         meta_path = out.with_suffix(".meta.json")
         try:
             earlier = json.loads(meta_path.read_text())
@@ -449,7 +474,7 @@ def main(argv=None) -> None:
     print(f"\ndone: {ok} ok, {failed} failed, {len(stale)} stale ids -> {out}")
     if args.budget and todo and ok == 0:
         # A collection run that read nobody leaves no snapshot to judge it by, so say so here.
-        sys.exit(f"the rolling run read none of {len(todo)} profiles")
+        sys.exit(f"the rolling run read none of {len(todo)} profiles" + (f": {stopped}" if stopped else ""))
 
 
 if __name__ == "__main__":

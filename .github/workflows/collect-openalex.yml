@@ -62,5 +62,6 @@ jobs:
     uses: ./.github/workflows/health-check.yml
     with:
       expect: openalex
+      job_result: ${{ needs.collect.result }}
     secrets:
       SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
