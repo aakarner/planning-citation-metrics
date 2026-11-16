@@ -1,19 +1,29 @@
 name: Collect Google Scholar metrics (weekly, rolling)
 
-# About fifty profiles a week, oldest reading first, so every current profile
-# is re-read roughly every fifteen weeks. Sized for SerpApi's free tier (250
-# searches a month, 50 an hour): paced at 75 s so an hour never sees more than
-# 48 calls. Needs the SERPAPI_KEY repository secret; the job skips itself with
-# an explanation if the secret is absent rather than failing.
+# Fifty SerpApi searches every Monday, sized for the free tier (250 a month,
+# 50 an hour; paced at 75 s so an hour never sees more than 48 calls).
+#
+# First, profile discovery: up to about a dozen searches looking for profiles
+# of people who have none on file, people whose id died first. Then the
+# rolling re-read spends what discovery left, oldest reading first, so every
+# current profile is re-read roughly every four to five months, and every week
+# once nobody is waiting to be searched the re-read gets all fifty back.
+#
+# Needs the SERPAPI_KEY repository secret; the job skips itself with an
+# explanation if the secret is absent rather than failing.
 on:
   schedule:
     - cron: "23 6 * * 1"            # 06:23 UTC every Monday
   workflow_dispatch:
     inputs:
       budget:
-        description: "Profiles to re-read this run"
+        description: "SerpApi searches to spend this run, discovery and re-read together"
         required: false
         default: "50"
+      discovery:
+        description: "Of those, how many discovery may spend"
+        required: false
+        default: "12"
 
 permissions:
   contents: write
@@ -36,13 +46,29 @@ jobs:
             echo "::warning::SERPAPI_KEY is not set, so there is nothing to collect with."
             echo "skip=yes" >> "$GITHUB_ENV"
           fi
+      - name: Look for profiles of people who have none
+        if: env.skip != 'yes'
+        env:
+          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
+          TOTAL: ${{ github.event.inputs.budget || '50' }}
+          DISCOVERY: ${{ github.event.inputs.discovery || '12' }}
+        run: |
+          # A discovery that crashes must not cost the week's readings: record it and go on.
+          python -m pipeline.find_scholar_profiles --via serpapi --sleep 75 --max-searches "$DISCOVERY" \
+              --report "$RUNNER_TEMP/discovery.json" --status data/review/discovery_status.json \
+            || { echo "::warning::profile discovery failed; see the log above"
+                 python -m pipeline.discovery_status --state data/review/discovery_status.json --failed; }
+          spent="$(python -c 'import json, sys; print(json.load(open(sys.argv[1]))["searches"])' "$RUNNER_TEMP/discovery.json" 2>/dev/null || echo "$DISCOVERY")"
+          reread=$(( TOTAL - spent )); [ "$reread" -lt 1 ] && reread=1
+          echo "discovery spent $spent searches; the re-read gets $reread"
+          echo "reread=$reread" >> "$GITHUB_ENV"
       - name: Re-read the oldest profiles
         if: env.skip != 'yes'
         env:
           SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
         run: |
-          python -m pipeline.collect_scholar --via serpapi --sleep 75 --jitter 10 \
-            --budget "${{ github.event.inputs.budget || '50' }}"
+          # A profile discovery just accepted has no reading yet, so it comes first here.
+          python -m pipeline.collect_scholar --via serpapi --sleep 75 --jitter 10 --budget "$reread"
       - name: Apply roster changes the profiles imply
         if: env.skip != 'yes'
         run: python -m pipeline.apply_changes
@@ -56,7 +82,7 @@ jobs:
         run: |
           git config user.name "citation-metrics-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/snapshots/google_scholar data/roster
+          git add data/snapshots/google_scholar data/roster data/review/identity_candidates.csv data/review/discovery_status.json
           git diff --cached --quiet && echo "nothing new" && exit 0
           git commit -m "Google Scholar rolling snapshot $(date -u +%Y-%m-%d)"
           # main moves while a long run collects; rebase the commit onto it rather than lose the run

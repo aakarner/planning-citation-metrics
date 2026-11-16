@@ -8,7 +8,7 @@ from datetime import date, datetime, timezone
 
 from pipeline.collect_scholar import merged_meta, run_meta
 from pipeline.discovery_status import next_status
-from pipeline.find_scholar_profiles import batch_report
+from pipeline.find_scholar_profiles import batch_report, linked_authors, serpapi_candidates
 from pipeline.health_check import (Finding, check_audit, check_dead_ids, check_discovery, check_openalex,
                                    check_openalex_figures, check_scholar, check_serpapi, check_site,
                                    issue_body, issue_title, plan_issue_actions, rolling_runs, run_counts)
@@ -179,74 +179,101 @@ def test_matches_the_audit_withdrew_are_raised_for_a_fortnight():
     assert check_audit(persons, review, date(2026, 11, 16)) == []
 
 
-# ---------------------------------------------------------- discovery, on the Mac
+# ------------------------------------------------- discovery, in the weekly run
 
-def at(day, hour=15):
+def at(day, hour=7):
     return datetime(2026, int(day[5:7]), int(day[8:10]), hour, 15, tzinfo=timezone.utc)
 
 
 def test_a_batch_of_verification_pages_is_raised():
     # 2026-09-16: thirty searches, thirty pages with no linked author, thirty people marked "no profile".
     tally = {"accepted": 0, "pending": 0, "rejected": 0, "none": 30, "failed": 0}
-    batch = batch_report(tally, no_links=30, consecutive_failures=0)
-    assert batch == {"searched": 30, "no_links": 30, "failed": 0, "found": 0, "blocked": False}
-    status = next_status(None, now=at("2026-09-16"), outcome="ran", queued=600, batch=batch)
-    assert status["outcome"] == "searched" and status["stalled_since"] is None
-    [f] = check_discovery(status, 600, date(2026, 9, 16))
+    batch = batch_report(tally, no_links=30, consecutive_failures=0, searches=30, waiting=600)
+    assert batch == {"searched": 30, "no_links": 30, "failed": 0, "found": 0, "blocked": False,
+                     "searches": 30, "waiting": 600}
+    status = next_status(None, now=at("2026-09-16"), batch=batch)
+    assert status["outcome"] == "searched" and status["stalled_since"] is None and status["queued"] == 570
+    [f] = check_discovery(status, 570, date(2026, 9, 16))
     assert f.key == "discovery-empty-batch" and "30 of 30" in f.title
-    # a normal batch the next day does not bury it
-    ordinary = {"searched": 30, "no_links": 4, "failed": 0, "found": 9, "blocked": False}
-    status = next_status(status, now=at("2026-09-17"), outcome="ran", queued=570, batch=ordinary)
-    assert keys(check_discovery(status, 570, date(2026, 9, 17))) == ["discovery-empty-batch"]
-    assert "discovery-empty-batch" not in keys(check_discovery(status, 570, date(2026, 9, 25)))   # a week on
+    # a normal batch afterwards does not bury it
+    ordinary = {"searched": 9, "no_links": 2, "failed": 0, "found": 3, "blocked": False, "waiting": 570}
+    status = next_status(status, now=at("2026-09-21"), batch=ordinary)
+    assert keys(check_discovery(status, 561, date(2026, 9, 21))) == ["discovery-empty-batch"]
+    assert check_discovery(status, 561, date(2026, 9, 25)) == []          # a week on
 
 
 def test_an_ordinary_batch_is_not_raised():
-    batch = {"searched": 30, "no_links": 4, "failed": 0, "found": 9, "blocked": False}
-    status = next_status(None, now=at("2026-10-20"), outcome="ran", queued=40, batch=batch)
-    assert check_discovery(status, 40, date(2026, 10, 20)) == []
+    # the first batch through SerpApi, 2026-11-16: four people, one page with no linked author
+    batch = {"searched": 4, "no_links": 1, "failed": 0, "found": 1, "blocked": False, "searches": 8, "waiting": 90}
+    status = next_status(None, now=at("2026-11-16"), batch=batch)
+    assert status["queued"] == 86 and status["last_searched"] == "2026-11-16"
+    assert check_discovery(status, 86, date(2026, 11, 16)) == []
     # nor a tiny one: one dead id, searched, no linked author
-    one = {"searched": 1, "no_links": 1, "failed": 0, "found": 0, "blocked": False}
-    status = next_status(None, now=at("2026-11-05"), outcome="ran", queued=0, batch=one)
-    assert check_discovery(status, 0, date(2026, 11, 5)) == []
+    one = {"searched": 1, "no_links": 1, "failed": 0, "found": 0, "blocked": False, "waiting": 1}
+    status = next_status(None, now=at("2026-11-05"), batch=one)
+    assert status["queued"] == 0 and check_discovery(status, 0, date(2026, 11, 5)) == []
 
 
-def test_days_of_blocking_with_people_waiting_are_raised_on_the_third_day():
-    blocked = {"searched": 0, "no_links": 0, "failed": 5, "found": 0, "blocked": True}
-    status = None
-    for day in ("2026-11-13", "2026-11-14", "2026-11-15"):
-        for hour in (15, 19):
-            status = next_status(status, now=at(day, hour), outcome="ran", queued=90, batch=blocked)
-        assert status["outcome"] == "blocked" and status["stalled_since"] == "2026-11-13"
-        assert check_discovery(status, 90, date.fromisoformat(day)) == []
-    status = next_status(status, now=at("2026-11-16"), outcome="ran", queued=90, batch=blocked)
+def test_a_run_that_had_people_to_search_and_searched_none_is_raised_at_once():
+    # 2026-11-13 to 15: six slots in a row, ninety people waiting, every search refused.
+    blocked = {"searched": 0, "no_links": 0, "failed": 5, "found": 0, "blocked": True, "searches": 5, "waiting": 90}
+    status = next_status(None, now=at("2026-11-16"), batch=blocked)
+    assert status["outcome"] == "blocked" and status["stalled_since"] == "2026-11-16" and status["queued"] == 90
     [f] = check_discovery(status, 90, date(2026, 11, 16))
-    assert f.key == "discovery-stalled" and f.episode == "2026-11-13" and "90 people" in f.title
-    # one slot that gets through clears it
-    good = {"searched": 30, "no_links": 3, "failed": 0, "found": 8, "blocked": False}
-    status = next_status(status, now=at("2026-11-16", 19), outcome="ran", queued=60, batch=good)
-    assert status["stalled_since"] is None and status["last_searched"] == "2026-11-16"
-    assert check_discovery(status, 60, date(2026, 11, 16)) == []
+    assert f.key == "discovery-stalled" and f.episode == "2026-11-16" and "90 people" in f.title
+    # a second week of it is the same occurrence, not a new alarm
+    status = next_status(status, now=at("2026-11-23"), batch=blocked)
+    [f] = check_discovery(status, 90, date(2026, 11, 23))
+    assert f.episode == "2026-11-16"
+    # one run that gets through clears it
+    good = {"searched": 9, "no_links": 2, "failed": 0, "found": 3, "blocked": False, "searches": 12, "waiting": 90}
+    status = next_status(status, now=at("2026-11-30"), batch=good)
+    assert status["stalled_since"] is None and status["last_searched"] == "2026-11-30"
+    assert check_discovery(status, 81, date(2026, 11, 30)) == []
 
 
-def test_a_mac_that_is_offline_or_a_finder_that_crashed_also_counts_as_stalled():
-    status = next_status(None, now=at("2026-11-13"), outcome="offline", queued=90)
-    assert status["stalled_since"] == "2026-11-13"
-    status = next_status(status, now=at("2026-11-14"), outcome="ran", queued=90, batch=None)
-    assert status["outcome"] == "failed" and status["stalled_since"] == "2026-11-13"
-    # a second slot on a day that already searched a batch is rest, not a stall
-    status = next_status({"stalled_since": None, "queued": 60}, now=at("2026-11-16", 19), outcome="rested")
-    assert status["stalled_since"] is None and status["queued"] == 60
+def test_a_run_that_crashed_before_reporting_counts_as_stalled():
+    status = next_status({"queued": 86, "stalled_since": None}, now=at("2026-11-23"), batch=None)
+    assert status["outcome"] == "failed" and status["stalled_since"] == "2026-11-23" and status["queued"] == 86
+    assert keys(check_discovery(status, 86, date(2026, 11, 23))) == ["discovery-stalled"]
 
 
-def test_a_silent_agent_is_raised_only_when_there_is_work():
+def test_discovery_that_stops_running_is_raised_only_when_there_is_work():
     assert keys(check_discovery(None, 90, date(2026, 11, 13))) == ["discovery-silent"]
     assert check_discovery(None, 0, date(2026, 11, 13)) == []
-    status = next_status(None, now=at("2026-11-10"), outcome="idle", queued=0)
-    assert check_discovery(status, 0, date(2026, 11, 30)) == []          # nothing to do, nothing to say
-    assert check_discovery(status, 3, date(2026, 11, 12)) == []          # two days: a weekend with the lid shut
-    [f] = check_discovery(status, 3, date(2026, 11, 14))
-    assert f.key == "discovery-silent" and f.episode == "2026-11-10"
+    idle = next_status(None, now=at("2026-11-16"), batch={"searched": 0, "waiting": 0})
+    assert idle["outcome"] == "idle" and idle["stalled_since"] is None
+    assert check_discovery(idle, 0, date(2026, 12, 30)) == []            # nothing to do, nothing to say
+    assert check_discovery(idle, 3, date(2026, 11, 23)) == []            # new hires wait for next Monday's run
+    [f] = check_discovery(idle, 3, date(2026, 11, 25))                   # and it never came
+    assert f.key == "discovery-silent" and f.episode == "2026-11-16"
+
+
+def test_linked_authors_are_read_from_a_serpapi_response():
+    response = {"organic_results": [
+        {"publication_info": {"summary": "B Wali, AJ Khattak - 2020", "authors": [
+            {"name": "B Wali", "author_id": "rhiTassAAAAJ"}, {"name": "AJ Khattak", "author_id": "h1zbRDIAAAAJ"}]}},
+        {"publication_info": {"authors": [{"name": "B Wali", "author_id": "rhiTassAAAAJ"},
+                                          {"name": "H Bozdogan"}]}},      # no profile, so no id
+        {"publication_info": {"summary": "no linked authors at all"}}, {}]}
+    assert linked_authors(response) == {"rhiTassAAAAJ": "B Wali", "h1zbRDIAAAAJ": "AJ Khattak"}
+    assert linked_authors({"error": "Google hasn't returned any results for this query."}) == {}
+
+
+def test_every_search_and_profile_read_is_counted_against_the_quota():
+    from pipeline.collect_scholar import PermanentFailure
+    person = {"display_name": "Behram Wali", "first_name": "Behram", "last_name": "Wali"}
+    links = {"rhiTassAAAAJ": "B Wali", "h1zbRDIAAAAJ": "AJ Khattak", "DEADDEADDEAD": "B Wali"}
+
+    def read(sid, key):
+        if sid == "DEADDEADDEAD":
+            raise PermanentFailure("empty profile")
+        return {"name": "Behram Wali", "affiliation": "UC San Diego", "citedby": 2678, "email_domain": "@ucsd.edu"}
+
+    meter = {"spent": 0}
+    got, found = serpapi_candidates(person, "key", meter, 0, search=lambda name, key: links, read=read)
+    assert got == links and [c["scholar_id"] for c in found] == ["rhiTassAAAAJ"]
+    assert meter["spent"] == 3            # the search, and a read of each of the two profiles named "B Wali"
 
 
 # ------------------------------------------------------------------- SerpApi

@@ -26,14 +26,15 @@ owner so GitHub notifies them:
   * an issue closed by hand stays closed for that episode, which is how to
     say "seen it".
 
-A check that could not be made (no SerpApi key, the status record unreachable)
-neither raises nor closes anything. Notices (alarm=False) open an issue but do
+A check that could not be made (no SerpApi key here) neither raises nor closes
+anything. Notices (alarm=False) open an issue but do
 not fail the run. What none of this can see is a plausible wrong answer, such
 as a namesake's profile: that still takes a person writing in.
 
-The discovery agent runs on a Mac and cannot fail a workflow, so it publishes a
-small status record to the ref `refs/agent/discovery-status` after every slot
-(see pipeline/discovery_status.py); the checks here read it from there.
+Profile discovery runs inside the weekly Scholar workflow and can come back
+empty for good reasons and bad ones, so each run folds what it saw into
+data/review/discovery_status.json (see pipeline/discovery_status.py); the
+checks here read that.
 """
 
 from __future__ import annotations
@@ -57,7 +58,7 @@ from .match_openalex import REVIEW_DIR
 
 SITE = "https://scholarmetrics.com"
 LABEL = "health-check"
-STATUS_REF = "refs/agent/discovery-status"   # where scripts/daily_discovery.sh publishes
+DISCOVERY_STATUS = REVIEW_DIR / "discovery_status.json"   # written by find_scholar_profiles --status
 
 WEEKLY_BUDGET = 50          # profiles the Monday Scholar run re-reads
 ROLLING_MIN = 30            # an older run record with this many attempts was a collection run, not a repair
@@ -65,9 +66,8 @@ SHORT_RUN = 0.9             # a run that read under this share of what it set ou
 REPEAT_MIN_CITES = 20       # two records of one person with identical figures above this are one record
 SHARED_MIN_CITES = 50       # two people with identical figures above this are one record
 AUDIT_WINDOW_DAYS = 14      # how long an audit withdrawal stays raised
-SILENT_DAYS = 3             # the agent has work and has not reported for this long
-STALLED_DAYS = 3            # the agent has work and has searched nobody for this long
-EMPTY_BATCH_MIN = 10        # a batch at least this large ...
+SILENT_DAYS = 8             # people are waiting and discovery (weekly) has not reported for this long
+EMPTY_BATCH_MIN = 6         # a batch at least this large ...
 EMPTY_BATCH_SHARE = 0.8     # ... in which this share of searches showed no linked author at all
 
 
@@ -159,7 +159,7 @@ def check_scholar(metas: dict[str, dict], today: date, expect: bool = False) -> 
 
 
 def check_dead_ids(persons: list[dict], metas: dict[str, dict]) -> list[Finding]:
-    """A notice, not an alarm: the discovery agent looks for the replacement itself."""
+    """A notice, not an alarm: the next discovery run looks for the replacement itself."""
     reported: dict[str, str] = {}           # scholar id -> newest run that found it dead
     for d, m in sorted(metas.items()):
         for e in m.get("stale_ids") or []:
@@ -173,7 +173,7 @@ def check_dead_ids(persons: list[dict], metas: dict[str, dict]) -> list[Finding]
     return [Finding(
         "scholar-dead-ids", max(d for _, _, d in held),
         f"{len(held)} Scholar profile id{'s' if len(held) != 1 else ''} no longer resolve{'s' if len(held) == 1 else ''}",
-        f"{lines}\n\nThe discovery agent searches for the replacement profile at its next slot; this closes "
+        f"{lines}\n\nThe next weekly discovery run searches for the replacement profile first; this closes "
         "when the roster holds a new id or the old one is cleared. Nothing to do unless it lingers.",
         alarm=False)]
 
@@ -281,9 +281,10 @@ DISCOVERY_KEYS = {"discovery-silent", "discovery-stalled", "discovery-empty-batc
 
 
 def check_discovery(status: dict | None, queued: int, today: date) -> list[Finding]:
-    """The Mac agent that searches Scholar for unknown profiles. `status` is its
-    last published record; `queued` is how many people the repository says are
-    waiting to be searched, which does not depend on the agent being alive."""
+    """Profile discovery, which runs in the weekly Scholar workflow. `status`
+    is its record (data/review/discovery_status.json); `queued` is how many
+    people the roster says are waiting to be searched, counted here rather
+    than taken from the record, so a discovery that never runs is still seen."""
     out = []
     week = (today - timedelta(days=7)).isoformat()
     suspect = [b for b in (status or {}).get("batches") or []
@@ -295,9 +296,10 @@ def check_discovery(status: dict | None, queued: int, today: date) -> list[Findi
         out.append(Finding(
             "discovery-empty-batch", batch["date"],
             f"Scholar discovery on {batch['date']}: {empty} of {searched} searches showed no linked author",
-            "Normally about one search in eight comes back with no linked profile at all. A batch that is "
-            "nearly all empty means the pages being read were not real results (in September 2026 they were "
-            "Scholar's verification page, and 59 people were wrongly recorded as having no profile).\n\n"
+            "A search for someone with any publications nearly always shows at least a co-author with a "
+            "profile. A batch that is nearly all empty suggests the searches were not returning real results "
+            "(in September 2026 they were Scholar's verification page, and people were wrongly recorded as "
+            "having no profile).\n\n"
             "The people in this batch are marked as searched. Check a few by hand, and if the batch was bad, "
             "delete their `google_scholar` rows with an empty `external_id` from "
             "`data/review/identity_candidates.csv` so they are searched again. This stays open for a week "
@@ -308,23 +310,20 @@ def check_discovery(status: dict | None, queued: int, today: date) -> list[Findi
     if not reported or reported < (today - timedelta(days=SILENT_DAYS)).isoformat():
         out.append(Finding(
             "discovery-silent", reported or "never",
-            f"The discovery agent has not reported since {reported or 'it was set up'}; {queued} people are waiting",
-            f"{queued} people are waiting for a Scholar profile search and the agent on the Mac has published "
-            f"no status for {SILENT_DAYS} days or more. Either the Mac has been off or asleep at every slot, "
-            "the launchd agent is no longer installed, or it cannot push. "
-            "The log is `~/Library/Logs/planning-citations-discovery.log`."))
+            f"Scholar discovery has not run since {reported or 'records began'}; {queued} people are waiting",
+            f"{queued} people are waiting for a Scholar profile search, and the discovery step of the weekly "
+            f"Scholar workflow has recorded nothing for more than {SILENT_DAYS} days. See the latest run of "
+            "*Collect Google Scholar metrics (weekly, rolling)* under Actions."))
         return out
     stalled = status.get("stalled_since")
-    if stalled and stalled <= (today - timedelta(days=STALLED_DAYS)).isoformat():
+    if stalled:
         out.append(Finding(
             "discovery-stalled", stalled,
             f"Scholar discovery has searched no one since {stalled}; {queued} people are waiting",
-            f"Every slot since {stalled} had people to search and searched none. "
-            f"Last outcome: {status.get('outcome', 'unknown')}. "
+            f"The last run had people to search and searched none (outcome: {status.get('outcome', 'unknown')}). "
             f"Last successful search: {status.get('last_searched') or 'none on record'}.\n\n"
-            "Usual cause: Scholar is answering this address with its verification page instead of results. "
-            "It cannot be forced; it clears on its own or from a different network. New hires and anyone "
-            "whose profile id died stay without a Scholar figure until it does."))
+            "Usual causes: the SerpApi quota was already spent, or SerpApi was failing. New hires and anyone "
+            "whose profile id died stay without a Scholar figure until a run gets through."))
     return out
 
 
@@ -514,25 +513,6 @@ def fetch_json(url: str, tries: int = 3) -> dict:
     raise RuntimeError(err)
 
 
-def published_discovery_status() -> tuple[dict | None, bool]:
-    """(the agent's last status record, whether we could tell). No such ref
-    yet means the agent has never reported, which is itself an answer."""
-    def git(*args):
-        return subprocess.run(["git", *args], cwd=REPO_ROOT, capture_output=True, text=True)
-    heads = git("ls-remote", "origin", STATUS_REF)
-    if heads.returncode:
-        return None, False
-    if not heads.stdout.strip():
-        return None, True
-    if git("fetch", "--quiet", "--depth", "1", "origin", STATUS_REF).returncode:
-        return None, False
-    shown = git("show", "FETCH_HEAD:discovery.json")
-    try:
-        return json.loads(shown.stdout), True
-    except ValueError:
-        return None, False
-
-
 def discovery_queue(persons: list[dict], review: list[dict]) -> int:
     from .find_scholar_profiles import load_run_metas, people_to_search, searched_ids, stale_ids_on_file
     return len(people_to_search(persons, searched_ids(review), stale_ids_on_file(persons, load_run_metas())))
@@ -567,20 +547,12 @@ def gather(today: date, expect: str = "", status_file: str | None = None, offlin
     findings += check_audit(persons, review, today)
     evaluated |= AUDIT_KEYS
 
-    if status_file:
-        try:
-            status, known = json.loads(open(status_file).read()), True
-        except (OSError, ValueError):
-            status, known = None, False
-    elif offline:
-        status, known = None, False
-    else:
-        status, known = published_discovery_status()
-    if known:
-        findings += check_discovery(status, discovery_queue(persons, review), today)
-        evaluated |= DISCOVERY_KEYS
-    else:
-        skipped.append("discovery agent: could not read its status record")
+    try:
+        status = json.loads(open(status_file or DISCOVERY_STATUS).read())
+    except (OSError, ValueError):
+        status = None                       # no record at all: discovery has never reported
+    findings += check_discovery(status, discovery_queue(persons, review), today)
+    evaluated |= DISCOVERY_KEYS
 
     key = os.environ.get("SERPAPI_KEY")
     if key and not offline:
@@ -624,7 +596,7 @@ def main(argv=None) -> None:
     ap.add_argument("--expect", default="", choices=["", "scholar", "openalex"],
                     help="a scheduled run of this collection should just have finished")
     ap.add_argument("--discovery-status", metavar="FILE",
-                    help="the agent's status record as a file, instead of fetching the published one")
+                    help="a discovery status record other than data/review/discovery_status.json")
     ap.add_argument("--offline", action="store_true", help="only the checks that need no network")
     ap.add_argument("--self-test", action="store_true",
                     help="raise a harmless test alarm, to see that the notification arrives")

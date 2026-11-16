@@ -109,8 +109,8 @@ h-index is the largest, and the record with the most works is the primary id.
 ## 5. Identity
 
 **Scholar profiles.** Most Scholar ids came from the workbook. For people without one, a
-daily search runs from a residential address (Scholar blocks datacentre addresses): a
-publication search by name, the linked author profiles fetched and scored on name,
+weekly search runs through SerpApi inside the Scholar collection (a home address worked
+until Google flagged it in November 2026): a publication search by name, the linked author profiles fetched and scored on name,
 affiliation text and plausibility against the figure already held. A profile whose
 affiliation names the person's institution is accepted; one naming an institution we do
 not track, a student stage, or a field no planning scholar works in is rejected with the
@@ -154,9 +154,9 @@ institution where the record names a doctorate.
 
 | What | When | Where |
 |---|---|---|
-| Google Scholar readings | Rolling: about fifty profiles every Monday, oldest reading first, so every profile is re-read roughly every fifteen weeks | GitHub Actions, SerpApi free tier (250 searches a month, paced to its hourly cap) |
+| Google Scholar readings | Rolling: every Monday, oldest reading first, as many profiles as the week's fifty SerpApi searches leave after discovery (about 38 while people are waiting to be searched, fifty otherwise) | GitHub Actions, SerpApi free tier (250 searches a month, paced to its hourly cap) |
 | OpenAlex readings | Monthly, 1st of the month, everyone matched | GitHub Actions, free by-id lookups; followed by the match audit and the ORCID PhD fill |
-| Scholar profile discovery | Daily, one batch; fetches figures for anything it finds | A launchd agent on the maintainer's Mac, with a retry slot if the machine was asleep |
+| Scholar profile discovery | Weekly, about a dozen searches: people whose id died first, then people never searched | First step of the weekly Scholar job, on the same SerpApi quota |
 | Roster rules | After every Scholar run | Same job as the readings |
 | Site build and deploy | On every push to `main`, and after every collector commits | GitHub Actions to GitHub Pages at scholarmetrics.com |
 
@@ -260,7 +260,6 @@ pipeline/
   scan_departments.py       program-page scan
   build_review_sheet.py, build_rank_sheet.py, import_review.py, import_rank_review.py
   fill_phd_from_orcid.py
-scripts/             daily_discovery.sh, install_discovery_agent.sh
 sql/                 schema.sql, views.sql
 site/                copy.toml
 tests/               rules, views, homepage blocks, regression against the workbook

@@ -116,7 +116,7 @@ git add data/roster && git commit && git push          # CI deploys
 ```
 
 New people have no PhD year, so the rank-review flag will not see them; the
-Scholar discovery agent will search them on its next batch automatically.
+weekly Scholar discovery run will search them automatically.
 
 ## Start by re-running the scan
 

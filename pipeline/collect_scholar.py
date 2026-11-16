@@ -94,7 +94,7 @@ def id_is_dead(scholar_id: str) -> bool:
 
 def run_meta(via: str, ok: int, failed: int, minutes: float, stale: list[tuple],
              attempted: int | None = None, rolling: int | None = None) -> dict:
-    """The run's record. Dead ids go in by name so the discovery pass can find
+    """The run's record. Dead ids go in by name so the discovery run can find
     them without anyone reading the log: on GitHub the stderr listing is gone
     once the run page scrolls away. The counts are fields, not just prose, and
     a rolling run carries its budget: pipeline/health_check.py reads them to
@@ -111,7 +111,7 @@ def run_meta(via: str, ok: int, failed: int, minutes: float, stale: list[tuple],
 
 def merged_meta(old: dict | None, new: dict) -> dict:
     """Two runs can land on one date: the Monday collection, then a one-profile
-    fetch for someone the discovery agent found that afternoon. The second used
+    fetch for someone whose profile was found that afternoon. The second used
     to replace the first's record (2026-10-12 reads "1 ok" for a day that
     collected 47), taking its dead ids with it. A rolling run's record is kept
     unless another rolling run replaces it, and dead ids accumulate."""
@@ -281,7 +281,7 @@ def main(argv=None) -> None:
                     help="re-read the N current people whose latest reading is oldest (the weekly rolling run)")
     ap.add_argument("--missing", action="store_true",
                     help="only people whose roster id has never been fetched: a profile discovery "
-                         "accepted, or one set by hand. Cheap, and what the daily wrapper runs")
+                         "accepted, or one set by hand")
     ap.add_argument("--via", choices=["serpapi", "scholarly"],
                     default="serpapi" if os.environ.get("SERPAPI_KEY") else "scholarly")
     args = ap.parse_args(argv)
@@ -441,7 +441,7 @@ def main(argv=None) -> None:
         save_people(fields, everyone)
     if stale:
         print(f"\n{len(stale)} Scholar ids no longer resolve; recorded in {out.with_suffix('.meta.json').name}. "
-              f"The daily discovery pass will look for the new profiles; to search now:\n"
+              f"Next week's discovery run will look for the new profiles first; to search now:\n"
               f"  python -m pipeline.find_scholar_profiles --stale={','.join(s[2] for s in stale)}",
               file=sys.stderr)
         for _, name, sid in stale:

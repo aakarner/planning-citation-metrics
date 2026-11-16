@@ -1,41 +1,46 @@
 """Look for Google Scholar profiles for people who do not have one on file.
 
-    pip install -e ".[scholar]"
-    python -m pipeline.find_scholar_profiles --limit 20 --sleep 10    # trial
-    python -m pipeline.find_scholar_profiles                          # everyone without a profile
+    python -m pipeline.find_scholar_profiles --via serpapi --max-searches 12   # what the weekly workflow runs
+    python -m pipeline.find_scholar_profiles --via serpapi --limit 3 --dry-run # trial
 
 Policy (2026-09-14): we do not reconstruct citation counts for people without
 a Scholar profile (that is what Publish or Perish did, by hand). We do check
 whether a profile exists that we simply never recorded, and we re-check new
-hires each semester.
+hires.
 
-How it works (2026-09-15): Scholar's author search redirects to a Google
-sign-in page when reached directly, and SerpApi has discontinued its author
-search endpoint; SerpApi's regular Scholar search returns author names as
-plain text with no profile links. The only route that still exposes profile
-links is a direct publication search restricted to the author's name, fetched
-from a residential or university address. Linked author names that match ours
-are fetched and scored: one search page plus one profile page per plausible
-candidate. Scholar blocks an address after roughly 45 requests for many hours,
-so run this in batches of about 30 (--limit 30) on different days. It is
-resumable, and the yield is low: on the first 20 of the 243 it found no
-missing profiles, only namesakes.
+How it works: a Scholar publication search restricted to the author's name
+(author:"Name"). Authors with a profile are linked on the results page; linked
+names that could be ours are fetched and scored: one search plus one profile
+read per plausible candidate.
 
-  --via scrape    the working route (default).
-  --via serpapi   kept for the record; exits with an explanation.
+  --via serpapi   the working route (2026-11-15). SerpApi's Scholar search
+                  returns the linked authors' profile ids (it did not on
+                  2026-09-15, when this was first tried), so the search runs
+                  from GitHub Actions inside the weekly collection, on the
+                  same monthly quota. --max-searches caps what a run spends:
+                  no new person is started once it is reached, and the
+                  workflow gives the re-read whatever discovery did not use.
+  --via scrape    fetches the results page directly. It worked from a home
+                  address at about 30 people a day until Google flagged that
+                  address: from 2026-11-13 every request, and a real browser
+                  on the same network, got a verification page. Before that,
+                  such pages were read as "no profile" for 90 people. Kept
+                  for the record; needs  pip install -e ".[scholar]".
 
 Stale ids (2026-11-05): when a recorded Scholar id stops resolving (profile
 deleted, or re-created under a new id) the collector writes it into that
 run's .meta.json as stale_ids. Every run here reads those metas and searches
-each person still holding such an id, whether or not they were searched
-before, so a dead id is followed up by the next daily batch with nobody
-noticing it. The dead id can never be re-accepted; if nothing is found it is
-cleared and the person falls back to OpenAlex. --stale=ID,ID adds ids by hand
-(say, before the meta is committed).
+each person still holding such an id first, whether or not they were searched
+before, so a dead id is followed up by the next run with nobody noticing it.
+The dead id can never be re-accepted; if nothing is found it is cleared and
+the person falls back to OpenAlex. --stale=ID,ID adds ids by hand (say,
+before the meta is committed).
 
 Candidates are scored like OpenAlex candidates (name, affiliation text,
 citation plausibility) and land in data/review/identity_candidates.csv with
 source=google_scholar. Clear winners are written to person.google_scholar_id.
+--status folds the run into data/review/discovery_status.json, which
+pipeline/health_check.py reads.
 """
 
 from __future__ import annotations
@@ -48,6 +53,7 @@ import os
 import re
 import sys
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import date
@@ -143,14 +149,17 @@ def people_to_search(persons: list[dict], searched: set[str], stale: set[str]) -
             or (not p.get("google_scholar_id") and p["person_id"] not in searched)]
 
 
-def batch_report(tally: dict, no_links: int, consecutive_failures: int) -> dict:
+def batch_report(tally: dict, no_links: int, consecutive_failures: int,
+                 searches: int = 0, waiting: int = 0) -> dict:
     """What a batch saw, for the health check. `searched` counts the people
     whose search came back as a real results page; `no_links` those whose page
     linked no author at all. A batch that is nearly all `no_links` was not
-    reading results (2026-09-16: 30 of 30)."""
+    reading results (2026-09-16: 30 of 30). `searches` is what the run spent
+    of the SerpApi quota; `waiting` is how many people it had to search."""
     return {"searched": sum(n for k, n in tally.items() if k != "failed"), "no_links": int(no_links),
             "failed": tally.get("failed", 0), "found": tally.get("accepted", 0) + tally.get("pending", 0),
-            "blocked": consecutive_failures >= MAX_CONSECUTIVE_FAILURES}
+            "blocked": consecutive_failures >= MAX_CONSECUTIVE_FAILURES,
+            "searches": int(searches), "waiting": int(waiting)}
 
 
 def search_profile_links(name: str) -> dict[str, str]:
@@ -173,25 +182,53 @@ def search_profile_links(name: str) -> dict[str, str]:
 _load_dotenv()
 
 
-def serpapi_profiles(name: str, key: str) -> list[dict]:
-    """Scholar author search via SerpApi -> candidate dicts in the scholarly shape."""
+def linked_authors(results: dict) -> dict[str, str]:
+    """{scholar_id: linked author text} from a SerpApi Scholar search response.
+    Authors without a profile come back with no author_id and are left out."""
+    links: dict[str, str] = {}
+    for item in results.get("organic_results") or []:
+        for author in (item.get("publication_info") or {}).get("authors") or []:
+            if author.get("author_id") and author.get("name"):
+                links.setdefault(author["author_id"], author["name"].strip())
+    return links
+
+
+def serpapi_search(name: str, key: str) -> dict[str, str]:
+    """The same publication search as search_profile_links, through SerpApi."""
     url = "https://serpapi.com/search.json?" + urllib.parse.urlencode(
-        {"engine": "google_scholar_profiles", "mauthors": name, "hl": "en", "api_key": key})
-    with urllib.request.urlopen(url, timeout=60) as resp:
-        data = json.loads(resp.read().decode("utf-8"))
+        {"engine": "google_scholar", "q": f'author:"{name}"', "hl": "en", "num": 20, "api_key": key})
+    try:
+        with urllib.request.urlopen(url, timeout=60) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        raise RuntimeError(f"SerpApi answered HTTP {e.code}") from None   # never the URL: it carries the key
     if data.get("error") and "hasn't returned any results" not in data["error"]:
         raise RuntimeError(data["error"])
-    out = []
-    for prof in data.get("profiles") or []:
-        email = prof.get("email") or ""
-        out.append({
-            "scholar_id": prof.get("author_id"),
-            "name": prof.get("name"),
-            "affiliation": prof.get("affiliations"),
-            "citedby": prof.get("cited_by"),
-            "email_domain": ("@" + email.split(" at ", 1)[1].strip()) if " at " in email else None,
-        })
-    return out
+    return linked_authors(data)
+
+
+def serpapi_candidates(person: dict, key: str, meter: dict, pause: float,
+                       search=None, read=None) -> tuple[dict[str, str], list[dict]]:
+    """(links, candidate profiles) for one person: the search, then a read of
+    each linked profile whose name could be theirs ("N Brooks" counts), four at
+    most. Every SerpApi call is counted in meter["spent"] as it is made."""
+    from .collect_scholar import PermanentFailure, fetch_serpapi
+    search, read = search or serpapi_search, read or fetch_serpapi
+    meter["spent"] += 1
+    links = search(person["display_name"], key)
+    plausible = [sid for sid, text in links.items()
+                 if name_similarity(person, {"display_name": text}) >= 0.9][:4]
+    found = []
+    for sid in plausible:
+        time.sleep(pause)
+        meter["spent"] += 1
+        try:
+            a = read(sid, key)
+        except PermanentFailure:
+            continue                                   # a linked id that no longer resolves is not a candidate
+        found.append({"scholar_id": sid, "name": a.get("name"), "affiliation": a.get("affiliation"),
+                      "citedby": a.get("citedby"), "email_domain": a.get("email_domain")})
+    return links, found
 
 
 # A candidate's citation count against the figure we already hold. Both measure
@@ -507,10 +544,16 @@ def main(argv=None) -> None:
     ap.add_argument("--reclassify", action="store_true",
                     help="re-apply the accept/reject rules to rows already in the review queue, "
                          "from their stored evidence; makes no network calls")
-    ap.add_argument("--via", choices=["serpapi", "scrape"], default="scrape")
+    ap.add_argument("--via", choices=["serpapi", "scrape"],
+                    default="serpapi" if os.environ.get("SERPAPI_KEY") else "scrape")
+    ap.add_argument("--max-searches", type=int, metavar="N",
+                    help="start no new person once N SerpApi searches are spent (one per person, plus one "
+                         "per plausible candidate profile). The person under way is finished, so a run "
+                         "can go over by up to four; --report says what was spent")
     ap.add_argument("--report", metavar="FILE",
-                    help="write what this batch saw (searched, no linked authors, failed, found, blocked) "
-                         "as JSON, for scripts/daily_discovery.sh to publish")
+                    help="write what this batch saw and spent as JSON; the workflow sizes the re-read from it")
+    ap.add_argument("--status", metavar="FILE",
+                    help="fold this run into the discovery status record the health check reads")
     ap.add_argument("--stale", metavar="ID,ID,...", default="",
                     help="also re-check the people holding these Scholar ids (no longer resolving), on top "
                          "of those the collector has recorded in the snapshot metas; "
@@ -527,9 +570,8 @@ def main(argv=None) -> None:
     scholarly = None
     key = os.environ.get("SERPAPI_KEY")
     if args.via == "serpapi":
-        sys.exit("SerpApi discontinued its Scholar author-search endpoint, and its regular Scholar "
-                 "search omits profile links (checked 2026-09-15). Use --via scrape from a home or "
-                 "campus address, about 30 people per day.")
+        if not key:
+            sys.exit("SERPAPI_KEY is not set (put it in .env)")
     else:
         try:
             from scholarly import scholarly
@@ -546,6 +588,10 @@ def main(argv=None) -> None:
     listed = listed_pairs(existing)
 
     todo = people_to_search(persons, searched, stale)
+    todo.sort(key=lambda p: p.get("google_scholar_id") not in stale)   # dead ids first: they have lost a figure
+    waiting = len(todo)
+    budget = args.max_searches if args.max_searches is not None else float("inf")
+    meter = {"spent": 0}
     if args.limit:
         todo = todo[: args.limit]
     print(f"{sum(1 for p in persons if not p.get('google_scholar_id'))} people without a Scholar id, "
@@ -556,10 +602,12 @@ def main(argv=None) -> None:
     for i, person in enumerate(todo, 1):
         aff = current.get(person["person_id"])
         dept = dept_by_id.get(aff["department_id"]) if aff else None
+        if meter["spent"] >= budget:
+            print(f"  search budget of {args.max_searches} spent; {len(todo) - i + 1} people left for the next run")
+            break
         try:
             if args.via == "serpapi":
-                found = serpapi_profiles(person["display_name"], key)
-                links = {c["scholar_id"]: c["name"] for c in found}
+                links, found = serpapi_candidates(person, key, meter, args.sleep)
             else:
                 links = search_profile_links(person["display_name"])
                 # Only fetch profiles whose linked name could be this person ("N Brooks" counts).
@@ -580,7 +628,8 @@ def main(argv=None) -> None:
             consecutive += 1
             print(f"  [{i}/{len(todo)}] {person['display_name']}: FAILED ({type(e).__name__}: {e})", file=sys.stderr)
             if consecutive >= MAX_CONSECUTIVE_FAILURES:
-                print("Scholar appears to be blocking; stopping. Partial results are kept.", file=sys.stderr)
+                print(("SerpApi is failing every search" if args.via == "serpapi" else "Scholar appears to be blocking")
+                      + "; stopping. Partial results are kept.", file=sys.stderr)
                 break
             continue
         no_links += not links
@@ -624,11 +673,15 @@ def main(argv=None) -> None:
         if i < len(todo):
             time.sleep(args.sleep)
 
-    print("\nsummary:", tally)
+    print("\nsummary:", tally, f"| {meter['spent']} searches spent" if args.via == "serpapi" else "")
+    batch = batch_report(tally, no_links, consecutive, meter["spent"], waiting)
     if args.report:
-        Path(args.report).write_text(json.dumps(batch_report(tally, no_links, consecutive)) + "\n")
+        Path(args.report).write_text(json.dumps(batch) + "\n")
     if args.dry_run:
         return
+    if args.status:
+        from .discovery_status import record_run
+        record_run(args.status, batch)
     write_csv(review_path, REVIEW_FIELDS, existing + rows)
     write_csv(ROSTER_DIR / "person.csv", pfields, persons)
     print(f"wrote {review_path} and updated person.csv")

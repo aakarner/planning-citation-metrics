@@ -105,16 +105,25 @@ single address gets about 45 fetches before Scholar blocks it for many hours.
 ## Scholar profile discovery
 
 ```bash
-.venv/bin/python -m pipeline.find_scholar_profiles --limit 20 --sleep 10   # trial
-.venv/bin/python -m pipeline.find_scholar_profiles                         # everyone without a profile
+.venv/bin/python -m pipeline.find_scholar_profiles --via serpapi --limit 3 --dry-run   # trial
+.venv/bin/python -m pipeline.find_scholar_profiles --via serpapi --max-searches 12     # what the weekly job runs
 ```
 
-Runs a Scholar publication search restricted to the author's name from this machine and
-follows the profile links on the results page. This is the only route that still exposes
-those links: Scholar's own author search demands a sign-in, and SerpApi has discontinued its
-author-search endpoint and strips profile links from regular search results. Scholar blocks an
-address after ~45 requests for many hours, so run about 30 people per day (`--limit 30`); it
-resumes where it left off. Candidates are scored like OpenAlex candidates and written to the
+Runs a Scholar publication search restricted to the author's name (`author:"Name"`) through
+SerpApi and reads the linked author profiles off the results: one search per person, plus one
+profile read per linked name that could be theirs. It runs as the first step of the weekly
+Scholar workflow, capped at about a dozen searches; the rolling re-read then spends what is
+left of the week's fifty. People whose recorded id has died are searched first. It resumes
+where it left off, and writes what each run saw to `data/review/discovery_status.json` for
+the health check.
+
+Until November 2026 this fetched Scholar's results page directly from a home address, thirty
+people a day (`--via scrape`). Google then flagged the address: every request, and a real
+browser on the same network, got a verification page, and before that such pages had been read
+as "no profile". SerpApi's results did not carry profile ids when first tried in September
+2026; they do now.
+
+Candidates are scored like OpenAlex candidates and written to the
 same review queue with `source=google_scholar`. Because searching by name alone mostly turns
 up strangers, a candidate is rejected outright, reason kept, when its affiliation gives a
 decisive reason: it names an institution that is not this person's department, or a field no
@@ -131,12 +140,8 @@ stranger's count as theirs.
 `--apply` writes accepted ids from the queue into `person.csv`, which is how a person's own
 decisions take effect.
 
-People whose recorded Scholar id stops resolving (the collector reports "empty profile") are
-re-found by a direct fetch that follows Google's redirect, from an unblocked address:
-
-```bash
-.venv/bin/python -m pipeline.collect_scholar --via scholarly --ids <old id> ...
-```
+People whose recorded Scholar id stops resolving (the collector reports "empty profile" and
+lists the id in that run's `.meta.json`) go to the front of the next discovery run.
 
 We do not reconstruct citation counts for people without a profile (that was Publish or
 Perish, by hand); they get the flagged OpenAlex number instead.
@@ -155,15 +160,15 @@ collection (`.github/workflows/health-check.yml`).
 | --- | --- |
 | `scholar-overdue` | no rolling Scholar snapshot for the most recent Monday |
 | `scholar-short-run` | the run read under 90% of its budget, or 3+ profiles failed for reasons other than a dead id |
-| `scholar-dead-ids` (notice) | a roster id no longer resolves; the discovery agent looks for the new one |
+| `scholar-dead-ids` (notice) | a roster id no longer resolves; the next discovery run looks for the new one |
 | `serpapi-quota` | on Sunday or Monday before the run, SerpApi has fewer searches left than the run needs |
 | `openalex-overdue` | no full OpenAlex snapshot this month |
 | `openalex-incomplete` | the run stopped early, or missed 5+ people (0.5% of the roster if larger) |
 | `openalex-repeated-records` | one record counted twice: identical figures on two of a person's records, or one record under two people |
 | `openalex-audit-withdrawals` | the audit withdrew an accepted match in the last 14 days |
-| `discovery-silent` | people are waiting and the Mac agent has not reported for 3 days |
-| `discovery-stalled` | people are waiting and no slot has searched anyone for 3 days (Scholar blocking) |
-| `discovery-empty-batch` | a batch of 10+ in which 80% of searches showed no linked author |
+| `discovery-silent` | people are waiting and discovery has recorded no run for more than 8 days |
+| `discovery-stalled` | the last discovery run had people to search and searched none |
+| `discovery-empty-batch` | a batch of 6+ in which 80% of searches showed no linked author |
 | `site-stale` | the live site was built without a snapshot the repository has held for a day |
 | `site-unreachable` | the site's `status.json` cannot be read |
 
@@ -177,33 +182,8 @@ raises something new, so a red run always means there is a new issue to read.
 To see what an alarm looks like and confirm the notification reaches you, run the *Health
 check* workflow by hand with "Raise a harmless test alarm" ticked; the next run closes it.
 
-The discovery agent cannot fail a workflow, so after every slot it pushes a small status
-record (counts and dates, `pipeline/discovery_status.py`) to the ref
-`refs/agent/discovery-status`, which the check reads:
-
-    git fetch origin refs/agent/discovery-status && git show FETCH_HEAD:discovery.json
-
 None of this can see a plausible wrong answer, such as a namesake's profile accepted for
 the right person. That still takes someone writing in.
-
-## Scheduled discovery (local, macOS)
-
-Discovery has to run from a residential or campus address, so it cannot live in GitHub
-Actions. A launchd agent runs one batch of 30 a day:
-
-```bash
-bash scripts/install_discovery_agent.sh          # 10:15, retried at 14:15 if the Mac was asleep
-bash scripts/install_discovery_agent.sh 10:15 14:15 20:15   # or any slots you like
-```
-
-Each run pulls, searches 30 people, commits anything it found, and pushes. It takes a lock so
-runs cannot overlap, logs to `~/Library/Logs/planning-citations-discovery.log`, and when
-nobody is left to search it says so and stops doing work. Remove it with:
-
-```bash
-launchctl bootout gui/$(id -u)/com.aakarner.planning-citations.discovery
-rm ~/Library/LaunchAgents/com.aakarner.planning-citations.discovery.plist
-```
 
 ## PhD year and institution
 
