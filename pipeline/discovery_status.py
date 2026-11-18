@@ -13,6 +13,7 @@ and pipeline/health_check.py reads it. Counts and dates only.
                    searched at least one person was searched
                    blocked  five searches in a row failed
                    failed   there were people to search and none was, for another reason
+                   skipped  the week's run was cut so short that discovery was given no searches
     queued         people still waiting after the run
     last_searched  the last day anyone was searched
     stalled_since  the first day of the current run of attempts that had work
@@ -22,6 +23,8 @@ and pipeline/health_check.py reads it. Counts and dates only.
 
     python -m pipeline.discovery_status --state data/review/discovery_status.json --failed
         records a run that crashed before it could report (the workflow does this)
+    python -m pipeline.discovery_status --state data/review/discovery_status.json --skipped
+        records a week in which discovery was deliberately not run
 """
 
 from __future__ import annotations
@@ -34,11 +37,17 @@ from pathlib import Path
 KEEP_BATCHES = 10
 
 
-def next_status(prev: dict | None, *, now: datetime, batch: dict | None) -> dict:
+def next_status(prev: dict | None, *, now: datetime, batch: dict | None, skipped: bool = False) -> dict:
     """Fold one run into the record. `batch` is the finder's report
     (find_scholar_profiles.batch_report), or None for a run that never got
-    as far as writing one."""
+    as far as writing one. `skipped` records a week in which discovery was
+    left out on purpose: the record shows it reported, so the health check
+    does not call it silent, and nothing else about it changes."""
     prev = prev or {}
+    if skipped:
+        return {"reported": now.strftime("%Y-%m-%dT%H:%M:%SZ"), "outcome": "skipped",
+                "queued": prev.get("queued"), "last_searched": prev.get("last_searched"),
+                "stalled_since": prev.get("stalled_since"), "batches": list(prev.get("batches") or [])}
     today = now.date().isoformat()
     batch = batch or {}
     searched = int(batch.get("searched") or 0)
@@ -73,8 +82,8 @@ def read_json(path) -> dict | None:
         return None
 
 
-def record_run(path, batch: dict | None) -> dict:
-    status = next_status(read_json(path), now=datetime.now(timezone.utc), batch=batch)
+def record_run(path, batch: dict | None, skipped: bool = False) -> dict:
+    status = next_status(read_json(path), now=datetime.now(timezone.utc), batch=batch, skipped=skipped)
     Path(path).write_text(json.dumps(status, indent=2) + "\n")
     print(f"discovery status: {status['outcome']}, {status['queued']} waiting"
           + (f", no one searched since {status['stalled_since']}" if status["stalled_since"] else ""))
@@ -84,10 +93,12 @@ def record_run(path, batch: dict | None) -> dict:
 def main(argv=None) -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--state", required=True, help="the record to update in place")
-    ap.add_argument("--failed", action="store_true", required=True,
-                    help="record a run that did not get as far as reporting")
+    how = ap.add_mutually_exclusive_group(required=True)
+    how.add_argument("--failed", action="store_true", help="record a run that did not get as far as reporting")
+    how.add_argument("--skipped", action="store_true",
+                     help="record a week in which discovery was given no searches and not run")
     args = ap.parse_args(argv)
-    record_run(args.state, None)
+    record_run(args.state, None, skipped=args.skipped)
 
 
 if __name__ == "__main__":

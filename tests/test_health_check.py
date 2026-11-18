@@ -6,6 +6,8 @@ Each of these went unnoticed at the time because the workflow run was green.
 import json
 from datetime import date, datetime, timezone
 
+import pytest
+
 from pipeline.collect_scholar import merged_meta, run_meta
 from pipeline.discovery_status import next_status
 from pipeline.find_scholar_profiles import batch_report, linked_authors, serpapi_candidates
@@ -276,6 +278,77 @@ def test_every_search_and_profile_read_is_counted_against_the_quota():
     assert meter["spent"] == 3            # the search, and a read of each of the two profiles named "B Wali"
 
 
+# ------------------------------------------------- profiles that may be a namesake's
+
+def gs_row(pid, sid, cites, d, **raw):
+    return {"person_id": pid, "collected_at": d, "total_citations": str(cites),
+            "raw_json": json.dumps({"scholar_id": sid, **raw})}
+
+
+def test_the_change_reports_two_signs_of_a_namesake_are_raised_as_one_notice():
+    """The weekly change report was written and thrown away from 2026-10 to
+    2026-11: seventy people flagged on 2026-11-18 and nobody told."""
+    from pipeline.health_check import check_profiles
+    rutgers = {"university": "Rutgers University", "short_name": "Rutgers University", "name": "Rutgers University"}
+    persons = [{"person_id": "1", "display_name": "A Planner", "google_scholar_id": "AAA"},
+               {"person_id": "2", "display_name": "B Surgeon", "google_scholar_id": "BBB"},
+               {"person_id": "3", "display_name": "C Dropped", "google_scholar_id": "CCC"},
+               {"person_id": "4", "display_name": "D Corrected", "google_scholar_id": "REAL4"},
+               {"person_id": "5", "display_name": "E Departed", "google_scholar_id": "EEE"},
+               {"person_id": "6", "display_name": "F Geodesign", "google_scholar_id": "FFF"}]
+    latest = [gs_row("1", "AAA", 900, "2026-11-09", interests=["land use", "housing"]),
+              gs_row("2", "BBB", 4000, "2026-11-09", interests=["hand surgery"], affiliation="General Hospital"),
+              gs_row("3", "CCC", 600, "2026-11-09", interests=["transport"]),
+              gs_row("4", "REAL4", 13175, "2026-10-12", interests=["urban growth"]),
+              gs_row("5", "EEE", 50, "2026-11-09", interests=["oncology"]),
+              # the automatic rule leaves a profile that names the person's own department alone, and so does this
+              gs_row("6", "FFF", 3000, "2026-11-09", interests=["geodesign", "global surgery"],
+                     affiliation="Rutgers University")]
+    prev = [gs_row("1", "AAA", 880, "2026-07-01"), gs_row("3", "CCC", 1000, "2026-07-01"),
+            gs_row("4", "NAMESAKE", 23933, "2026-09-15")]     # a fall across a change of id is a correction
+    current = {"1": rutgers, "2": rutgers, "3": rutgers, "4": rutgers, "6": rutgers}       # 5 has left
+    [f] = check_profiles(persons, current, latest, prev)
+    assert f.key == "scholar-profile-flags" and not f.alarm and f.title.startswith("2 Scholar profiles to check")
+    assert "B Surgeon: Scholar profile lists 'surgery'" in f.detail and "C Dropped: Scholar citations fell 1000 -> 600" in f.detail
+    assert not any(name in f.detail for name in ("A Planner", "D Corrected", "E Departed", "F Geodesign"))
+    assert f.members == ("2:namesake:BBB", "3:drop:2026-11-09")
+    assert check_profiles(persons, current, latest[2:4], []) == []
+
+
+def test_a_list_closed_by_hand_comes_back_only_for_a_flag_that_was_not_on_it():
+    """Closing the notice says 'seen these'. Clearing one of the ids, as the notice
+    itself suggests, or a fall expiring at the next reading, shortens the list;
+    that used to count as a new occurrence and re-announce the names left on it."""
+    def notice(*members):
+        return Finding("scholar-profile-flags", "-".join(members), f"{len(members)} to check", "d",
+                       alarm=False, members=tuple(members))
+    both = notice("2:namesake:BBB", "3:drop:2026-11-09")
+    one = notice("3:drop:2026-11-09")
+    plus = notice("3:drop:2026-11-09", "7:drop:2026-11-16")
+    again = notice("3:drop:2027-03-08")                       # the same person, a later fall
+    seen = {"scholar-profile-flags"}
+    assert "members=2:namesake:BBB,3:drop:2026-11-09" in issue_body(both)
+    assert plan_issue_actions([one], [issue(20, both, "CLOSED")], seen, TODAY) == []          # shorter: still seen
+    assert does(plan_issue_actions([plus], [issue(20, both, "CLOSED")], seen, TODAY)) == ["create"]
+    assert does(plan_issue_actions([again], [issue(20, both, "CLOSED")], seen, TODAY)) == ["create"]
+    # while the issue is open, a shorter list only refreshes its text; a new name is a comment
+    assert does(plan_issue_actions([one], [issue(20, both)], seen, TODAY)) == ["edit"]
+    assert does(plan_issue_actions([plus], [issue(20, both)], seen, TODAY)) == ["comment", "edit"]
+    # and an ordinary finding, with no list, behaves as it always did
+    assert does(plan_issue_actions([Finding(F.key, "2026-12-01", "again", "d")], [issue(12, F, "CLOSED")], EVALUATED, TODAY)) == ["create"]
+
+
+def test_a_week_with_discovery_left_out_on_purpose_is_not_called_silent():
+    # A run cut to a handful of searches gives discovery none. With nothing written to the
+    # record, the health check called discovery silent from the following Wednesday.
+    last = next_status(None, now=at("2026-11-23"), batch={"searched": 9, "waiting": 85, "found": 1})
+    skipped = next_status(last, now=at("2026-11-30"), batch=None, skipped=True)
+    assert skipped["outcome"] == "skipped" and skipped["reported"].startswith("2026-11-30")
+    assert (skipped["last_searched"], skipped["stalled_since"], skipped["queued"]) == ("2026-11-23", None, 76)
+    assert check_discovery(skipped, 76, date(2026, 12, 4)) == []
+    assert keys(check_discovery(last, 76, date(2026, 12, 4))) == ["discovery-silent"]       # what it said before
+
+
 # ------------------------------------------------------------------- SerpApi
 
 ACCOUNT = {"plan_name": "Free Plan", "searches_per_month": 250, "this_month_usage": 218, "total_searches_left": 32}
@@ -289,6 +362,9 @@ def test_too_few_searches_is_raised_on_the_eve_of_the_run_only():
     assert keys(check_serpapi(ACCOUNT, date(2026, 11, 16), "2026-11-09")) == ["serpapi-quota"]   # Monday, not yet run
     assert check_serpapi(ACCOUNT, date(2026, 11, 16), "2026-11-16") == []                         # Monday, after the run
     assert check_serpapi({**ACCOUNT, "total_searches_left": 250}, date(2026, 11, 15), "2026-11-09") == []
+    # the run cuts itself to the balance, so a shortfall is a notice; only an empty account is an alarm
+    assert not f.alarm
+    assert check_serpapi({**ACCOUNT, "total_searches_left": 0}, date(2026, 11, 15), "2026-11-09")[0].alarm
 
 
 # ----------------------------------------------------------------- live site
@@ -341,8 +417,9 @@ def test_the_collector_stops_when_the_account_is_out_of_searches(tmp_path, monke
     monkeypatch.setattr(cs, "load_people", lambda: (list(people[0]), people))
     monkeypatch.setattr(cs, "current_ids", lambda: {p["person_id"] for p in people})
     monkeypatch.setattr(cs, "fetch_serpapi", fetch)
-    monkeypatch.setattr(cs, "searches_left", lambda key: 0)
-    monkeypatch.setattr(cs, "id_is_dead", lambda sid: False)
+    balance = iter([None])                           # SerpApi would not say at the start, then says 0
+    monkeypatch.setattr(cs, "searches_left", lambda key: next(balance, 0))
+    monkeypatch.setattr(cs, "id_is_dead", lambda sid: pytest.fail("a SerpApi run must not ask Scholar itself"))
     monkeypatch.setattr(cs.time, "sleep", naps.append)
     cs.main(["--via", "serpapi", "--budget", "37", "--date", "2026-11-16"])
 

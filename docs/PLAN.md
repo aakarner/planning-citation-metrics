@@ -121,7 +121,7 @@ profile whose id stops resolving is cleared, and the person is searched again.
 profile still belong to someone else at the same university. The one cheap tell is the
 profile's interests line. Any held profile whose interests or affiliation name a field no
 planning scholar works in, and which does not place itself at the person's department, is
-cleared and vetoed automatically; the person falls back to OpenAlex until the daily search
+cleared and vetoed automatically; the person falls back to OpenAlex until the weekly discovery search
 finds the right profile.
 
 **OpenAlex records.** The matcher searches by name, filters by the program's institution,
@@ -253,7 +253,7 @@ pipeline/
   load_workbook.py          one-time migration
   build_db.py, build_site.py, site_assets.py
   collect_scholar.py, collect_openalex.py, clear_dead_ids.py
-  find_scholar_profiles.py  daily discovery
+  find_scholar_profiles.py  weekly discovery
   match_openalex.py, resolve_institutions.py, audit_matches.py
   apply_changes.py          roster rules from profiles
   detect_changes.py         change report and rank review

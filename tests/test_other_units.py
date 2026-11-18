@@ -116,3 +116,33 @@ def test_a_targeted_fetch_does_not_move_the_as_of_date():
     # OpenAlex is collected in full runs, so the 50-row fetch does not move its date;
     # Scholar is rolling, so its date is the newest reading (the page says "last read")
     assert as_of_dates(counts) == {"openalex": "2026-10-09", "google_scholar": "2026-10-12"}
+
+
+def test_the_change_report_counts_only_people_it_has_something_to_say_about(tmp_path, monkeypatch, capsys):
+    """Adding an empty list of flags to a person still listed them: a change that
+    looked harmless made the report say 905 people were flagged when 70 were."""
+    from datetime import date
+    r = roster(tmp_path)
+    snaps = tmp_path / "snapshots"
+    today = date.today().isoformat()
+    rows = [{**scholar(1, 500, "Professor, Test U", "testu.edu"), "collected_at": today},
+            {**scholar(2, 900, "Professor of Geography, Test U", "testu.edu"), "collected_at": today}]
+    write(snaps / "google_scholar" / f"{today}.csv", SNAP_FIELDS, rows)
+    for name, value in (("ROSTER_DIR", r), ("SNAPSHOT_DIR", snaps), ("BUILD_DIR", tmp_path)):
+        monkeypatch.setattr(detect_changes, name, value)
+    detect_changes.main(["--out", str(tmp_path / "report.md")])
+    report = (tmp_path / "report.md").read_text()
+    assert "\n0 people flagged out of 2 Scholar" in report and "## " not in report
+    # and one person with a field no planner works in is one person flagged
+    rows[0]["raw_json"] = json.dumps({"affiliation": "Heart Centre", "email_domain": "testu.edu",
+                                      "interests": ["cardiology"]})
+    write(snaps / "google_scholar" / f"{today}.csv", SNAP_FIELDS, rows)
+    detect_changes.main(["--out", str(tmp_path / "report.md")])
+    report = (tmp_path / "report.md").read_text()
+    assert "\n1 people flagged" in report and report.count("## ") == 1 and "## Ada Planner" in report
+    # the same interests on a profile that names their own department are theirs (David Tulloch's 'global surgery')
+    rows[0]["raw_json"] = json.dumps({"affiliation": "Professor, Test U", "email_domain": "testu.edu",
+                                      "interests": ["cardiology"]})
+    write(snaps / "google_scholar" / f"{today}.csv", SNAP_FIELDS, rows)
+    detect_changes.main(["--out", str(tmp_path / "report.md")])
+    assert "\n0 people flagged" in (tmp_path / "report.md").read_text()

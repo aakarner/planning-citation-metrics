@@ -183,8 +183,53 @@ def test_a_dead_id_the_collector_recorded_is_searched_again_until_it_is_replaced
     assert stale == {"DEAD1"}
     searched = {"1", "4"}      # person 1 was found by discovery in the first place
     assert [p["person_id"] for p in people_to_search(persons, searched, stale)] == ["1", "3"]
-    # a hand-given id joins the set the same way
-    assert [p["person_id"] for p in people_to_search(persons, searched, stale | {"LIVE5"})] == ["1", "3", "5"]
+    # a hand-given id joins the set the same way; dead ids go first, because they have lost a figure
+    assert [p["person_id"] for p in people_to_search(persons, searched, stale | {"LIVE5"})] == ["1", "5", "3"]
+
+
+def row(pid, status="rejected", by="matcher", at="2026-09-16", ext=""):
+    return {"person_id": pid, "source": "google_scholar", "status": status, "reviewed_by": by,
+            "reviewed_at": at, "external_id": ext}
+
+
+def test_someone_searched_with_nothing_found_is_searched_again_later():
+    """Until 2026-11 a person was searched once and never again: 198 of the 282
+    current people without a profile, while their pages said that creating one
+    'fixes it at the next update'."""
+    from datetime import date
+    from pipeline.find_scholar_profiles import due_for_recheck, people_to_search
+    rows = [row("1", at="2026-09-16"),                      # searched in September, nothing found
+            row("2", at="2026-09-17"), row("2", at="2026-11-10"),   # searched again since
+            row("3", at="2026-09-15"),                      # has left the tracked programs
+            row("4", at="2026-09-01"), row("4", status="pending", by="", at="", ext="CAND4"),  # a person has one to decide
+            row("5", at="2026-08-30"),                      # the longest-waiting
+            {"person_id": "6", "source": "openalex", "status": "rejected", "reviewed_by": "matcher",
+             "reviewed_at": "2026-01-01", "external_id": "A1"}]     # not a Scholar search at all
+    current = {"1", "2", "4", "5", "6", "7"}
+    assert due_for_recheck(rows, current, date(2026, 11, 18)) == {}             # two months on: nobody yet
+    due = due_for_recheck(rows, current, date(2027, 2, 1))
+    assert due == {"1": "2026-09-16", "5": "2026-08-30"}
+    persons = [{"person_id": str(n), "google_scholar_id": ""} for n in range(1, 8)]
+    searched = {"1", "2", "3", "4", "5"}
+    # never searched (6, 7) before repeat searches, and those longest-waiting first
+    assert [p["person_id"] for p in people_to_search(persons, searched, set(), due)] == ["6", "7", "5", "1"]
+    # someone who gained a profile in the meantime is not searched, due or not
+    persons[4]["google_scholar_id"] = "FOUND5"
+    assert [p["person_id"] for p in people_to_search(persons, searched, set(), due)] == ["6", "7", "1"]
+
+
+def test_a_repeat_search_does_not_read_profiles_already_ruled_out():
+    # A namesake rejected in September would otherwise be fetched again at every repeat
+    # search, a search each time, to be rejected again.
+    from pipeline.find_scholar_profiles import serpapi_candidates
+    person = {"display_name": "Robert Patrick", "first_name": "Robert", "last_name": "Patrick"}
+    links = {"ECONOMIST001": "R Patrick", "NEWPROFILE01": "R Patrick"}
+    read = lambda sid, key: {"name": "Robert Patrick", "affiliation": "x", "citedby": 10, "email_domain": None}
+    meter = {"spent": 0}
+    _, found = serpapi_candidates(person, "key", meter, 0, search=lambda name, key: links, read=read,
+                                  skip={"ECONOMIST001"})
+    assert [c["scholar_id"] for c in found] == ["NEWPROFILE01"]
+    assert meter["spent"] == 2            # the search and the one profile not yet judged
 
 
 def test_only_a_results_page_counts_as_a_search():

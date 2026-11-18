@@ -29,7 +29,11 @@ owner so GitHub notifies them:
 A check that could not be made (no SerpApi key here) neither raises nor closes
 anything. Notices (alarm=False) open an issue but do
 not fail the run. What none of this can see is a plausible wrong answer, such
-as a namesake's profile: that still takes a person writing in.
+as a namesake's profile with nothing odd about it: that still takes a person
+writing in. The two signs there are, a field no planner works in and a total
+that fell, come from the weekly change report (pipeline/detect_changes.py)
+and are raised here as a notice, because the report itself is an artifact
+nobody is told about.
 
 Profile discovery runs inside the weekly Scholar workflow and can come back
 empty for good reasons and bad ones, so each run folds what it saw into
@@ -41,6 +45,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import os
 import re
@@ -78,6 +83,10 @@ class Finding:
     title: str
     detail: str         # markdown
     alarm: bool = True  # False: a notice, raised but the run stays green
+    # For a finding that is a list of things to look at: what is on the list. An issue
+    # that already showed all of these covers the finding, whatever else it showed, so a
+    # list that only gets shorter is never raised again (see plan_issue_actions).
+    members: tuple[str, ...] = ()
 
 
 # ---------------------------------------------------------------- run records
@@ -140,6 +149,7 @@ def check_scholar(metas: dict[str, dict], today: date, expect: bool = False) -> 
             f"A run was due on Monday {due.isoformat()} and no snapshot from it is in "
             f"`data/snapshots/google_scholar/`. The last collection run on file is {d or 'none'}.\n\n"
             "Usual causes: the workflow was skipped or disabled, the `SERPAPI_KEY` secret is missing, "
+            "the SerpApi account had no searches left (the run then reads nothing and says so), "
             "or every request failed (a run that reads nothing leaves no snapshot). "
             "See the latest run of *Collect Google Scholar metrics (weekly, rolling)* under Actions."))
     if m is not None:
@@ -147,7 +157,9 @@ def check_scholar(metas: dict[str, dict], today: date, expect: bool = False) -> 
         attempted = int(m.get("attempted") or ok + failed)
         dead = len(m.get("stale_ids") or [])
         errors = failed - dead
-        if attempted and (ok < SHORT_RUN * attempted or errors >= 3):
+        # A dead id was answered, not missed, and has its own notice: it must not make a
+        # small run look short (2 read and 1 dead of 3 is a complete run).
+        if attempted and (ok + dead < SHORT_RUN * attempted or errors >= 3):
             out.append(Finding(
                 "scholar-short-run", d,
                 f"The Scholar collection of {d} read {ok} of {attempted} profiles",
@@ -302,6 +314,59 @@ def check_audit(persons: list[dict], review: list[dict], today: date) -> list[Fi
         "`data/review/identity_candidates.csv` can be flipped back.")]
 
 
+PROFILE_KEYS = {"scholar-profile-flags"}
+
+
+def check_profiles(persons: list[dict], current: dict[str, dict | None], latest: list[dict],
+                   prev: list[dict]) -> list[Finding]:
+    """Scholar profiles we hold and publish that show a sign of being someone
+    else's. `current` maps each current person to their department; `latest`
+    and `prev` are each person's newest Scholar reading and the one before
+    (detect_changes.latest_two).
+
+    The signs are the change report's: a total that fell by more than a fifth
+    between two readings of one profile, and a field no planner works in on a
+    profile that does not name the person's department. The weekly workflow's
+    own rule clears the second kind before this runs, so it appears here only
+    when a profile was read outside that workflow.
+
+    A notice. What is flagged goes in `members`, each entry naming the reading
+    or the profile it came from, so closing the issue by hand says "seen
+    these": it comes back only for a flag that was not on the list."""
+    from .detect_changes import reading_id, readings_of_held_ids, suspect_profile_flags
+    held = {p["person_id"]: (p.get("google_scholar_id") or "").strip() for p in persons}
+    names = {p["person_id"]: p["display_name"] for p in persons}
+    prev_by = {r["person_id"]: r for r in prev}
+    hits = []       # (name, what distinguishes this flag from an earlier one on the same person, sentence)
+    for r in readings_of_held_ids(held, latest):
+        pid = r["person_id"]
+        if pid not in current:
+            continue
+        for kind, text in suspect_profile_flags(r, prev_by.get(pid), current[pid]):
+            which = r["collected_at"] if kind == "drop" else (reading_id(r) or held[pid])
+            hits.append((names[pid], f"{pid}:{kind}:{which}", text))
+    if not hits:
+        return []
+    hits.sort()
+    members = tuple(sorted(m for _, m, _ in hits))
+    episode = hashlib.sha1(",".join(members).encode()).hexdigest()[:10]
+    who = len({m.split(":")[0] for m in members})
+    lines = "\n".join(f"- {name}: {text}" for name, _, text in hits)
+    return [Finding(
+        "scholar-profile-flags", episode,
+        f"{who} Scholar profile{'s' if who != 1 else ''} to check: citations that fell, or a field outside planning",
+        f"{lines}\n\nEach is a profile whose figure the site publishes. A total that fell by more than a fifth "
+        "between two readings of the same profile, or a field no planner works in on a profile that does not "
+        "name the person's department, is how a namesake's profile usually shows itself. A fall can also be "
+        "Scholar merging duplicate entries on the right person's profile.\n\n"
+        "If they are all the right people, close this issue: it is raised again only for a flag that is not "
+        "on this list. If one is a namesake's, reject that profile for the person in "
+        "`data/review/identity_candidates.csv` and clear the id in `data/roster/person.csv`.\n\n"
+        "The full weekly change report (likely moves, missing figures, rank review) is the `change-report` "
+        "artifact on the latest run of *Collect Google Scholar metrics (weekly, rolling)* under Actions.",
+        alarm=False, members=members)]
+
+
 DISCOVERY_KEYS = {"discovery-silent", "discovery-stalled", "discovery-empty-batch"}
 
 
@@ -364,14 +429,17 @@ def check_serpapi(account: dict, today: date, last_rolling: str | None, budget: 
     soon = today.weekday() == 6 or (today.weekday() == 0 and (last_rolling or "") < today.isoformat())
     if not soon or left is None or int(left) >= budget:
         return []
+    # The run cuts itself to the balance, so a shortfall is news, not a failure; nothing left is.
     return [Finding(
         "serpapi-quota", monday.isoformat(),
-        f"SerpApi has {int(left)} searches left; Monday's Scholar run needs {budget}",
+        f"SerpApi has {int(left)} searches left; Monday's Scholar run asks for {budget}",
         f"The account ({account.get('plan_name') or 'plan unknown'}, {account.get('searches_per_month', '?')} "
-        f"searches a month) has used {account.get('this_month_usage', '?')} this period. The run on "
-        f"{monday.isoformat()} will read only what the balance allows and fail the rest, unless the "
-        "period resets first.\n\nTo skip or shrink the run, start the workflow by hand with a smaller "
-        "budget, or disable it for the week under Actions.")]
+        f"searches a month) has used {account.get('this_month_usage', '?')} this period. Unless the period "
+        f"resets first, the run on {monday.isoformat()} is cut to what the balance allows: it reads that many "
+        "profiles, oldest first, and the rest wait a week. With nothing left it reads nothing and fails.\n\n"
+        "Nothing to do unless the shortfall is unexpected: a month with five Mondays uses the whole free "
+        "tier, and every lookup made by hand comes out of the same balance.",
+        alarm=int(left) == 0)]
 
 
 SITE_KEYS = {"site-stale", "site-unreachable"}
@@ -407,12 +475,15 @@ def check_site(live: dict, repo: dict[str, str], today: date) -> list[Finding]:
 # -------------------------------------------------------------- GitHub issues
 
 MARK = re.compile(r"<!-- health-check key=(\S+) episode=(\S+?)( resolved)? -->")
+MEMBERS = re.compile(r"<!-- health-check members=(\S*) -->")
 FOOTER = ("\n\n---\nRaised by `pipeline/health_check.py`. This issue closes itself when the check passes "
           "again. Closing it by hand silences this occurrence.\n")
 
 
 def issue_body(f: Finding, resolved: bool = False) -> str:
-    return f"{f.detail}{FOOTER}<!-- health-check key={f.key} episode={f.episode}{' resolved' if resolved else ''} -->"
+    listed = f"<!-- health-check members={','.join(f.members)} -->\n" if f.members else ""
+    return (f"{f.detail}{FOOTER}{listed}"
+            f"<!-- health-check key={f.key} episode={f.episode}{' resolved' if resolved else ''} -->")
 
 
 def issue_title(f: Finding) -> str:
@@ -432,21 +503,29 @@ def plan_issue_actions(findings: list[Finding], issues: list[dict], evaluated: s
     for i in issues:
         m = MARK.search(i.get("body") or "")
         if m:
+            listed = MEMBERS.search(i.get("body") or "")
             tracked.append({**i, "key": m[1], "episode": m[2], "resolved": bool(m[3]),
+                            "members": set(listed[1].split(",")) - {""} if listed else set(),
                             "open": (i.get("state") or "").upper() == "OPEN"})
+
+    def covers(issue: dict, f: Finding) -> bool:
+        """The issue already showed everything this finding lists: the same
+        occurrence, or the same list with some of it since dealt with."""
+        return issue["episode"] == f.episode or (bool(f.members) and set(f.members) <= issue["members"])
+
     actions = []
     for f in findings:
         title, body = issue_title(f), issue_body(f)
         mine = [i for i in tracked if i["key"] == f.key]
         current = next((i for i in mine if i["open"]), None)
         if current:
-            if current["episode"] != f.episode:
+            if not covers(current, f):
                 actions.append({"do": "comment", "number": current["number"], "new": True, "alarm": f.alarm,
                                 "text": f"It has happened again ({today.isoformat()}): **{f.title}**\n\n{f.detail}"})
             if current["episode"] != f.episode or current.get("title") != title or current.get("body") != body:
                 actions.append({"do": "edit", "number": current["number"], "title": title, "body": body})
             continue
-        same = [i for i in mine if i["episode"] == f.episode]
+        same = [i for i in mine if covers(i, f)]
         if any(not i["resolved"] for i in same):
             continue                                   # closed by hand: this occurrence has been seen
         if same:
@@ -538,9 +617,21 @@ def fetch_json(url: str, tries: int = 3) -> dict:
     raise RuntimeError(err)
 
 
-def discovery_queue(persons: list[dict], review: list[dict]) -> int:
-    from .find_scholar_profiles import load_run_metas, people_to_search, searched_ids, stale_ids_on_file
-    return len(people_to_search(persons, searched_ids(review), stale_ids_on_file(persons, load_run_metas())))
+def current_departments() -> dict[str, dict | None]:
+    """person_id -> the department of their open primary appointment."""
+    depts = {d["department_id"]: d for d in read_rows(ROSTER_DIR / "department.csv")}
+    return {a["person_id"]: depts.get(a["department_id"]) for a in read_rows(ROSTER_DIR / "affiliation.csv")
+            if not a["end_date"] and a["is_primary"] == "1"}
+
+
+def discovery_queue(persons: list[dict], review: list[dict], today: date) -> int:
+    """How many people the next discovery run has to search: dead ids, people
+    never searched, and current people due their six-monthly repeat search."""
+    from .collect_scholar import current_ids
+    from .find_scholar_profiles import (due_for_recheck, load_run_metas, people_to_search, searched_ids,
+                                        stale_ids_on_file)
+    return len(people_to_search(persons, searched_ids(review), stale_ids_on_file(persons, load_run_metas()),
+                                due_for_recheck(review, current_ids(), today)))
 
 
 def gather(today: date, expect: str = "", status_file: str | None = None, offline: bool = False,
@@ -577,11 +668,15 @@ def gather(today: date, expect: str = "", status_file: str | None = None, offlin
     findings += check_audit(persons, review, today)
     evaluated |= AUDIT_KEYS
 
+    from .detect_changes import latest_two
+    findings += check_profiles(persons, current_departments(), *latest_two("google_scholar"))
+    evaluated |= PROFILE_KEYS
+
     try:
         status = json.loads(open(status_file or DISCOVERY_STATUS).read())
     except (OSError, ValueError):
         status = None                       # no record at all: discovery has never reported
-    findings += check_discovery(status, discovery_queue(persons, review), today)
+    findings += check_discovery(status, discovery_queue(persons, review, today), today)
     evaluated |= DISCOVERY_KEYS
 
     key = os.environ.get("SERPAPI_KEY")

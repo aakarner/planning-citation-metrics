@@ -173,7 +173,12 @@ SELECT d.department_id, d.short_name, d.university, d.country, d.url, d.acsp_mem
        agg.n_faculty, agg.total_citations, med_c.median_citations, agg.mean_citations,
        agg.total_citations * 1.0 / agg.n_faculty AS citations_per_faculty,
        med_h.median_h_index, agg.mean_h_index, agg.share_with_scholar_profile,
-       RANK() OVER (ORDER BY med_c.median_citations DESC) AS rank_by_median_citations
+       -- A median of one or two people is not a program's standing, so a program with
+       -- fewer than three faculty tracked has no rank (the site lists it unranked too;
+       -- MIN_FACULTY_TO_RANK in pipeline/build_site.py is the same three).
+       CASE WHEN agg.n_faculty >= 3
+            THEN RANK() OVER (PARTITION BY agg.n_faculty >= 3 ORDER BY med_c.median_citations DESC)
+       END AS rank_by_median_citations
 FROM department d
 JOIN agg   ON agg.department_id   = d.department_id
 JOIN med_c ON med_c.department_id = d.department_id

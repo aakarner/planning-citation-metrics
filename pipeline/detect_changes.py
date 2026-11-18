@@ -1,6 +1,13 @@
-"""Semiannual change report: what a person should look at before editing the roster.
+"""Change report: what a person should look at before editing the roster.
 
     python -m pipeline.detect_changes                # latest snapshots -> build/change_report_<date>.md
+
+The weekly Scholar workflow runs this after each collection and keeps the
+report and the rank review sheet as a run artifact (`change-report`). The two
+flags that mean a published figure may be someone else's, a foreign field on
+the profile and a fall in citations, are also raised as a GitHub issue by
+pipeline/health_check.py, because a report nobody opens is no report: from
+2026-10 to 2026-11 this one was written every week and thrown away.
 
 Flags, per person:
   * Scholar verified-email domain does not match the department's web domain
@@ -27,8 +34,7 @@ Flags, per person:
     rather than flagging 250 people who are simply long past their PhD.
     Written as a table in the report and as build/rank_review_<date>.csv.
 
-Nothing here edits the roster. The report is for the person doing the
-semiannual review.
+Nothing here edits the roster. The report is for the person reviewing it.
 """
 
 from __future__ import annotations
@@ -43,7 +49,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 from . import BUILD_DIR, REPO_ROOT, ROSTER_DIR, SNAPSHOT_DIR
-from .find_scholar_profiles import FOREIGN_FIELDS, affiliation_match
+from .find_scholar_profiles import FOREIGN_FIELDS, affiliation_match, affiliation_names_dept
 from .openalex import short_id
 
 DROP = 0.20
@@ -123,7 +129,11 @@ def rank_review(rank, start_date, phd_year, today, verified=None) -> tuple[int, 
     return None
 
 
-STALE_WEEKS = 20     # rolling collection re-reads everyone within about fifteen weeks
+# Rolling collection re-reads about forty profiles a week once discovery has
+# taken its share, so some 840 profiles come round in 21 to 22 weeks. The line
+# was 20 weeks while the cycle was thought to be fifteen, which would have
+# flagged the tail of every cycle as failing.
+STALE_WEEKS = 26
 
 
 def foreign_field(raw: dict) -> str | None:
@@ -137,6 +147,56 @@ def foreign_field(raw: dict) -> str | None:
     crystallography. The interests line is the cheapest tell there is."""
     text = (" ".join(raw.get("interests") or []) + " | " + (raw.get("affiliation") or "")).lower()
     return next((w for w in FOREIGN_FIELDS if w in text), None)
+
+
+def reading_id(row: dict) -> str | None:
+    """The Scholar id a stored reading was taken from, if it says."""
+    try:
+        return json.loads(row.get("raw_json") or "{}").get("scholar_id")
+    except ValueError:
+        return None
+
+
+def readings_of_held_ids(held: dict[str, str], latest: list[dict]) -> list[dict]:
+    """The latest readings that came from the id the roster holds now. A row
+    from an id since cleared as a namesake is not evidence about the person;
+    a row that names no id (one early collection day) counts for the id held."""
+    return [r for r in latest
+            if held.get(r["person_id"]) and held[r["person_id"]] == (reading_id(r) or held[r["person_id"]])]
+
+
+def namesake_sign(raw: dict, dept: dict | None) -> str | None:
+    """A field no planning scholar works in, named by a profile that does not
+    place itself at the person's own department: somebody else's profile.
+
+    A profile that names the department keeps its interests whatever they say
+    (David Tulloch lists 'global surgery' beside geodesign at Rutgers). This
+    is the rule pipeline/apply_changes.py clears ids by, so a report or a
+    notice built on it lists only what that rule has not yet dealt with, not
+    the people it deliberately left alone."""
+    text = raw.get("affiliation") or ""
+    if dept and text and affiliation_names_dept(text, dept):
+        return None
+    return foreign_field(raw)
+
+
+def suspect_profile_flags(row: dict, prev: dict | None, dept: dict | None = None) -> list[tuple[str, str]]:
+    """(kind, sentence) for the two signs that a held Scholar profile is not
+    the person's own: a field no planner works in, on a profile that does not
+    name their department ('namesake'), and a total that fell by more than
+    DROP since the previous reading of the same profile ('drop'). A fall
+    across a change of id is a correction, not a sign: Yan Song's went
+    23,933 -> 13,175 when a namesake's profile was replaced by hers."""
+    out = []
+    raw = json.loads(row.get("raw_json") or "{}")
+    if (field := namesake_sign(raw, dept)):
+        out.append(("namesake", f"Scholar profile lists '{field}' among its interests or affiliation; probably a namesake"))
+    if prev and prev.get("total_citations") and row.get("total_citations"):
+        same_profile = reading_id(prev) in (None, reading_id(row))
+        a, b = int(prev["total_citations"]), int(row["total_citations"])
+        if same_profile and a and (a - b) / a > DROP:
+            out.append(("drop", f"Scholar citations fell {a} -> {b} ({(b - a) / a:+.0%}); check the profile"))
+    return out
 
 
 def latest_two(source: str) -> tuple[list[dict], list[dict]]:
@@ -223,8 +283,7 @@ def main(argv=None) -> None:
         home_domains[did] = doms
 
     held = {pid: (p.get("google_scholar_id") or "").strip() for pid, p in people.items()}
-    gs_latest = [r for r in gs_latest
-                 if held.get(r["person_id"]) and held[r["person_id"]] == (json.loads(r["raw_json"] or "{}").get("scholar_id") or held[r["person_id"]])]
+    gs_latest = readings_of_held_ids(held, gs_latest)
     for r in gs_latest:
         pid = r["person_id"]
         aff = current.get(pid)
@@ -236,20 +295,15 @@ def main(argv=None) -> None:
         text_ok = bool(raw.get("affiliation")) and dept is not None and affiliation_match(raw["affiliation"], dept)
         if email_domain and homes and not email_ok and not text_ok:   # a stale email alone is not a signal
             flags[pid].append(f"Scholar verified email is @{email_domain}; department uses {', '.join(sorted(homes))}")
-        if (field := foreign_field(raw)):
-            flags[pid].append(f"Scholar profile lists '{field}' among its interests or affiliation; probably a namesake")
+        for _, text in suspect_profile_flags(r, gs_prev_by.get(pid), dept):
+            flags[pid].append(text)      # appended one by one: `flags[pid] += []` would list everyone, flagged or not
         # Affiliation text is only evidence when the email does not already settle it.
         if (email_ok is not True and raw.get("affiliation") and dept
                 and not affiliation_match(raw["affiliation"], dept)):
             flags[pid].append(f"Scholar affiliation reads \"{raw['affiliation'][:80]}\"")
-        prev = gs_prev_by.get(pid)
-        if prev and prev["total_citations"] and r["total_citations"]:
-            a, b = int(prev["total_citations"]), int(r["total_citations"])
-            if a and (a - b) / a > DROP:
-                flags[pid].append(f"Scholar citations fell {a} -> {b} ({(b - a) / a:+.0%}); check the profile")
     partial_note = ""
-    # Rolling collection should bring every current profile round within about
-    # fifteen weeks; one older than STALE_WEEKS has been failing or was skipped.
+    # Rolling collection should bring every current profile round in four to
+    # five months; one older than STALE_WEEKS has been failing or was skipped.
     last_read = {r["person_id"]: r["collected_at"] for r in gs_latest}
     stale_before = (date.today() - timedelta(weeks=STALE_WEEKS)).isoformat()
     for pid, sid in held.items():

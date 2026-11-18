@@ -48,7 +48,7 @@ from pathlib import Path
 from . import ROSTER_DIR
 from datetime import date
 
-from .detect_changes import foreign_field, latest_two, registrable, rows, verified_on
+from .detect_changes import latest_two, namesake_sign, registrable, rows, verified_on
 from .match_openalex import REVIEW_DIR, REVIEW_FIELDS, read_csv, write_csv
 from .find_scholar_profiles import affiliation_match, affiliation_names_dept
 from .match_openalex import norm
@@ -115,14 +115,11 @@ def namesake_field(raw: dict, cur: dict) -> str | None:
     under planning faculty for weeks, two of them printing as 'WRONG?' and one
     never printing at all because 'IIT Kanpur' has no institution word. The
     rules now act on this: the id is cleared and the profile vetoed, and the
-    person falls back to OpenAlex until the daily search finds the right one.
+    person falls back to OpenAlex until discovery finds the right one.
     A profile that names the department keeps its interests whatever they say
     (David Tulloch lists 'global surgery' beside geodesign at Rutgers).
     """
-    text = raw.get("affiliation") or ""
-    if text and affiliation_names_dept(text, cur):
-        return None
-    return foreign_field(raw)
+    return namesake_sign(raw, cur)      # one rule, shared with the change report and the health check
 
 
 def decide(text, email, rank, cur, depts, home, domain_owner, cites=None, years_since_phd=None):
