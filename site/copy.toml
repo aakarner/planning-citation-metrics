@@ -24,6 +24,9 @@ wordmark_lead = "Planning"
 wordmark_rest = "Citation Metrics"
 beta_tag = "Beta"
 search_placeholder = "Search faculty or schools"
+search_none = "Nothing matches that name."
+# search_no_figure: shown beside a search result for someone on the roster with no citation figure
+search_no_figure = "no figure yet"
 nav_rankings = "Rankings"
 nav_departments = "Departments"
 nav_others = "Beyond planning"
@@ -47,7 +50,8 @@ footer_corrections = """Counts come from public profile pages and change constan
 [home]
 # Values: people_count, dept_count, scholar_date, openalex_date, rankings_href, departments_href,
 #         methods_href, contact, repo, scholar_help, gs_n, oa_n, pop_n, pop_month, scholar_oldest, min_total,
-#         assistant_median, n (departed count), n_pages, n_profiles (promotions by where they were read)
+#         assistant_median, n (departed count), n_pages, n_profiles (promotions by where they were read),
+#         min_faculty (the fewest faculty a program needs to be ranked)
 meta_description = """Citation metrics for {people_count} urban planning faculty at {dept_count} programs in the US and Canada."""
 beta_title = "Beta &middot; in active development"
 beta_body_1 = """This site is new and under active development. Figures, rosters and rankings will change as
@@ -97,7 +101,7 @@ new_lede = """What changed in the last three months. Everything here comes from 
      Scholar profile or their program's website."""
 new_found_heading = "Scholar profiles found"
 new_found_note = """People previously shown on OpenAlex or Publish or Perish figures who now have a Scholar
-     profile on record. The daily search adds more as it finds them."""
+     profile on record. A search each week adds more as it finds them."""
 new_moves_heading = "Now at a new program"
 new_promos_heading = "Promotions recorded"
 new_promos_note = """{n_pages} of these were read from program websites or confirmed by a reviewer during
@@ -114,7 +118,7 @@ boards_lede = """These barely move between updates, so they are folded away. The
 top_faculty_heading = "Most cited faculty"
 top_faculty_link = "Full faculty rankings &rarr;"
 top_departments_heading = "Programs by median citations"
-top_departments_note = """Programs with at least three faculty tracked.
+top_departments_note = """Programs with at least {min_faculty} faculty tracked.
      <a href="{departments_href}">All programs &rarr;</a>"""
 caveats_heading = "What to know before citing these numbers"
 caveats_body = """Citation counts measure attention, not quality, and they differ enormously by subfield,
@@ -124,7 +128,7 @@ caveats_body = """Citation counts measure attention, not quality, and they diffe
 
 [person]
 # One page per faculty member. Values: source, scholar_help, collected_at, rank_label,
-#                                      methods_href, name, rank, department
+#                                      methods_href, name, rank, department, contact
 # fallback_note_openalex / fallback_note_pop: shown under the figures when the headline
 # is not from Google Scholar; the site picks the one matching the source.
 meta_description = "Citation metrics for {name}, {rank_label} at {department}."
@@ -136,13 +140,15 @@ fallback_note_openalex = """This person has no Google Scholar profile we know of
        figures above come from <strong>OpenAlex</strong>. OpenAlex indexes fewer books,
        reports and other non-journal work than Scholar does, so this is very likely an
        undercount next to the Scholar numbers shown elsewhere on this site.
-       <a href="{scholar_help}">Creating a Scholar profile</a> takes a few minutes and
-       fixes it at the next update."""
+       <a href="{scholar_help}">Creating a Scholar profile</a> takes a few minutes. We look
+       again for new profiles about twice a year; to be moved onto Scholar figures sooner,
+       <a href="mailto:{contact}?subject=Planning%20Citation%20Metrics%3A%20Scholar%20profile">email us the link</a>."""
 fallback_note_pop = """This person has no Google Scholar profile we know of, and no OpenAlex record we
        could match, so the figures above are the <strong>Publish or Perish</strong> lookup
        from the original dataset, dated {collected_at}. Nothing refreshes that figure.
        <a href="{scholar_help}">Creating a Scholar profile</a> takes a few minutes and
-       replaces it at the next update."""
+       replaces it. We look again for new profiles about twice a year; to be moved sooner,
+       <a href="mailto:{contact}?subject=Planning%20Citation%20Metrics%3A%20Scholar%20profile">email us the link</a>."""
 pct_citations_all = "Citations, all"
 pct_citations_rank = "Citations, {rank}s"
 pct_h_all = "h-index, all"
@@ -155,8 +161,17 @@ percentile_note = """Percentile among the
 other_note = """{name} holds a planning PhD and works in planning, but is appointed outside a
          planning program, so is listed <a href="{others_href}">beside the rankings</a> rather
          than in them. No percentiles are shown: they describe planning-program faculty only."""
-spark_caption = "Total citations recorded by this project, {source}. {change}"
-spark_change = "Up {percent} over that span."
+# The chart of citations per year. years_caption values: source, collected_at, notes
+# (notes is years_partial, years_earlier and years_openalex, whichever apply).
+# years_partial: year. years_earlier: first_year. years_openalex: shown under an OpenAlex chart.
+years_caption = "Citations received in each year, from {source}, as of {collected_at}. {notes}"
+years_partial = "The paler column is {year} so far."
+years_earlier = "Years before {first_year} are not shown."
+years_openalex = """OpenAlex gives yearly counts from 2012 on, so citations received before then are in the
+     total above but not in the chart."""
+years_table = "The same figures as a table"
+years_th_year = "Year"
+years_th_citations = "Citations"
 compare_heading = "OpenAlex, for comparison"
 compare_note = """OpenAlex is journal-centric and normally
      counts fewer citations than Scholar. Shown for context, not used in rankings."""
@@ -177,6 +192,8 @@ link_linkedin = "LinkedIn"
 
 [department]
 # One page per program. Values: n_faculty, methods_href, short_name
+# no_figure_one / no_figure_many: names the people on the program's roster who have no
+# figure from any source (one person, or several). Values: n, names, methods_href, scholar_help
 meta_description = "Citation metrics for {n_faculty} planning faculty at {short_name}."
 eyebrow = "Department"
 program_link = "Program website"
@@ -196,6 +213,14 @@ fallback_footnote = """Rows marked <span class="pill pill-oa">OpenAlex</span> or
      <span class="pill pill-oa">PoP</span> have no Google Scholar profile, so their figures come
      from OpenAlex or from the original Publish or Perish lookup, and are likely undercounts.
      See <a href="{methods_href}">Methods</a>."""
+no_figure_one = """Also on this program's faculty: {names}. None of our sources has given us a figure
+     for them yet, so they are not ranked or counted above.
+     <a href="{scholar_help}">A Scholar profile</a> is the quickest way to one; see
+     <a href="{methods_href}">Methods</a>."""
+no_figure_many = """Also on this program's faculty: {names}. None of our sources has given us a figure
+     for any of them yet, so they are not ranked or counted above.
+     <a href="{scholar_help}">A Scholar profile</a> is the quickest way to one; see
+     <a href="{methods_href}">Methods</a>."""
 
 [rankings]
 # Values: people_count
@@ -213,6 +238,7 @@ shown = "shown"
 [others]
 # Planning PhDs appointed outside planning programs. Values: n, methods_href, contact
 # (meta_description: n only)
+# no_figure_one / no_figure_many: people on this list with no figure. Values: n, names, scholar_help
 meta_description = "{n} scholars with planning PhDs who work in planning from departments outside planning programs."
 eyebrow = "Beyond planning programs"
 heading = "Planning scholars in other departments"
@@ -227,8 +253,12 @@ filter_rank = "Rank"
 filter_country = "Country"
 shown = "shown"
 footnote = """Rows marked <span class="pill pill-oa">OA</span> have no Google Scholar profile we know of,
-     so their figures come from OpenAlex and are likely undercounts. We check for Scholar profiles
-     daily. See <a href="{methods_href}">Methods</a>."""
+     so their figures come from OpenAlex and are likely undercounts. We look again for Scholar
+     profiles about twice a year. See <a href="{methods_href}">Methods</a>."""
+no_figure_one = """Also on this list: {names}. None of our sources has given us a figure for them yet.
+     <a href="{scholar_help}">A Scholar profile</a> is the quickest way to one."""
+no_figure_many = """Also on this list: {names}. None of our sources has given us a figure for any of
+     them yet. <a href="{scholar_help}">A Scholar profile</a> is the quickest way to one."""
 criteria_heading = "Who belongs here"
 criteria_intro = """This list is for planning scholars the main rankings cannot hold, because the rankings
      are defined by where a person is appointed. Someone belongs here when all of the following are
@@ -250,12 +280,14 @@ criteria_request = """To be added, or to correct an entry, email {contact_name} 
      any program's figures."""
 
 [departments]
-# Values: dept_count
-meta_description = "{dept_count} urban planning programs ranked by faculty citation metrics."
+# Values: dept_count, min_faculty (the fewest faculty a program needs to be ranked)
+meta_description = "Faculty citation metrics for {dept_count} urban planning programs, ranked by median citations."
 eyebrow = "Departments"
 heading = "Planning programs"
 lede = """{dept_count} programs, ranked by the median citation count of the faculty tracked
-     at each. Median rather than mean, because one very highly cited person moves a mean a long way."""
+     at each. Median rather than mean, because one very highly cited person moves a mean a long way.
+     Programs with fewer than {min_faculty} faculty tracked are listed last and not ranked: a median
+     of one or two people says little about a program."""
 filter_country = "Country"
 filter_acsp = "ACSP"
 shown = "shown"
@@ -298,10 +330,14 @@ sources_pop = """<strong>Publish or Perish</strong> is the source of last resort
      until the person gains a Scholar profile or an OpenAlex record, and nobody is added on a
      Publish or Perish figure now."""
 sources_invitation = """Anyone shown with an OpenAlex or Publish or Perish figure can move to the Scholar series by
-     <a href="{scholar_help}">creating a Scholar profile</a>. We search for new profiles daily."""
+     <a href="{scholar_help}">creating a Scholar profile</a>. We search for a profile when a person
+     joins the roster and again about twice a year after that. To be moved sooner,
+     <a href="mailto:{contact}?subject=Planning%20Citation%20Metrics%3A%20Scholar%20profile">email us the link</a>
+     and the change is made at the next weekly update."""
 cadence_heading = "How often it updates"
-cadence_body = """OpenAlex monthly; Google Scholar on a rolling schedule of about fifty profiles a week,
-     oldest reading first, so each profile is re-read roughly every fifteen weeks; faculty
+cadence_body = """OpenAlex monthly. Google Scholar on a rolling schedule: up to fifty lookups each
+     Monday, a few of them spent looking for new profiles and the rest re-reading existing ones,
+     oldest reading first, so each profile is re-read every four to five months. Faculty
      rosters twice a year. Every run is
      appended, never overwritten, so the history builds up from the first snapshot in
      February and March 2026 rather than being reconstructed backwards."""
@@ -353,8 +389,23 @@ corrections_body = """The site is in beta, so expect all of the above to be more
 data_heading = "Get the data"
 data_body = """Everything is public. The curated roster and every dated snapshot live as CSV in the
      <a href="{repo}/tree/main/data">repository</a>; the built database, with the percentile and
-     summary views already defined, is one file:"""
+     summary views already defined, is one file. It holds every figure from every snapshot. The
+     full record a source returned is included for each person's latest reading only; the earlier
+     ones are in the repository's snapshot files."""
 data_links = """<a href="{db_href}"><strong>citations.sqlite</strong></a> &middot;
      <a href="{repo}">pipeline source</a>"""
 citation_body = """Please cite it as: Karner, A. and T. W. Sanchez ({year}).
      <em>Planning Citation Metrics</em>. {repo}"""
+
+[notfound]
+# The page shown for any address that is not a page. Values (links only): home_href,
+# rankings_href, departments_href, others_href, contact
+eyebrow = "Not found"
+heading = "That page is not here"
+lede = """The address may be mistyped, or the page may have gone: people who leave the tracked
+     programs are no longer listed, and a page's address changes when a program is renamed.
+     Search for a name or a school."""
+links = """Or start from the <a href="{home_href}">home page</a>, the
+     <a href="{rankings_href}">faculty rankings</a>, the <a href="{departments_href}">programs</a>, or
+     <a href="{others_href}">planning scholars in other departments</a>. If something should be here
+     and is not, email <a href="mailto:{contact}?subject=Planning%20Citation%20Metrics">{contact}</a>."""

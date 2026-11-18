@@ -91,16 +91,30 @@ instructions on the first tab). To apply the decisions:
 .venv/bin/python -m pipeline.collect_scholar --budget 50    # the weekly rolling run: oldest readings first
 .venv/bin/python -m pipeline.collect_scholar --missing      # figures for newly found profiles
 .venv/bin/python -m pipeline.collect_scholar                # everyone at once (needs a paid month)
+.venv/bin/python -m pipeline.clear_dead_ids --ids=ID        # clear an id by hand, once SerpApi returns it empty twice
 ```
 
-Collection is **rolling** (since October 2026): `collect-scholar-weekly.yml` re-reads about
-fifty current profiles every Monday, oldest reading first, so each profile comes round roughly
-every fifteen weeks and the whole thing fits SerpApi's free tier (250 searches a month, 50 an
-hour; the weekly run is paced at 75 s). The change report compares each person with their own
-previous reading, and the homepage narrates roster changes from the last 90 days. Default
-backend is SerpApi's Scholar author endpoint: one JSON call per person, runs from GitHub
-Actions. `--via scholarly` scrapes profile pages directly and is kept for spot checks only; a
-single address gets about 45 fetches before Scholar blocks it for many hours.
+Collection is **rolling** (since October 2026): `collect-scholar-weekly.yml` spends up to
+fifty SerpApi searches every Monday, about a dozen on profile discovery and the rest re-reading
+current profiles, oldest reading first. With some 840 profiles and about forty re-reads a week,
+each profile comes round every four to five months, and the whole thing fits SerpApi's free
+tier (250 searches a month, 50 an hour; the weekly run is paced at 75 s). Fifty on each of five
+Mondays is the entire tier, so the run first asks the account what it has left and cuts itself
+to that (`collect_scholar.weekly_plan`): a short month ends in a smaller run, not a failed one.
+The collector counts searches, not profiles, as it goes (a dead id costs two), and stops while
+the next profile can still be paid for. A run cut below ten searches skips discovery for the
+week and records that it did.
+The change report compares each person with their own previous reading, and the homepage
+narrates roster changes from the last 90 days.
+
+The backend is SerpApi's Scholar author endpoint: one JSON call per person, runs from GitHub
+Actions. Anyone whose fetch failed for a passing reason is tried once more at the end of the
+run. An id is reported dead only when a second, uncached look agrees, because discovery clears
+a dead id for good when it finds no replacement. `--via scholarly` scrapes profile pages
+directly from the machine it runs on; it is never the default and is kept for the record only
+(a single address gets about 45 fetches before Scholar blocks it, and in November 2026 Google
+flagged a home address outright). Nothing in a SerpApi run contacts Scholar itself, and
+`clear_dead_ids` checks an id through SerpApi too.
 
 ## Scholar profile discovery
 
@@ -113,15 +127,32 @@ Runs a Scholar publication search restricted to the author's name (`author:"Name
 SerpApi and reads the linked author profiles off the results: one search per person, plus one
 profile read per linked name that could be theirs. It runs as the first step of the weekly
 Scholar workflow, capped at about a dozen searches; the rolling re-read then spends what is
-left of the week's fifty. People whose recorded id has died are searched first. It resumes
-where it left off, and writes what each run saw to `data/review/discovery_status.json` for
-the health check.
+left of the week's fifty. It resumes where it left off, and writes what each run saw to
+`data/review/discovery_status.json` for the health check.
+
+Who is searched, in order: people whose recorded id has died; people with no id who have never
+been searched; then current people whose last search found nothing and is more than
+`RECHECK_DAYS` (120) old, longest-waiting first. Until November 2026 a person was searched once
+and never again, while the site told everyone on an OpenAlex figure that a new Scholar profile
+would be picked up. What sets the real interval is the budget: at a dozen searches a week,
+some 280 people without a profile come round about twice a year, which is what the site says.
+The first repeat searches fall due in mid-January 2027, and the last of the people searched in
+September 2026 will be reached around May.
+
+Two costs to know about. The repeat searches keep discovery's dozen searches busy every week,
+so the re-read gets about forty, not fifty, and its cycle is nearer five months than four;
+raising `RECHECK_DAYS` or lowering the workflow's `discovery` input trades one for the other.
+And a profile already rejected for a person, by a reviewer or by the rules, is never read
+again, so a repeat search usually costs one search but cannot recover someone whose own
+profile was rejected when it still read "PhD student": that takes a person writing in, or
+flipping the row in `data/review/identity_candidates.csv`.
 
 Until November 2026 this fetched Scholar's results page directly from a home address, thirty
 people a day (`--via scrape`). Google then flagged the address: every request, and a real
 browser on the same network, got a verification page, and before that such pages had been read
 as "no profile". SerpApi's results did not carry profile ids when first tried in September
-2026; they do now.
+2026; they do now. `--via scrape` has to be asked for by name: a missing `SERPAPI_KEY` stops
+the run and never falls back to it.
 
 Candidates are scored like OpenAlex candidates and written to the
 same review queue with `source=google_scholar`. Because searching by name alone mostly turns
@@ -140,8 +171,9 @@ stranger's count as theirs.
 `--apply` writes accepted ids from the queue into `person.csv`, which is how a person's own
 decisions take effect.
 
-People whose recorded Scholar id stops resolving (the collector reports "empty profile" and
-lists the id in that run's `.meta.json`) go to the front of the next discovery run.
+People whose recorded Scholar id stops resolving (the collector gets an empty profile twice,
+the second time uncached, and lists the id in that run's `.meta.json`) go to the front of the
+next discovery run.
 
 We do not reconstruct citation counts for people without a profile (that was Publish or
 Perish, by hand); they get the flagged OpenAlex number instead.
@@ -159,10 +191,11 @@ collection (`.github/workflows/health-check.yml`).
 | Rule | Raised when |
 | --- | --- |
 | `scholar-overdue` | no rolling Scholar snapshot for the most recent Monday |
-| `scholar-short-run` | the run read under 90% of its budget, or 3+ profiles failed for reasons other than a dead id |
+| `scholar-short-run` | the run read under 90% of the profiles it attempted (dead ids aside), or 3+ failed for reasons other than a dead id |
 | `scholar-dead-ids` (notice) | a roster id no longer resolves; the next discovery run looks for the new one |
 | `scholar-job`, `openalex-job` | the collection job failed, timed out or was cancelled, and no other rule explains it |
-| `serpapi-quota` | on Sunday or Monday before the run, SerpApi has fewer searches left than the run needs |
+| `scholar-profile-flags` (notice) | a held profile's citations fell by more than a fifth between two readings, or it lists a field no planner works in without naming the person's department; once closed by hand it is raised again only for a flag that was not on the list |
+| `serpapi-quota` (notice; an alarm when nothing is left) | on Sunday or Monday before the run, SerpApi has fewer searches left than the run asks for, so the run will be cut to fit |
 | `openalex-overdue` | no full OpenAlex snapshot this month |
 | `openalex-incomplete` | the run stopped early, or missed 5+ people (0.5% of the roster if larger) |
 | `openalex-repeated-records` | one record counted twice: identical figures on two of a person's records, or one record under two people |
@@ -172,6 +205,10 @@ collection (`.github/workflows/health-check.yml`).
 | `discovery-empty-batch` | a batch of 6+ in which 80% of searches showed no linked author |
 | `site-stale` | the live site was built without a snapshot the repository has held for a day |
 | `site-unreachable` | the site's `status.json` cannot be read |
+
+Both collector workflows commit through `.github/scripts/commit_and_push.sh`, which rebases onto
+`main`, tries the push three times and fails the job if it still cannot be made. The loop it
+replaces ended quietly after the third rejection, so a lost snapshot left a green run.
 
 One issue per problem. The same problem on later days only refreshes the issue text; a new
 occurrence while it is open is a comment; the issue closes itself when the check passes.
@@ -225,7 +262,20 @@ date and the evidence in `source`.
 ```
 
 Writes `build/site`: a page per current faculty member and per department, sortable rankings,
-a methods page, a client-side search index, and a copy of the database for download.
+a methods page, a client-side search index, `sitemap.xml`, `robots.txt`, a `404.html` that
+searches for the name in the address it was reached by, and the database for download.
+
+The published `citations.sqlite` holds every figure from every snapshot but keeps the source's
+full record (`raw_json`) only for each person's newest reading from each source; the build's
+own copy in `build/` keeps them all, and so do the CSVs in `data/snapshots/`. That takes the
+download from 39 MB to about 6.
+
+Programs with fewer than three faculty tracked are listed on the departments page without a
+rank, as on the homepage, and `v_department_summary.rank_by_median_citations` is null for them. Current people with no figure from any source cannot be ranked, but
+they are named on their program's page and found by the search. A person's page charts
+citations received per year from the profile itself, not this project's handful of readings
+(for someone on an OpenAlex figure, from 2012 on, which is as far back as OpenAlex's yearly
+counts go; the caption says so).
 
 **Every word on the site is in [site/copy.toml](site/copy.toml)**, not in the Python. Edit the
 prose there, rebuild, and push; the deploy runs itself. Values in curly braces like
@@ -234,14 +284,14 @@ build with a message naming the passage and listing what is available, so a typo
 the site. `tests/test_copy.py` fills every passage in the file, which catches a malformed brace
 anywhere in it. Plain
 Python and SQLite, no Node toolchain. Deployed to GitHub Pages by `.github/workflows/deploy.yml`
-on every push that touches `data/`, `sql/`, or `pipeline/`:
+on every push that touches `data/`, `sql/`, `pipeline/` or `site/`, after the tests pass:
 
 <https://scholarmetrics.com/>
 
 The custom domain is set in the repository's Pages settings, not by a `CNAME` file, because
 the workflow deploys an artifact. DNS is at NearlyFreeSpeech: four A and four AAAA records for
 GitHub Pages on the apex, and `www` as a CNAME to `aakarner.github.io.`. The old
-`scholarmetrics.com/` address redirects to it.
+`aakarner.github.io/planning-citation-metrics/` address redirects to it.
 
 ## Split OpenAlex records
 
@@ -318,7 +368,9 @@ strong enough to act on, OpenAlex last known institution elsewhere, a citation c
 fell more than 20% (usually a wrong or merged profile), and profiles that vanished. It edits
 nothing.
 
-The report ends with a **rank review**: everyone held as assistant or associate for seven years or more, so a promotion may have gone unrecorded. Promotions are applied only when the profile text states a rank, and many profiles never do. Tom's rows carry no rank start date, so for the inherited roster years since the PhD stands in, for assistants only; associates are judged only by a start date we recorded ourselves, so that part fills in over time. The same rows go to `build/rank_review_<date>.csv`, and both files are uploaded by the Scholar workflow.
+The report ends with a **rank review**: everyone held as assistant or associate for seven years or more, so a promotion may have gone unrecorded. Promotions are applied only when the profile text states a rank, and many profiles never do. Tom's rows carry no rank start date, so for the inherited roster years since the PhD stands in, for assistants only; associates are judged only by a start date we recorded ourselves, so that part fills in over time. The same rows go to `build/rank_review_<date>.csv`.
+
+The weekly Scholar workflow writes both files after each collection and keeps them for 90 days as the run's `change-report` artifact (Actions, the run's page, Artifacts). From October to mid-November 2026 it wrote the report and discarded it. Because an artifact tells nobody it exists, the two flags that mean a published figure may be someone else's (a field no planner works in, a fall in citations) are also raised as a `scholar-profile-flags` issue by the health check.
 
 ## Private attributes
 

@@ -1,29 +1,31 @@
 """Collect Google Scholar profile metrics.
 
+    python -m pipeline.collect_scholar --budget 50      # what the weekly workflow runs
+    python -m pipeline.collect_scholar --missing        # ids on the roster with no reading yet
+    python -m pipeline.collect_scholar --ids=ID,ID      # these profiles only
+
 Two backends:
 
-  --via serpapi   (default when SERPAPI_KEY is set) SerpApi's google_scholar_author
-                  endpoint: parsed JSON, one call per person, runs anywhere including
-                  GitHub Actions. Free tier is 250 lookups a month; $25 buys 1,000,
-                  enough for one full quarterly run, at a cap of 200 searches an hour
-                  (so a full run takes about four hours). Key from serpapi.com in .env.
+  --via serpapi   (the default) SerpApi's google_scholar_author endpoint: parsed
+                  JSON, one search per person, runs anywhere including GitHub
+                  Actions. The free tier is 250 searches a month and 50 an hour,
+                  which is what the weekly rolling run is sized for: --budget N
+                  re-reads the N current people whose reading is oldest, and is
+                  cut to what the account has left, so a short month ends in a
+                  smaller run, not a failed one. Key from serpapi.com in .env.
 
-  --via scholarly direct scraping of profile pages from this machine. Kept for
-                  spot checks. Not viable for full runs: Scholar allowed ~45 fetches
-                  from one address on 2026-09-14 and then blocked it for 8+ hours.
+  --via scholarly direct scraping of profile pages from this machine. Never the
+                  default, and not to be run from a home address: Scholar
+                  allowed about 45 fetches from one address on 2026-09-14 and
+                  then blocked it for 8+ hours, and in November 2026 it flagged
+                  the address outright. Kept for the record.
 
-    python -m pipeline.collect_scholar --limit 20                # test
-    python -m pipeline.collect_scholar                           # full run, resumable
-
-Scholar has no API. This scrapes public profile pages one request per person,
-so run it from a residential or university connection, never from a cloud
-runner. Scholar tolerates roughly 40 to 50 profile fetches in a burst before
-it starts refusing for a while, so the defaults are slow and jittered
-(--sleep 20 plus up to --jitter 20 seconds). When fetches start failing the
-collector does not quit; it waits --cooldown minutes and tries again,
-giving up only after --max-wait hours without a success. Output goes to
+When fetches start failing the collector does not quit; it waits --cooldown
+minutes and tries again, giving up only after --max-wait hours without a
+success, and at once when the account has no searches left. Everyone who
+failed for a passing reason is tried once more at the end. Output goes to
 data/snapshots/google_scholar/<today>.csv; re-running the same day resumes,
-skipping ids already written. Plan on an overnight run for all ~800 profiles.
+skipping people already read in the last week.
 
 Beyond totals and h-index, each profile yields citations received per
 calendar year (cites_per_year), the verified email domain, and the
@@ -32,9 +34,11 @@ move detection.
 
 A Scholar id that stops resolving (the profile was deleted or re-created under
 a new id; Yiyi He's was, 2026-11-05) is reported and written into the run's
-.meta.json as stale_ids. The person keeps their last reading; the discovery
-pass (find_scholar_profiles, run daily by the Mac agent) reads those metas and
-looks for the new profile on its own. Nothing here clears the id.
+.meta.json as stale_ids, but only after a second, uncached look agrees: the
+discovery pass clears a dead id for good when it finds no replacement, so one
+empty answer is not enough. The person keeps their last reading; discovery
+(find_scholar_profiles, the first step of the weekly workflow) reads those
+metas and looks for the new profile on its own. Nothing here clears the id.
 """
 
 from __future__ import annotations
@@ -62,6 +66,8 @@ FIELDS = [
     "citations_5yr", "h_index_5yr", "works_count", "raw_json",
 ]
 FAILURES_BEFORE_COOLDOWN = 3
+DISCOVERY_FLOOR = 10      # a weekly run cut to fewer searches than this skips discovery (see weekly_plan)
+SEARCHES_PER_PROFILE = 2  # the most one profile can cost: the reading, and the second look at an id that came back dead
 
 
 class PermanentFailure(RuntimeError):
@@ -80,7 +86,12 @@ def id_is_dead(scholar_id: str) -> bool:
     A fetch failure means either 'this profile is gone' or 'Google is refusing
     us right now', and the two call for opposite responses: skip, or wait. The
     profile page answers directly: 404 for a profile that no longer exists, a
-    redirect to /sorry/ when the address is being refused."""
+    redirect to /sorry/ when the address is being refused.
+
+    This asks Scholar itself, from this machine, so it is used only by the
+    scholarly backend, which is already doing that. A SerpApi run never calls
+    it: a SerpApi error says nothing about the profile, and the run may be on
+    an address Google must not see (2026-11)."""
     req = urllib.request.Request(PROFILE_URL.format(id=scholar_id),
                                  headers={"User-Agent": BROWSER_UA})
     try:
@@ -191,9 +202,10 @@ def oldest_first(people: list[dict], snapshot_rows: list[dict], current: set[str
     """The `budget` current people whose latest Scholar reading is oldest, never-read first.
 
     Collection is rolling (from 2026-10): SerpApi's free tier allows 250 searches
-    a month, so about fifty profiles a week are re-read, oldest first, and every
-    profile comes round in roughly fifteen weeks. People who have left are not
-    re-read; their last figures stay in the data.
+    a month, so up to fifty a week are spent, oldest reading first, after
+    discovery has taken its share. With some 840 profiles and about forty
+    re-reads a week, every profile comes round in four to five months. People
+    who have left are not re-read; their last figures stay in the data.
     """
     last: dict[str, str] = {}
     for r in snapshot_rows:
@@ -240,10 +252,49 @@ def searches_left(key: str) -> int | None:
         return None
 
 
-def fetch_serpapi(scholar_id: str, key: str) -> dict:
-    """Return the same dict shape scholarly produces, from SerpApi's JSON."""
-    url = "https://serpapi.com/search.json?" + urllib.parse.urlencode(
-        {"engine": "google_scholar_author", "author_id": scholar_id, "hl": "en", "api_key": key})
+def weekly_plan(total: int, discovery: int, left: int | None) -> tuple[int, int]:
+    """(searches the whole weekly run may spend, of which discovery may spend).
+
+    Fifty searches on each of five Mondays is the entire free tier, so any
+    month with five Mondays, or one lookup made by hand, ended in a run that
+    asked for more than the account had: it failed part-way and raised an
+    alarm (2026-11-16). The run is cut to what is left instead, and discovery
+    keeps the share it was asked for. A run cut below DISCOVERY_FLOOR gives
+    discovery nothing: it finishes the person it has started, so it can go
+    over its cap by four searches, and on a small balance that would leave the
+    re-read none. With enough left, or when SerpApi will not say (`left` is
+    None), the plan stands exactly as asked."""
+    if left is None or left >= total:
+        return total, min(discovery, total)
+    cut = max(0, left)
+    return cut, (cut * discovery // total if total and cut >= DISCOVERY_FLOOR else 0)
+
+
+def read_confirmed(fetch, scholar_id: str, pause: float) -> dict:
+    """One profile's reading. PermanentFailure leaves here only when two looks
+    agree that the id is dead.
+
+    SerpApi answers a dead id with an empty profile, and discovery acts on
+    that for good: it searches for a replacement and, finding none, clears the
+    id and never accepts it again. One empty answer is too little for that, so
+    the profile is asked for once more, uncached (SerpApi serves a repeat of
+    the same search from its cache for an hour). A second empty answer raises
+    PermanentFailure; anything else that goes wrong on the second look is an
+    ordinary failure, and the person is tried again later."""
+    try:
+        return fetch(scholar_id)
+    except PermanentFailure:
+        time.sleep(pause)
+        return fetch(scholar_id, fresh=True)
+
+
+def fetch_serpapi(scholar_id: str, key: str, fresh: bool = False) -> dict:
+    """Return the same dict shape scholarly produces, from SerpApi's JSON.
+    `fresh` asks SerpApi to look again instead of answering from its cache."""
+    params = {"engine": "google_scholar_author", "author_id": scholar_id, "hl": "en", "api_key": key}
+    if fresh:
+        params["no_cache"] = "true"
+    url = "https://serpapi.com/search.json?" + urllib.parse.urlencode(params)
     with urllib.request.urlopen(url, timeout=60) as resp:
         data = json.loads(resp.read().decode("utf-8"))
     if data.get("error"):
@@ -296,8 +347,9 @@ def main(argv=None) -> None:
     ap.add_argument("--missing", action="store_true",
                     help="only people whose roster id has never been fetched: a profile discovery "
                          "accepted, or one set by hand")
-    ap.add_argument("--via", choices=["serpapi", "scholarly"],
-                    default="serpapi" if os.environ.get("SERPAPI_KEY") else "scholarly")
+    ap.add_argument("--via", choices=["serpapi", "scholarly"], default="serpapi",
+                    help="scholarly fetches Scholar directly from this machine and has to be asked for: "
+                         "a missing key must not turn a run into scraping from a home address")
     args = ap.parse_args(argv)
     sys.stdout.reconfigure(line_buffering=True)  # progress lines show up in logs as they happen
 
@@ -305,7 +357,12 @@ def main(argv=None) -> None:
         key = os.environ.get("SERPAPI_KEY")
         if not key:
             sys.exit("SERPAPI_KEY is not set (put it in .env)")
-        fetch = lambda sid: fetch_serpapi(sid, key)
+        spent = [0]     # SerpApi searches this run has made, successful or not
+
+        def fetch(sid, fresh=False):
+            # The first look is the plain call; only the confirming look of a dead id passes `fresh`.
+            spent[0] += 1
+            return fetch_serpapi(sid, key, fresh=True) if fresh else fetch_serpapi(sid, key)
         left = lambda: searches_left(key)
         if args.sleep == 20.0 and args.jitter == 20.0:
             # SerpApi's paid plans cap searches at 200 per hour (429 beyond that);
@@ -316,7 +373,9 @@ def main(argv=None) -> None:
             from scholarly import scholarly
         except ImportError as e:
             sys.exit(f'cannot import scholarly ({e}); run  pip install -e ".[scholar]"')
-        fetch = lambda sid: fetch_scholarly(scholarly, sid)
+        print("note: --via scholarly requests Scholar pages from this machine's address", file=sys.stderr)
+        spent = [0]
+        fetch = lambda sid, fresh=False: fetch_scholarly(scholarly, sid)
         left = lambda: None
     print(f"backend: {args.via}")
 
@@ -334,7 +393,17 @@ def main(argv=None) -> None:
         missing = wanted - {p["google_scholar_id"] for p in people}
         if missing:
             print(f"  note: no roster entry holds {', '.join(sorted(missing))}", file=sys.stderr)
+    asked = args.budget
+    allowance = None      # searches the account had when a rolling run began; None when unknown or not rolling
     if args.budget:
+        have = allowance = left()
+        if have is not None and have < args.budget:
+            # Read what the account can pay for and finish cleanly, rather than fail part-way.
+            print(f"SerpApi has {have} searches left; this run reads {have} profiles, not {args.budget}",
+                  file=sys.stderr)
+            if have == 0:
+                sys.exit("the rolling run read nothing: SerpApi has no searches left this period")
+            args.budget = have
         people = oldest_first(people, all_snapshot_rows(), current_ids(), args.budget)
         print(f"rolling run: {len(people)} people, oldest reading first")
     out = SNAPSHOT_DIR / "google_scholar" / f"{args.date}.csv"
@@ -353,9 +422,12 @@ def main(argv=None) -> None:
     new_file = not out.exists()
     ok = failed = consecutive = 0
     redirected: dict[str, str] = {}   # person_id -> new Scholar id
-    retry: list[dict] = []            # people skipped during a cooldown; retried once at the end
+    retry: list[dict] = []            # people whose fetch failed for a passing reason; tried once more at the end
+    second_pass = False
     stale: list[tuple] = []           # (person_id, name, id) whose Scholar id no longer resolves
     stopped = None                    # set when the run ends before its list does
+    tried = 0                         # people the first pass got to
+    ran_out = False                   # the run ended because the account's searches were spent
     t0 = time.monotonic()
     last_success = t0
     with out.open("a", newline="", encoding="utf-8") as f:
@@ -364,14 +436,29 @@ def main(argv=None) -> None:
             w.writeheader()
         queue = list(todo)
         i = 0
-        while i < len(queue):
+        while True:
+            if i >= len(queue):
+                # The end of the list. Until 2026-11 the retry pass was tested for one
+                # step too late, after the loop had already ended, so nobody was retried.
+                if second_pass or not retry:
+                    break
+                print(f"  trying {len(retry)} failed profile(s) once more")
+                time.sleep(args.sleep)
+                queue.extend(retry)
+                retry, second_pass = [], True
+            if allowance is not None and allowance - spent[0] < SEARCHES_PER_PROFILE:
+                # The budget counts profiles and the account counts searches: a dead id costs
+                # two, and so does a failure SerpApi charges for. Stop while the next profile
+                # can still be paid for, instead of ending the run on a refusal and an alarm.
+                print(f"SerpApi's searches are spent ({spent[0]} used of {allowance}); "
+                      f"{len(todo) - tried} profile(s) wait for next week", file=sys.stderr)
+                ran_out = True
+                break
             p = queue[i]
             i += 1
-            if i == len(todo) + 1 and retry:
-                queue.extend(retry)   # one more pass over the people skipped during cooldowns
-                retry = []
+            tried += not second_pass
             try:
-                a = fetch(p["google_scholar_id"])
+                a = read_confirmed(fetch, p["google_scholar_id"], args.sleep)
                 seen = a.get("scholar_id")
                 if seen and seen != p["google_scholar_id"]:
                     # Google merged or renumbered the profile; remember the new id.
@@ -388,29 +475,33 @@ def main(argv=None) -> None:
                 })
                 f.flush()
                 ok += 1
+                failed -= second_pass       # counted as failed on the first pass; it is not any more
                 consecutive = 0
                 last_success = time.monotonic()
                 print(f"  [{i}/{len(queue)}] {p['display_name']}: {a.get('citedby')} cites, h={a.get('hindex')}, "
                       f"{a.get('email_domain') or 'no verified email'}")
             except PermanentFailure as e:
                 # A dead id is not a rate limit: record it and move on.
-                failed += 1
+                failed += not second_pass
                 stale.append((p["person_id"], p["display_name"], p["google_scholar_id"]))
                 print(f"  [{i}/{len(queue)}] {p['display_name']}: STALE ID "
-                      f"{p['google_scholar_id']} ({e})", file=sys.stderr)
-                if i < len(queue):
+                      f"{p['google_scholar_id']} ({e}; a second look agreed)", file=sys.stderr)
+                if i < len(queue) or retry:
                     time.sleep(args.sleep)
                 continue
             except Exception as e:
-                failed += 1
-                if id_is_dead(p["google_scholar_id"]):
+                failed += not second_pass
+                # Only the scholarly backend asks Scholar directly, so only it may ask this.
+                if args.via == "scholarly" and id_is_dead(p["google_scholar_id"]):
                     stale.append((p["person_id"], p["display_name"], p["google_scholar_id"]))
                     print(f"  [{i}/{len(queue)}] {p['display_name']}: DEAD PROFILE "
                           f"{p['google_scholar_id']} (page returns 404)", file=sys.stderr)
-                    if i < len(queue):
+                    if i < len(queue) or retry:
                         time.sleep(args.sleep)
                     continue
                 consecutive += 1
+                if not second_pass:
+                    retry.append(p)   # come back to this person at the end
                 print(f"  [{i}/{len(queue)}] {p['display_name']}: FAILED ({type(e).__name__}: {e})", file=sys.stderr)
                 if left() == 0:
                     # An empty account answers 429 just as the hourly limit does, and no
@@ -431,7 +522,6 @@ def main(argv=None) -> None:
                           f"Cooling down {args.cooldown:.0f} min ({waited:.1f} h since last success).", file=sys.stderr)
                     time.sleep(args.cooldown * 60)
                     consecutive = 0
-                    retry.append(p)   # come back to this person at the end
                     continue
             if i < len(queue):
                 time.sleep(args.sleep + random.uniform(0, args.jitter))
@@ -442,8 +532,12 @@ def main(argv=None) -> None:
         out.unlink(missing_ok=True)
         print("no profiles collected; removed the empty snapshot file", file=sys.stderr)
     else:
+        # A run that ended because the searches were spent attempted the people it reached, and
+        # is a smaller run, not a short one. Any other early end set out to read everyone.
         meta = run_meta(args.via, ok, failed, (time.monotonic() - t0) / 60, stale,
-                        attempted=len(todo), rolling=args.budget, stopped=stopped)
+                        attempted=tried if ran_out else len(todo), rolling=args.budget, stopped=stopped)
+        if asked and asked != args.budget:
+            meta["budget_asked"] = asked    # the run was cut to what the SerpApi account had left
         meta_path = out.with_suffix(".meta.json")
         try:
             earlier = json.loads(meta_path.read_text())

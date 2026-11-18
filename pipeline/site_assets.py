@@ -108,11 +108,19 @@ code{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:.88em;
 
 /* ------------------------------------------------------------------ table */
 .tw{overflow-x:auto;border:1px solid var(--rule);border-radius:5px;background:var(--surface)}
+/* A box that scrolls sideways is a scroll container, and a sticky header sticks
+   to its container, not the page: inside .tw the header never stuck at all, and
+   1,063 rows scrolled past with no column labels. table.js marks a table that
+   fits its box, and only a table that does not fit keeps the sideways scroll. */
+.tw.fits{overflow:visible}
+.tw.fits th:first-child{border-top-left-radius:4px}
+.tw.fits th:last-child{border-top-right-radius:4px}
 table{border-collapse:collapse;width:100%;font-size:14.5px;font-variant-numeric:tabular-nums}
 th,td{text-align:left;padding:9px 13px;border-bottom:1px solid var(--rule-soft);
   vertical-align:baseline;white-space:nowrap}
+/* The rule under the header is a shadow: a collapsed border stays behind when the cell sticks. */
 th{font:600 11.5px/1.3 "Source Sans 3",sans-serif;letter-spacing:.07em;text-transform:uppercase;
-  color:var(--muted);border-bottom:1px solid var(--rule);position:sticky;top:0;
+  color:var(--muted);border-bottom:0;box-shadow:inset 0 -1px 0 var(--rule);position:sticky;top:0;
   background:var(--surface);z-index:1}
 th[role=button]{cursor:pointer;user-select:none}
 th[role=button]::after{content:"";opacity:.45;margin-left:5px}
@@ -122,7 +130,21 @@ tbody tr:last-child td{border-bottom:0}
 tbody tr:hover td{background:var(--sunk)}
 td.n,th.n{text-align:right}
 td.name{white-space:normal;min-width:11rem}
+/* One school name is 65 characters; unwrapped it made the rankings table wider than any page. */
+td.school{white-space:normal;min-width:9.5rem}
 .rank{color:var(--muted);font-size:13px}
+/* .under is a second line beneath a name that stands in, on a phone, for the
+   columns marked .wide, which are hidden there so the table fits the screen. */
+.under{display:none}
+@media (max-width:720px){
+  th,td{padding:8px 9px}
+  th{white-space:normal;letter-spacing:.04em}
+  th.nb{white-space:nowrap}
+  .wide{display:none}
+  .under{display:block;font-size:12.5px;line-height:1.3;color:var(--muted);margin-top:2px}
+  td.name{min-width:0}
+  td.rank,th.rank{padding-right:0}
+}
 
 /* -------------------------------------------------------------------- beta */
 .beta{background:var(--amber-soft);border:1px solid var(--amber);border-left-width:4px;
@@ -168,9 +190,25 @@ dl.facts dd{margin:0}
 .links li{margin-bottom:5px}
 .card{background:var(--surface);border:1px solid var(--rule);border-radius:5px;padding:16px 18px}
 .card h3{margin-top:0}
-.spark{margin:22px 0 0;max-width:330px}
-.spark svg{display:block;width:100%;height:auto;color:var(--ink)}
-.spark figcaption{font-size:13px;color:var(--muted);margin-top:7px}
+/* Citations per year: one series, so no legend; the caption names it. The
+   reading year is not over, so its column is paler. A column shows its value
+   on hover; the table under the caption has every value without hovering. */
+.years{margin:26px 0 0;max-width:430px}
+.years svg{display:block;width:100%;height:auto;overflow:visible}
+.years .col{fill:var(--accent)}
+.years .col.part{fill-opacity:.42}
+.years .grid{stroke:var(--rule-soft);stroke-width:1}
+.years .base{stroke:var(--rule);stroke-width:1}
+.years text{font:11px "Source Sans 3",system-ui,sans-serif;fill:var(--muted);font-variant-numeric:tabular-nums}
+.years .tip{fill:var(--ink);font-weight:600;font-size:12px;opacity:0;pointer-events:none;
+  paint-order:stroke;stroke:var(--bg);stroke-width:4px;stroke-linejoin:round}
+.years .yr:hover .tip{opacity:1}
+.years .yr:hover .col{fill:var(--accent-ink);fill-opacity:1}
+.years figcaption{font-size:13px;color:var(--muted);margin-top:8px}
+.years details{margin-top:6px;font-size:13px;color:var(--muted)}
+.years summary{cursor:pointer}
+.years details table{width:auto;font-size:13px;margin-top:6px}
+.years details th,.years details td{padding:3px 18px 3px 0;border:0;box-shadow:none;position:static;background:none}
 
 /* ------------------------------------------------------------------- misc */
 .controls{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin:0 0 16px;font-size:14px}
@@ -179,7 +217,6 @@ dl.facts dd{margin:0}
   border:1px solid var(--rule);border-radius:4px;padding:5px 8px}
 .cols{columns:2 16rem;column-gap:32px;font-size:14.5px}
 .cols a{display:block;margin-bottom:5px;break-inside:avoid}
-.count{color:var(--muted);font-size:14px;margin:0 0 14px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
 /* homepage: status strip, source mix, two/three-column lists, folds */
@@ -204,6 +241,27 @@ details.fold summary::before{content:"\\25B8";display:inline-block;width:16px;co
 details.fold[open]{padding-bottom:12px}
 @media(max-width:720px){.cols2,.cols3{grid-template-columns:1fr}ul.plain.two{columns:1}}
 
+/* ------------------------------------------------------------------ phone */
+.sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+@media (max-width:600px){
+  .bar-in{padding:10px 16px;gap:8px 16px}
+  .bar .search{flex-basis:100%;max-width:none}
+  .bar nav{margin-left:0;gap:14px;font-size:13.5px}
+  main{padding:24px 16px 56px}
+  footer .bar-in{padding:18px 16px 32px}
+  /* The homepage has its own search box a few lines down; a second one in the header only pushes it away. */
+  body.home header .search{display:none}
+  /* The beta notice is two long paragraphs. On a phone it filled the first screen and the
+     page heading started at the bottom of it, so here the heading and the search come first.
+     The notice is still first in the source, which is the order a screen reader gives. */
+  main.home{display:flex;flex-direction:column}
+  main.home>*{min-width:0}
+  main.home>h1,main.home>.lede,main.home>.hero-search,main.home>.hint{order:-1}
+  main.home>.beta{margin-top:18px}
+  .metric .big{font-size:38px}
+  .pct-row{grid-template-columns:7.2rem 1fr 3rem}
+}
+
 /* footer donate line: quiet, one small button */
 footer p.donate{margin-top:14px;padding-top:12px;border-top:1px solid var(--rule-soft)}
 .btn{display:inline-block;margin-left:6px;padding:4px 11px;border-radius:999px;border:1px solid var(--accent);
@@ -215,7 +273,7 @@ SEARCH_JS = """
 /* Client-side search over a prebuilt index. Linear scan: ~1,200 short records
    is instant and needs no library. */
 (function () {
-  var INDEX = null, LOADING = null;
+  var INDEX = null, LOADING = null, BOXES = 0;
   function load(base) {
     if (INDEX) return Promise.resolve(INDEX);
     if (!LOADING) LOADING = fetch(base + "search.json")
@@ -228,90 +286,175 @@ SEARCH_JS = """
     return (s || "").normalize("NFKD").replace(/[\\u0300-\\u036f]/g, "")
       .toLowerCase().replace(/[^a-z0-9 ]+/g, " ").replace(/\\s+/g, " ").trim();
   }
-  function score(rec, q) {
+  // Does every token begin some word? Order does not matter.
+  function covers(words, toks) {
+    return toks.every(function (t) {
+      return words.some(function (w) { return w.indexOf(t) === 0; });
+    });
+  }
+  /* Lower is better; -1 is no match. The query used to have to appear in the
+     name as one unbroken string, so "karner alex" and "handy, susan" found
+     nobody. Now each word of the query has to begin a word of the name, in any
+     order; after that, words may be spread over the name and the school. */
+  function score(rec, q, toks) {
     var n = rec.n;                                  // normalized name
     if (n === q) return 0;
     if (n.indexOf(q) === 0) return 1;               // starts with
-    var parts = n.split(" ");
-    for (var i = 0; i < parts.length; i++) if (parts[i].indexOf(q) === 0) return 2;
+    var words = n.split(" ");
+    if (covers(words, toks)) return 2;              // every word of the query begins a word of the name
     if (n.indexOf(q) > -1) return 3;
-    if (rec.w && rec.w.indexOf(q) > -1) return 4;   // department words
+    if (rec.w) {
+      if (covers(words.concat(rec.w.split(" ")), toks)) return 4;   // "handy davis"
+      if (rec.w.indexOf(q) > -1) return 5;          // school words
+    }
     return -1;
+  }
+  function find(data, q) {
+    function pass(toks) {
+      var hits = [];
+      for (var i = 0; i < data.length; i++) {
+        var s = score(data[i], q, toks);
+        if (s > -1) hits.push([s, data[i]]);
+      }
+      return hits;
+    }
+    var toks = q.split(" "), hits = pass(toks);
+    // "susan l handy" for someone listed without the initial: try again without lone letters.
+    var solid = toks.filter(function (t) { return t.length > 1; });
+    if (!hits.length && solid.length && solid.length < toks.length) hits = pass(solid);
+    hits.sort(function (a, b) { return a[0] - b[0] || (b[1].c || 0) - (a[1].c || 0); });
+    return hits.slice(0, 12).map(function (h) { return h[1]; });
   }
   function wire(box) {
     var input = box.querySelector("input"), list = box.querySelector(".results");
     var base = box.getAttribute("data-base") || "";
+    var none = box.getAttribute("data-none") || "Nothing matches.";
+    var id = "search-results-" + (++BOXES);
     var rows = [], cursor = -1;
+    // A combobox with a listbox: what a screen reader needs to say that there are
+    // results, how many, and which one the arrow keys are on.
+    list.id = id;
+    list.setAttribute("role", "listbox");
+    list.setAttribute("aria-label", input.getAttribute("aria-label") || "Search results");
+    input.setAttribute("role", "combobox");
+    input.setAttribute("aria-autocomplete", "list");
+    input.setAttribute("aria-controls", id);
+    input.setAttribute("aria-expanded", "false");
+    var status = document.createElement("div");
+    status.className = "sr";
+    status.setAttribute("role", "status");
+    box.appendChild(status);
+    function close() {
+      list.hidden = true;
+      input.setAttribute("aria-expanded", "false");
+      input.removeAttribute("aria-activedescendant");
+    }
+    function point(to) {
+      if (cursor > -1) { rows[cursor].classList.remove("on"); rows[cursor].setAttribute("aria-selected", "false"); }
+      cursor = to;
+      if (cursor > -1) {
+        rows[cursor].classList.add("on");
+        rows[cursor].setAttribute("aria-selected", "true");
+        rows[cursor].scrollIntoView({ block: "nearest" });
+        input.setAttribute("aria-activedescendant", rows[cursor].id);
+      } else input.removeAttribute("aria-activedescendant");
+    }
     function render(items, q) {
-      list.innerHTML = "";
-      if (!q) { list.hidden = true; return; }
+      list.textContent = "";
+      rows = []; cursor = -1;
+      input.removeAttribute("aria-activedescendant");
+      if (!q) { status.textContent = ""; close(); return; }
       if (!items.length) {
-        list.hidden = false;
-        list.innerHTML = '<div class="none">Nothing matches that name.</div>';
-        return;
+        var empty = document.createElement("div");
+        empty.className = "none";
+        empty.textContent = none;
+        list.appendChild(empty);
+        status.textContent = none;
+      } else {
+        // Built with textContent: the index is our own, but a name is still data, not markup.
+        items.forEach(function (rec, k) {
+          var a = document.createElement("a"), name = document.createElement("span"),
+              where = document.createElement("span");
+          a.href = base + rec.u;
+          a.id = id + "-" + k;
+          a.setAttribute("role", "option");
+          a.setAttribute("aria-selected", "false");
+          name.textContent = rec.t;
+          where.className = "where";
+          where.textContent = rec.d || "";
+          a.appendChild(name); a.appendChild(where);
+          list.appendChild(a);
+          rows.push(a);
+        });
+        status.textContent = items.length + (items.length === 1 ? " result" : " results");
       }
-      items.forEach(function (rec) {
-        var a = document.createElement("a");
-        a.href = base + rec.u;
-        a.innerHTML = '<span>' + rec.t + '</span><span class="where">' + (rec.d || "") + '</span>';
-        list.appendChild(a);
-      });
-      rows = Array.prototype.slice.call(list.querySelectorAll("a"));
-      cursor = -1;
       list.hidden = false;
+      input.setAttribute("aria-expanded", "true");
     }
     function run() {
       var q = norm(input.value);
       if (!q) { render([], ""); return; }
       load(base).then(function (data) {
-        var hits = [];
-        for (var i = 0; i < data.length; i++) {
-          var s = score(data[i], q);
-          if (s > -1) hits.push([s, data[i]]);
-        }
-        hits.sort(function (a, b) { return a[0] - b[0] || (b[1].c || 0) - (a[1].c || 0); });
-        render(hits.slice(0, 12).map(function (h) { return h[1]; }), q);
+        if (norm(input.value) !== q) return;        // a slower answer to an older query
+        render(find(data, q), q);
       });
     }
     input.addEventListener("input", run);
     input.addEventListener("focus", function () { if (input.value) run(); });
     input.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") { list.hidden = true; input.blur(); return; }
+      if (e.key === "Escape") { close(); input.blur(); return; }
       if (!rows.length) return;
       if (e.key === "ArrowDown" || e.key === "ArrowUp") {
         e.preventDefault();
-        if (cursor > -1) rows[cursor].classList.remove("on");
-        cursor = (cursor + (e.key === "ArrowDown" ? 1 : rows.length - 1)) % rows.length;
-        rows[cursor].classList.add("on");
-        rows[cursor].scrollIntoView({ block: "nearest" });
-      } else if (e.key === "Enter" && cursor > -1) {
-        e.preventDefault(); rows[cursor].click();
+        point((cursor + (e.key === "ArrowDown" ? 1 : rows.length - (cursor < 0 ? 0 : 1))) % rows.length);
+      } else if (e.key === "Enter") {
+        e.preventDefault(); rows[cursor > -1 ? cursor : 0].click();   // Enter alone opens the best match
       }
     });
     document.addEventListener("click", function (e) {
-      if (!box.contains(e.target)) list.hidden = true;
+      if (!box.contains(e.target)) close();
     });
   }
   document.querySelectorAll(".search").forEach(wire);
   // "/" focuses search, the way most reference sites behave.
   document.addEventListener("keydown", function (e) {
     if (e.key === "/" && !/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) {
-      var i = document.querySelector(".search input");
+      var all = document.querySelectorAll(".search input"), i = null;
+      for (var k = 0; k < all.length; k++) if (all[k].offsetParent !== null) { i = all[k]; break; }
       if (i) { e.preventDefault(); i.focus(); }
     }
   });
 })();
 """
 
+NOT_FOUND_JS = """
+/* The not-found page: search for the words in the address that led here, so a
+   saved link whose address has changed still leads somewhere. */
+document.addEventListener("DOMContentLoaded", function () {
+  var m = location.pathname.match(/\\/(?:person|department)\\/([^\\/]+?)(?:\\.html)?$/);
+  var input = document.querySelector("main .search input");
+  if (!m || !input) return;
+  input.value = decodeURIComponent(m[1]).replace(/-\\d+$/, "").replace(/-/g, " ");
+  input.dispatchEvent(new Event("input"));
+});
+"""
+
 TABLE_JS = """
 /* Column sorting and filtering for the ranking tables. */
 (function () {
-  function val(td) {
+  /* A cell's sort key: a number in a number column, lower-case text in a text
+     column, and null for a blank (an em dash, or nothing). The old version
+     returned the dash itself as a string, and a comparison of a number with a
+     string is false both ways, so a column with blanks in it came out in no
+     order at all: PhD years on a department page read 1993, then four blanks,
+     then 2022. Blanks now sort last whichever way the column runs. */
+  function val(td, text) {
     var v = td.getAttribute("data-v");
-    if (v !== null) return parseFloat(v);
-    var t = td.textContent.replace(/[,%]/g, "").trim();
-    var n = parseFloat(t);
-    return isNaN(n) ? t.toLowerCase() : n;
+    var t = (v !== null ? v : td.textContent).replace(/\\s+/g, " ").trim();
+    if (t === "" || t === "\\u2014" || t === "-") return null;
+    if (text) return t.toLowerCase();
+    var n = parseFloat(t.replace(/[,%]/g, ""));
+    return isNaN(n) ? null : n;
   }
   document.querySelectorAll("table[data-sortable]").forEach(function (table) {
     var tbody = table.tBodies[0];
@@ -324,13 +467,13 @@ TABLE_JS = """
         if (th.hasAttribute("data-text") && !th.getAttribute("aria-sort")) desc = false;
         table.querySelectorAll("th").forEach(function (o) { o.removeAttribute("aria-sort"); });
         th.setAttribute("aria-sort", desc ? "descending" : "ascending");
+        var text = th.hasAttribute("data-text");
         var rows = Array.prototype.slice.call(tbody.rows);
         rows.sort(function (a, b) {
-          var x = val(a.cells[i]), y = val(b.cells[i]);
-          if (x === y) return 0;
-          if (x === "" || x === null) return 1;
-          if (y === "" || y === null) return -1;
-          return (x > y ? 1 : -1) * (desc ? -1 : 1);
+          var x = val(a.cells[i], text), y = val(b.cells[i], text);
+          if (x === null || y === null) return (x === null) - (y === null);
+          var c = text ? x.localeCompare(y) : x - y;
+          return desc ? -c : c;
         });
         rows.forEach(function (r) { tbody.appendChild(r); });
         renumber(table);
@@ -341,12 +484,26 @@ TABLE_JS = """
       });
     });
   });
+  /* Let the header stick when the table fits its box (see .tw.fits in the stylesheet). */
+  function fit() {
+    document.querySelectorAll(".tw").forEach(function (w) {
+      w.classList.remove("fits");
+      if (w.scrollWidth <= w.clientWidth + 1) w.classList.add("fits");
+    });
+  }
+  var pending = 0;
+  window.addEventListener("resize", function () {
+    cancelAnimationFrame(pending);
+    pending = requestAnimationFrame(fit);
+  });
+  fit();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
   function renumber(table) {
     var i = 0;
     Array.prototype.forEach.call(table.tBodies[0].rows, function (r) {
       if (r.hidden) return;
       var c = r.querySelector(".rank");
-      if (c) c.textContent = ++i;
+      if (c && !r.hasAttribute("data-unranked")) c.textContent = ++i;   // too small to rank: the dash stays
     });
   }
   /* Filters. Every select pointing at a table is applied together, so Rank and

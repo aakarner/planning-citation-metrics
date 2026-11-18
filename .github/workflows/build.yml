@@ -10,8 +10,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - run: pip install -e ".[dev]"
@@ -20,7 +20,7 @@ jobs:
       - name: Tests
         # The workbook regression test skips in CI (data/legacy is not committed).
         run: python -m pytest -q
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         # A convenience download, not part of the build; storage hiccups must not fail the run.
         continue-on-error: true
         with:

@@ -5,8 +5,11 @@
 
 Policy (2026-09-14): we do not reconstruct citation counts for people without
 a Scholar profile (that is what Publish or Perish did, by hand). We do check
-whether a profile exists that we simply never recorded, and we re-check new
-hires.
+whether a profile exists that we simply never recorded, and we look again:
+a current person searched with nothing found is searched again about twice
+a year (once RECHECK_DAYS have passed and the weekly budget reaches them),
+longest-waiting first, after dead ids and people never searched. A profile a reviewer or a rule has already ruled out
+for them is not read again, so a repeat search usually costs one search.
 
 How it works: a Scholar publication search restricted to the author's name
 (author:"Name"). Authors with a profile are linked on the results page; linked
@@ -25,7 +28,9 @@ read per plausible candidate.
                   address: from 2026-11-13 every request, and a real browser
                   on the same network, got a verification page. Before that,
                   such pages were read as "no profile" for 90 people. Kept
-                  for the record; needs  pip install -e ".[scholar]".
+                  for the record and never the default: it has to be asked
+                  for, and not from a home address. Needs
+                  pip install -e ".[scholar]".
 
 Stale ids (2026-11-05): when a recorded Scholar id stops resolving (profile
 deleted, or re-created under a new id) the collector writes it into that
@@ -56,7 +61,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 
 from . import ROSTER_DIR, SNAPSHOT_DIR
@@ -140,14 +145,56 @@ def load_run_metas() -> list[dict]:
     return out
 
 
-def people_to_search(persons: list[dict], searched: set[str], stale: set[str]) -> list[dict]:
-    """Everyone without a Scholar id who has not been searched, plus everyone
-    whose id is stale. A stale person may well have been searched before (that
-    is how many ids were found); the dead id is new information, so they are
-    searched again."""
-    return [p for p in persons
-            if p.get("google_scholar_id") in stale
-            or (not p.get("google_scholar_id") and p["person_id"] not in searched)]
+# Someone searched with nothing found is searched again once this long has
+# passed and discovery has searches to spare. What sets the real interval is
+# the budget: at a dozen searches a week some 280 people come round about
+# twice a year. The threshold only has to be shorter than that, so the first
+# wave (176 people searched in three days of September 2026) starts early
+# enough to be spread out rather than all falling due the same week.
+RECHECK_DAYS = 120
+
+
+def last_searched(rows: list[dict]) -> dict[str, str]:
+    """person_id -> the last day discovery searched them, from the rows the
+    matcher settled. Someone with a candidate still pending is left out: a
+    person has that one to decide, and another search would add nothing."""
+    waiting = {r["person_id"] for r in rows if r["source"] == "google_scholar" and r["status"] == "pending"}
+    out: dict[str, str] = {}
+    for r in rows:
+        if (r["source"] == "google_scholar" and (r.get("reviewed_by") or "") == "matcher"
+                and r["person_id"] not in waiting):
+            out[r["person_id"]] = max(out.get(r["person_id"], ""), (r.get("reviewed_at") or "")[:10])
+    return out
+
+
+def due_for_recheck(rows: list[dict], current: set[str], today: date, after_days: int = RECHECK_DAYS) -> dict[str, str]:
+    """person_id -> last search date, for current people whose last search is
+    more than `after_days` old.
+
+    Until 2026-11 a person was searched exactly once. The site told everyone
+    on an OpenAlex figure that creating a Scholar profile would move them at
+    the next update, and 198 of the 282 people it said that to were never
+    going to be looked at again. People who have left are not re-checked."""
+    cutoff = (today - timedelta(days=after_days)).isoformat()
+    return {pid: d for pid, d in last_searched(rows).items() if pid in current and d < cutoff}
+
+
+def people_to_search(persons: list[dict], searched: set[str], stale: set[str],
+                     due: dict[str, str] | None = None) -> list[dict]:
+    """Who discovery searches, in the order it searches them: everyone whose
+    id is stale, then everyone without a Scholar id who has never been
+    searched, then those in `due` (see due_for_recheck), longest-waiting first.
+
+    A stale person may well have been searched before (that is how many ids
+    were found); the dead id is new information, so they are searched again,
+    and first, because they have lost a figure."""
+    due = due or {}
+    dead = [p for p in persons if p.get("google_scholar_id") in stale]
+    without = [p for p in persons if not p.get("google_scholar_id")]
+    new = [p for p in without if p["person_id"] not in searched]
+    again = sorted((p for p in without if p["person_id"] in searched and p["person_id"] in due),
+                   key=lambda p: (due[p["person_id"]], int(p["person_id"])))
+    return dead + new + again
 
 
 def batch_report(tally: dict, no_links: int, consecutive_failures: int,
@@ -209,16 +256,19 @@ def serpapi_search(name: str, key: str) -> dict[str, str]:
 
 
 def serpapi_candidates(person: dict, key: str, meter: dict, pause: float,
-                       search=None, read=None) -> tuple[dict[str, str], list[dict]]:
+                       search=None, read=None, skip: frozenset | set = frozenset()) -> tuple[dict[str, str], list[dict]]:
     """(links, candidate profiles) for one person: the search, then a read of
     each linked profile whose name could be theirs ("N Brooks" counts), four at
-    most. Every SerpApi call is counted in meter["spent"] as it is made."""
+    most. Every SerpApi call is counted in meter["spent"] as it is made.
+    Profiles in `skip` (ruled out for this person already, or dead) are not
+    read: nothing a read could say would get them accepted, and on a repeat
+    search they would cost a search each, every time."""
     from .collect_scholar import PermanentFailure, fetch_serpapi
     search, read = search or serpapi_search, read or fetch_serpapi
     meter["spent"] += 1
     links = search(person["display_name"], key)
     plausible = [sid for sid, text in links.items()
-                 if name_similarity(person, {"display_name": text}) >= 0.9][:4]
+                 if sid not in skip and name_similarity(person, {"display_name": text}) >= 0.9][:4]
     found = []
     for sid in plausible:
         time.sleep(pause)
@@ -545,8 +595,9 @@ def main(argv=None) -> None:
     ap.add_argument("--reclassify", action="store_true",
                     help="re-apply the accept/reject rules to rows already in the review queue, "
                          "from their stored evidence; makes no network calls")
-    ap.add_argument("--via", choices=["serpapi", "scrape"],
-                    default="serpapi" if os.environ.get("SERPAPI_KEY") else "scrape")
+    ap.add_argument("--via", choices=["serpapi", "scrape"], default="serpapi",
+                    help="scrape fetches Scholar directly from this machine and has to be asked for: "
+                         "a missing key must not turn a run into scraping from a home address")
     ap.add_argument("--max-searches", type=int, metavar="N",
                     help="start no new person once N SerpApi searches are spent (one per person, plus one "
                          "per plausible candidate profile). The person under way is finished, so a run "
@@ -578,6 +629,7 @@ def main(argv=None) -> None:
             from scholarly import scholarly
         except ImportError as e:
             sys.exit(f'cannot import scholarly ({e}); run  pip install -e ".[scholar]"')
+        print("note: --via scrape requests Scholar pages from this machine's address", file=sys.stderr)
     print(f"backend: {args.via}")
 
     pfields, persons, dept_by_id, current, totals = load_context()
@@ -588,15 +640,17 @@ def main(argv=None) -> None:
     vetoed = vetoed_ids(existing)
     listed = listed_pairs(existing)
 
-    todo = people_to_search(persons, searched, stale)
-    todo.sort(key=lambda p: p.get("google_scholar_id") not in stale)   # dead ids first: they have lost a figure
+    due = due_for_recheck(existing, set(current), date.today())
+    todo = people_to_search(persons, searched, stale, due)   # dead ids, then never searched, then re-checks
     waiting = len(todo)
     budget = args.max_searches if args.max_searches is not None else float("inf")
     meter = {"spent": 0}
     if args.limit:
         todo = todo[: args.limit]
     print(f"{sum(1 for p in persons if not p.get('google_scholar_id'))} people without a Scholar id, "
-          f"{len(searched)} already searched, {len(stale)} stale ids, {len(todo)} to search")
+          f"{len(searched)} already searched, {len(stale)} stale ids, "
+          f"{sum(1 for p in todo if p['person_id'] in due and p['person_id'] in searched)} due a repeat search, "
+          f"{len(todo)} to search")
 
     rows, tally, consecutive = [], {"accepted": 0, "pending": 0, "rejected": 0, "none": 0, "failed": 0}, 0
     no_links = 0        # searches whose results page linked no author profile at all
@@ -606,9 +660,11 @@ def main(argv=None) -> None:
         if meter["spent"] >= budget:
             print(f"  search budget of {args.max_searches} spent; {len(todo) - i + 1} people left for the next run")
             break
+        # A stale id must never be re-accepted, and neither may one a reviewer rejected.
+        veto = stale | vetoed.get(person["person_id"], set())
         try:
             if args.via == "serpapi":
-                links, found = serpapi_candidates(person, key, meter, args.sleep)
+                links, found = serpapi_candidates(person, key, meter, args.sleep, skip=veto)
             else:
                 links = search_profile_links(person["display_name"])
                 # Only fetch profiles whose linked name could be this person ("N Brooks" counts).
@@ -620,8 +676,6 @@ def main(argv=None) -> None:
                     a = scholarly.search_author_id(sid)
                     found.append({"scholar_id": sid, "name": a.get("name"), "affiliation": a.get("affiliation"),
                                   "citedby": a.get("citedby"), "email_domain": a.get("email_domain")})
-            # A stale id must never be re-accepted, and neither may one a reviewer rejected.
-            veto = stale | vetoed.get(person["person_id"], set())
             found = [c for c in found if c.get("scholar_id") and c["scholar_id"] not in veto]
             consecutive = 0
         except Exception as e:

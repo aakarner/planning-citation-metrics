@@ -8,12 +8,17 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: collect-openalex
+  cancel-in-progress: false
+
 jobs:
   collect:
     runs-on: ubuntu-latest
+    timeout-minutes: 90           # a full run takes about twenty; without a limit a hung request holds the runner for six hours
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - run: pip install -e .
@@ -29,18 +34,14 @@ jobs:
         run: python -m pipeline.build_db
       - name: Fill PhD year and institution from ORCID where blank
         run: python -m pipeline.fill_phd_from_orcid
+      # Runs even when a step above failed or the job hit its time limit: the snapshot is
+      # resumable (a second run the same day fetches only the people missed), so what was
+      # collected is worth keeping, and the failed job is still reported as failed.
       - name: Commit the snapshot
+        if: always()
         run: |
-          git config user.name "citation-metrics-bot"
-          git config user.email "actions@users.noreply.github.com"
           git add data/snapshots/openalex data/roster/person.csv data/review/identity_candidates.csv
-          git diff --cached --quiet && echo "nothing new" && exit 0
-          git commit -m "OpenAlex snapshot $(date -u +%Y-%m-%d)"
-          # main moves while a long run collects; rebase the commit onto it rather than lose the run
-          for i in 1 2 3; do
-            git pull --rebase origin main && git push && break
-            echo "push rejected, retrying ($i)"; sleep 15
-          done
+          bash .github/scripts/commit_and_push.sh "OpenAlex snapshot $(date -u +%Y-%m-%d)"
 
   deploy:
     needs: collect
