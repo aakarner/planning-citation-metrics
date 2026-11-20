@@ -88,3 +88,21 @@ def test_only_an_independently_sourced_orcid_drives_a_lookup():
     from_person = {"person_id": "3", "orcid": "0000-0002-9306-2141", "notes": "ORCID sent by the scholar 2026-10-15"}
     assert orcid_is_independent(from_person, rows)
     assert not orcid_is_independent({"person_id": "4", "orcid": "", "notes": "ORCID from faculty page"}, rows)
+
+
+def test_a_scholar_reading_is_the_total_a_record_is_judged_against(tmp_path):
+    """The Publish or Perish lookup of February 2026 used to replace any Scholar
+    reading, because its folder sorts after Scholar's. It stands in only for
+    someone Scholar has no figure for."""
+    from pipeline.match_openalex import cites_plausibility, known_totals
+    head = "person_id,source,collected_at,total_citations\n"
+    for source, name, rows in (("pop", "2026-02-20", "1,pop,2026-02-20,400\n2,pop,2026-02-20,90\n"),
+                               ("google_scholar", "2026-07-06", "1,google_scholar,2026-07-06,3000\n"),
+                               ("google_scholar", "2026-11-09", "1,google_scholar,2026-11-09,3300\n3,google_scholar,2026-11-09,\n"),
+                               ("openalex", "2026-11-01", "1,openalex,2026-11-01,2500\n2,openalex,2026-11-01,70\n")):
+        (tmp_path / source).mkdir(exist_ok=True)
+        (tmp_path / source / f"{name}.csv").write_text(head + rows)
+    assert known_totals(tmp_path) == {"1": 3300, "2": 90}
+    # Against the old lookup this person's own record looked six times too large and scored nothing.
+    assert cites_plausibility({"cited_by_count": 2500}, 400)[0] == 0.0
+    assert cites_plausibility({"cited_by_count": 2500}, 3300)[0] == 1.0

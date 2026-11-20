@@ -72,6 +72,16 @@ def t(section: str, key: str, **values) -> str:
 
 RANK_LABEL = {"assistant": "Assistant Professor", "associate": "Associate Professor",
               "full": "Professor", "other": "Faculty"}
+
+
+def ranks(rank: str, lower: bool = False) -> str:
+    """A rank as a group of people ("Full professors"), where RANK_LABEL is one
+    person's title ("Professor"). Bare codes used to be pluralised in place,
+    which gave "Citations, fulls"."""
+    label = t("site", f"rank_{rank if rank in ('assistant', 'associate', 'full') else 'other'}")
+    return label.lower() if lower else label
+
+
 SOURCE_LABEL = {"google_scholar": "Google Scholar", "openalex": "OpenAlex",
                 "pop": "Publish or Perish", "manual": "entered by hand"}
 PILL_LABEL = {"openalex": "OpenAlex", "pop": "PoP", "manual": "manual"}     # on a fallback row
@@ -533,11 +543,11 @@ def person_page(p, slugs, dslug, oa, yearly, base, share=None) -> str:
         where = f'<a href="{base}department/{dslug}.html">{e(p["department"])}</a>'
         standing = f"""<div class="pct">
         {pct_row(t("person", "pct_citations_all"), p["pct_citations_all"])}
-        {pct_row(t("person", "pct_citations_rank", rank=p['rank']), p["pct_citations_rank"])}
+        {pct_row(t("person", "pct_citations_rank", ranks=ranks(p['rank'], lower=True)), p["pct_citations_rank"])}
         {pct_row(t("person", "pct_h_all"), p["pct_h_all"])}
-        {pct_row(t("person", "pct_h_rank", rank=p['rank']), p["pct_h_rank"])}
+        {pct_row(t("person", "pct_h_rank", ranks=ranks(p['rank'], lower=True)), p["pct_h_rank"])}
       </div>
-      <p class="sub" style="font-size:13px;margin-top:10px">{t("person", "percentile_note", rank_label=RANK_LABEL.get(p['rank'], p['rank']).lower())}</p>"""
+      <p class="sub" style="font-size:13px;margin-top:10px">{t("person", "percentile_note", ranks=ranks(p['rank'], lower=True))}</p>"""
 
     body = f"""<main>
   <p class="eyebrow">{t("person", "eyebrow")}</p>
@@ -613,8 +623,8 @@ def department_page(d, roster, slugs, base, dslug="", unlisted=()) -> str:
   <div class="controls">
     <label>{t("department", "filter_rank")}
       <select data-filter-for="roster" data-filter-key="rank">
-        <option value="">All</option><option value="full">Professor</option>
-        <option value="associate">Associate</option><option value="assistant">Assistant</option>
+        <option value="">All</option><option value="full">{ranks("full")}</option>
+        <option value="associate">{ranks("associate")}</option><option value="assistant">{ranks("assistant")}</option>
       </select>
     </label>
     <span class="count"><span id="roster-count">{d['n_faculty']}</span> {t("department", "shown")}</span>
@@ -773,8 +783,7 @@ def index_page(data, slugs, dslugs, base) -> str:
     by_pid = {str(p["person_id"]): p for p in people}
     plink = lambda pid: (f'<a href="{base}person/{slugs[id(by_pid[pid])]}.html">{e(by_pid[pid]["display_name"])}</a>'
                          if pid in by_pid else "")
-    rank_label = {"assistant": t("home", "rank_assistant"), "associate": t("home", "rank_associate"),
-                  "full": t("home", "rank_full")}
+    rank_label = {rk: ranks(rk) for rk in ("assistant", "associate", "full")}
 
     brow = "".join(f'<tr><td class="name">{rank_label[rk]}</td><td class="n">{b["n"]}</td>'
                    f'<td class="n">{num(b["median_citations"])}</td><td class="n">{num(b["p75_citations"])}</td>'
@@ -928,8 +937,8 @@ def rankings_page(data, slugs, base) -> str:
   <div class="controls">
     <label>{t("rankings", "filter_rank")}
       <select data-filter-for="faculty" data-filter-key="rank">
-        <option value="">All</option><option value="full">Professor</option>
-        <option value="associate">Associate</option><option value="assistant">Assistant</option>
+        <option value="">All</option><option value="full">{ranks("full")}</option>
+        <option value="associate">{ranks("associate")}</option><option value="assistant">{ranks("assistant")}</option>
       </select>
     </label>
     <label>{t("rankings", "filter_country")}
@@ -1024,8 +1033,8 @@ def others_page(data, slugs, base) -> str:
   <div class="controls">
     <label>{t("others", "filter_rank")}
       <select data-filter-for="others" data-filter-key="rank">
-        <option value="">All</option><option value="full">Professor</option>
-        <option value="associate">Associate</option><option value="assistant">Assistant</option>
+        <option value="">All</option><option value="full">{ranks("full")}</option>
+        <option value="associate">{ranks("associate")}</option><option value="assistant">{ranks("assistant")}</option>
       </select>
     </label>
     <label>{t("others", "filter_country")}

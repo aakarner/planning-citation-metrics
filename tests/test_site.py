@@ -189,3 +189,21 @@ def test_the_caption_claims_only_what_the_chart_shows():
     html = person_page(p, slugs, "big-u", {}, {9: [(2012, 20), (2013, 30), (2025, 40), (2026, 0)]}, "../")
     assert t("person", "years_openalex") in html
     assert t("person", "years_partial", year=2026) not in html and 'class="col part"' not in html
+
+
+def test_a_rank_is_worded_as_a_group_of_people_not_a_pluralised_code():
+    """The percentile box read "Citations, fulls": the rank code with an s on it."""
+    from pipeline.build_site import person_page, ranks, uniq_slugs
+    for rank in ("assistant", "associate", "full", "other"):
+        p = {"person_id": 9, "display_name": "Ina Ranked", "department": "Big U", "department_id": 1, "rank": rank,
+             "source": "google_scholar", "is_fallback": 0, "collected_at": "2026-11-09", "total_citations": 859,
+             "h_index": 12, "pct_citations_all": 0.5, "pct_citations_rank": 0.5, "pct_h_all": 0.5, "pct_h_rank": 0.5,
+             "years_since_phd": 30, "citations_per_year": 28.6, "phd_year": 1996, "phd_institution": "",
+             "interests": "", "google_scholar_id": "G1", "openalex_author_id": "", "orcid": "",
+             "researchgate_url": "", "linkedin_url": "", "personal_url": ""}
+        html = person_page(p, uniq_slugs([p], lambda x: x["display_name"]), "big-u", {}, {}, "../")
+        group = ranks(rank, lower=True)
+        assert t("person", "pct_citations_rank", ranks=group) in html and t("person", "pct_h_rank", ranks=group) in html
+        assert f"{rank}s<" not in html and f"{rank}s " not in html
+    assert len({ranks(r) for r in ("assistant", "associate", "full", "other")}) == 4
+    assert ranks("emeritus") == ranks("other")          # a code with no wording of its own

@@ -249,13 +249,22 @@ def load_context():
     _, affs = read_csv(ROSTER_DIR / "affiliation.csv")
     dept_by_id = {d["department_id"]: d for d in depts}
     current = {a["person_id"]: a for a in affs if a["end_date"] is None and a["is_primary"] == "1"}
-    gs_total = {}
-    for path in sorted(SNAPSHOT_DIR.glob("*/*.csv")):
-        if path.parent.name in ("google_scholar", "pop"):
+    return pfields, persons, dept_by_id, current, known_totals()
+
+
+def known_totals(root=None) -> dict[str, int]:
+    """person_id -> the citation total a candidate record is judged against:
+    the newest Google Scholar reading, and the Publish or Perish lookup only
+    for someone Scholar has never given a figure. The two folders used to be
+    read in one alphabetical pass, so for anyone with both the February 2026
+    lookup replaced a Scholar reading made months later."""
+    totals: dict[str, int] = {}
+    for source in ("pop", "google_scholar"):            # Scholar last, so it wins
+        for path in sorted(((root or SNAPSHOT_DIR) / source).glob("*.csv")):
             for r in read_csv(path)[1]:
                 if r["total_citations"]:
-                    gs_total[r["person_id"]] = int(r["total_citations"])
-    return pfields, persons, dept_by_id, current, gs_total
+                    totals[r["person_id"]] = int(r["total_citations"])
+    return totals
 
 
 def fetch_candidates(person: dict) -> list[dict]:
