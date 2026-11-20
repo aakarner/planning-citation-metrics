@@ -23,6 +23,12 @@
 wordmark_lead = "Planning"
 wordmark_rest = "Citation Metrics"
 beta_tag = "Beta"
+# The ranks as groups of people: the home page's benchmarks, the rank menu above each
+# table and, in lower case, the percentile box on a person's page ({ranks} there).
+rank_assistant = "Assistant professors"
+rank_associate = "Associate professors"
+rank_full = "Full professors"
+rank_other = "Other faculty"
 search_placeholder = "Search faculty or schools"
 search_none = "Nothing matches that name."
 # search_no_figure: shown beside a search result for someone on the roster with no citation figure
@@ -86,9 +92,6 @@ th_faculty = "Faculty"
 th_median = "Median citations"
 th_p75 = "75th percentile"
 th_median_h = "Median h-index"
-rank_assistant = "Assistant professors"
-rank_associate = "Associate professors"
-rank_full = "Full professors"
 rising_heading = "Most cited in the past year"
 rising_lede = """The five people in each rank who received the most citations in the twelve months before
      their Google Scholar profile was last read, estimated from the profile's own per-year
@@ -128,7 +131,8 @@ caveats_body = """Citation counts measure attention, not quality, and they diffe
 
 [person]
 # One page per faculty member. Values: source, scholar_help, collected_at, rank_label,
-#                                      methods_href, name, rank, department, contact
+#                                      methods_href, name, rank, department, contact,
+#                                      ranks (the person's rank as a group: "full professors")
 # fallback_note_openalex / fallback_note_pop: shown under the figures when the headline
 # is not from Google Scholar; the site picks the one matching the source.
 meta_description = "Citation metrics for {name}, {rank_label} at {department}."
@@ -150,11 +154,11 @@ fallback_note_pop = """This person has no Google Scholar profile we know of, and
        replaces it. We look again for new profiles about twice a year; to be moved sooner,
        <a href="mailto:{contact}?subject=Planning%20Citation%20Metrics%3A%20Scholar%20profile">email us the link</a>."""
 pct_citations_all = "Citations, all"
-pct_citations_rank = "Citations, {rank}s"
+pct_citations_rank = "Citations, {ranks}"
 pct_h_all = "h-index, all"
-pct_h_rank = "h-index, {rank}s"
+pct_h_rank = "h-index, {ranks}"
 percentile_note = """Percentile among the
-         {rank_label}s in this dataset, and among all
+         {ranks} in this dataset, and among all
          faculty in it."""
 # other_note: shown instead of percentiles for someone with a planning PhD whose
 # appointment is outside a planning program. Values: name, others_href
