@@ -81,10 +81,10 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 80,Jennifer,,Minner,Jennifer Minner,2013,"University of Texas, Austin","Land Use Planning, Geographic Information Systems, Historic Preservation, Sustainability. 607.255.5561",0jPZTmUAAAAJ,A5001038635,0000-0002-0403-6890,,https://researchgate.net/profile/Jennifer_Minner,,,
 81,Sophie,,Oldfield,Sophie Oldfield,2000,University of Minnesota,,tP5O4C4AAAAJ,A5083269806,0000-0002-5601-3041,,,,,
 82,Stephan,,Schmidt,Stephan Schmidt,2006,Rutgers University,,UNn68ykAAAAJ,A5011395922,0000-0003-2412-3868,,https://researchgate.net/profile/Stephan_Schmidt9,https://linkedin.com/in/stephanschmidtcornell,,
-83,Linda,,Shi,Linda Shi,2017,MIT,,NBCtqiIAAAAJ,A5070264015,0000-0002-2444-367X,,,,,
+83,Linda,,Shi,Linda Shi,2017,MIT,,NBCtqiIAAAAJ,A5153944458,0000-0002-2444-367X,,,,,"OpenAlex id now A5153944458 (2026-11-22): A5070264015, held before, is another person's record."
 84,Michael,,Tomlan,Michael Tomlan,1976,Cornell University,"Building Conservation Technology, Documentation Methods for Preservation, History of the Preservation Movement, China, India, Canada",b1xSziEAAAAJ,A5036373238,,,,https://linkedin.com/in/michael-tomlan-37a9329,,
 85,Mildred,,Warner,Mildred Warner,1997,Cornell University,"Community Development, Economic Development, State & Local Government Policy",v1dOouMAAAAJ,A5005380055,0000-0002-0109-338X,,https://researchgate.net/profile/Mildred_Warner,https://linkedin.com/in/mildred-warner-b5758223,,
-86,Wenfei,,Xu,Wenfei Xu,2022,Columbia University,,-VP9js8AAAAJ,A5042450429,,,,,,
+86,Wenfei,,Xu,Wenfei Xu,2022,Columbia University,,-VP9js8AAAAJ,,,,,,,"OpenAlex id A5042450429 cleared 2026-11-22: a namesake's record, accepted on name and institution."
 87,Lisa,,Berglund,Lisa Berglund,2017,UCLA,,vxeLlLIAAAAJ,A5073738871,0000-0002-2808-319X,,,,,
 88,Ahsan,,Habib,Ahsan Habib,2009,University of Toronto,,EqK6qS0AAAAJ,,,,,,,
 89,Patricia,,Manuel,Patricia Manuel,1992,Dalhousie University,,,A5114112612,,,,,,
@@ -94,14 +94,14 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 93,Misun,,Hur,Misun Hur,2008,Ohio State University,"Community Development, Urban Design, GIS & Visualization Technology, Environmental Behavior",Q7Rwqu8AAAAJ,A5064994512,0000-0002-1827-4187,,https://researchgate.net/profile/Misun_Hur,https://linkedin.com/in/misunhur,,
 94,Andrew,,Jacobs,Andrew Jacobs,1999,Michigan State University,,,A5109588411,,,,,,
 95,Anuradha,,Mukherji,Anuradha Mukherji,2008,UC Berkeley,"Housing, Hazard Mitigation and Recovery, Disaster Planning and Management, International Development",88FnzbsAAAAJ,A5058366952,0000-0003-2315-7062,,https://researchgate.net/profile/Anuradha_Mukherji,https://linkedin.com/in/anuradhamukherji,,
-96,Steven,,Richter,Steven Richter,2021,"University of Texas, Austin",,fRQbhxoAAAAJ,A5028593551,0000-0002-5135-9676,,,,,
+96,Steven,,Richter,Steven Richter,2021,"University of Texas, Austin",,fRQbhxoAAAAJ,,,,,,,"OpenAlex id A5028593551 cleared 2026-11-22: a namesake's record, accepted on name and institution. ORCID 0000-0002-5135-9676 cleared 2026-11-22: it came from that record."
 97,Heather,,Khan-Welsh,Heather Khan-Welsh,2008,Florida State University,,,A5074843401,,,,,,
 98,RJ,,Koscielniak,RJ Koscielniak,2020,University of Michigan,,,A5047256402,,,,,,
 99,Matthew,,Anderson,Matthew Anderson,2012,"University of Illinois, Urbana-Champaign",,wHzEVFkAAAAJ,A5050876260,0000-0002-9092-2580,,,,,
 100,Margo,,Hill,Margo Hill,1998,Gonzaga University,"Tribal Law, Tribal Planning and Management, Planning Law, Tribal Economic Development.",,A5048163774,,,,https://linkedin.com/in/margo-hill-6880bb48,,
 101,Jason,,Scully,Jason Scully,2015,University of Washington,,,A5010939611,0000-0003-0693-7454,,,,,
 102,Eric,,Dumbaugh,Eric Dumbaugh,2005,Georgia Tech,Transportation Planning and Design,QePeI0EAAAAJ,A5082212269,0000-0002-5254-9711,,https://researchgate.net/profile/Eric_Dumbaugh,https://linkedin.com/in/eric-dumbaugh-9818b913,,
-103,Yanmei,,Li,Yanmei Li,2006,Ohio State University,"Statistics, Geography and Urban Planning",ZaF71qUAAAAJ,A5100642929,0000-0001-9416-8530,,https://researchgate.net/profile/Yanmei_Li8,https://linkedin.com/in/yanmeili,,
+103,Yanmei,,Li,Yanmei Li,2006,Ohio State University,"Statistics, Geography and Urban Planning",ZaF71qUAAAAJ,,,,https://researchgate.net/profile/Yanmei_Li8,https://linkedin.com/in/yanmeili,,"OpenAlex id A5100642929 cleared 2026-11-22: a namesake's record, accepted on name and institution. ORCID 0000-0001-9416-8530 cleared 2026-11-22: it came from that record."
 104,Melina,,Matos,Melina Matos,2021,Texas A&M,,W6UImc8AAAAJ,A5022012510,0000-0001-5067-3412,,,,,
 105,Louis,,Merlin,Louis Merlin,2014,"University of North Carolina, Chapel Hill",,RpdvnXkAAAAJ,A5042236384,0000-0002-9267-5712,,,,,
 106,Diana,,Mitsova,Diana Mitsova,2008,University of Cincinnati,"GIS Applications, GIS Data Collection, Environmental Modeling",tIME-ekAAAAJ,A5034151265,,,https://researchgate.net/profile/Diana_Mitsova,https://linkedin.com/in/diana-mitsova-a220547b,,
@@ -143,7 +143,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 142,Peter,G.,Rowe,Peter Rowe,1986,Harvard University,"Housing and Neighborhood Planning, Physical Planning/ Urban Design, Planning History, Planning Theory, International Planning and Design",,A5045102391,,,https://researchgate.net/profile/Peter_Rowe8,https://linkedin.com/in/peter-rowe-168ba646,,
 143,Hannah,,Teicher,Hannah Teicher,2019,MIT,,TQXBGWsAAAAJ,A5063075226,0000-0002-8246-3134,,,,,"ORCID from faculty page, rank review 2026-10-07 by maddie: program website (confirms the one on record)"
 144,Carole,,Voulgaris,Carole Voulgaris,2017,UCLA,,BmzXltMAAAAJ,A5060988135,0000-0003-0556-924X,,,,,
-145,Rachel,,Weber,Rachel Weber,1998,Cornell University,"Economic Development Planning, Planning Theory, Public Finance and Fiscal Planning",-nMertYAAAAJ,A5052083424,,,https://researchgate.net/profile/Rachel_Weber,https://linkedin.com/in/rachel-weber-1b6404a,,
+145,Rachel,,Weber,Rachel Weber,1998,Cornell University,"Economic Development Planning, Planning Theory, Public Finance and Fiscal Planning",-nMertYAAAAJ,,,,https://researchgate.net/profile/Rachel_Weber,https://linkedin.com/in/rachel-weber-1b6404a,,"OpenAlex id A5052083424 cleared 2026-11-22: a namesake's record, accepted on name and institution."
 146,Stefan,,AL,Stefan Al,2010,UC Berkeley,,IrrSGOYAAAAJ,A5100665696,0000-0003-0605-8601,,,,,
 147,Nicholas,,Bloom,Nicholas Bloom,1999,Brandeis University,,,,,,,,,"un-accepted 2026-09-15: OpenAlex 65,929 citations against 770 from pop (85.6x); probable namesake ORCID 0000-0002-1600-7819 cleared 2026-09-20: it came from an OpenAlex record later rejected as a namesake."
 148,John,,Chin,John Chin,2001,Columbia University,"community participation, urban health, immigrant communities and non-profits",gV7SKuUAAAAJ,A5012453075,0009-0003-2960-6452,,,,,
@@ -154,7 +154,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 153,Sigmund,,Shipp,Sigmund Shipp,1990,Howard University,"economic development, community development, cultural competency and diversity, poverty",,A5088984164,,,,,,
 154,Laura,,Wolf-Powers,Laura Wolf-Powers,2004,Rutgers University,"Neighborhood revitalization, urban and regional economic urban development policy and planning",HpXFwjkAAAAJ,A5017599316,0000-0001-5104-823X,,,,,
 155,John,E.,Benhart,John Benhart,1995,University of Tennessee,"Environmental Planning, Geographic Information Systems, Transportation, Urbanization",,A5010156025,,,,https://linkedin.com/in/john-benhart-74280132,,
-156,Sudeshna,,Ghosh,Sudeshna Ghosh,2013,University of Cincinnati,"Land Use and Land Cover Change Modeling, GIS, Community Economic Development, Regional Planning and Development, Small Town and Rural Development Planning, Planning in the Developing World",,A5062838577,,,https://researchgate.net/profile/Sudeshna_Ghosh,https://linkedin.com/in/sudeshna-ghosh-87809721,,"Scholar id kzHi8cQAAAAJ removed 2026-10-12: a namesake (chemistry, protein crystallography)"
+156,Sudeshna,,Ghosh,Sudeshna Ghosh,2013,University of Cincinnati,"Land Use and Land Cover Change Modeling, GIS, Community Economic Development, Regional Planning and Development, Small Town and Rural Development Planning, Planning in the Developing World",,,,,https://researchgate.net/profile/Sudeshna_Ghosh,https://linkedin.com/in/sudeshna-ghosh-87809721,,"Scholar id kzHi8cQAAAAJ removed 2026-10-12: a namesake (chemistry, protein crystallography) OpenAlex id A5062838577 cleared 2026-11-22: a namesake's record, accepted on name and institution."
 157,Richard,J.,Hoch,Richard Hoch,2005,West Virginia University,"Environmental Planning, Geospatial Applications for Land Use Planning, Urban Development",,A5027486496,,,,https://linkedin.com/in/richard-hoch-3aa24610,,
 158,Calvin,O.,Masilela,Calvin Masilela,1989,Virginia Tech,"Land Use Policy, Planning Techniques, Planning Theory, Urban Planning",,A5001437900,,,https://researchgate.net/profile/Calvin_Masilela3,https://linkedin.com/in/calvin-masilela-13b01325,,
 159,Carlton,,Basmajian,Carlton Basmajian,2008,University of Michigan,"Regional Planning, Planning History, Suburbia, Land Use",i-VJ0sIAAAAJ,A5015669396,0000-0002-6075-2189,,,https://linkedin.com/in/carlton-basmajian-861b8b2,,
@@ -169,7 +169,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 168,Gary,D.,Taylor,Gary Taylor,1988,University of Nebraska,"Planning Law and Implementation, Intergovernmental Coordination, Small Town Planning",YpkooCgAAAAJ,A5101800566,,,,,,
 169,Moe,,Chowdhury,Moe Chowdhury,1994,"University of Wisconsin, Madison",,,A5074908831,,,,,,
 170,Berneece,,Herbert,Berneece Herbert,2007,Alabama A&M University,,wFI7_EAAAAAJ,A5078821471,0000-0003-4878-4580,,,,,
-171,Mukesh,,Kumar,Mukesh Kumar,2004,Cleveland State University,Economic Development,zdTB77IAAAAJ,A5018751461,0000-0001-8404-1747,,,,,
+171,Mukesh,,Kumar,Mukesh Kumar,2004,Cleveland State University,Economic Development,,,,,,,,"OpenAlex id A5018751461 cleared 2026-11-22: a namesake's record, accepted on name and institution. ORCID 0000-0001-8404-1747 cleared 2026-11-22: it came from that record. Scholar id zdTB77IAAAAJ removed 2026-11-22: a namesake (business professor, University of Bahrain); inherited from the workbook."
 172,Edmund,,Merem,Edmund Merem,2003,Jackson State University,Environment and Land Use Planning,,A5134418069,,,https://researchgate.net/profile/Edmund_Merem,https://linkedin.com/in/edmund-merem-a995b319,,
 173,Talya,,Thomas,Talya Thomas,2011,Texas Southern University,,,A5136973473,,,,,,
 174,Joan,M.,Wesley,Joan Wesley,2002,Jackson State University,Community Development and Housing,,A5108486734,,,,https://linkedin.com/in/joan-wesley-70965810,,OpenAlex record found under the name 'Joan Marshall Wesley' (2026-10-17)
@@ -219,7 +219,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 218,Dennis,,Frenchman,Dennis Frenchman,2000,MIT,"Urban Design, Advanced Media and Design of Public Space, Heritage and Cultural Development, Transformation of Former Industrial Areas",,A5066825148,,,,https://linkedin.com/in/dennis-frenchman-b027756,,
 219,David,,Geltner,David Geltner,1989,MIT,"Real Estate Finance, Real Estate Investment",5S2bRsUAAAAJ,A5090561022,0000-0002-1024-7555,,https://researchgate.net/profile/David_Geltner,https://linkedin.com/in/david-geltner-70414181,,
 220,Amy,K.,Glasmeier,Amy Glasmeier,1986,UC Berkeley,Geography and Regional Economic Development; Poverty,HO7_3i8AAAAJ,A5001871676,,,,https://linkedin.com/in/amy-glasmeier-0184b918,,
-221,David,,Hsu,David Hsu,2010,University of Washington,Urban & Environmental Infrastructure,bZ98GoIAAAAJ,A5101962232,,,,https://linkedin.com/in/david-hsu-49a362,,
+221,David,,Hsu,David Hsu,2010,University of Washington,Urban & Environmental Infrastructure,bZ98GoIAAAAJ,,,,,https://linkedin.com/in/david-hsu-49a362,,"OpenAlex id A5101962232 cleared 2026-11-22: a namesake's record, accepted on name and institution."
 222,Jason,,Jackson,Jason Jackson,2013,MIT,,orC6GycAAAAJ,A5086232037,0000-0002-0674-6853,,,,,
 223,Erica,,James,Erica James,2003,Harvard University,,EKnh-r0AAAAJ,A5015468347,,,,,,
 224,Janelle,,Knox-Hayes,Janelle Knox-Hayes,2009,University of Oxford,,0ls-w1wAAAAJ,A5081992910,0000-0003-0378-5811,,,,,
@@ -274,7 +274,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 273,Steven,,Gehrke,Steven Gehrke,2017,Portland State University,,xQqnkVgAAAAJ,A5039692315,0000-0001-9355-5571,,,,,
 274,Dawn,,Hawley,R. Dawn Hawley,1994,Arizona State University,"Land Use Planning, Public Participation, Economic Geography",,A5091474292,,,,,,
 275,Ruihong,,Huang,Ruihong Huang,2003,"University of Wisconsin, Milwaukee",,L-y59HgAAAAJ,A5042499634,,,,,,
-276,Brian,,Petersen,Brian Petersen,2008,UC Santa Cruz,,-rON9VEAAAAJ,A5101407319,,,,,,
+276,Brian,,Petersen,Brian Petersen,2008,UC Santa Cruz,,-rON9VEAAAAJ,A5081442837,,,,,,"OpenAlex id now A5081442837 (2026-11-22): A5101407319, held before, is another person's record."
 277,Kelsea,,Best,Kelsea Best,2022,Vanderbilt University,,isMyIb4AAAAJ,A5049625734,0000-0002-9040-6244,,,,,
 278,Richardo,,Cardoso,Ricardo Cardoso,2018,UC Berkeley,,Tcifuz4AAAAJ,A5057518859,0000-0003-1514-1714,,,,,"ORCID from faculty page, rank review 2026-10-07 by maddie: orcid"
 279,Andre,,Carrel,Andre Carrel,2013,UC Berkeley,,a7um54AAAAAJ,A5051239567,0000-0002-3040-6306,,,,,
@@ -297,7 +297,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 296,Jenny,H.,Liu,Jenny Liu,2010,UC Berkeley,"Environment and Resource Economics, Transportation, Energy, Development Economics and Public Policy.",,A5072604421,,,,https://linkedin.com/in/jenny-liu-5221bb8,,"REVERSED 2026-09-19: not a move. Scholar id oirhrhsAAAAJ inherited from the workbook belongs to a University of Guelph entomologist (6 citations; interests entomology, food security), not this UC Berkeley PhD in transportation and resource economics. Id cleared; she stays at Portland State. Alex spotted it."
 297,Greg,,Schrock,Greg Schrock,2010,"University of Illinois, Chicago","Regional Economic Development, Labor Market and Workforce Development Policy",2YfHTPIAAAAJ,A5059565765,0000-0003-0476-8677,,,https://linkedin.com/in/greg-schrock-60a24056,,
 298,Ozcan,,Tunalilar,Ozcan Tunalilar,2016,University of Florida,,wHwKAK4AAAAJ,A5027453122,0000-0001-9864-1217,,,,,
-299,Liming,,Wang,Liming Wang,2009,University of Washington,"Transportation Planning, Urban Modeling, Planning Support Systems, Housing Markets and Real Estate Development.",jgcEZPgAAAAJ,A5100328707,,,,https://linkedin.com/in/liming-wang-16b8a341,,
+299,Liming,,Wang,Liming Wang,2009,University of Washington,"Transportation Planning, Urban Modeling, Planning Support Systems, Housing Markets and Real Estate Development.",jgcEZPgAAAAJ,,,,,https://linkedin.com/in/liming-wang-16b8a341,,"OpenAlex id A5100328707 cleared 2026-11-22: a namesake's record, accepted on name and institution."
 300,Yu,,Xiao,Yu Xiao,2008,"University of Illinois, Urbana-Champaign","Economic Development, Community Resiliency, Disaster Impact, Economic Resiliency",nDF5G30AAAAJ,A5011154045,0000-0002-4998-5213,,,,,
 301,Marisa,,Zapata,Marisa Zapata,2009,"University of Illinois, Urbana-Champaign","Participatory Planning Processes, Land Use Planning, Culutral Diversity",-P2oJ9sAAAAJ,A5010305628,,,https://researchgate.net/profile/Marisa_Zapata,https://linkedin.com/in/marisa-zapata-7746184,,
 302,Eve,,Baron,Eve Baron,2003,Rutgers University,,,,,,,,,
@@ -370,7 +370,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 370,Shiguo,,Jiang,Shiguo Jiang,2012,Ohio State University,,tJaShosAAAAJ,A5008833262,0000-0001-9088-883X,,,,,
 371,Catherine,T.,Lawson,Catherine Lawson,1998,Portland State University,"Transportation Planning, Quantitative Methods & Data Management, GIS, Freight",MepaZWoAAAAJ,A5031593554,0000-0003-4169-2069,,,,,
 372,David,A.,Lewis,David Lewis,2003,Rutgers University,"Regional Planning and Regional Science, Brownfield Redevelopment, Local and Regional Economic Development, Globalization and Economic Restructuring",,,,,,,,
-373,Rui,,Li,Rui Li,2012,Pennsylvania State University,,Cei2NNEAAAAJ,A5100448563,0000-0002-8877-8524,,,,,
+373,Rui,,Li,Rui Li,2012,Pennsylvania State University,,Cei2NNEAAAAJ,,,,,,,"OpenAlex id A5100448563 cleared 2026-11-22: a namesake's record, accepted on name and institution. ORCID 0000-0002-8877-8524 cleared 2026-11-22: it came from that record."
 374,Ryan,,Devlin,Ryan Devlin,2010,UC Berkeley,,,A5023723578,0000-0001-8845-7301,,,,,
 375,Jeffrey,,Doshna,Jeffrey Doshna,2015,Rutgers University,,G40XMisAAAAJ,,,,,,,Scholar id  stopped resolving 2026-10-12.
 376,Lynn,,Mandarano,Lynn Mandarano,2004,University of Pennsylvania,"Collaborative Planning Negotiations, Sustainable Communities",trL3_roAAAAJ,A5024163993,0000-0001-5477-7630,,https://researchgate.net/profile/Lynn_Mandarano,https://linkedin.com/in/lynn-mandarano-63341634,,
@@ -443,7 +443,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 443,Zachary,,Lamb,Zachary Lamb,2018,MIT,,RXZEj-YAAAAJ,A5017673186,0000-0001-6701-3728,,,,,
 444,Elizabeth,,Macdonald,Elizabeth Macdonald,1999,UC Berkeley,"Urban Design Theory, History of Urban Design and Urban Form, Public Space Design, and Environmental Behavior Research, Street Design",v4p_U2MAAAAJ,A5102909263,,,,https://linkedin.com/in/elizabeth-macdonald-2907b73a,,
 445,Carolina,K.,Reid,Carolina Reid,2004,University of Washington,"Housing Policy and Affordable Housing, Urban Poverty and Inequality, Community Development, Land Tenure Rights, Sustainable Development.",Q5V6-2MAAAAJ,A5082612952,0000-0002-1315-6413,,,https://linkedin.com/in/carolina-reid-02467010,,
-446,Daniel,,Rodriguez,Daniel Rodriguez,2000,University of Michigan,"Transportation & Land Use Policy, Urban Spatial Structure, Traveler Behavior, Public Health & Safety",YmyOoaYAAAAJ,A5074468125,,,https://researchgate.net/profile/Daniel_Rodriguez87,https://linkedin.com/in/daniel-rodriguez-81657633,,
+446,Daniel,,Rodriguez,Daniel Rodriguez,2000,University of Michigan,"Transportation & Land Use Policy, Urban Spatial Structure, Traveler Behavior, Public Health & Safety",YmyOoaYAAAAJ,,,,https://researchgate.net/profile/Daniel_Rodriguez87,https://linkedin.com/in/daniel-rodriguez-81657633,,"OpenAlex id A5074468125 cleared 2026-11-22: a namesake's record, accepted on name and institution."
 447,Dominic,,Bednar,Dominic Bednar,2021,University of Michigan,,Z0nJlToAAAAJ,A5006024741,0000-0002-1662-2643,,,,,
 448,Ajay,M.,Garde,Ajay Garde,2003,USC,"Urban Design, Urban Form, Sustainable Growth, Physical Planning",6M-FNBEAAAAJ,A5016750586,0000-0001-5558-059X,,,,,
 449,Jessica,,Garrison,Jessica Garrison,2016,MIT,,,A5075993456,0000-0001-9601-4375,,,,,"ORCID from faculty page, rank review 2026-10-01 by Maddie: School news (confirms the one on record)"
@@ -472,7 +472,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 472,Amy,,Lerner,Amy Lerner,2011,UCSB,,Ud4ENSQAAAAJ,A5013784517,0000-0001-7033-248X,,,,,
 473,Isaac,,Martin,Isaac Martin,2003,UC Berkeley,,9VwAZ8cAAAAJ,A5084146449,0000-0002-7470-636X,,,,,
 474,Kelema,,Moses,Kelema Moses,2015,Pennsylvania State University,,,A5022535388,0000-0002-1695-7726,,,,,
-475,Mai,,Nguyen,Mai Nguyen,2004,UC Irvine,,zpYl8EcAAAAJ,A5101845660,0000-0001-8006-4028,,,,,
+475,Mai,,Nguyen,Mai Nguyen,2004,UC Irvine,,zpYl8EcAAAAJ,,,,,,,"OpenAlex id A5101845660 cleared 2026-11-22: a namesake's record, accepted on name and institution. ORCID 0000-0001-8006-4028 cleared 2026-11-22: it came from that record."
 476,Keith,,Pezzoli,Keith Pezzoli,1990,UCLA,,2hoi_p4AAAAJ,A5074296381,0000-0003-2137-0345,,,,,
 477,Mirle,,Rabinowitz Bussell,Mirle Rabinowitz Bussell,1999,UCLA,,NZXc5asAAAAJ,A5043457683,,,,,,
 478,Nora,,Schwaller,Nora Schwaller,2022,UNC,,j8kdmdEAAAAJ,A5056126180,0000-0002-2244-5735,,,,,
@@ -541,7 +541,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 541,Alexandre,,Lebel,Alexandre Lebel,2011,Université Laval,,NBcJNaYAAAAJ,A5031598881,0000-0001-6774-7633,,,,,"ORCID from faculty page, rank review 2026-09-30 by Maddie: Google Scholar (confirms the one on record)"
 542,Martin,,Lee-Gosselin,Martin Lee-Gosselin,1980,University of Michigan,,,A5113441032,,,,,,
 543,Jean,,Morin,Jean Morin,2001,INRS (Institut national de la recherche scientifique),,sswn0tcAAAAJ,A5058440390,,,,,,
-544,Francois,,Proulx,Francois Proulx,2009,Université Laval,,Y2mu1nAAAAAJ,A5015907260,,,,,,
+544,Francois,,Proulx,Francois Proulx,2009,Université Laval,,Y2mu1nAAAAAJ,,,,,,,"OpenAlex id A5015907260 cleared 2026-11-22: a namesake's record, accepted on name and institution."
 545,Manuel,J.,Rodriguez,Manuel Rodriguez,1996,Université Laval,,gYKMgEUAAAAJ,,,,,,,
 546,Owen,,Waygood,Owen Waygood,2009,Kyoto University,,dADJ0sUAAAAJ,A5013070159,,,,,,
 547,Emmanuel,,Boamah,Emmanuel Boamah,2017,University of Louisville,,hra8PVAAAAAJ,A5015067875,0000-0002-6608-9170,,,,,
@@ -613,7 +613,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 613,Leah,,Hollstein,Leah Hollstein,2014,"University of Texas, Austin",,,A5049534165,0000-0002-6243-7772,,,,,
 614,Hyesung,,Jeong,Hyesun Jeong,2016,Illinois Institute of Technology,,pXhTRzwAAAAJ,A5000684130,0009-0000-9888-9554,,,,,"ORCID from faculty page, rank review 2026-10-01 by Maddie: personal website; REPLACES 0000-0001-7794-397X, which came from the OpenAlex match and now looks wrong"
 615,Johanna,W.,Looye,Johanna Looye,1998,Cornell University,"Urban and Regional Theory, International Development, Women in International Development, Planning Techniques",yf0VWRIAAAAJ,A5081366329,0000-0002-7868-5607,,https://researchgate.net/profile/Johanna_Looye,https://linkedin.com/in/johanna-looye-6163629,,
-616,Vikas,,Mehta,Vikas Mehta,2006,University of Maryland,"Urban Design, Relationship between Built Environment and Social Behavior, Public Space, Neighborhood design",72WtdxsAAAAJ,A5025676060,,,,https://linkedin.com/in/vikas-mehta-3258837,,
+616,Vikas,,Mehta,Vikas Mehta,2006,University of Maryland,"Urban Design, Relationship between Built Environment and Social Behavior, Public Space, Neighborhood design",72WtdxsAAAAJ,A5021295764,,,,https://linkedin.com/in/vikas-mehta-3258837,,"OpenAlex id now A5021295764 (2026-11-22): A5025676060, held before, is another person's record."
 617,Danilo,,Palazzo,Danilo Palazzo,1993,Istituto Universitario di Architettura di Venezia,"Urban Design, Physical Planning",t5ooS9UAAAAJ,A5026383619,0000-0002-3029-3452,,,https://linkedin.com/in/danilo-palazzo-a9116b19,,
 618,Hayden,,Shelby,Hayden Shelby,2019,UC Berkeley,,ueY7xR8AAAAJ,A5087055241,0000-0002-2314-4360,,,,,
 619,Xinhao,,Wang,Xinhao Wang,1993,University of Pennsylvania,"Environmental Planning, GIS, Modeling",BK9-s6EAAAAJ,A5100772595,0000-0002-2626-160X,,https://researchgate.net/profile/Xinhao_Wang,https://linkedin.com/in/xinhao-wang-550a9713,,
@@ -882,7 +882,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 882,Ariadna,,Reyes-Sanchez,Ariadna Reyes-Sanchez,2019,"University of Texas, Austin",,lS3zIxsAAAAJ,A5038458244,0000-0002-8849-3772,,,,,"ORCID from faculty page, rank review 2026-10-07 by maddie: program site"
 883,Malini,,Roy,Malini Roy,2023,Texas A&M,,araqOKEAAAAJ,A5023426653,0000-0002-9438-3000,,,,,
 884,Deden,,Rukmana,Deden Rukmana,2006,Florida State University,"Housing and Community Development, Urban Planning, International Development and Planning, Homelessness and Poverty and Quantitative Methods.",mZYV-z0AAAAJ,A5037421031,0000-0002-0730-8070,,https://researchgate.net/profile/Deden_Rukmana,https://linkedin.com/in/dedenrukmana,,
-885,Wei,,Zhai,Wei Zhai,2021,University of Florida,,Vz8kG8IAAAAJ,A5101425640,0000-0003-4064-0427,,,,,
+885,Wei,,Zhai,Wei Zhai,2021,University of Florida,,Vz8kG8IAAAAJ,A5007973016,0000-0003-4064-0427,,,,,"OpenAlex id now A5007973016 (2026-11-22): A5101425640, held before, is another person's record."
 886,Junfeng,,Jiao,Junfeng Jiao,2010,University of Washington,"urban informatics, transit/food deserts, shared mobility, and public health",7vjmZsIAAAAJ,A5060920769,0000-0002-7272-8805,,,https://linkedin.com/in/junfeng-jiao-6386b122,,
 887,Alex,,Karner,Alex Karner,2012,"University of California, Davis",,YC_-mUAAAAAJ,A5000540944,0000-0002-3651-8157,,,,,
 888,Katherine,,Lieberknecht,Katherine Lieberknecht,2007,Cornell University,,mF3IsbsAAAAJ,A5008568037,0000-0002-4168-7457,,,,,
@@ -893,7 +893,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 893,Bjorn,,Sletto,Bjorn Sletto,2006,Cornell University,"Geographic Information Systems, Planning in Latin America, Urban Environmental Analysis, Indigenous Cartographies",,A5012813188,0000-0002-8371-7917,,,https://linkedin.com/in/bjorn-sletto-bbb0028,,
 894,Miriam,,Solis,Miriam Solis,2018,UC Berkeley,,Q2Ck504AAAAJ,A5114258115,,,,https://www.linkedin.com/in/solism/,,
 895,Jake,,Wegmann,Jake Wegmann,2014,UC Berkeley,,BG5iIkoAAAAJ,A5062355327,0000-0001-5553-2395,,,https://linkedin.com/in/jake-wegmann-b325aa3,,
-896,Ming,,Zhang,Ming Zhang,2002,MIT,"Urban Transportation Planning, Urban Form and Travel Behavior, GIS Applications in Planning, International Planning",YKHNB98AAAAJ,A5100642537,,,https://researchgate.net/profile/Ming_Zhang34,https://linkedin.com/in/mingzhang-yin-724ab8103,,
+896,Ming,,Zhang,Ming Zhang,2002,MIT,"Urban Transportation Planning, Urban Form and Travel Behavior, GIS Applications in Planning, International Planning",YKHNB98AAAAJ,,,,https://researchgate.net/profile/Ming_Zhang34,https://linkedin.com/in/mingzhang-yin-724ab8103,,"OpenAlex id A5100642537 cleared 2026-11-22: a namesake's record, accepted on name and institution."
 897,Ryun,Jung,Lee,Ryun Jung Lee,2018,Texas A&M,,A4CMrP0AAAAJ,,,,,,,
 898,Esteban,López,Ochoa,Esteban López Ochoa,2016,"University of Illinois, Urbana-Champaign",,JW1waTwAAAAJ,,,,,,,
 899,Bhuiyan,,Alam,Bhuiyan Alam,2005,Florida State University,"GIS Applications in Transportation, Environmental Planning, Urban and Regional Planning, Quantitative Methods/Spatial Statistics, Transportation Planning and Modeling, Regional Development",,A5091099011,0000-0002-9683-6560,,https://researchgate.net/profile/Bhuiyan_Alam,,,
@@ -929,7 +929,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 929,Andrea,,Roberts,Andrea Roberts,2016,"University of Texas, Austin",,arxHS-YAAAAJ,A5011585330,0000-0001-8821-8802,,,,,
 930,Jennifer,,Roe,Jennifer Roe,1995,Heriot Watt University,,9hTL_nkAAAAJ,,,,,,,"un-accepted 2026-09-15: OpenAlex 165 citations against 11,870 from google_scholar (0.0x); probable namesake"
 931,Bev,,Wilson,Bev Wilson,2009,UNC,"Land Use and Environmental Planning and Policy; Growth Management; Spatial Analysis; GIS, Sustainability; Urban Simulation Modeling",-y4JRccAAAAJ,A5089529760,,,https://researchgate.net/profile/Bev_Wilson,https://linkedin.com/in/bev-wilson-aicp-0a00545,,
-932,Barbara,,Wilson,Barbara Wilson,2010,"University of Texas, Austin",,u93hCkgAAAAJ,A5109193437,,,,,,
+932,Barbara,,Wilson,Barbara Wilson,2010,"University of Texas, Austin",,u93hCkgAAAAJ,,,,,,,"OpenAlex id A5109193437 cleared 2026-11-22: a namesake's record, accepted on name and institution."
 933,Daniel,B.,Abramson,Daniel Abramson,1998,Tsinghua University,,,A5029072063,0000-0002-5070-8619,,,https://linkedin.com/in/dan-abramson-7132866,,
 934,Marina,,Alberti,Marina Alberti,1992,MIT,"Urban Ecology, Environmental Planning",sP0cHYgAAAAJ,A5027673966,0000-0002-1920-309X,,https://researchgate.net/profile/Marina_Alberti,https://linkedin.com/in/marina-alberti-b8111921,,
 935,Christine,,Bae,Christine Bae,1994,USC,"Land Use, Transportation Planning, Analytical Techniques in Planning, Community Planning for Diverse Neighborhoods",,A5087736214,0000-0003-0579-0913,,https://researchgate.net/profile/Christine_Bae2,https://linkedin.com/in/christine-bae-17092ab,,
@@ -938,7 +938,7 @@ person_id,first_name,middle_name,last_name,display_name,phd_year,phd_institution
 938,Karen,,Chen,Karen Chen,2020,Aarhus University,,,A5012655879,,,,https://www.linkedin.com/in/tzu-hsin-karen-chen/,,"Scholar id ALTsdGwAAAAJ removed 2026-10-12: a namesake (functional materials, energy storage)"
 939,Sofia,,Dermisi,Sofia Dermisi,2002,Harvard University,,,A5026829209,0000-0002-1295-9441,,https://researchgate.net/profile/Sofia_Dermisi,https://linkedin.com/in/sofia-dermisi-1962185,,
 940,Mark,,Purcell,Mark Purcell,1998,UCLA,"Urban Democracy, Urban Social Movements",Zk5yIpsAAAAJ,A5065474839,0000-0002-1288-614X,,,https://linkedin.com/in/mark-purcell-a5b11520,,
-941,Qing,,Shen,Qing Shen,1993,UC Berkeley,"Urban Economics, Transportation Planning, Statistical Methods and Geographic Information Systems",gPnD5gYAAAAJ,A5071793944,0000-0002-0968-7377,,https://researchgate.net/profile/Qing_Shen9,https://linkedin.com/in/qing-shen-6534025,,
+941,Qing,,Shen,Qing Shen,1993,UC Berkeley,"Urban Economics, Transportation Planning, Statistical Methods and Geographic Information Systems",gPnD5gYAAAAJ,A5033555253,0000-0002-0968-7377,,https://researchgate.net/profile/Qing_Shen9,https://linkedin.com/in/qing-shen-6534025,,"OpenAlex id now A5033555253 (2026-11-22): A5071793944, held before, is another person's record."
 942,Dylan,,Stevenson,Dylan Stevenson,2023,Cornell University,,Jbuqs8IAAAAJ,,,,,https://www.linkedin.com/in/dmstevenson/,,
 943,Jan,,Whittington,Jan Whittington,2008,UC Berkeley,"Infrastructure Development and Management, Transportation Project Delivery",K_llbN8AAAAJ,A5050736585,,,https://researchgate.net/profile/Jan_Whittington,https://linkedin.com/in/jan-whittington-a6b68210,,
 944,Martine,,August,Martine August,2014,University of Toronto,,JqcxamAAAAAJ,A5056527280,,,,,,
