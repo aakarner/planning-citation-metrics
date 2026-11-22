@@ -55,7 +55,8 @@ SETTLE_NAME = 0.95      # a pending candidate this close on name, at the right i
 SETTLE_RATIO = 1.5      # ...and at most this many times our own figure, is the person
 SIBLING_SUM_RATIO = 1.2 # a further record for someone already matched may not push the OpenAlex sum past this
 FRAGMENT_WORKS = 3      # a record this small settles on name and institution alone
-SIBLING_TOPIC = 0.5     # an extra record at another institution needs this share of planning topics
+SIBLING_TOPIC = 0.5     # a record at another institution needs this share of planning topics
+FOREIGN_TOPIC = 0.2     # under this share a record is left to a reviewer wherever it sits
 MEDICAL = ("hospital", "medical", "clinic", "health", "medicine", "cancer")
 MIN_RATIO = 0.05    # kept for implausible()'s two-sided mode; policy no longer un-accepts on the low side
 MIN_BASE = 25       # below this the ratio is noise, so don't judge
@@ -128,6 +129,9 @@ def settles(name_sim, inst_match, oa_cites, works, base_cites, accepted_cites=0,
       SIBLING_SUM_RATIO times it, since a sum well above Scholar means two
       people. Jenny Liu's two same-campus records (no base) and Robert Brown's
       16,190-citation namesake beside his 9,517 both stay with a reviewer.
+    * Either way the record itself must not look like someone else's
+      (`held_for_a_reviewer`). The numbers cannot see that: a namesake of
+      about the person's own size passes them.
     """
     if (name_sim or 0) < SETTLE_NAME or (inst_match or 0) < 1.0:
         return False
@@ -135,21 +139,62 @@ def settles(name_sim, inst_match, oa_cites, works, base_cites, accepted_cites=0,
         return True
     if not base_cites or base_cites < MIN_BASE or oa_cites is None:
         return False
+    if held_for_a_reviewer(last_inst_ok, topic_share, oa_cites, base_cites, has_record):
+        return False
     if has_record:
-        if not sibling_agrees(last_inst_ok, topic_share):
-            return False
         return (accepted_cites + oa_cites) / base_cites <= SIBLING_SUM_RATIO
     return oa_cites / base_cites <= SETTLE_RATIO
 
 
+def held_for_a_reviewer(last_inst_ok, topic_share, oa_cites=None, base_cites=None, has_record=False) -> str | None:
+    """Why a record that matches on name and institution still waits for a
+    person, else None. Never a rejection: the row stays pending.
+
+    inst_match is 1.0 when the department's institution appears *anywhere* in
+    the record's affiliation history. OpenAlex conflates people who share a
+    name, so one misfiled paper is enough: the 'Liming Wang' records rejected
+    by hand on 2026-11-22 each carried Portland State for one or two years
+    among 29 to 65 affiliations, and sat at Shandong University, Capital
+    Medical University and the Chinese Academy of Medical Sciences. With the
+    institution test that weak, a namesake about the person's size passes
+    the citation test by chance. Three things the record says about itself
+    hold it back:
+
+    * Almost no planning topics (under FOREIGN_TOPIC), wherever it sits. Of
+      the 23 records with such a share and 200 or more citations that the
+      matcher and this audit had accepted, 22 were namesakes, some at the
+      person's own university (the MRI physicist Lawrence R. Frank at UC
+      San Diego, polymer chemists under Yan Song at UNC). The 23rd, Betsy
+      Donald's, was hers: a low share is not proof, which is why the row
+      waits for a person and is not rejected.
+    * Sits at another institution with under SIBLING_TOPIC planning topics.
+      This was the rule for extra records only (`sibling_agrees`, after five
+      'Yan Song' records settled on 2026-09-25); a first record gets it too.
+    * A first record at another institution holding more citations than our
+      own figure. OpenAlex normally lands near 0.7 of Scholar, and the topic
+      words are broad enough that a carbon-emissions economist at China Three
+      Gorges University scored 1.0 for Ming Zhang (7,543 against 5,049). An
+      extra record needs no such test; the sum rule already bounds it.
+
+    Unknown topics (None) and an unnamed institution (None) hold nothing back.
+    """
+    if topic_share is not None and topic_share < FOREIGN_TOPIC:
+        return f"{topic_share:.0%} planning topics"
+    if not sibling_agrees(last_inst_ok, topic_share):
+        return "at another institution with " + ("unknown" if topic_share is None else f"{topic_share:.0%}") + " planning topics"
+    if not has_record and last_inst_ok is False and oa_cites is not None and base_cites and oa_cites > base_cites:
+        return "at another institution with more citations than our own figure"
+    return None
+
+
 def sibling_agrees(last_inst_ok, topic_share) -> bool:
-    """May an extra, non-fragment record join someone already matched?
+    """May a non-fragment record at another institution be the person's?
 
     inst_match says the department's institution appears somewhere in the
     record's affiliation history, which for a common name is weak: OpenAlex
     conflates authors, and on 2026-09-25 the sum rule let five 'Yan Song'
     records through, three at Chinese universities, because together they
-    stayed under 1.2x her Scholar total. An extra record must therefore also
+    stayed under 1.2x her Scholar total. A record must therefore also
     sit at the person's institution now (`last_inst_ok`: True, or None when
     the record names none) or carry a planning share of topics; a record at a
     hospital or company with no planning topics is left to a reviewer.
@@ -275,7 +320,9 @@ def main(argv=None) -> None:
 
     # ---- extra records the audit itself accepted that no longer pass --------
     # Back to pending, not rejected: a reviewer decides. Only rows this audit
-    # accepted; a person's decision stands.
+    # accepted; a person's decision stands. This stays on the 2026-09-25 test
+    # (`sibling_agrees`) and does not apply the wider `held_for_a_reviewer`
+    # of 2026-11-22: sending standing records back under that is Alex's call.
     unsettled: dict[int, str] = {}
     for pid, rs in accepted_by.items():
         if len(rs) < 2:
@@ -295,6 +342,7 @@ def main(argv=None) -> None:
     if unsettled:
         print(f"\n{len(unsettled)} extra records sent back to review")
 
+    held: list[str] = []                            # log lines: matched, but the record looks like someone else's
     have: dict[str, float] = {}                     # OpenAlex citations already accepted per person
     for r in review:
         if r["source"] == "openalex" and r["status"] == "accepted" and r["external_id"] and id(r) not in unsettled:
@@ -321,8 +369,16 @@ def main(argv=None) -> None:
             accepted_now[id(r)] = (f"accepted {today}: name and institution match, "
                                    + (f"{int(oa):,} against {b[1]:,} from {b[0]}" if b and oa is not None else f"{int(works or 0)}-work fragment"))
             newly_matched.setdefault(str(r["person_id"]), []).append(r)
+        elif settles(ns, im, oa, works, b[1] if b else None, have.get(pid_s, 0.0), has_record=pid_s in have):
+            # the numbers alone would have settled it; say why it waits, in the log only
+            why = held_for_a_reviewer(ok, ts, oa, b[1] if b else None, pid_s in have)
+            held.append(f"  {r['display_name'][:26]:26} <- {r['external_id']:12} {int(oa):>7,} cites  "
+                        f"{(r['last_known_institution'] or '?')[:34]:34} {why}")
     if accepted_now:
         print(f"\n{len(accepted_now)} pending candidates settled as the person, across {len(newly_matched)} people")
+    if held:
+        print(f"\n{len(held)} pending candidates match on name and institution but are left for a reviewer:")
+        print("\n".join(held))
 
     settled = sorted(name for pid, rs in per_person.items()
                      if rs and all(id(r) in flagged for r in rs)

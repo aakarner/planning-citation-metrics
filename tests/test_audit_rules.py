@@ -125,9 +125,10 @@ def test_an_extra_record_at_a_hospital_with_no_planning_topics_waits_for_a_revie
     # the extra record: 100 works, 3,949 citations at Xidian, topics 0.0, beside an accepted 10,766 record
     assert not settles(1.0, 1.0, 3949, 100, 23933, accepted_cites=10766, has_record=True,
                        last_inst_ok=last_institution_ok("Xidian University", dept), topic_share=0.0)
-    # the same numbers for a record that still sits at UNC are fine
+    # the same numbers for a record that still sits at UNC are fine, given some planning topics
+    # (with none it waits since 2026-11-22: see the polymer chemists below)
     assert settles(1.0, 1.0, 3949, 100, 23933, accepted_cites=10766, has_record=True,
-                   last_inst_ok=last_institution_ok("University of North Carolina at Chapel Hill", dept), topic_share=0.0)
+                   last_inst_ok=last_institution_ok("University of North Carolina at Chapel Hill", dept), topic_share=0.4)
     # or one elsewhere whose topics are planning (a previous post)
     assert settles(1.0, 1.0, 3949, 100, 23933, accepted_cites=10766, has_record=True,
                    last_inst_ok=False, topic_share=0.9)
@@ -179,3 +180,120 @@ def test_un_accepting_keeps_an_orcid_sourced_from_the_person_and_the_ratio_defer
     # Yang Zhang, 2026-11-01: a two-work fragment Alex had held back as pending was auto-accepted
     settling = src[src.index("pending candidates the evidence already settles"):src.index("if accepted_now:")]
     assert 'decided_by_a_person(r.get("reviewed_by"))' in settling
+
+
+# ---- 2026-11-22: records the numbers pass and the record itself contradicts ----
+# Every case below is a real row of data/review/identity_candidates.csv, with the
+# Scholar base and the already-accepted OpenAlex sum the audit held on 2026-11-22.
+# Tuples: (works, OpenAlex citations, base, accepted sum, last_inst_ok, topic_share).
+
+def _settles(works, oa, base, have, last_ok, topics, *, judged=True):
+    """The audit's call for a row matching on name and institution; `judged=False`
+    withholds what the record says about itself, which is all the audit knew of
+    a first record before this rule."""
+    from pipeline.audit_matches import settles
+    extra = dict(last_inst_ok=last_ok, topic_share=topics) if judged else {}
+    return settles(1.0, 1.0, oa, works, base, accepted_cites=have, has_record=have > 0, **extra)
+
+
+def test_a_record_with_almost_no_planning_topics_waits_even_at_the_persons_own_university():
+    """22 of the 23 accepted records with under a fifth planning topics and 200 or
+    more citations were namesakes. The citation test passed every one of these."""
+    namesakes = {
+        "Rachel Weber, an epidemiologist; no institution named":  (186, 7372, 5093, 0, None, 0.0),
+        "Steven Richter, a process chemist at East Carolina":     (17, 327, 375, 0, True, 0.0),
+        "Lawrence Frank, an MRI physicist at UC San Diego":       (225, 16781, 62495, 38437, True, 0.0),
+        "Yan Song, polymer chemists at UNC":                      (186, 4599, 13237, 10766, True, 0.0),
+        "Wei Zhai, computer vision, at UT Arlington":             (84, 1114, 2232, 1269, True, 0.0),
+        "Sarah Williams, science news and management, at MIT":    (173, 1529, 2945, 1713, True, 0.133),
+        "David Howell, six people of the name":                   (57, 536, 3968, 1472, None, 0.167),
+        "Brian Taylor, an inorganic chemist":                     (85, 1434, 9188, 6105, None, 0.118),
+    }
+    for who, row in namesakes.items():
+        assert _settles(*row, judged=False), who        # the numbers alone settle it
+        assert not _settles(*row), who                  # the record's topics keep it with a reviewer
+
+
+def test_a_first_record_at_another_institution_is_judged_as_an_extra_one_always_was():
+    """Liming Wang (Portland State), 2026-11-22: with his accepted record rejected,
+    the audit would have taken the next same-name record, then the next. Each has
+    Portland State for a year or two among 29 to 65 affiliations, which is all
+    inst_match 1.0 means, and none had a record beside it to trigger the 2026-09-25 test."""
+    from pipeline.audit_matches import held_for_a_reviewer, last_institution_ok
+    dept = {"department_id": "39", "university": "Portland State University",
+            "short_name": "Portland State University", "name": "Portland State University"}
+    base = 1532
+    records = [   # works, citations, last known institution, topic share
+        (159, 1852, "Shandong University", 0.137),                                                   # mechanical engineering, finance
+        (96, 1935, "Chinese Academy of Medical Sciences & Peking Union Medical College", 0.0),      # oncology
+        (242, 2284, "Mongolian University of Science and Technology", 0.0),                         # machinery fault diagnosis
+    ]
+    for works, oa, where, topics in records:
+        elsewhere = last_institution_ok(where, dept)
+        assert elsewhere is False, where
+        assert _settles(works, oa, base, 0, elsewhere, topics, judged=False), where
+        assert not _settles(works, oa, base, 0, elsewhere, topics), where
+    # The Drosophila neuroscientist at Capital Medical University scores 0.257, above the
+    # floor, and was kept out only by holding 2.2x his figure. The institution test must
+    # hold that record whatever the base: against a larger Scholar total it would have settled.
+    capital = last_institution_ok("Capital Medical University", dept)
+    assert capital is False
+    assert held_for_a_reviewer(capital, 0.257, 3380, base)
+    assert _settles(78, 3380, 5000, 0, capital, 0.257, judged=False)
+    assert not _settles(78, 3380, 5000, 0, capital, 0.257)
+    # a first record that sits at Portland State with ordinary topics settles as before
+    assert _settles(159, 1852, base, 0, last_institution_ok("Portland State University", dept), 0.6)
+
+
+def test_a_first_record_elsewhere_with_more_citations_than_our_figure_waits_whatever_its_topics():
+    """Ming Zhang (UT Austin): a carbon-emissions economist at China Three Gorges
+    University scores 1.0 on topics, because 'energy', 'environmental' and
+    'economics' are planning words, and at 7,543 against 5,049 sits inside the
+    1.5x bound. Nothing but its institution and size told it from him."""
+    from pipeline.audit_matches import held_for_a_reviewer
+    assert _settles(254, 7543, 5049, 0, False, 1.0, judged=False)
+    assert not _settles(254, 7543, 5049, 0, False, 1.0)
+    # the same record at his own institution, or naming none, is not held on size
+    assert _settles(254, 7543, 5049, 0, True, 1.0)
+    assert _settles(254, 7543, 5049, 0, None, 1.0)
+    # an extra record is bounded by the sum rule already, so this test is for first records only
+    assert held_for_a_reviewer(False, 1.0, 900, 800, has_record=True) is None
+
+
+def test_records_people_accepted_still_settle():
+    """The rule must not start refusing what a named reviewer took as the person.
+    Of the 67 rows accepted by AK, Maddie or the rank reviewer, the audit's numbers
+    settle five, two of them fragments; the same five settle under the new rule."""
+    accepted_by_a_person = {
+        # the Landscape Institute is not Calgary, but the topics are hers and the record is small
+        "Rebecca Pedersen, accepted by AK 2026-10-09":      (13, 126, 4943, 0, False, 0.7),
+        # rows added by the alias pass and ORCID search carry no topic share or institution
+        "Monica Teets Farris, accepted by AK 2026-10-17":   (25, 28, 118, 0, None, None),
+        "Hun Kim, accepted by AK 2026-10-17":               (5, 67, 160, 0, None, None),
+    }
+    for who, row in accepted_by_a_person.items():
+        assert _settles(*row, judged=False) and _settles(*row), who
+    # a fragment settles on name and institution alone, whatever it says about itself
+    assert _settles(2, 0, 2427, 741, True, 0.0) and _settles(3, 40, 1532, 0, False, 0.0)
+    # the matcher writes 0.5 for a record with no topics at all: neutral, not foreign
+    assert _settles(40, 300, 500, 0, True, 0.5)
+    # an ordinary planner who moved: elsewhere, planning topics, under our own figure
+    assert _settles(60, 900, 1500, 0, False, 0.8)
+
+
+def test_a_low_share_holds_a_record_back_and_never_rejects_it():
+    """Betsy Donald (Queen's) is the one real record of the 23: economic geography
+    scores 0.185. Under this rule hers would wait for a person too, which is the
+    price of the other 22, so the rule may only ever leave a row pending."""
+    from pipeline.audit_matches import FOREIGN_TOPIC, held_for_a_reviewer, implausible
+    assert not _settles(36, 741, 2427, 0, True, 0.185)
+    assert held_for_a_reviewer(True, 0.185, 741, 2427)
+    assert implausible(741, 2427, high_only=True) is None       # nothing here rejects her record
+    assert held_for_a_reviewer(True, FOREIGN_TOPIC, 741, 2427) is None      # the floor is not inclusive
+    assert held_for_a_reviewer(True, None, 741, 2427) is None               # unknown topics hold nothing
+    src = (ROOT / "pipeline" / "audit_matches.py").read_text()
+    settling = src[src.index("pending candidates the evidence already settles"):src.index("if accepted_now:")]
+    assert "held_for_a_reviewer" in settling and '"rejected"' not in settling
+    # standing records are not sent back under the new rule; that block keeps the 2026-09-25 test
+    unsettling = src[src.index("unsettled: dict[int, str] = {}"):src.index("if unsettled:")]
+    assert "sibling_agrees(ok, ts)" in unsettling and "held_for_a_reviewer(" not in unsettling

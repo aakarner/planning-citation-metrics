@@ -1,0 +1,11 @@
+{
+  "trigger": "manual",
+  "notes": "OpenAlex collector (targeted); 1 ok, 0 failed, 0.0 min",
+  "ok": 1,
+  "failed": 0,
+  "attempted": 1,
+  "matched": 1,
+  "collected": 1,
+  "stopped": false,
+  "targeted": true
+}
