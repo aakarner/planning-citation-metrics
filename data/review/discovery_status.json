@@ -1,9 +1,9 @@
 {
-  "reported": "2026-11-16T02:47:16Z",
-  "outcome": "searched",
+  "reported": "2026-11-23T18:24:52Z",
+  "outcome": "failed",
   "queued": 85,
   "last_searched": "2026-11-16",
-  "stalled_since": null,
+  "stalled_since": "2026-11-23",
   "batches": [
     {
       "date": "2026-11-16",
